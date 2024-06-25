@@ -29,5 +29,12 @@ myinputs = GenX.load_inputs(mysetup, case);
 
 myinputs_decomp = GenX.separate_inputs_subperiods(myinputs);
 
+OPTIMIZER = configure_solver(settings_path, HiGHS.Optimizer)
+
+decomp_models = Dict();
+for w in keys(myinputs_decomp)
+    decomp_models[w] = generate_model(mysetup, myinputs_decomp[w], OPTIMIZER);
+end
+
 
 
