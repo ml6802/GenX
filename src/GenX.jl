@@ -74,5 +74,6 @@ include("time_domain_reduction/precluster.jl")
 
 include_all_in_folder("multi_stage")
 include_all_in_folder("additional_tools")
+include_all_in_folder("decomposition")
 
 end
