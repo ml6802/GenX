@@ -31,10 +31,13 @@ myinputs_decomp = GenX.separate_inputs_subperiods(myinputs);
 
 OPTIMIZER = configure_solver(settings_path, HiGHS.Optimizer)
 
+master_model = GenX.generate_investment_model(mysetup,myinputs,OPTIMIZER);
+
 decomp_models = Dict();
 for w in keys(myinputs_decomp)
-    decomp_models[w] = generate_model(mysetup, myinputs_decomp[w], OPTIMIZER);
+    decomp_models[w] = GenX.generate_operation_model(mysetup, myinputs_decomp[w], OPTIMIZER);
 end
+
 
 
 
