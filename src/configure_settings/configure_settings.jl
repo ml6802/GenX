@@ -32,7 +32,8 @@ function default_settings()
         "ResourcePoliciesFolder" => "policy_assignments",
         "SystemFolder" => "system",
         "PoliciesFolder" => "policies",
-        "ObjScale" => 1)
+        "ObjScale" => 1,
+        "Benders"=>0)
 end
 
 @doc raw"""
@@ -89,6 +90,24 @@ function validate_settings!(settings::Dict{Any, Any})
     if settings["EnableJuMPStringNames"] == 0 && settings["ComputeConflicts"] == 1
         settings["EnableJuMPStringNames"] = 1
     end
+
+    if settings["EnableJuMPStringNames"] == 0 && settings["Benders"] == 1
+        settings["EnableJuMPStringNames"] = 1
+    end
+    
+    if settings["MultiStage"] == 1 && settings["Benders"] == 1
+        Base.depwarn("""Multistage and Benders are not integrated yet, deactivating Benders.""",
+            :validate_settings!, force = true)
+        settings["Benders"] = 0;
+    end
+
+    if settings["ModelingToGenerateAlternatives"] == 1 && settings["Benders"] == 1
+        Base.depwarn("""MGA and Benders are not integrated yet, deactivating Benders.""",
+            :validate_settings!, force = true)
+        settings["Benders"] = 0;
+    end
+
+
 end
 
 function default_writeoutput()

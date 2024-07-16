@@ -4,7 +4,7 @@ case = dirname(@__FILE__)
 
 Pkg.activate(dirname(dirname(case)))
 
-using GenX,HiGHS
+using GenX,Gurobi
 
 genx_settings = GenX.get_settings_path(case, "genx_settings.yml") # Settings YAML file path
 writeoutput_settings = GenX.get_settings_path(case, "output_settings.yml") # Write-output settings YAML file path
@@ -29,14 +29,20 @@ myinputs = GenX.load_inputs(mysetup, case);
 
 myinputs_decomp = GenX.separate_inputs_subperiods(myinputs);
 
-OPTIMIZER = configure_solver(settings_path, HiGHS.Optimizer)
+OPTIMIZER = configure_solver(settings_path, Gurobi.Optimizer)
 
-master_model = GenX.generate_investment_model(mysetup,myinputs,OPTIMIZER);
+model = GenX.generate_model(mysetup,myinputs,OPTIMIZER);
+model_old = GenX.generate_model_legacy(mysetup,myinputs,OPTIMIZER);
+GenX.optimize!(model)
+GenX.optimize!(model_old)
+println(abs(GenX.objective_value(model) - GenX.objective_value(model_old)))
 
-decomp_models = Dict();
-for w in keys(myinputs_decomp)
-    decomp_models[w] = GenX.generate_operation_model(mysetup, myinputs_decomp[w], OPTIMIZER);
-end
+# master_model = GenX.generate_investment_model(mysetup,myinputs,OPTIMIZER);
+
+# decomp_models = Dict();
+# for w in keys(myinputs_decomp)
+#     decomp_models[w] = GenX.generate_operation_model(mysetup, myinputs_decomp[w], OPTIMIZER);
+# end
 
 
 
