@@ -257,11 +257,7 @@ function operation_model!(EP::Model,setup::Dict, inputs::Dict)
 
     #Capacity Reserve Margin
     if setup["CapacityReserveMargin"] > 0
-        if setup["Benders"]==1
-            error("Capacity Reserve Margins and Benders are not integrated yet")
-        else
-            cap_reserve_margin!(EP, inputs, setup)
-        end
+        cap_reserve_margin!(EP, inputs, setup)
     end
 
     ## Power balance constraints
