@@ -172,6 +172,10 @@ function operation_model!(EP::Model,setup::Dict, inputs::Dict)
         dcopf_transmission!(EP, inputs, setup)
     end
 
+    if (setup["Benders"]==1 && (!isempty(inputs["STOR_LONG_DURATION"]) || !isempty(inputs["STOR_HYDRO_LONG_DURATION"])))||(inputs["REP_PERIOD"] > 1 && (!isempty(inputs["STOR_LONG_DURATION"]) || !isempty(inputs["STOR_HYDRO_LONG_DURATION"])))
+		lds_slack!(EP,inputs,setup)
+	end
+
     # Technologies
     # Model constraints, variables, expression related to dispatchable renewable resources
 
@@ -190,13 +194,12 @@ function operation_model!(EP::Model,setup::Dict, inputs::Dict)
         storage_all!(EP, inputs, setup)
     
         # Include Long Duration Storage only when modeling representative periods and long-duration storage
-        if inputs["REP_PERIOD"] > 1 && !isempty(inputs["STOR_LONG_DURATION"])
-            if setup["Benders"]==1
-                long_duration_storage_subperiod!(EP, inputs, setup)
-            else
-                long_duration_storage!(EP, inputs, setup)
-            end
+        if setup["Benders"]==1 && !isempty(inputs["STOR_LONG_DURATION"])
+            long_duration_storage_subperiod!(EP, inputs, setup)
+        elseif inputs["REP_PERIOD"] > 1 && !isempty(inputs["STOR_LONG_DURATION"])
+            long_duration_storage!(EP, inputs, setup)
         end
+    
         
         if !isempty(inputs["STOR_ASYMMETRIC"])
             storage_asymmetric!(EP, inputs, setup)
@@ -217,14 +220,12 @@ function operation_model!(EP::Model,setup::Dict, inputs::Dict)
     end
 
     # Model constraints, variables, expression related to reservoir hydropower resources with long duration storage
-    if inputs["REP_PERIOD"] > 1 && !isempty(inputs["STOR_HYDRO_LONG_DURATION"])
-        if setup["Benders"]==1
-            error("LDES constraints and Benders are not integrated yet")
-        else
-            hydro_inter_period_linkage!(EP, inputs)
-        end
+    if setup["Benders"]==1 && !isempty(inputs["STOR_HYDRO_LONG_DURATION"])
+        hydro_inter_period_linkage_subperiod!(EP, inputs)
+    elseif inputs["REP_PERIOD"] > 1 && !isempty(inputs["STOR_HYDRO_LONG_DURATION"])
+        hydro_inter_period_linkage!(EP, inputs)
     end
-
+    
     # Model constraints, variables, expression related to demand flexibility resources
     if !isempty(inputs["FLEX"])
         flexible_demand!(EP, inputs, setup)
@@ -313,7 +314,7 @@ function planning_model!(EP::Model,setup::Dict, inputs::Dict)
     
     # Model constraints, variables, expression related to reservoir hydropower resources with long duration storage
     if setup["Benders"]==1 && inputs["REP_PERIOD"] > 1 && !isempty(inputs["STOR_HYDRO_LONG_DURATION"])
-        error("LDES constraints and Benders are not integrated yet")
+        hydro_inter_period_linkage_planning!(EP, inputs)
     end
 
     # Policies
