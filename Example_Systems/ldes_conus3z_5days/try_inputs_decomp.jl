@@ -43,14 +43,14 @@ GenX.optimize!(model)
 GenX.optimize!(model_old)
 println(abs(GenX.objective_value(model) - GenX.objective_value(model_old))/GenX.objective_value(model_old))
 
-# mysetup["Benders"] = 1;
+mysetup["Benders"] = 1;
 
-# planning_problem = GenX.generate_planning_problem(mysetup,myinputs,PLANNING_OPTIMIZER);
+planning_problem = GenX.generate_planning_problem(mysetup,myinputs,PLANNING_OPTIMIZER);
 
-# decomp_subproblems = Dict();
-# for w in keys(myinputs_decomp)
-#     decomp_subproblems[w] = GenX.generate_operation_subproblem(mysetup, myinputs_decomp[w], SUBPROB_OPTIMIZER);
-# end
+decomp_subproblems = Dict();
+for w in keys(myinputs_decomp)
+    decomp_subproblems[w] = GenX.generate_operation_subproblem(mysetup, myinputs_decomp[w], SUBPROB_OPTIMIZER);
+end
 
 
 

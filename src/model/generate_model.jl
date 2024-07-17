@@ -308,7 +308,7 @@ function planning_model!(EP::Model,setup::Dict, inputs::Dict)
     end
 
     if setup["Benders"]==1 && inputs["REP_PERIOD"] > 1 && !isempty(inputs["STOR_LONG_DURATION"])
-        long_duration_energy_storage_planning!(EP, inputs, setup)
+        long_duration_storage_planning!(EP, inputs, setup)
     end
     
     # Model constraints, variables, expression related to reservoir hydropower resources with long duration storage
