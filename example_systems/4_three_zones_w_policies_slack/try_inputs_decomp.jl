@@ -3,7 +3,7 @@ using Pkg
 case = dirname(@__FILE__)
 
 Pkg.activate(dirname(dirname(case)))
-
+using Revise
 using GenX,Gurobi
 
 genx_settings = GenX.get_settings_path(case, "genx_settings.yml") # Settings YAML file path
@@ -25,18 +25,33 @@ settings_path = GenX.get_settings_path(case)
     end
 end
 
+(@isdefined GRB_ENV) || (const GRB_ENV = Gurobi.Env())
+
 myinputs = GenX.load_inputs(mysetup, case);
 
 myinputs_decomp = GenX.separate_inputs_subperiods(myinputs);
 
-OPTIMIZER = configure_solver(settings_path, Gurobi.Optimizer)
+OPTIMIZER = GenX.optimizer_with_attributes(()->Gurobi.Optimizer(GRB_ENV),"BarConvTol"=>1e-3,"Method"=>2,"Crossover"=>0)
 
-master_model = GenX.generate_investment_model(mysetup,myinputs,OPTIMIZER);
+PLANNING_OPTIMIZER = GenX.optimizer_with_attributes(()->Gurobi.Optimizer(GRB_ENV),"BarConvTol"=>1e-3,"Method"=>2,"MIPGap"=>1e-3,"Crossover"=>0)
 
-decomp_models = Dict();
+SUBPROB_OPTIMIZER = GenX.optimizer_with_attributes(()->Gurobi.Optimizer(GRB_ENV),"BarConvTol"=>1e-3,"Method"=>2,"Crossover"=>1)
+
+model = GenX.generate_model(mysetup,myinputs,OPTIMIZER);
+model_old = GenX.generate_model_legacy(mysetup,myinputs,OPTIMIZER);
+GenX.optimize!(model)
+GenX.optimize!(model_old)
+println(abs(GenX.objective_value(model) - GenX.objective_value(model_old)))
+
+mysetup["Benders"] = 1;
+
+planning_problem = GenX.generate_planning_problem(mysetup,myinputs,PLANNING_OPTIMIZER);
+
+decomp_subproblems = Dict();
 for w in keys(myinputs_decomp)
-    decomp_models[w] = GenX.generate_operation_model(mysetup, myinputs_decomp[w], OPTIMIZER);
+    decomp_subproblems[w] = GenX.generate_operation_subproblem(mysetup, myinputs_decomp[w], SUBPROB_OPTIMIZER);
 end
+
 
 
 
