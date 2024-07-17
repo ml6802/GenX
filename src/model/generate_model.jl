@@ -83,6 +83,10 @@ function generate_model(setup::Dict, inputs::Dict, OPTIMIZER::MOI.OptimizerWithA
     # Initialize Objective Function Expression
     EP[:eObj] = AffExpr(0.0)
 
+    if setup["Benders"]==1 && !isempty(inputs["VRE_STOR"])
+        error("Benders not yet supported with VRE-STOR")
+    end
+
     planning_model!(EP,setup,inputs)
 
     operation_model!(EP,setup,inputs)
@@ -188,7 +192,7 @@ function operation_model!(EP::Model,setup::Dict, inputs::Dict)
         # Include Long Duration Storage only when modeling representative periods and long-duration storage
         if inputs["REP_PERIOD"] > 1 && !isempty(inputs["STOR_LONG_DURATION"])
             if setup["Benders"]==1
-                error("LDES constraints and Benders are not integrated yet")
+                long_duration_storage_subperiod!(EP, inputs, setup)
             else
                 long_duration_storage!(EP, inputs, setup)
             end
@@ -304,17 +308,12 @@ function planning_model!(EP::Model,setup::Dict, inputs::Dict)
     end
 
     if setup["Benders"]==1 && inputs["REP_PERIOD"] > 1 && !isempty(inputs["STOR_LONG_DURATION"])
-        error("LDES constraints and Benders are not integrated yet")
+        long_duration_energy_storage_planning!(EP, inputs, setup)
     end
     
     # Model constraints, variables, expression related to reservoir hydropower resources with long duration storage
     if setup["Benders"]==1 && inputs["REP_PERIOD"] > 1 && !isempty(inputs["STOR_HYDRO_LONG_DURATION"])
         error("LDES constraints and Benders are not integrated yet")
-    end
-
-    # Model constraints, variables, expressions related to the co-located VRE-storage resources
-    if setup["Benders"]==1 && !isempty(inputs["VRE_STOR"])
-        error("Benders not yet supported with VRE-STOR")
     end
 
     # Policies

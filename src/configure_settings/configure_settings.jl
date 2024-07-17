@@ -33,7 +33,8 @@ function default_settings()
         "SystemFolder" => "system",
         "PoliciesFolder" => "policies",
         "ObjScale" => 1,
-        "Benders"=>0)
+        "Benders"=>0,
+        "LDES_Feasible"=>1)
 end
 
 @doc raw"""
