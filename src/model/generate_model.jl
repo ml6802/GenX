@@ -91,11 +91,6 @@ function generate_model(setup::Dict, inputs::Dict, OPTIMIZER::MOI.OptimizerWithA
 
     operation_model!(EP,setup,inputs)
 
-    # Model constraints, variables, expressions related to the co-located VRE-storage resources
-    if !isempty(inputs["VRE_STOR"])
-        vre_stor!(EP, inputs, setup)
-    end
-
     if setup["ModelingToGenerateAlternatives"] == 1
         mga!(EP, inputs, setup)
     end
@@ -235,6 +230,10 @@ function operation_model!(EP::Model,setup::Dict, inputs::Dict)
         thermal!(EP, inputs, setup)
     end
 
+    # Model constraints, variables, expressions related to the co-located VRE-storage resources
+    if setup["Benders"]==0 && !isempty(inputs["VRE_STOR"])
+        vre_stor!(EP, inputs, setup)
+    end
 
     # Policies
 
@@ -423,6 +422,10 @@ function generate_model_legacy(setup::Dict, inputs::Dict, OPTIMIZER::MOI.Optimiz
     if Z > 1 && setup["DC_OPF"] != 0
         dcopf_transmission!(EP, inputs, setup)
     end
+
+    if (setup["Benders"]==1 && (!isempty(inputs["STOR_LONG_DURATION"]) || !isempty(inputs["STOR_HYDRO_LONG_DURATION"])))||(inputs["REP_PERIOD"] > 1 && (!isempty(inputs["STOR_LONG_DURATION"]) || !isempty(inputs["STOR_HYDRO_LONG_DURATION"])))
+		lds_slack!(EP,inputs,setup)
+	end
 
     # Technologies
     # Model constraints, variables, expression related to dispatchable renewable resources

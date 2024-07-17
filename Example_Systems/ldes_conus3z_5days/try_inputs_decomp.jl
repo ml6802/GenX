@@ -31,26 +31,26 @@ myinputs = GenX.load_inputs(mysetup, case);
 
 myinputs_decomp = GenX.separate_inputs_subperiods(myinputs);
 
-OPTIMIZER = GenX.optimizer_with_attributes(()->Gurobi.Optimizer(GRB_ENV),"BarConvTol"=>1e-3,"Method"=>2,"Crossover"=>0)
+OPTIMIZER = GenX.optimizer_with_attributes(()->Gurobi.Optimizer(GRB_ENV),"BarConvTol"=>1e-6,"Method"=>2,"Crossover"=>1)
 
-PLANNING_OPTIMIZER = GenX.optimizer_with_attributes(()->Gurobi.Optimizer(GRB_ENV),"BarConvTol"=>1e-3,"Method"=>2,"MIPGap"=>1e-3,"Crossover"=>0)
+PLANNING_OPTIMIZER = GenX.optimizer_with_attributes(()->Gurobi.Optimizer(GRB_ENV),"BarConvTol"=>1e-6,"Method"=>2,"MIPGap"=>1e-3,"Crossover"=>0)
 
-SUBPROB_OPTIMIZER = GenX.optimizer_with_attributes(()->Gurobi.Optimizer(GRB_ENV),"BarConvTol"=>1e-3,"Method"=>2,"Crossover"=>1)
+SUBPROB_OPTIMIZER = GenX.optimizer_with_attributes(()->Gurobi.Optimizer(GRB_ENV),"BarConvTol"=>1e-6,"Method"=>2,"Crossover"=>1)
 
 model = GenX.generate_model(mysetup,myinputs,OPTIMIZER);
 model_old = GenX.generate_model_legacy(mysetup,myinputs,OPTIMIZER);
 GenX.optimize!(model)
 GenX.optimize!(model_old)
-println(abs(GenX.objective_value(model) - GenX.objective_value(model_old)))
+println(abs(GenX.objective_value(model) - GenX.objective_value(model_old))/GenX.objective_value(model_old))
 
-mysetup["Benders"] = 1;
+# mysetup["Benders"] = 1;
 
-planning_problem = GenX.generate_planning_problem(mysetup,myinputs,PLANNING_OPTIMIZER);
+# planning_problem = GenX.generate_planning_problem(mysetup,myinputs,PLANNING_OPTIMIZER);
 
-decomp_subproblems = Dict();
-for w in keys(myinputs_decomp)
-    decomp_subproblems[w] = GenX.generate_operation_subproblem(mysetup, myinputs_decomp[w], SUBPROB_OPTIMIZER);
-end
+# decomp_subproblems = Dict();
+# for w in keys(myinputs_decomp)
+#     decomp_subproblems[w] = GenX.generate_operation_subproblem(mysetup, myinputs_decomp[w], SUBPROB_OPTIMIZER);
+# end
 
 
 
