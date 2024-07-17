@@ -240,7 +240,7 @@ function operation_model!(EP::Model,setup::Dict, inputs::Dict)
     # CO2 emissions limits
     if setup["CO2Cap"] > 0
         if setup["Benders"]==1
-            error("CO2 caps and Benders are not integrated yet")
+            co2_cap_subperiod!(EP,inputs,setup)
         else
             co2_cap!(EP, inputs, setup)
         end
@@ -249,7 +249,7 @@ function operation_model!(EP::Model,setup::Dict, inputs::Dict)
     # Energy Share Requirement
     if setup["EnergyShareRequirement"] >= 1
         if setup["Benders"]==1
-            error("ESR and Benders are not integrated yet")
+            energy_share_requirement_subperiod!(EP,inputs,setup)
         else
             energy_share_requirement!(EP, inputs, setup)
         end
@@ -313,7 +313,7 @@ function planning_model!(EP::Model,setup::Dict, inputs::Dict)
     end
 
     # Model constraints, variables, expressions related to the co-located VRE-storage resources
-    if setup["Benders"]==1 && å!isempty(inputs["VRE_STOR"])
+    if setup["Benders"]==1 && !isempty(inputs["VRE_STOR"])
         error("Benders not yet supported with VRE-STOR")
     end
 
@@ -335,6 +335,16 @@ function planning_model!(EP::Model,setup::Dict, inputs::Dict)
 
     if setup["MaxCapReq"] == 1
         maximum_capacity_requirement!(EP, inputs, setup)
+    end
+
+    # CO2 emissions limits
+    if setup["CO2Cap"] > 0 && setup["Benders"]==1
+        co2_cap_planning!(EP,inputs,setup)
+    end
+
+    # Energy Share Requirement
+    if setup["EnergyShareRequirement"] >= 1 && setup["Benders"]==1
+        energy_share_requirement_planning!(EP,inputs,setup)
     end
 
 end
