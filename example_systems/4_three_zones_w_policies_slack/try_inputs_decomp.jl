@@ -3,7 +3,7 @@ using Pkg
 case = dirname(@__FILE__)
 
 Pkg.activate(dirname(dirname(case)))
-
+using Revise
 using GenX,Gurobi
 
 genx_settings = GenX.get_settings_path(case, "genx_settings.yml") # Settings YAML file path
@@ -37,12 +37,15 @@ GenX.optimize!(model)
 GenX.optimize!(model_old)
 println(abs(GenX.objective_value(model) - GenX.objective_value(model_old)))
 
-# master_model = GenX.generate_investment_model(mysetup,myinputs,OPTIMIZER);
+mysetup["Benders"] = 1;
 
-# decomp_models = Dict();
-# for w in keys(myinputs_decomp)
-#     decomp_models[w] = GenX.generate_operation_model(mysetup, myinputs_decomp[w], OPTIMIZER);
-# end
+planning_problem = GenX.generate_planning_problem(mysetup,myinputs,OPTIMIZER);
+
+decomp_subproblems = Dict();
+for w in keys(myinputs_decomp)
+    decomp_subproblems[w] = GenX.generate_operation_subproblem(mysetup, myinputs_decomp[w], OPTIMIZER);
+end
+
 
 
 
