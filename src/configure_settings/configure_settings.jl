@@ -34,7 +34,8 @@ function default_settings()
         "PoliciesFolder" => "policies",
         "ObjScale" => 1,
         "Benders"=>0,
-        "LDES_Feasible"=>1)
+        "LDES_Feasible"=>1,
+        "IntegerInvestments"=>0)
 end
 
 @doc raw"""

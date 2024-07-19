@@ -37,6 +37,10 @@ using Random
 using RecursiveArrayTools
 using Statistics
 using HiGHS
+using Distributed
+using DistributedArrays
+using ClusterManagers
+using Gurobi
 
 # Global scaling factor used when ParameterScale is on to shift values from MW to GW
 # DO NOT CHANGE THIS (Unless you do so very carefully)
@@ -44,6 +48,12 @@ using HiGHS
 # To translate $ to $M, multiply by ModelScalingFactor^2
 # To translate $/MWh to $M/GWh, multiply by ModelScalingFactor
 const ModelScalingFactor = 1e+3
+
+const GRB_ENV = Ref{Gurobi.Env}()
+function __init__()
+    GRB_ENV[] = Gurobi.Env()
+    return
+end
 
 """
 An abstract type that should be subtyped for users creating GenX resources.
@@ -74,6 +84,6 @@ include("time_domain_reduction/precluster.jl")
 
 include_all_in_folder("multi_stage")
 include_all_in_folder("additional_tools")
-include_all_in_folder("decomposition")
-
+include_all_in_folder("benders") 
+ 
 end

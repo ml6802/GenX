@@ -34,3 +34,45 @@ function separate_inputs_subperiods(inputs::Dict)
     return inputs_all
 
 end
+
+
+function generate_benders_inputs(setup::Dict,inputs::Dict,inputs_decomp::Dict)
+
+    planning_problem, planning_variables = init_planning_problem(setup,inputs);
+
+    subproblems_dist,planning_variables_sub = init_dist_subproblems(setup,inputs_decomp,planning_variables);
+
+    benders_inputs = Dict();
+	benders_inputs["planning_problem"] = planning_problem;
+	benders_inputs["planning_variables"] = planning_variables;
+
+    benders_inputs["subproblems"] = subproblems_dist;
+	benders_inputs["planning_variables_sub"] = planning_variables_sub;
+
+    return benders_inputs
+
+
+end
+
+function check_negative_capacities(EP::Model)
+
+	neg_cap_bool = false;
+	tol = -1e-8;
+	if any(value.(EP[:eTotalCap]).< tol) 
+			neg_cap_bool = true;
+	elseif haskey(EP,:eTotalCapEnergy)
+		if any(value.(EP[:eTotalCapEnergy]).< tol)
+			neg_cap_bool = true;
+		end
+	elseif haskey(EP,:eTotalCapCharge)
+		if any(value.(EP[:eTotalCapCharge]).< tol)
+			neg_cap_bool = true;
+		end
+	elseif haskey(EP,:eAvail_Trans_Cap)
+		if any(value.(EP[:eAvail_Trans_Cap]).< tol)
+			neg_cap_bool = true;
+		end
+	end
+	return neg_cap_bool
+	
+end

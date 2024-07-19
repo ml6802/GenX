@@ -19,3 +19,6 @@ MaxCapReq: 1
 MinCapReq: 1
 CO2Cap: 1
 WriteShadowPrices: 1
+Benders: 0
+LDES_Feasible: 0
+IntegerInvestments: 0
