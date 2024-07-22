@@ -1,6 +1,9 @@
 using Pkg
 
+case = dirname(@__FILE__)
+
 Pkg.activate("/home/fp0820/GenX")
+
 using GenX
 
 genx_settings = GenX.get_settings_path(case, "genx_settings.yml") # Settings YAML file path
@@ -14,7 +17,7 @@ addprocs(SlurmManager(ntasks);exeflags=["-t $cpus_per_task"])
 
 @everywhere begin
     import Pkg
-    Pkg.activate("/home/fp0820/GenX-Benders")
+    Pkg.activate("/home/fp0820/GenX")
     using GenX
 end
 

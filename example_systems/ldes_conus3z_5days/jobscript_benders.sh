@@ -11,11 +11,11 @@
 #SBATCH --mail-type=all          # send email when job ends
 #SBATCH --mail-user=fp0820@princeton.edu
 ######## #SBATCH --exclude=della-h12n16
-#SBATCH --constraint=cascade
+#########SBATCH --constraint=cascade
 ######## #SBATCH --nodelist=della-h12n16
 
 module purge
 module load gurobi/10.0.1
-module load julia/1.9.1
+module load julia/1.10.2
 
 julia Run_benders_della.jl
