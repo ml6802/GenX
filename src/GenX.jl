@@ -13,6 +13,7 @@ export mga
 export morris
 export simple_operation
 export choose_output_dir
+export restr_casefolder
 
 # Multi-stage methods
 export run_ddp
