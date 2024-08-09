@@ -33,9 +33,9 @@ benders_settings_path = GenX.get_settings_path(case, "benders_settings.yml")
 setup_benders = GenX.configure_benders(benders_settings_path) 
 setup = merge(setup,setup_benders);
 
-setup["BD_StabParam"] = 0.0;
-setup["BD_Stab_Method"]="off";
-GenX.run_genx_case_benders!(case, setup)
+# setup["BD_StabParam"] = 0.0;
+# setup["BD_Stab_Method"]="off";
+# GenX.run_genx_case_benders!(case, setup)
 
 setup["BD_StabParam"] = 0.5;
 setup["BD_Stab_Method"]="int_level_set";
