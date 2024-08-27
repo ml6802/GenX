@@ -1,4 +1,5 @@
 function write_benders_output(LB_hist::Vector{Float64},UB_hist::Vector{Float64},cpu_time::Vector{Float64},feasibility_hist::Vector{Float64},outpath::AbstractString, setup::Dict,inputs::Dict,planning_problem::Model)
+	println("Running with crossover on")
 	set_attribute(planning_problem, "Crossover", 1)
 	optimize!(planning_problem)
 	
