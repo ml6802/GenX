@@ -6,7 +6,7 @@ function lds_slack!(EP::Model, inputs::Dict,setup::Dict)
 
 	@constraint(EP,cPosSlack[w in 1:inputs["REP_PERIOD"]],vLDS_SLACK_MAX[w]>=0)
     
-    PenaltyValue = 1000*(inputs["Weights"]/inputs["H"])*inputs["Voll"][1] ;
+    PenaltyValue = 500*(inputs["Weights"]/inputs["H"])*inputs["Voll"][1] ;
     println("LDES slack penalty value is:")
     println(PenaltyValue)
 
