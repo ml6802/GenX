@@ -32,6 +32,7 @@ $ julia Run.jl
 Once the model has completed, results will write to the `results` directory.
 
 To run MGA with Benders, include the following settings in genx_settings.yml, with modifications as desired:
+```
 Benders: 1
 ModelingToGenerateAlternatives: 1
 ModelingToGenerateAlternativeSlack: 0.1
@@ -41,5 +42,6 @@ ModelingToGenerateAlternativeIterations: 5
 MGAMethod: 2
 ClusterMGAVecs: 0
 RelaxBudget: 0.05
+```
 
 Integer decisions are not supported yet.
