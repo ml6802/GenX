@@ -127,7 +127,7 @@ function get_local_planning_variables(subproblems_local::Vector{Dict{Any,Any}})
 
 end
 
-function solve_dist_subproblems(EP_subproblems::DArray{Dict{Any, Any}, 1, Vector{Dict{Any, Any}}},planning_sol::NamedTuple)
+function solve_dist_subproblems(EP_subproblems::DArray{Dict{Any, Any}, 1, Vector{Dict{Any, Any}}},planning_sol::NamedTuple,inputs)
 
     p_id = workers();
     np_id = length(p_id);
@@ -135,7 +135,7 @@ function solve_dist_subproblems(EP_subproblems::DArray{Dict{Any, Any}, 1, Vector
     sub_results = [Dict() for k in 1:np_id];
 
     @sync for k in 1:np_id
-              @async sub_results[k]= @fetchfrom p_id[k] solve_local_subproblem(localpart(EP_subproblems),planning_sol); ### This is equivalent to fetch(@spawnat p .....)
+              @async sub_results[k]= @fetchfrom p_id[k] solve_local_subproblem(localpart(EP_subproblems),planning_sol,inputs); ### This is equivalent to fetch(@spawnat p .....)
     end
 
 	sub_results = merge(sub_results...);
@@ -143,19 +143,19 @@ function solve_dist_subproblems(EP_subproblems::DArray{Dict{Any, Any}, 1, Vector
     return sub_results
 end
 
-function solve_local_subproblem(subproblem_local::Vector{Dict{Any,Any}},planning_sol::NamedTuple)
+function solve_local_subproblem(subproblem_local::Vector{Dict{Any,Any}},planning_sol::NamedTuple,inputs)
 
     local_sol=Dict();
     for m in subproblem_local
         EP = m["Model"];
         planning_variables_sub = m["planning_variables_sub"]
         w = m["SubPeriod"];
-		local_sol[w] = solve_subproblem(EP,planning_sol,planning_variables_sub);
+		local_sol[w] = solve_subproblem(EP,planning_sol,planning_variables_sub,inputs);
     end
     return local_sol
 end
 
-function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_sub::Vector{String})
+function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_sub::Vector{String},inputs)
 
 	
 	fix_planning_variables!(EP,planning_sol,planning_variables_sub)
@@ -164,6 +164,8 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
 	
 	if has_values(EP)
 		op_cost = objective_value(EP);
+        zone_cost = make_benders_zonal_opcost(inputs,EP)
+		emissions = value.(EP[:eEmissionsByZone])
 		lambda = [dual(FixRef(variable_by_name(EP,y))) for y in planning_variables_sub];
 		theta_coeff = 1;
 		if haskey(EP,:eObjSlack)
@@ -174,6 +176,8 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
 		
 	else
 		op_cost = 0;
+        zone_cost = make_benders_zonal_opcost(inputs,EP)
+		emissions = value.(EP[:eEmissionsByZone])
 		lambda = zeros(length(planning_variables_sub));
 		theta_coeff = 0;
 		feasibility_slack = 0;
@@ -190,7 +194,7 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
 		@warn "The subproblem solution failed. This should not happen, double check the input files"
 	end
     
-	return (op_cost=op_cost,lambda = lambda,theta_coeff=theta_coeff,feasibility_slack=feasibility_slack)
+	return (op_cost=op_cost,zone_cost = zone_cost, emissions = emissions,lambda = lambda,theta_coeff=theta_coeff,feasibility_slack=feasibility_slack)
 
 end
 

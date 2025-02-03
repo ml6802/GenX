@@ -36,6 +36,12 @@ function run_genx_case!(case::AbstractString, optimizer::Any = HiGHS.Optimizer)
     if mysetup["MultiStage"] == 0
         if mysetup["Benders"] == 0
             run_genx_case_simple!(case, mysetup, optimizer)
+        #elseif mysetup["PresetMGA"] == 1
+         #   benders_settings_path = get_settings_path(case, "benders_settings.yml")
+          #  mysetup_benders = configure_benders(benders_settings_path) 
+           # mysetup = merge(mysetup,mysetup_benders);
+
+            #run_genx_case_preset_mga!(case,mysetup)
         else
             benders_settings_path = get_settings_path(case, "benders_settings.yml")
             mysetup_benders = configure_benders(benders_settings_path) 
@@ -226,9 +232,22 @@ function run_genx_case_benders!(case::AbstractString, mysetup::Dict)
 
     benders_inputs = generate_benders_inputs(mysetup,myinputs,myinputs_decomp)
 
-    planning_problem, planning_sol,LB_hist,UB_hist,cpu_time,feasibility_hist  = benders(benders_inputs,mysetup);
-
+    planning_problem, planning_sol,operational_sol, LB_hist,UB_hist,cpu_time,feasibility_hist  = benders(benders_inputs,mysetup,myinputs);
+    opt_stats = (cpu_time=cpu_time, UB_hist = UB_hist)
     println("Benders decomposition took $(cpu_time[end]) seconds to run")
+
+    """ MGA Functionality """
+    if mysetup["ModelingToGenerateAlternatives"] == 1
+        # Write least-cost solution into DF for MGA results
+        dfResults = make_benders_results_df(planning_sol,operational_sol,case,mysetup,myinputs,myinputs_decomp)
+        println("Running Modelling to Generate Alternatives with Cutting-Plane Algorithm")
+        # Run MGA
+        benders_inputs["mga_vectors"] = generate_vecs(myinputs, mysetup)
+        results, sumtime_df = run_benders_mga(benders_inputs,mysetup, myinputs, opt_stats)
+        write_benders_mga_results!(dfResults, results, case, mysetup, myinputs, myinputs_decomp, sumtime_df)
+    end
+
+    
 
     println("Writing Output")
 
@@ -251,5 +270,38 @@ function run_genx_case_benders!(case::AbstractString, mysetup::Dict)
 	end
     
     elapsed_time = @elapsed write_benders_output(LB_hist,UB_hist,cpu_time,feasibility_hist,outputs_path,mysetup,myinputs,planning_problem);
+
+end
+
+
+function run_genx_case_preset_mga!(case,mysetup)
+
+    settings_path = get_settings_path(case)    
+    ### Cluster time series inputs if necessary and if specified by the user
+    if mysetup["TimeDomainReduction"] == 1
+        TDRpath = joinpath(case, mysetup["TimeDomainReductionFolder"])
+        system_path = joinpath(case, mysetup["SystemFolder"])
+        prevent_doubled_timedomainreduction(system_path)
+        if !time_domain_reduced_files_exist(TDRpath)
+            println("Clustering Time Series Data (Grouped)...")
+            cluster_inputs(case, settings_path, mysetup)
+        else
+            println("Time Series Data Already Clustered.")
+        end
+    end
+    mysetup["settings_path"] = settings_path;
+
+    myinputs = load_inputs(mysetup, case);
+    myinputs_decomp = separate_inputs_subperiods(myinputs);
+
+    benders_inputs = generate_benders_inputs(mysetup,myinputs,myinputs_decomp)
+        
+    # Write least-cost solution into DF for MGA results
+    dfResults = make_benders_results_df(planning_sol,operational_sol,case,mysetup,myinputs,myinputs_decomp)
+    println("Running Modelling to Generate Alternatives with Cutting-Plane Algorithm")
+    # Run MGA
+    TechTypes = unique(myinputs["dfGen"][myinputs["dfGen"][!, :MGA] .== 1, :Resource_Type])
+    results, sumtime_df = run_benders_mga(benders_inputs,mysetup)
+    write_benders_mga_results!(dfResults, results, case, setup, inputs, inputs_decomp, sumtime_df)
 
 end

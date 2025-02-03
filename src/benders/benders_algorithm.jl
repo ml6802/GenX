@@ -1,5 +1,5 @@
 
-function benders(benders_inputs::Dict{Any,Any},setup::Dict)
+function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 	
     #### Algorithm from:
     ### Pecci, F. and Jenkins, J. D. “Regularized Benders Decomposition for High Performance Capacity Expansion Models”. arXiv:2403.02559 [math]. URL: http://arxiv.org/abs/2403.02559.
@@ -36,7 +36,8 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict)
 	end
 
     #### Initialize UB and LB
-	planning_sol = solve_planning_problem(planning_problem,planning_variables);
+	planning_sol = solve_planning_problem(planning_problem,planning_variables,inputs);
+	subop_sol = Dict()
 
     UB = Inf;
     LB = planning_sol.LB;
@@ -53,7 +54,7 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict)
 		
 		start_subop_sol = time();
 
-        subop_sol = solve_dist_subproblems(subproblems,planning_sol);
+        subop_sol = solve_dist_subproblems(subproblems,planning_sol,inputs);
         
 		cpu_subop_sol = time()-start_subop_sol;
 		println("Solving the subproblems required $cpu_subop_sol seconds")
@@ -73,7 +74,7 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict)
 		println("done (it took $time_planning_update s).")
 
 		start_planning_sol = time()
-		unst_planning_sol = solve_planning_problem(planning_problem,planning_variables);
+		unst_planning_sol = solve_planning_problem(planning_problem,planning_variables,inputs);
 		cpu_planning_sol = time()-start_planning_sol;
 		println("Solving the planning problem required $cpu_planning_sol seconds")
 
@@ -96,7 +97,7 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict)
 				UB = Inf;
 				set_integer.(integer_variables)
 				set_binary.(binary_variables)
-				planning_sol = solve_planning_problem(planning_problem,planning_variables);
+				planning_sol = solve_planning_problem(planning_problem,planning_variables,inputs);
 				LB = planning_sol.LB;
 				planning_sol_best = deepcopy(planning_sol);
 				integer_routine_flag = false;
@@ -120,7 +121,7 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict)
 						fix(v,unst_planning_sol.values[name(v)];force=true)
 					end
                     println("Solving the interior level set problem with γ = $γ")
-					planning_sol = solve_int_level_set_problem(planning_problem,planning_variables,unst_planning_sol,LB,UB,γ);
+					planning_sol = solve_int_level_set_problem(planning_problem,planning_variables,unst_planning_sol,LB,UB,γ,inputs);
 					unfix.(integer_variables)
 					unfix.(binary_variables)
 					set_integer.(integer_variables)
@@ -129,7 +130,7 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict)
 					set_lower_bound.(binary_variables,0.0)
 				else
                     println("Solving the interior level set problem with γ = $γ")
-					planning_sol = solve_int_level_set_problem(planning_problem,planning_variables,unst_planning_sol,LB,UB,γ);
+					planning_sol = solve_int_level_set_problem(planning_problem,planning_variables,unst_planning_sol,LB,UB,γ,inputs);
 				end
 				cpu_stab_method = time()-start_stab_method;
 				println("Solving the interior level set problem required $cpu_stab_method seconds")
@@ -141,7 +142,7 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict)
 
     end
 
-	return (planning_problem=planning_problem,planning_sol = planning_sol_best,LB_hist = LB_hist,UB_hist = UB_hist,cpu_time = cpu_time,feasibility_hist = feasibility_hist)
+	return (planning_problem=planning_problem,planning_sol = planning_sol_best,operational_sol = subop_sol,LB_hist = LB_hist,UB_hist = UB_hist,cpu_time = cpu_time,feasibility_hist = feasibility_hist)
 end
 
 function update_planning_problem_multi_cuts!(EP::Model,subop_sol::Dict,planning_sol::NamedTuple,planning_variables_sub::Dict)

@@ -16,6 +16,14 @@ function generate_planning_problem(setup::Dict, inputs::Dict, OPTIMIZER::MOI.Opt
 
     @variable(EP,vTHETA[1:inputs["REP_PERIOD"]]>=0)
 
+	if setup["ModelingToGenerateAlternatives"] == 1
+		Z = inputs["Z"]
+		TechTypes = collect(unique(inputs["RESOURCES"].resource_type))
+		@variable(EP, vSumvCap[TechTypes = 1:length(TechTypes), z = 1:Z] >= 0)
+		@constraint(EP, cCapEquiv[tt = 1:length(TechTypes), z = 1:Z], vSumvCap[tt,z] == sum(EP[:eTotalCap][y] for y in  inputs["RESOURCES"][(inputs["RESOURCES"].resource_type .== inputs["RESOURCES"].resource_type[tt]) .& (inputs["RESOURCES"].zone .== z)].id))
+	
+	end
+
     ## Define the objective function
     @objective(EP, Min, setup["ObjScale"]*(EP[:eObj]+sum(vTHETA)))
 
@@ -61,13 +69,14 @@ end
 
 
 
-function solve_planning_problem(EP::Model,planning_variables::Vector{String})
+function solve_planning_problem(EP::Model,planning_variables::Vector{String},inputs)
 	
 	if any(is_integer.(all_variables(EP)))
 		println("The planning model is a MILP")
 		optimize!(EP)
 			if has_values(EP) #
-				planning_sol =  (LB = objective_value(EP), inv_cost =value(EP[:eObj]), values =Dict([s=>value.(variable_by_name(EP,s)) for s in planning_variables]), theta = value.(EP[:vTHETA])) 
+				zone_inv_cost = make_benders_zonal_invcost(inputs, EP)
+				planning_sol =  (LB = objective_value(EP), inv_cost =value(EP[:eObj]), zone_inv_cost = zone_inv_cost,values =Dict([s=>value.(variable_by_name(EP,s)) for s in planning_variables]), theta = value.(EP[:vTHETA])) 
 			else
 				compute_conflict!(EP)
 				list_of_conflicting_constraints = ConstraintRef[];
@@ -93,7 +102,8 @@ function solve_planning_problem(EP::Model,planning_variables::Vector{String})
 				#set_attribute(EP, "BarHomogeneous", 1)
 				optimize!(EP)
 				if has_values(EP)
-					planning_sol =  (LB = objective_value(EP), inv_cost =value(EP[:eObj]), values =Dict([s=>value.(variable_by_name(EP,s)) for s in planning_variables]), theta = value.(EP[:vTHETA])) 
+					zone_inv_cost = make_benders_zonal_invcost(inputs, EP)
+					planning_sol =  (LB = objective_value(EP), inv_cost =value(EP[:eObj]), zone_inv_cost = zone_inv_cost,values =Dict([s=>value.(variable_by_name(EP,s)) for s in planning_variables]), theta = value.(EP[:vTHETA])) 
 					set_attribute(EP, "Crossover", 0)
 					#set_attribute(EP, "BarHomogeneous", -1)
 				else			
@@ -101,21 +111,24 @@ function solve_planning_problem(EP::Model,planning_variables::Vector{String})
 					set_attribute(EP, "BarHomogeneous", 1)
 					optimize!(EP)
 					if has_values(EP)
-						planning_sol =  (LB = objective_value(EP), inv_cost =value(EP[:eObj]), values =Dict([s=>value.(variable_by_name(EP,s)) for s in planning_variables]), theta = value.(EP[:vTHETA])) 
+						zone_inv_cost = make_benders_zonal_invcost(inputs, EP)
+						planning_sol =  (LB = objective_value(EP), inv_cost =value(EP[:eObj]), zone_inv_cost = zone_inv_cost,values =Dict([s=>value.(variable_by_name(EP,s)) for s in planning_variables]), theta = value.(EP[:vTHETA])) 
 						set_attribute(EP, "BarHomogeneous", -1)
 					else
 						@error "The planning solution failed. This should not happen"
 					end
 				end
 			else
-				planning_sol =  (LB = objective_value(EP), inv_cost =value(EP[:eObj]), values =Dict([s=>value.(variable_by_name(EP,s)) for s in planning_variables]), theta = value.(EP[:vTHETA])) 
+				zone_inv_cost = make_benders_zonal_invcost(inputs, EP)
+				planning_sol =  (LB = objective_value(EP), inv_cost =value(EP[:eObj]), zone_inv_cost = zone_inv_cost,values =Dict([s=>value.(variable_by_name(EP,s)) for s in planning_variables]), theta = value.(EP[:vTHETA])) 
 			end
 		else
 			println("The planning problem solution failed, trying with BarHomogenous=1")
 			set_attribute(EP, "BarHomogeneous", 1)
 			optimize!(EP)
 			if has_values(EP)
-				planning_sol =  (LB = objective_value(EP), inv_cost =value(EP[:eObj]), values =Dict([s=>value.(variable_by_name(EP,s)) for s in planning_variables]), theta = value.(EP[:vTHETA])) 
+				zone_inv_cost = make_benders_zonal_invcost(inputs, EP)
+				planning_sol =  (LB = objective_value(EP), inv_cost =value(EP[:eObj]), zone_inv_cost = zone_inv_cost,values =Dict([s=>value.(variable_by_name(EP,s)) for s in planning_variables]), theta = value.(EP[:vTHETA])) 
 				set_attribute(EP, "BarHomogeneous", -1)
 			else
 				@error "The planning solution failed. This should not happen"

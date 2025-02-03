@@ -103,11 +103,11 @@ function validate_settings!(settings::Dict{Any, Any})
         settings["Benders"] = 0;
     end
 
-    if settings["ModelingToGenerateAlternatives"] == 1 && settings["Benders"] == 1
-        Base.depwarn("""MGA and Benders are not integrated yet, deactivating Benders.""",
-            :validate_settings!, force = true)
-        settings["Benders"] = 0;
-    end
+    #if settings["ModelingToGenerateAlternatives"] == 1 && settings["Benders"] == 1
+       # Base.depwarn("""MGA and Benders are not integrated yet, deactivating Benders.""",
+        #    :validate_settings!, force = true)
+        #settings["Benders"] = 0;
+    #end
 
 
 end
