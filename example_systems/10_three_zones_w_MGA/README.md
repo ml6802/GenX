@@ -43,5 +43,5 @@ MGAMethod: 2
 ClusterMGAVecs: 0
 RelaxBudget: 0.05
 ```
-
+Otherwise, follow MGA directions on GenX Documentation.
 Integer decisions are not supported yet.
