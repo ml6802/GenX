@@ -37,10 +37,10 @@ function load_network_data!(setup::Dict, path::AbstractString, inputs_nw::Dict)
 
     ## Inputs for the DC-OPF 
     if setup["DC_OPF"] == 1
-        if setup["NetworkExpansion"] == 1
-            @warn("Because the DC_OPF flag is active, GenX will not allow any transmission capacity expansion. Set the DC_OPF flag to 0 if you want to optimize tranmission capacity expansion.")
-            setup["NetworkExpansion"] = 0
-        end
+        #if setup["NetworkExpansion"] == 1
+        #    @warn("Because the DC_OPF flag is active, GenX will not allow any transmission capacity expansion. Set the DC_OPF flag to 0 if you want to optimize tranmission capacity expansion.")
+        #    setup["NetworkExpansion"] = 0
+        #end
         println("Reading DC-OPF values...")
         # Transmission line voltage (in kV)
         line_voltage_kV = to_floats(:Line_Voltage_kV)
@@ -52,6 +52,11 @@ function load_network_data!(setup::Dict, path::AbstractString, inputs_nw::Dict)
         # MW = (kV)^2/Ohms 
         inputs_nw["pDC_OPF_coeff"] = ((line_voltage_kV .^ 2) ./ line_reactance_Ohms) /
                                      scale_factor
+        # DC-OPF transmission capacity (in MW) expansion data:
+        inputs_nw["pMax_quantized_Line_Reinforcement"] = to_floats(:pMax_quantized_MW) /
+                                                         scale_factor # convert to GW
+        inputs_nw["Max_Trans_Cap"] = floor(Array{Int64}, (to_floats(:Line_Max_Reinforcement_MW)./
+                                           to_floats(:pMax_quantized_MW))) # Maximum number of quantized reinforcements allowed
     end
 
     # Maximum possible flow after reinforcement for use in linear segments of piecewise approximation

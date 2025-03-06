@@ -163,24 +163,40 @@ function transmission_capacity_decisions!(EP, inputs::Dict, setup::Dict)
     ### Variables ###
 
     if NetworkExpansion == 1
-        # Transmission network capacity reinforcements per line
-        @variable(EP, vNEW_TRANS_CAP[l in EXPANSION_LINES]>=0)
+        if setup["IntegerInvestments"] == 1 && setup["DC_OPF"] == 0
+            # Transmission network capacity reinforcements per line, integer
+            @variable(EP, vNEW_TRANS_LINES[l in EXPANSION_LINES] in Int, lower_bound=0)
+        elseif setup["DC_OPF"] == 1
+            @variable(EP, vNEW_TRANS_LINES[l in EXPANSION_LINES] in Parameter(0))
+        else
+            # Transmission network capacity reinforcements per line
+            @variable(EP, vNEW_TRANS_CAP[l in EXPANSION_LINES]>=0)
+        end
     end
 
     ### Expressions ###
     @expression(EP, eTransMax[l = 1:L], inputs["pTrans_Max"][l])
-    
+
     ## Transmission power flow and loss related expressions:
     # Total availabile maximum transmission capacity is the sum of existing maximum transmission capacity plus new transmission capacity
     if NetworkExpansion == 1
-        @expression(EP, eAvail_Trans_Cap[l = 1:L],
+        if setup["IntegerInvestments"] == 1 || setup["DC_OPF"] == 1
+            @expression(EP, eAvail_Trans_Cap[l = 1:L],
             if l in EXPANSION_LINES
-                eTransMax[l] + vNEW_TRANS_CAP[l]
+                eTransMax[l] + vNEW_TRANS_LINES[l]*inputs["pMax_quantized_Line_Reinforcement"][l]
             else
-                eTransMax[l] + EP[:vZERO]
+                eTransMax[l]
             end)
+        else 
+            @expression(EP, eAvail_Trans_Cap[l = 1:L],
+                if l in EXPANSION_LINES
+                    eTransMax[l] + vNEW_TRANS_CAP[l]
+                else
+                    eTransMax[l] + EP[:vZERO]
+                end)
+            end
+        end
     else
         @expression(EP, eAvail_Trans_Cap[l = 1:L], eTransMax[l]+EP[:vZERO])
     end
-
 end

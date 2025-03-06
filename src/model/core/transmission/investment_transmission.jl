@@ -42,8 +42,13 @@ function investment_transmission!(EP::Model, inputs::Dict, setup::Dict)
     end
 
     if NetworkExpansion == 1
-        # Transmission network capacity reinforcements per line
-        @variable(EP, vNEW_TRANS_CAP[l in EXPANSION_LINES]>=0)
+        if setup["IntegerInvestments"] == 1 || setup["DC_OPF"] == 1
+            # Transmission network capacity reinforcements per line, integer
+            @variable(EP, vNEW_TRANS_LINES[l in EXPANSION_LINES] in Int, lower_bound=0)
+        else
+            # Transmission network capacity reinforcements per line
+            @variable(EP, vNEW_TRANS_CAP[l in EXPANSION_LINES]>=0)
+        end
     end
 
     ### Expressions ###
@@ -57,12 +62,21 @@ function investment_transmission!(EP::Model, inputs::Dict, setup::Dict)
     ## Transmission power flow and loss related expressions:
     # Total availabile maximum transmission capacity is the sum of existing maximum transmission capacity plus new transmission capacity
     if NetworkExpansion == 1
-        @expression(EP, eAvail_Trans_Cap[l = 1:L],
+        if setup["IntegerInvestments"] == 1 || setup["DC_OPF"] == 1
+            @expression(EP, eAvail_Trans_Cap[l = 1:L],
+            if l in EXPANSION_LINES
+                eTransMax[l] + vNEW_TRANS_LINES[l]*inputs["pMax_quantized_Line_Reinforcement"][l]
+            else
+                eTransMax[l]
+            end)
+        else
+            @expression(EP, eAvail_Trans_Cap[l = 1:L],
             if l in EXPANSION_LINES
                 eTransMax[l] + vNEW_TRANS_CAP[l]
             else
                 eTransMax[l] + EP[:vZERO]
             end)
+        end
     else
         @expression(EP, eAvail_Trans_Cap[l = 1:L], eTransMax[l]+EP[:vZERO])
     end
@@ -70,11 +84,17 @@ function investment_transmission!(EP::Model, inputs::Dict, setup::Dict)
     ## Objective Function Expressions ##
 
     if NetworkExpansion == 1
-        @expression(EP,
-            eTotalCNetworkExp,
-            sum(vNEW_TRANS_CAP[l] * inputs["pC_Line_Reinforcement"][l]
-            for l in EXPANSION_LINES))
-
+        if setup["IntegerInvestments"] == 1 || setup["DC_OPF"] == 1
+            @expression(EP,
+                eTotalCNetworkExp,
+                sum(vNEW_TRANS_LINES[l] * inputs["pMax_quantized_Line_Reinforcement"][l] * inputs["pC_Line_Reinforcement"][l]
+                for l in EXPANSION_LINES))
+        else
+            @expression(EP,
+                eTotalCNetworkExp,
+                sum(vNEW_TRANS_CAP[l] * inputs["pC_Line_Reinforcement"][l]
+                for l in EXPANSION_LINES))
+        end
         if MultiStage == 1
             # OPEX multiplier to count multiple years between two model stages
             # We divide by OPEXMULT since we are going to multiply the entire objective function by this term later,
@@ -107,6 +127,12 @@ function investment_transmission!(EP::Model, inputs::Dict, setup::Dict)
         @constraint(EP,
             cMaxLineReinforcement[l in EXPANSION_LINES],
             vNEW_TRANS_CAP[l]<=inputs["pMax_Line_Reinforcement"][l])
+        if setup["IntegerInvestments"] == 1 || setup["DC_OPF"] == 1
+            # Constrain maximum single-stage line capacity reinforcement for lines eligible for expansion with integers
+            @constraint(EP,
+                cMaxLineReinforcement[l in EXPANSION_LINES],
+                vNEW_TRANS_LINES[l]<=inputs["Max_Trans_Cap"][l]) 
+        end
     end
     #END network expansion contraints
 

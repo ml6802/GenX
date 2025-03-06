@@ -36,12 +36,18 @@ function dcopf_transmission!(EP::Model, inputs::Dict, setup::Dict)
 
     ### DC-OPF constraints ###
 
-    # Power flow constraint:: vFLOW = DC_OPF_coeff * (vANGLE[START_ZONE] - vANGLE[END_ZONE])
+    # Power flow constraint existing lines:: vFLOW = DC_OPF_coeff * (vANGLE[START_ZONE] - vANGLE[END_ZONE])
     @constraint(EP,
         cPOWER_FLOW_OPF[l = 1:L, t = 1:T],
         EP[:vFLOW][l,
             t]==inputs["pDC_OPF_coeff"][l] *
                 sum(inputs["pNet_Map"][l, z] * vANGLE[z, t] for z in 1:Z))
+
+    #Power Flow in the candidate expansion lines  note --- vNEW_TRANS_LINES is a parameter so this is not quadratic
+    @constraint(EP,
+    cPOWER_FLOW_OPF_EXPANSION[l in EXPANSION_LINES, t = 1:T],
+    EP[:vFLOW][l,t] == vNEW_TRANS_LINES[l]*inputs["pDC_OPF_coeff"][l] *
+            sum(inputs["pNet_Map"][l, z] * vANGLE[z, t] for z in 1:Z))
 
     # Bus angle limits (except slack bus)
     @constraints(EP,

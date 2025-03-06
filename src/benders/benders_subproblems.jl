@@ -201,7 +201,11 @@ end
 function fix_planning_variables!(EP::Model,planning_sol::NamedTuple,planning_variables_sub::Vector{String})
 	for y in planning_variables_sub
 		vy = variable_by_name(EP,y);
-		fix(vy,planning_sol.values[y];force=true)
+        if is_parameter(vy):
+            set_parameter_value(vy,planning_sol.values[y])
+        else
+            fix(vy,planning_sol.values[y];force=true)
+        end
 		if is_integer(vy)
 			unset_integer(vy)
 		elseif is_binary(vy)
