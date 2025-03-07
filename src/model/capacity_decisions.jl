@@ -194,7 +194,6 @@ function transmission_capacity_decisions!(EP, inputs::Dict, setup::Dict)
                 else
                     eTransMax[l] + EP[:vZERO]
                 end)
-            end
         end
     else
         @expression(EP, eAvail_Trans_Cap[l = 1:L], eTransMax[l]+EP[:vZERO])
