@@ -135,6 +135,7 @@ function write_capacity_benders(inputs::Dict, master_sol::NamedTuple)
 	master_sol_df = DataFrame(key = collect(keys(master_sol.values)), vals = collect(master_sol.values[i] for i in collect(keys(master_sol.values))))
 	sort!(master_sol_df,:key)
 	capacity_names = vcat(resources,lines)
+	print(capacity_names)
 	cap_vec = [existing_cap_mw;zeros(length(lines))]
 	counter = 0
 	for i in eachindex(master_sol_df.key)
@@ -167,11 +168,12 @@ function write_capacity_benders(inputs::Dict, master_sol::NamedTuple)
 			cap_vec[counter+parse(Int64,num[1])] = master_sol_df.vals[i]
 		end
 	end
-	cap_mat = Array{Union{String,Float64},2}(undef,(3,length(capacity_names)))
-	cap_mat[1,:] = reshape(capacity_names,(1,:))
-	cap_mat[2,:] = cap_vec'
-	cap_mat = add_types(inputs,cap_mat)
-	df_summary = summarize_type_capacities(inputs, cap_mat, cap_mat[3,:])
+	df_summary = DataFrame(cap_vec', capacity_names)
+	#cap_mat = Array{Union{String,Float64},2}(undef,(3,length(capacity_names)))
+	#cap_mat[1,:] = reshape(capacity_names,(1,:))
+	#cap_mat[2,:] = cap_vec'
+	#cap_mat = add_types(inputs,cap_mat)
+	#df_summary = summarize_type_capacities(inputs, cap_mat, cap_mat[3,:])
 	return df_summary
 end
 
