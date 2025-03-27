@@ -44,7 +44,7 @@ function investment_transmission!(EP::Model, inputs::Dict, setup::Dict)
     if NetworkExpansion == 1
         if setup["IntegerInvestments"] == 1 || setup["DC_OPF"] == 1
             # Transmission network capacity reinforcements per line, integer
-            @variable(EP, vNEW_TRANS_LINES[l in EXPANSION_LINES] in Int, lower_bound=0)
+            @variable(EP, vNEW_TRANS_LINES[l in EXPANSION_LINES]>=0, Int)
         else
             # Transmission network capacity reinforcements per line
             @variable(EP, vNEW_TRANS_CAP[l in EXPANSION_LINES]>=0)
@@ -65,7 +65,7 @@ function investment_transmission!(EP::Model, inputs::Dict, setup::Dict)
         if setup["IntegerInvestments"] == 1 || setup["DC_OPF"] == 1
             @expression(EP, eAvail_Trans_Cap[l = 1:L],
             if l in EXPANSION_LINES
-                eTransMax[l] + vNEW_TRANS_LINES[l]*inputs["pMax_quantized_Line_Reinforcement"][l]
+                eTransMax[l] + vNEW_TRANS_LINES[l]*inputs["Line_Reinforcement_Cap_Size"][l]
             else
                 eTransMax[l]
             end)
@@ -87,7 +87,7 @@ function investment_transmission!(EP::Model, inputs::Dict, setup::Dict)
         if setup["IntegerInvestments"] == 1 || setup["DC_OPF"] == 1
             @expression(EP,
                 eTotalCNetworkExp,
-                sum(vNEW_TRANS_LINES[l] * inputs["pMax_quantized_Line_Reinforcement"][l] * inputs["pC_Line_Reinforcement"][l]
+                sum(vNEW_TRANS_LINES[l] * inputs["Line_Reinforcement_Cap_Size"][l] * inputs["pC_Line_Reinforcement"][l]
                 for l in EXPANSION_LINES))
         else
             @expression(EP,

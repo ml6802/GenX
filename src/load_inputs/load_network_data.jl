@@ -52,11 +52,6 @@ function load_network_data!(setup::Dict, path::AbstractString, inputs_nw::Dict)
         # MW = (kV)^2/Ohms 
         inputs_nw["pDC_OPF_coeff"] = ((line_voltage_kV .^ 2) ./ line_reactance_Ohms) /
                                      scale_factor
-        # DC-OPF transmission capacity (in MW) expansion data:
-        inputs_nw["pMax_quantized_Line_Reinforcement"] = to_floats(:pMax_quantized_MW) /
-                                                         scale_factor # convert to GW
-        inputs_nw["Max_Trans_Cap"] = floor(Array{Int64}, (to_floats(:Line_Max_Reinforcement_MW)./
-                                           to_floats(:pMax_quantized_MW))) # Maximum number of quantized reinforcements allowed
     end
 
     # Maximum possible flow after reinforcement for use in linear segments of piecewise approximation
@@ -108,6 +103,15 @@ function load_network_data!(setup::Dict, path::AbstractString, inputs_nw::Dict)
 
     println(filename * " Successfully Read!")
 
+
+     # DC-OPF transmission capacity (in MW) expansion data:
+    if setup["NetworkExpansion"] == 1
+        filename = "Candidate_line.csv"
+        network_var = load_dataframe(joinpath(path, filename))
+        inputs_nw["Line_Reinforcement_Cap_Size"] = to_floats(:pMax_quantized_MW) /
+                                                                                    scale_factor # convert to GW
+        inputs_nw["Max_Trans_Cap"] = calculate_integer_quotients(network_var)
+    end
     return network_var
 end
 
@@ -132,6 +136,18 @@ function load_network_map_from_list(network_var::DataFrame, Z, L, list_columns)
     end
     mat
 end
+
+function calculate_integer_quotients(df::DataFrame)
+    quotients = Int[] # Initialize an empty vector of Ints
+    for row in eachrow(df)
+        quotient = row.Line_Max_Reinforcement_MW / row.pMax_quantized_MW
+        integer_quotient = floor(Int, quotient) # Approximate to nearest integer <= quotient
+        push!(quotients, integer_quotient)
+    end
+    return quotients
+end
+
+
 
 @doc raw"""
     load_network_map_from_matrix(network_var::DataFrame, Z, L)
