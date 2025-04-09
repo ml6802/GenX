@@ -1,7 +1,31 @@
 @doc raw"""
 	load_inputs(setup::Dict,path::AbstractString)
 
-Loads various data inputs from multiple input .csv files in path directory and stores variables in a Dict (dictionary) object for use in model() function
+Loads inputs into a dictionary. Calls either load_inputs_csv or load_inputs_portfolio depending on the value of "InputType" in genx_settings.yaml
+
+inputs:
+setup - dict object containing setup parameters
+path - string path to working directory
+portfolio - Sienna portfolio required for load_inputs_portfolios
+
+returns: Dict (dictionary) object containing all data inputs
+"""
+function load_inputs(setup::Dict, path::AbstractString, portfolio::Portfolio)
+
+    if isnothing(portfolio)
+        inputs = load_inputs_csv(setup, path)
+    else
+        println("Loading inputs from portfolio")
+        inputs = load_inputs_portfolio(setup, portfolio, path)
+    end
+
+    return inputs
+end
+
+@doc raw"""
+	load_inputs_csv(setup::Dict,path::AbstractString)
+
+Reads inputs from a set of CSV files and stores data in a dictionary.
 
 inputs:
 setup - dict object containing setup parameters
@@ -9,7 +33,7 @@ path - string path to working directory
 
 returns: Dict (dictionary) object containing all data inputs
 """
-function load_inputs(setup::Dict, path::AbstractString)
+function load_inputs_csv(setup::Dict, path::AbstractString)
 
     ## Read input files
     println("Reading Input CSV Files")
@@ -86,6 +110,103 @@ function load_inputs(setup::Dict, path::AbstractString)
                                            scale_factor
 
     println("CSV Files Successfully Read In From $path")
+
+    return inputs
+end
+
+# Define generic constant for TransportTechnologies
+const GenericTransportTechnology = Union{
+    PSIP.ACTransportTechnology,
+    PSIP.HVDCTransportTechnology,
+}
+
+"""
+	load_inputs_portfolio(setup::Dict, portfolio::PSIP.Portfolio)
+
+Loads various data inputs from a PSIP Portfolio and stores variables in a Dict (dictionary) object for use in model() function
+
+inputs:
+setup - dict object containing setup parameters
+portfolio - Portfolio containing input data constructed from database
+path - string path to working directory
+
+returns: Dict (dictionary) object containing all data inputs
+"""
+function load_inputs_portfolio(setup::Dict, portfolio::PSIP.Portfolio, path::AbstractString)
+
+    # Need to generate portfolios 
+    system_path = joinpath(path, setup["SystemFolder"])
+    resources_path = joinpath(path, setup["ResourcesFolder"])
+    policies_path = joinpath(path, setup["PoliciesFolder"])
+
+    ## Declare Dict (dictionary) object used to store parameters
+    inputs = Dict()
+    
+    # Read input data about power network topology, operating and expansion attributes
+
+    #Check if network exists in portfolio
+    if length(collect(get_technologies(GenericTransportTechnology, portfolio))) != 0
+        load_network_data_p!(setup, portfolio, inputs)
+    else
+        inputs["Z"] = 1
+        inputs["L"] = 0
+    end
+
+    # Read temporal-resolved load data, and clustering information if relevant
+    load_demand_data!(setup, portfolio, inputs)
+    # Read fuel cost data, including time-varying fuel costs
+    load_fuels_data_p!(setup, portfolio, inputs)
+    # Read in generator/resource related inputs
+    load_resources_data_p!(inputs, setup, portfolio, path, resources_path)
+    # Read in generator/resource availability profiles
+    load_generators_variability!(setup, portfolio, inputs)
+
+    validatetimebasis(inputs)
+
+    #Need to do this one
+    if setup["CapacityReserveMargin"] == 1 #TODO
+        load_cap_reserve_margin!(setup, portfolio, inputs)
+        if inputs["Z"] > 1
+            load_cap_reserve_margin_trans!(setup, portfolio, network_var)
+        end
+    end
+
+    # Read in general configuration parameters for operational reserves (resource-specific reserve parameters are read in load_resources_data)
+    if setup["OperationalReserves"] == 1 #TODO
+        load_operational_reserves!(setup, system_path, inputs)
+    end
+
+    if setup["MinCapReq"] == 1
+        load_minimum_capacity_requirement_p!(portfolio, inputs, setup)
+    end
+
+    if setup["MaxCapReq"] == 1 #TODO
+        load_maximum_capacity_requirement!(policies_path, inputs, setup)
+    end
+
+    if setup["EnergyShareRequirement"] == 1 #TODO
+        load_energy_share_requirement!(setup, policies_path, inputs)
+    end
+
+    if setup["CO2Cap"] >= 1
+        load_co2_cap!(setup, portfolio, inputs)
+    end
+
+    if !isempty(inputs["VRE_STOR"]) #TODO
+        load_vre_stor_variability!(setup, path, inputs)
+    end
+
+    # Read in mapping of modeled periods to representative periods
+    if is_period_map_necessary(inputs) && is_period_map_exist(setup, path)
+        load_period_map!(setup, path, inputs)
+    end
+
+    # Virtual charge discharge cost
+    scale_factor = setup["ParameterScale"] == 1 ? ModelScalingFactor : 1
+    inputs["VirtualChargeDischargeCost"] = setup["VirtualChargeDischargeCost"] /
+                                           scale_factor
+
+    println("Portfolio successfully read")
 
     return inputs
 end

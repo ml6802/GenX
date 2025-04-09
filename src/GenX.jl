@@ -37,6 +37,11 @@ using RecursiveArrayTools
 using Statistics
 using HiGHS
 using Logging
+using PowerSystems
+using InfrastructureSystems
+using PowerSystemsInvestmentsPortfolios
+const PSIP=PowerSystemsInvestmentsPortfolios
+const IS=InfrastructureSystems
 
 using PrecompileTools: @compile_workload
 

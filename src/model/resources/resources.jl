@@ -8,7 +8,7 @@ Possible values:
 - :Vre
 - :Hydro
 - :Storage
-- :MustRun
+- :MustRun 
 - :FlexDemand
 - :VreStorage
 - :Electrolyzer
