@@ -11,11 +11,11 @@ using Gurobi
 using TimeSeries
 using CSV
 using DataFrames
-using JLD2
-using JSON3
-using JSONSchema
-using SQLite
-using HiGHS
+# using JLD2
+# using JSON3
+# using JSONSchema
+# using SQLite
+# using HiGHS
 const PSIP = PowerSystemsInvestmentsPortfolios
 const IS = InfrastructureSystems
 const PSY = PowerSystems
@@ -91,7 +91,7 @@ function test_portfolio(case_name::AbstractString)
         cofire_level_limits = Dict{ThermalFuels, MinMax}(),
         balancing_topology = "Region",
         region = [z1],
-        base_year = 2025,
+        #base_year = 2025,
         unit_size = 250.0,
         min_generation_percentage = 0.468,
         capacity_limits = (min = 0.0, max = 10000000)

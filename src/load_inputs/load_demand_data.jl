@@ -97,6 +97,7 @@ Read input parameters related to electricity demand (load) from portfolio
 """
 function load_demand_data!(setup::Dict, p::Portfolio, inputs::Dict)
 
+    #demands = collect(get_technologies(DemandRequirement, p_5bus))
     # Load related inputs
     #TDR_directory = joinpath(path, setup["TimeDomainReductionFolder"])
     # if TDR is used, my_dir = TDR_directory, else my_dir = "system"
@@ -107,6 +108,8 @@ function load_demand_data!(setup::Dict, p::Portfolio, inputs::Dict)
     #as_vector(col::Symbol) = collect(skipmissing(demand_in[!, col]))
 
     # Number of time steps (periods)
+    first_d = demand_in[1]
+    show_time_series(first_d)
     T = get_time_series(p, demand_in[1], "demand_")
     # Number of demand curtailment/lost load segments
     SEG = length(segments[1].segments)
@@ -149,8 +152,28 @@ function load_demand_data!(setup::Dict, p::Portfolio, inputs::Dict)
     inputs["pD"] = zeros( inputs["T"], length(demand_in) )
     for d in demand_in
         load_data = []
+        keys_ = get_time_series_keys(first_d)
+        names = [x.name for x in keys_] 
+        types = [x.time_series_type for x in keys_]
+        feats = [x.features for x in keys_]
+        temp_first_feats = Dict(Symbol.(keys(feats[1])) .=> values(feats[2]))
+        key_feats_first = collect(keys(feats[1]))
+        vals_feats_first = collect(values(feats[1]))
+        vals_feats_first[1]
+
+    ts_vals = IS.get_time_series_values(types[1], first_d, names[1]; temp_first_feats...)
         for year in p.internal.ext["years"]
             for day in p.internal.ext["order_days"]
+                keys = get_time_series_keys(d)
+                for key in keys
+                    if key == "demand_ct"
+                        continue
+                    end
+                end
+                ts_values = get_time_series_values(SingleTimeSeries, d, d.name, model_year = year, order_day = day)
+                if isempty(ts_values)
+                    error("Time series data for $key not found.")
+                end
                 ts = get_time_series(SingleTimeSeries, d, d.name, model_year = year, order_day = day)
                 time_array = values(ts.data) / scale_factor
                 append!(load_data, time_array)

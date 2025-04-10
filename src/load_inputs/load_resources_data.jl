@@ -381,7 +381,7 @@ This function takes a PSIP Portfolio and converts SupplyTechnologies and Storage
 """
 function create_resources_sametype(p::Portfolio, 
         psip_type::Type{<:PSIP.Technology},
-        genx_type::Type{<:GenX.ResourceType},
+        genx_type::Type{<:GenX.AbstractResource},
         scale_factor::Float64
     )
 
