@@ -152,7 +152,7 @@ function load_demand_data!(setup::Dict, p::Portfolio, inputs::Dict)
     inputs["pD"] = zeros( inputs["T"], length(demand_in) )
     for d in demand_in
         load_data = []
-        keys_ = get_time_series_keys(first_d)
+        keys_ = get_time_series_keys(d)
         names = [x.name for x in keys_] 
         types = [x.time_series_type for x in keys_]
         feats = [x.features for x in keys_]
@@ -161,7 +161,7 @@ function load_demand_data!(setup::Dict, p::Portfolio, inputs::Dict)
         vals_feats_first = collect(values(feats[1]))
         vals_feats_first[1]
 
-    ts_vals = IS.get_time_series_values(types[1], first_d, names[1]; temp_first_feats...)
+        ts_vals = IS.get_time_series_values(types[1], first_d, names[1]; temp_first_feats...)
         for year in p.internal.ext["years"]
             for day in p.internal.ext["order_days"]
                 keys = get_time_series_keys(d)
