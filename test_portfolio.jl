@@ -122,7 +122,7 @@ function test_portfolio(case_name::AbstractString)
         cofire_level_limits = Dict{ThermalFuels, MinMax}(),
         balancing_topology = "Region",
         region = [z2],
-        base_year = 2025,
+        #base_year = 2025,
         unit_size = 250.0,
         min_generation_percentage = 0.338,
         capacity_limits = (min = 0.0, max = 10000000))
@@ -152,7 +152,7 @@ function test_portfolio(case_name::AbstractString)
         cofire_level_limits = Dict{ThermalFuels, MinMax}(),
         balancing_topology = "Region",
         region = [z3],
-        base_year = 2025,
+        #base_year = 2025,
         unit_size = 250.0,
         min_generation_percentage = 0.474,
         capacity_limits = (min = 0.0, max = 10000000)
