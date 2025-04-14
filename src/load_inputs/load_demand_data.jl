@@ -132,9 +132,9 @@ function load_demand_data!(setup::Dict, p::Portfolio, inputs::Dict)
         if isempty(ts_vals)
             error("Time series data for $keys_ not found.")
         end
-        #id = PSIP.get_id(d.region)
-        r
-        #inputs["pD"][:, id] = reduce(vcat, ts_vals)
+        id = PSIP.get_id(d.region)
+        #r
+        inputs["pD"][:, id] = reduce(vcat, ts_vals)
     end
 
     inputs["T"] = T
