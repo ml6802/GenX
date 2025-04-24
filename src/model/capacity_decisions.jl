@@ -183,7 +183,7 @@ function transmission_capacity_decisions!(EP, inputs::Dict, setup::Dict)
         if setup["IntegerInvestments"] == 1 || setup["DC_OPF"] == 1
             @expression(EP, eAvail_Trans_Cap[l = 1:L],
             if l in EXPANSION_LINES
-                eTransMax[l] + vNEW_TRANS_LINES[l]*inputs["pMax_quantized_Line_Reinforcement"][l]
+                eTransMax[l] + vNEW_TRANS_LINES[l]*inputs["Line_Reinforcement_Cap_Size"][l]
             else
                 eTransMax[l]
             end)

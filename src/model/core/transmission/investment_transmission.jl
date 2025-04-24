@@ -27,6 +27,7 @@ function investment_transmission!(EP::Model, inputs::Dict, setup::Dict)
     println("Investment Transmission Module")
 
     L = inputs["L"]     # Number of transmission lines
+    L_cand = inputs["L_cand"]     # Number of candidate transmission lines
     NetworkExpansion = setup["NetworkExpansion"]
     MultiStage = setup["MultiStage"]
 
@@ -44,7 +45,7 @@ function investment_transmission!(EP::Model, inputs::Dict, setup::Dict)
     if NetworkExpansion == 1
         if setup["IntegerInvestments"] == 1 || setup["DC_OPF"] == 1
             # Transmission network capacity reinforcements per line, integer
-            @variable(EP, vNEW_TRANS_LINES[l in EXPANSION_LINES]>=0, Int)
+            @variable(EP, vNEW_TRANS_LINES[l in EXPANSION_LINES], Int, lower_bound=0)
         else
             # Transmission network capacity reinforcements per line
             @variable(EP, vNEW_TRANS_CAP[l in EXPANSION_LINES]>=0)
@@ -74,11 +75,11 @@ function investment_transmission!(EP::Model, inputs::Dict, setup::Dict)
             if l in EXPANSION_LINES
                 eTransMax[l] + vNEW_TRANS_CAP[l]
             else
-                eTransMax[l] + EP[:vZERO]
+                eTransMax[l]
             end)
         end
     else
-        @expression(EP, eAvail_Trans_Cap[l = 1:L], eTransMax[l]+EP[:vZERO])
+        @expression(EP, eAvail_Trans_Cap[l = 1:L], eTransMax[l])
     end
 
     ## Objective Function Expressions ##
@@ -123,15 +124,16 @@ function investment_transmission!(EP::Model, inputs::Dict, setup::Dict)
                 cMaxFlowPossible[l in EXPANSION_LINES],
                 eAvail_Trans_Cap[l]<=inputs["pTrans_Max_Possible"][l])
         end
-        # Constrain maximum single-stage line capacity reinforcement for lines eligible for expansion
-        @constraint(EP,
-            cMaxLineReinforcement[l in EXPANSION_LINES],
-            vNEW_TRANS_CAP[l]<=inputs["pMax_Line_Reinforcement"][l])
+
         if setup["IntegerInvestments"] == 1 || setup["DC_OPF"] == 1
             # Constrain maximum single-stage line capacity reinforcement for lines eligible for expansion with integers
             @constraint(EP,
                 cMaxLineReinforcement[l in EXPANSION_LINES],
-                vNEW_TRANS_LINES[l]<=inputs["Max_Trans_Cap"][l]) 
+                vNEW_TRANS_LINES[l]<=inputs["Line_Reinforcement_Cap_Size"][l]) 
+        else        # Constrain maximum single-stage line capacity reinforcement for lines eligible for expansion
+            @constraint(EP,
+                cMaxLineReinforcement[l in EXPANSION_LINES],
+                vNEW_TRANS_CAP[l]<=inputs["pMax_Line_Reinforcement"][l])
         end
     end
     #END network expansion contraints

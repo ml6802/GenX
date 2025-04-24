@@ -19,11 +19,41 @@ function load_network_data!(setup::Dict, path::AbstractString, inputs_nw::Dict)
     L = length(as_vector(:Network_Lines))
     inputs_nw["L"] = L
 
+    candidate_flag = false
+    if setup["DC_OPF"] == 1
+        if isfile(joinpath(path, "Candidate_line.csv"))
+            # Read candidate line data if it exists
+            candidate_network_path = joinpath(path, "Candidate_line.csv")
+            candidate_network_var = load_dataframe(candidate_network_path)
+            candidate_flag = true
+        else
+            @warn("Candidate line data not found. Proceeding with existing network data. 
+            Because the DC_OPF flag is active and Candidate_line.csv is nissing, GenX will not allow any transmission capacity expansion. 
+            Set the DC_OPF flag to 0 if you want to optimize tranmission capacity expansion.")
+        end
+    end
+
+    if candidate_flag
+        as_vector_cand(col::Symbol) = collect(skipmissing(candidate_network_var[!, col]))
+        to_floats_cand(col::Symbol) = convert(Array{Float64}, as_vector_cand(col))
+        # Number of zones in the candidate network
+        Z_cand = length(as_vector_cand(:Network_zones))
+        inputs_nw["Z_cand"] = Z_cand
+        # Number of lines in the network
+        L_cand = length(as_vector_cand(:Network_Lines))
+        inputs_nw["L_cand"] = L_cand
+        inputs_nw["pNet_Map_cand"] = load_network_map(candidate_network_var, Z_cand, L_cand)
+    end
+
     # Topology of the network source-sink matrix
     inputs_nw["pNet_Map"] = load_network_map(network_var, Z, L)
 
     # Transmission capacity of the network (in MW)
-    inputs_nw["pTrans_Max"] = to_floats(:Line_Max_Flow_MW) / scale_factor  # convert to GW
+    if !candidate_flag
+        inputs_nw["pTrans_Max"] = to_floats(:Line_Max_Flow_MW) / scale_factor  # convert to GW
+    else
+        inputs_nw["pTrans_Max"] = create_extended_max_flow_vector(network_var, candidate_network_var)
+    end
 
     if setup["Trans_Loss_Segments"] == 1
         # Line percentage Loss - valid for case when modeling losses as a fixed percent of absolute value of power flows
@@ -52,12 +82,33 @@ function load_network_data!(setup::Dict, path::AbstractString, inputs_nw::Dict)
         # MW = (kV)^2/Ohms 
         inputs_nw["pDC_OPF_coeff"] = ((line_voltage_kV .^ 2) ./ line_reactance_Ohms) /
                                      scale_factor
+        if candidate_flag
+            # Transmission line voltage (in kV)
+            line_voltage_kV_cand = to_floats_cand(:Line_Voltage_kV)
+            # Transmission line reactance (in Ohms)
+            line_reactance_Ohms_cand = to_floats_cand(:Line_Reactance_Ohms)
+            # Line angle limit (in radians)
+            inputs_nw["Line_Angle_Limit_cand"] = to_floats_cand(:Angle_Limit_Rad)
+            # DC-OPF coefficient for each line (in MW when not scaled, in GW when scaled) 
+            # MW = (kV)^2/Ohms 
+            inputs_nw["pDC_OPF_coeff_cand"] = ((line_voltage_kV_cand .^ 2) ./ line_reactance_Ohms_cand) /
+                                        scale_factor
+            # Transmission line candidate expansion capacity (in MW)
+            # DC-OPF transmission capacity (in MW) expansion data:
+            inputs_nw["Line_Reinforcement_Cap_Size"] = to_floats_cand(:pMax_quantized_MW) /
+                                                                                        scale_factor # convert to GW
+            inputs_nw["Max_Trans_Cap"] = calculate_integer_quotients(candidate_network_var)
+        end
+        
+        println("DC-OPF values successfully read!")
+        println("DC-OPF Coefficients: ", inputs_nw["Max_Trans_Cap"])
+        
     end
 
     # Maximum possible flow after reinforcement for use in linear segments of piecewise approximation
     inputs_nw["pTrans_Max_Possible"] = inputs_nw["pTrans_Max"]
 
-    if setup["NetworkExpansion"] == 1
+    if setup["NetworkExpansion"] == 1 && !candidate_flag
         # Read between zone network reinforcement costs per peak MW of capacity added
         inputs_nw["pC_Line_Reinforcement"] = to_floats(:Line_Reinforcement_Cost_per_MWyr) /
                                              scale_factor # convert to million $/GW/yr with objective function in millions
@@ -66,6 +117,17 @@ function load_network_data!(setup::Dict, path::AbstractString, inputs_nw::Dict)
         inputs_nw["pMax_Line_Reinforcement"] = map(x -> max(0, x),
             to_floats(:Line_Max_Reinforcement_MW)) / scale_factor # convert to GW
         inputs_nw["pTrans_Max_Possible"] += inputs_nw["pMax_Line_Reinforcement"]
+    elseif setup["NetworkExpansion"] == 1 && candidate_flag
+            # Read between zone network reinforcement costs per peak MW of capacity added
+            inputs_nw["pC_Line_Reinforcement"] = to_floats_cand(:Line_Reinforcement_Cost_per_MWyr) /
+                                                 scale_factor # convert to million $/GW/yr with objective function in millions
+            # Maximum reinforcement allowed in MW
+            #NOTE: values <0 indicate no expansion possible
+            inputs_nw["pMax_Line_Reinforcement"] = map(x -> max(0, x),
+                to_floats_cand(:Line_Max_Reinforcement_MW)) / scale_factor # convert to GW
+            println("Maximum line reinforcement (in GW): ", inputs_nw["pMax_Line_Reinforcement"])
+            # Maximum possible flow after reinforcement for use in linear segments of piecewise approximation
+            inputs_nw["pTrans_Max_Possible"] += inputs_nw["pMax_Line_Reinforcement"]
     end
 
     # Multi-Stage
@@ -102,16 +164,6 @@ function load_network_data!(setup::Dict, path::AbstractString, inputs_nw::Dict)
     end
 
     println(filename * " Successfully Read!")
-
-
-     # DC-OPF transmission capacity (in MW) expansion data:
-    if setup["NetworkExpansion"] == 1
-        filename = "Candidate_line.csv"
-        network_var = load_dataframe(joinpath(path, filename))
-        inputs_nw["Line_Reinforcement_Cap_Size"] = to_floats(:pMax_quantized_MW) /
-                                                                                    scale_factor # convert to GW
-        inputs_nw["Max_Trans_Cap"] = calculate_integer_quotients(network_var)
-    end
     return network_var
 end
 
@@ -201,4 +253,24 @@ function network_map_matrix_format_deprecation_warning()
                    2,          1,        3,
                    3,          2,        3,
   """ maxlog=1
+end
+
+
+function create_extended_max_flow_vector(network_df::DataFrame, candidate_df::DataFrame)
+
+    # Check if Line_Max_Flow_MW column exists in network_df
+    if !("Line_Max_Flow_MW" in names(network_df))
+        error("Column 'Line_Max_Flow_MW' not found in Network.csv.")
+    end
+
+    # Extract the Line_Max_Flow_MW values from network_df
+    max_flow_values = network_df.Line_Max_Flow_MW
+
+    # Calculate the number of additional rows
+    additional_rows = nrow(candidate_df) - nrow(network_df)
+
+    # Append 0.0 for the additional rows
+    append!(max_flow_values, zeros(Float64, additional_rows))
+
+    return max_flow_values
 end

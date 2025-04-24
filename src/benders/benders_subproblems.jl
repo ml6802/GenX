@@ -202,6 +202,7 @@ function fix_planning_variables!(EP::Model,planning_sol::NamedTuple,planning_var
 	for y in planning_variables_sub
 		vy = variable_by_name(EP,y);
         if is_parameter(vy)
+            println("Setting parameter " * string(vy) * " to " * string(planning_sol.values[y]))
             set_parameter_value(vy,planning_sol.values[y])
         else
             fix(vy,planning_sol.values[y];force=true)

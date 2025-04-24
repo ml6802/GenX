@@ -159,11 +159,9 @@ function operation_model!(EP::Model,setup::Dict, inputs::Dict)
         operational_reserves!(EP, inputs, setup)
     end
 
-    if Z > 1
+    if Z > 1 && setup["DC_OPF"] == 0
         transmission!(EP, inputs, setup)
-    end
-
-    if Z > 1 && setup["DC_OPF"] != 0
+    elseif Z > 1 && setup["DC_OPF"] != 0
         dcopf_transmission!(EP, inputs, setup)
     end
 

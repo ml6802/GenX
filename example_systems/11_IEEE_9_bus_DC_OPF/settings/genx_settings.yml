@@ -12,3 +12,4 @@ DC_OPF: 1 #Flag for running DC-OPF: 0 = not active (transport model); 1 = active
 WriteOutputs: "annual"
 Benders: 1
 UCommit: 2
+IntegerInvestments: 1
