@@ -1,0 +1,739 @@
+Set parameter LicenseID to value 197246
+Set parameter GURO_PAR_SPECIAL
+Set parameter TokenServer to value "license.rc.princeton.edu"
+Set parameter LicenseID to value 197246
+Set parameter GURO_PAR_SPECIAL
+Set parameter TokenServer to value "license.rc.princeton.edu"
+Set parameter Method to value 2
+Set parameter Crossover to value 0
+Set parameter MIPGap to value 0.0001
+Set parameter BarConvTol to value 1e-08
+      From worker 3:	Set parameter LicenseID to value 197246
+      From worker 3:	Set parameter GURO_PAR_SPECIAL
+      From worker 3:	Set parameter TokenServer to value "license.rc.princeton.edu"
+      From worker 5:	Set parameter LicenseID to value 197246
+      From worker 5:	Set parameter GURO_PAR_SPECIAL
+      From worker 5:	Set parameter TokenServer to value "license.rc.princeton.edu"
+      From worker 4:	Set parameter LicenseID to value 197246
+      From worker 4:	Set parameter GURO_PAR_SPECIAL
+      From worker 4:	Set parameter TokenServer to value "license.rc.princeton.edu"
+      From worker 2:	Set parameter LicenseID to value 197246
+      From worker 2:	Set parameter GURO_PAR_SPECIAL
+      From worker 2:	Set parameter TokenServer to value "license.rc.princeton.edu"
+      From worker 3:	WARNING: using GenX.load_dataframe in module GenX conflicts with an existing identifier.
+      From worker 3:	WARNING: using GenX.generate_model in module GenX conflicts with an existing identifier.
+      From worker 3:	WARNING: using GenX.operation_model! in module GenX conflicts with an existing identifier.
+      From worker 3:	WARNING: using GenX.load_inputs in module GenX conflicts with an existing identifier.
+      From worker 3:	WARNING: using GenX.write_outputs in module GenX conflicts with an existing identifier.
+      From worker 3:	WARNING: using GenX.solve_model in module GenX conflicts with an existing identifier.
+      From worker 3:	WARNING: using GenX.configure_solver in module GenX conflicts with an existing identifier.
+      From worker 3:	WARNING: using GenX.run_genx_case! in module GenX conflicts with an existing identifier.
+      From worker 3:	WARNING: using GenX.configure_settings in module GenX conflicts with an existing identifier.
+      From worker 3:	WARNING: using GenX.choose_output_dir in module GenX conflicts with an existing identifier.
+      From worker 3:	WARNING: using GenX.mga in module GenX conflicts with an existing identifier.
+      From worker 5:	WARNING: using GenX.load_inputs in module GenX conflicts with an existing identifier.
+      From worker 5:	WARNING: using GenX.operation_model! in module GenX conflicts with an existing identifier.
+      From worker 5:	WARNING: using GenX.mga in module GenX conflicts with an existing identifier.
+      From worker 5:	WARNING: using GenX.generate_model in module GenX conflicts with an existing identifier.
+      From worker 5:	WARNING: using GenX.choose_output_dir in module GenX conflicts with an existing identifier.
+      From worker 5:	WARNING: using GenX.load_dataframe in module GenX conflicts with an existing identifier.
+      From worker 5:	WARNING: using GenX.solve_model in module GenX conflicts with an existing identifier.
+      From worker 5:	WARNING: using GenX.write_outputs in module GenX conflicts with an existing identifier.
+      From worker 5:	WARNING: using GenX.run_genx_case! in module GenX conflicts with an existing identifier.
+      From worker 5:	WARNING: using GenX.configure_solver in module GenX conflicts with an existing identifier.
+      From worker 5:	WARNING: using GenX.configure_settings in module GenX conflicts with an existing identifier.
+      From worker 2:	WARNING: using GenX.run_genx_case! in module GenX conflicts with an existing identifier.
+      From worker 2:	WARNING: using GenX.write_outputs in module GenX conflicts with an existing identifier.
+      From worker 2:	WARNING: using GenX.load_inputs in module GenX conflicts with an existing identifier.
+      From worker 2:	WARNING: using GenX.generate_model in module GenX conflicts with an existing identifier.
+      From worker 2:	WARNING: using GenX.operation_model! in module GenX conflicts with an existing identifier.
+      From worker 2:	WARNING: using GenX.solve_model in module GenX conflicts with an existing identifier.
+      From worker 2:	WARNING: using GenX.choose_output_dir in module GenX conflicts with an existing identifier.
+      From worker 2:	WARNING: using GenX.configure_settings in module GenX conflicts with an existing identifier.
+      From worker 2:	WARNING: using GenX.configure_solver in module GenX conflicts with an existing identifier.
+      From worker 2:	WARNING: using GenX.mga in module GenX conflicts with an existing identifier.
+      From worker 2:	WARNING: using GenX.load_dataframe in module GenX conflicts with an existing identifier.
+      From worker 4:	WARNING: using GenX.solve_model in module GenX conflicts with an existing identifier.
+      From worker 4:	WARNING: using GenX.mga in module GenX conflicts with an existing identifier.
+      From worker 4:	WARNING: using GenX.configure_settings in module GenX conflicts with an existing identifier.
+      From worker 4:	WARNING: using GenX.load_dataframe in module GenX conflicts with an existing identifier.
+      From worker 4:	WARNING: using GenX.load_inputs in module GenX conflicts with an existing identifier.
+      From worker 4:	WARNING: using GenX.configure_solver in module GenX conflicts with an existing identifier.
+      From worker 4:	WARNING: using GenX.run_genx_case! in module GenX conflicts with an existing identifier.
+      From worker 4:	WARNING: using GenX.generate_model in module GenX conflicts with an existing identifier.
+      From worker 4:	WARNING: using GenX.write_outputs in module GenX conflicts with an existing identifier.
+      From worker 4:	WARNING: using GenX.choose_output_dir in module GenX conflicts with an existing identifier.
+      From worker 4:	WARNING: using GenX.operation_model! in module GenX conflicts with an existing identifier.
+      From worker 3:	Set parameter LicenseID to value 197246
+      From worker 3:	Set parameter GURO_PAR_SPECIAL
+      From worker 3:	Set parameter TokenServer to value "license.rc.princeton.edu"
+      From worker 2:	Set parameter LicenseID to value 197246
+      From worker 2:	Set parameter GURO_PAR_SPECIAL
+      From worker 2:	Set parameter TokenServer to value "license.rc.princeton.edu"
+      From worker 5:	Set parameter LicenseID to value 197246
+      From worker 5:	Set parameter GURO_PAR_SPECIAL
+      From worker 5:	Set parameter TokenServer to value "license.rc.princeton.edu"
+      From worker 4:	Set parameter LicenseID to value 197246
+      From worker 4:	Set parameter GURO_PAR_SPECIAL
+      From worker 4:	Set parameter TokenServer to value "license.rc.princeton.edu"
+Configuring Settings
+Configuring Benders Settings
+Time Series Data Already Clustered.
+Reading Input CSV Files
+Network.csv Successfully Read!
+Demand (load) data Successfully Read!
+Fuels_data.csv Successfully Read!
+
+Summary of resources loaded into the model:
+-------------------------------------------------------
+	Resource type 		Number of resources
+=======================================================
+	Thermal        		3
+	VRE            		4
+	Storage        		3
+=======================================================
+Total number of resources: 10
+-------------------------------------------------------
+Generators_variability.csv Successfully Read!
+Validating time basis
+CSV Files Successfully Read In From /home/ml6802/GenX-Bend-0.4/GenX/example_systems/10_three_zones_w_MGA
+Planning Gurobi attributes:
+Dict{String, Any} with 4 entries:
+  "Method" => 2
+  "Crossover" => 0
+  "MIPGap" => 0.0001
+  "BarConvTol" => 1.0e-8
+Investment Discharge Module
+Investment Transmission Module
+Investment Storage Resources Module
+Storage Investment Module
+      From worker 3:	Subproblem Gurobi attributes:
+      From worker 2:	Subproblem Gurobi attributes:
+      From worker 4:	Subproblem Gurobi attributes:
+      From worker 5:	Subproblem Gurobi attributes:
+      From worker 3:	Dict{String, Any} with 5 entries:
+      From worker 3:	  "Method" => 2
+      From worker 3:	  "Crossover" => 1
+      From worker 2:	Dict{String, Any} with 5 entries:
+      From worker 2:	  "Method" => 2
+      From worker 2:	  "Crossover" => 1
+      From worker 3:	  "MIPGap" => 0.001
+      From worker 3:	  "Threads" => 1
+      From worker 3:	  "BarConvTol" => 1.0e-8
+      From worker 2:	  "MIPGap" => 0.001
+      From worker 2:	  "Threads" => 1
+      From worker 2:	  "BarConvTol" => 1.0e-8
+      From worker 3:	Set parameter Method to value 2
+      From worker 3:	Set parameter Crossover to value 1
+      From worker 2:	Set parameter Method to value 2
+      From worker 2:	Set parameter Crossover to value 1
+      From worker 3:	Set parameter MIPGap to value 0.001
+      From worker 3:	Set parameter Threads to value 1
+      From worker 3:	Set parameter BarConvTol to value 1e-08
+      From worker 2:	Set parameter MIPGap to value 0.001
+      From worker 2:	Set parameter Threads to value 1
+      From worker 2:	Set parameter BarConvTol to value 1e-08
+      From worker 4:	Dict{String, Any} with 5 entries:
+      From worker 3:	Investment Discharge Module
+      From worker 4:	  "Method" => 2
+      From worker 4:	  "Crossover" => 1
+      From worker 2:	Investment Discharge Module
+      From worker 4:	  "MIPGap" => 0.001
+      From worker 4:	  "Threads" => 1
+      From worker 4:	  "BarConvTol" => 1.0e-8
+      From worker 4:	Set parameter Method to value 2
+      From worker 4:	Set parameter Crossover to value 1
+      From worker 4:	Set parameter MIPGap to value 0.001
+      From worker 4:	Set parameter Threads to value 1
+      From worker 4:	Set parameter BarConvTol to value 1e-08
+      From worker 4:	Investment Discharge Module
+      From worker 5:	Dict{String, Any} with 5 entries:
+      From worker 5:	  "Method" => 2
+      From worker 5:	  "Crossover" => 1
+      From worker 5:	  "MIPGap" => 0.001
+      From worker 5:	  "Threads" => 1
+      From worker 5:	  "BarConvTol" => 1.0e-8
+      From worker 5:	Set parameter Method to value 2
+      From worker 5:	Set parameter Crossover to value 1
+      From worker 5:	Set parameter MIPGap to value 0.001
+      From worker 5:	Set parameter Threads to value 1
+      From worker 5:	Set parameter BarConvTol to value 1e-08
+      From worker 5:	Investment Discharge Module
+      From worker 3:	Discharge Module
+      From worker 2:	Discharge Module
+      From worker 4:	Discharge Module
+      From worker 3:	Non-served Energy Module
+      From worker 5:	Discharge Module
+      From worker 2:	Non-served Energy Module
+      From worker 4:	Non-served Energy Module
+      From worker 5:	Non-served Energy Module
+      From worker 3:	Unit Commitment Module
+      From worker 2:	Unit Commitment Module
+      From worker 4:	Unit Commitment Module
+      From worker 3:	Fuel Module
+      From worker 5:	Unit Commitment Module
+      From worker 2:	Fuel Module
+      From worker 4:	Fuel Module
+      From worker 5:	Fuel Module
+      From worker 3:	CO2 Module
+      From worker 4:	CO2 Module
+      From worker 2:	CO2 Module
+      From worker 3:	Transmission Module
+      From worker 4:	Transmission Module
+      From worker 2:	Transmission Module
+      From worker 5:	CO2 Module
+      From worker 5:	Transmission Module
+      From worker 3:	Dispatchable Resources Module
+      From worker 4:	Dispatchable Resources Module
+      From worker 2:	Dispatchable Resources Module
+      From worker 3:	Storage Core Resources Module
+      From worker 5:	Dispatchable Resources Module
+      From worker 4:	Storage Core Resources Module
+      From worker 2:	Storage Core Resources Module
+      From worker 5:	Storage Core Resources Module
+      From worker 3:	Storage Resources with Symmetric Charge/Discharge Capacity Module
+      From worker 3:	Thermal (Unit Commitment) Resources Module
+      From worker 4:	Storage Resources with Symmetric Charge/Discharge Capacity Module
+      From worker 4:	Thermal (Unit Commitment) Resources Module
+      From worker 2:	Storage Resources with Symmetric Charge/Discharge Capacity Module
+      From worker 2:	Thermal (Unit Commitment) Resources Module
+      From worker 5:	Storage Resources with Symmetric Charge/Discharge Capacity Module
+      From worker 5:	Thermal (Unit Commitment) Resources Module
+Distributed operational subproblems generation took 29.178300142288208 seconds
+Solving the subproblems required 3.0028371810913086 seconds
+Updating the planning problem....done (it took 0.2859370708465576 s).
+Solving the planning problem required 0.0010671615600585938 seconds
+k = 0      LB = 814.0070391148258     UB = 5.529942851400001e6       Gap = 6792.482839427797       CPU Time = 4.720415115356445
+Solving the interior level set problem with γ = 0.5
+Solving the interior level set problem required 0.28017592430114746 seconds
+Solving the subproblems required 0.2470569610595703 seconds
+Updating the planning problem....done (it took 0.00021505355834960938 s).
+Solving the planning problem required 0.0007288455963134766 seconds
+k = 1      LB = 866.1094190432757     UB = 101787.93048359225       Gap = 116.52317691687216       CPU Time = 5.288877964019775
+Solving the interior level set problem with γ = 0.5
+Solving the interior level set problem required 0.0009331703186035156 seconds
+Solving the subproblems required 0.26972293853759766 seconds
+Updating the planning problem....done (it took 0.00026702880859375 s).
+Solving the planning problem required 0.0009050369262695312 seconds
+k = 2      LB = 1190.8283827188307     UB = 33982.83014721602       Gap = 27.537134855341943       CPU Time = 5.560826063156128
+Solving the interior level set problem with γ = 0.5
+Solving the interior level set problem required 0.0005757808685302734 seconds
+Solving the subproblems required 0.2767760753631592 seconds
+Updating the planning problem....done (it took 0.0002429485321044922 s).
+Solving the planning problem required 0.0010099411010742188 seconds
+k = 3      LB = 3193.6410700611564     UB = 12030.374789570238       Gap = 2.766977730324549       CPU Time = 5.839543104171753
+Solving the interior level set problem with γ = 0.5
+Solving the interior level set problem required 0.0006349086761474609 seconds
+Solving the subproblems required 0.21640896797180176 seconds
+Updating the planning problem....done (it took 0.000225067138671875 s).
+Solving the planning problem required 0.000988006591796875 seconds
+k = 4      LB = 3530.1634851604344     UB = 11517.999708990068       Gap = 2.2627383285243554       CPU Time = 6.057894945144653
+Solving the interior level set problem with γ = 0.5
+Solving the interior level set problem required 0.0006270408630371094 seconds
+Solving the subproblems required 0.19463396072387695 seconds
+Updating the planning problem....done (it took 0.00016999244689941406 s).
+Solving the planning problem required 0.0009450912475585938 seconds
+k = 5      LB = 3575.309347282188     UB = 6409.442478839469       Gap = 0.7926959197843061       CPU Time = 6.254362106323242
+Solving the interior level set problem with γ = 0.5
+Solving the interior level set problem required 0.0005831718444824219 seconds
+Solving the subproblems required 0.21679401397705078 seconds
+Updating the planning problem....done (it took 0.00021696090698242188 s).
+Solving the planning problem required 0.0011298656463623047 seconds
+k = 6      LB = 3576.4471943385793     UB = 5021.825608679901       Gap = 0.40413805539455955       CPU Time = 6.47317910194397
+Solving the interior level set problem with γ = 0.5
+Solving the interior level set problem required 0.0008571147918701172 seconds
+Solving the subproblems required 0.22313404083251953 seconds
+Updating the planning problem....done (it took 0.0002789497375488281 s).
+Solving the planning problem required 0.0013070106506347656 seconds
+k = 7      LB = 3756.9820763474136     UB = 5021.825608679901       Gap = 0.33666477684189133       CPU Time = 6.698832035064697
+Solving the interior level set problem with γ = 0.5
+Solving the interior level set problem required 0.0022268295288085938 seconds
+Solving the subproblems required 0.22896504402160645 seconds
+Updating the planning problem....done (it took 0.00019884109497070312 s).
+Solving the planning problem required 0.0030159950256347656 seconds
+k = 8      LB = 3758.926447660013     UB = 4231.812267798408       Gap = 0.12580342465407215       CPU Time = 6.933329105377197
+Solving the interior level set problem with γ = 0.5
+Solving the interior level set problem required 0.002930879592895508 seconds
+Solving the subproblems required 0.22256708145141602 seconds
+Updating the planning problem....done (it took 0.0002849102020263672 s).
+Solving the planning problem required 0.00417780876159668 seconds
+k = 9      LB = 3852.178272127818     UB = 4202.443934452573       Gap = 0.09092664917900568       CPU Time = 7.163387060165405
+Solving the interior level set problem with γ = 0.5
+Solving the interior level set problem required 0.002151966094970703 seconds
+Solving the subproblems required 0.1985487937927246 seconds
+Updating the planning problem....done (it took 0.00027179718017578125 s).
+Solving the planning problem required 0.0032279491424560547 seconds
+k = 10      LB = 3876.641132711394     UB = 4039.1166936013833       Gap = 0.04191142675524125       CPU Time = 7.3676841259002686
+Solving the interior level set problem with γ = 0.5
+Solving the interior level set problem required 0.0018398761749267578 seconds
+Solving the subproblems required 0.2192678451538086 seconds
+Updating the planning problem....done (it took 0.00018405914306640625 s).
+Solving the planning problem required 0.003113985061645508 seconds
+k = 11      LB = 3876.7685249337915     UB = 4039.1166936013833       Gap = 0.04187718911341617       CPU Time = 7.592159986495972
+Solving the interior level set problem with γ = 0.5
+Solving the interior level set problem required 0.0018260478973388672 seconds
+Solving the subproblems required 0.18034791946411133 seconds
+Updating the planning problem....done (it took 0.0001590251922607422 s).
+Solving the planning problem required 0.0031609535217285156 seconds
+k = 12      LB = 3894.4395146402603     UB = 3948.0750171046016       Gap = 0.013772329050871316       CPU Time = 7.777734041213989
+Solving the interior level set problem with γ = 0.5
+Solving the interior level set problem required 0.0018529891967773438 seconds
+Solving the subproblems required 0.1885530948638916 seconds
+Updating the planning problem....done (it took 0.0002110004425048828 s).
+Solving the planning problem required 0.0035588741302490234 seconds
+k = 13      LB = 3898.6031276545855     UB = 3914.43941958962       Gap = 0.00406204258717698       CPU Time = 7.972016096115112
+Solving the interior level set problem with γ = 0.5
+Solving the interior level set problem required 0.002441883087158203 seconds
+Solving the subproblems required 0.19710397720336914 seconds
+Updating the planning problem....done (it took 0.00017881393432617188 s).
+Solving the planning problem required 0.0035598278045654297 seconds
+k = 14      LB = 3900.978142465907     UB = 3908.1611320239554       Gap = 0.0018413303781056375       CPU Time = 8.175387144088745
+Solving the interior level set problem with γ = 0.5
+Solving the interior level set problem required 0.001344919204711914 seconds
+Solving the subproblems required 0.20888805389404297 seconds
+Updating the planning problem....done (it took 0.0001780986785888672 s).
+Solving the planning problem required 0.0019519329071044922 seconds
+k = 15      LB = 3901.4613050697885     UB = 3908.1611320239554       Gap = 0.0017172609005401869       CPU Time = 8.387809038162231
+Solving the interior level set problem with γ = 0.5
+Solving the interior level set problem required 0.0013151168823242188 seconds
+Solving the subproblems required 0.18605995178222656 seconds
+Updating the planning problem....done (it took 0.0002720355987548828 s).
+Solving the planning problem required 0.0020918846130371094 seconds
+k = 16      LB = 3901.681278983607     UB = 3908.1611320239554       Gap = 0.0016607848199318319       CPU Time = 8.577626943588257
+Solving the interior level set problem with γ = 0.5
+Solving the interior level set problem required 0.0012409687042236328 seconds
+Solving the subproblems required 0.19364094734191895 seconds
+Updating the planning problem....done (it took 0.0002770423889160156 s).
+Solving the planning problem required 0.0038390159606933594 seconds
+k = 17      LB = 3902.1180097209894     UB = 3905.129630171761       Gap = 0.000771791228063616       CPU Time = 8.776721000671387
+Benders decomposition took 8.776721000671387 seconds to run
+["MA_natural_gas_combined_cycle", "CT_natural_gas_combined_cycle", "ME_natural_gas_combined_cycle", "MA_solar_pv", "CT_onshore_wind", "CT_solar_pv", "ME_onshore_wind", "MA_battery", "CT_battery", "ME_battery", "Line_1", "Line_2"]Running Modelling to Generate Alternatives with Cutting-Plane Algorithm
+4
+5
+(4, 3, 5)
+(4, 3, 10)
+10
+(4, 3, 10)
+[-1.0 1.0 -1.0 -1.0 -1.0 1.0 -1.0 1.0 1.0 1.0; 0.0 0.0 -1.0 -1.0 -1.0 -0.0 -0.0 1.0 1.0 1.0]
+Cut Setting 2
+In mga master problem solve
+Solving the master problem required 0.15824389457702637 seconds
+Solving the subproblems required 0.17859101295471191 seconds
+k = 1      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4407.083939575033     TrueSystemCost_new = 4407.083939575033       MGABudget Violation = 0.02594288141261874       CPU Time = 0.39382505416870117
+MGA iteration finished
+Average Master Time = NaN
+Average Subop Time = 0.17859101295471191
+Master/Subop Ratio = NaN
+  0.544355 seconds (470.07 k allocations: 32.064 MiB, 3.75% gc time, 73.66% compilation time)
+In mga master problem solve
+Solving the master problem required 0.0018069744110107422 seconds
+Solving the subproblems required 0.1374201774597168 seconds
+k = 1      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 5808.280530174505     TrueSystemCost_new = 5808.280530174505       MGABudget Violation = 0.3521330986390644       CPU Time = 0.13932490348815918
+Updating the master problem....done (it took 0.10542607307434082 s).
+In mga master problem solve
+Solving the master problem required 0.002146005630493164 seconds
+Solving the subproblems required 0.15494394302368164 seconds
+k = 2      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 5591.039206270638     TrueSystemCost_new = 5591.039206270638       MGABudget Violation = 0.30156061287213415       CPU Time = 0.40196990966796875
+Updating the master problem....done (it took 0.00026297569274902344 s).
+In mga master problem solve
+Solving the master problem required 0.002401113510131836 seconds
+Solving the subproblems required 0.12759089469909668 seconds
+k = 3      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4945.462580356814     TrueSystemCost_new = 4945.462580356814       MGABudget Violation = 0.15127422104395144       CPU Time = 0.5323240756988525
+Updating the master problem....done (it took 0.0002269744873046875 s).
+In mga master problem solve
+Solving the master problem required 0.0022640228271484375 seconds
+Solving the subproblems required 0.21215200424194336 seconds
+k = 4      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4945.462580356814     TrueSystemCost_new = 4995.839825792436       MGABudget Violation = 0.16300174360728087       CPU Time = 0.7470250129699707
+Updating the master problem....done (it took 0.00020194053649902344 s).
+In mga master problem solve
+Solving the master problem required 0.0022580623626708984 seconds
+Solving the subproblems required 0.186384916305542 seconds
+k = 5      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4843.856565942031     TrueSystemCost_new = 4843.856565942031       MGABudget Violation = 0.1276209463101812       CPU Time = 0.9359679222106934
+Updating the master problem....done (it took 0.0002758502960205078 s).
+In mga master problem solve
+Solving the master problem required 0.002092123031616211 seconds
+Solving the subproblems required 0.19782495498657227 seconds
+k = 6      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4843.856565942031     TrueSystemCost_new = 4852.328609781571       MGABudget Violation = 0.12959318763513986       CPU Time = 1.1362249851226807
+Updating the master problem....done (it took 0.00021886825561523438 s).
+In mga master problem solve
+Solving the master problem required 0.0023980140686035156 seconds
+Solving the subproblems required 0.17928695678710938 seconds
+k = 7      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4800.606700415541     TrueSystemCost_new = 4800.606700415541       MGABudget Violation = 0.1175526353210254       CPU Time = 1.3182220458984375
+Updating the master problem....done (it took 0.00024199485778808594 s).
+In mga master problem solve
+Solving the master problem required 0.0023148059844970703 seconds
+Solving the subproblems required 0.153670072555542 seconds
+k = 8      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4671.508961683341     TrueSystemCost_new = 4671.508961683341       MGABudget Violation = 0.08749945097629101       CPU Time = 1.4745259284973145
+Updating the master problem....done (it took 0.0001659393310546875 s).
+In mga master problem solve
+Solving the master problem required 0.0026619434356689453 seconds
+Solving the subproblems required 0.1799640655517578 seconds
+k = 9      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4671.508961683341     TrueSystemCost_new = 4678.771013556471       MGABudget Violation = 0.08919001338123704       CPU Time = 1.6573729515075684
+Updating the master problem....done (it took 0.00030493736267089844 s).
+In mga master problem solve
+Solving the master problem required 0.0031249523162841797 seconds
+Solving the subproblems required 0.22533488273620605 seconds
+k = 10      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4540.874445180243     TrueSystemCost_new = 4540.874445180243       MGABudget Violation = 0.05708851392342057       CPU Time = 1.8862340450286865
+Updating the master problem....done (it took 0.00022411346435546875 s).
+In mga master problem solve
+Solving the master problem required 0.003498077392578125 seconds
+Solving the subproblems required 0.22108197212219238 seconds
+k = 11      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4530.207702226926     TrueSystemCost_new = 4530.207702226926       MGABudget Violation = 0.05460535972194437       CPU Time = 2.11112904548645
+Updating the master problem....done (it took 0.0002760887145996094 s).
+In mga master problem solve
+Solving the master problem required 0.003077983856201172 seconds
+Solving the subproblems required 0.21271681785583496 seconds
+k = 12      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4448.058324551155     TrueSystemCost_new = 4448.058324551155       MGABudget Violation = 0.03548147408815709       CPU Time = 2.32728910446167
+MGA iteration finished
+Average Master Time = 0.01225380464033647
+Average Subop Time = 0.18236430486043295
+Master/Subop Ratio = 0.06719409617860551
+  2.327371 seconds (201.20 k allocations: 20.493 MiB, 4.51% compilation time)
+In mga master problem solve
+Solving the master problem required 0.003412008285522461 seconds
+Solving the subproblems required 0.10093188285827637 seconds
+k = 1      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 117668.24774467472     TrueSystemCost_new = 117668.24774467472       MGABudget Violation = 26.392466945747888       CPU Time = 0.10441803932189941
+Updating the master problem....done (it took 0.00025010108947753906 s).
+In mga master problem solve
+Solving the master problem required 0.0037238597869873047 seconds
+Solving the subproblems required 0.13301920890808105 seconds
+k = 2      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 86651.12482580512     TrueSystemCost_new = 86651.12482580512       MGABudget Violation = 19.17186554654173       CPU Time = 0.2414991855621338
+Updating the master problem....done (it took 0.00019407272338867188 s).
+In mga master problem solve
+Solving the master problem required 0.0035800933837890625 seconds
+Solving the subproblems required 0.1494889259338379 seconds
+k = 3      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 9878.145093738087     TrueSystemCost_new = 9878.145093738087       MGABudget Violation = 1.2995733186463472       CPU Time = 0.3948361873626709
+Updating the master problem....done (it took 0.00017714500427246094 s).
+In mga master problem solve
+Solving the master problem required 0.003625154495239258 seconds
+Solving the subproblems required 0.21166181564331055 seconds
+k = 4      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 5770.002047186785     TrueSystemCost_new = 5770.002047186785       MGABudget Violation = 0.3432220958828264       CPU Time = 0.6103801727294922
+Updating the master problem....done (it took 0.0002009868621826172 s).
+In mga master problem solve
+Solving the master problem required 0.004003047943115234 seconds
+Solving the subproblems required 0.26491498947143555 seconds
+k = 5      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 5644.29854234094     TrueSystemCost_new = 5644.29854234094       MGABudget Violation = 0.3139590689622076       CPU Time = 0.8795790672302246
+Updating the master problem....done (it took 0.0002880096435546875 s).
+In mga master problem solve
+Solving the master problem required 0.002382993698120117 seconds
+Solving the subproblems required 0.16241812705993652 seconds
+k = 6      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 5565.5047886117245     TrueSystemCost_new = 5565.5047886117245       MGABudget Violation = 0.2956163525886087       CPU Time = 1.0447540283203125
+Updating the master problem....done (it took 0.0002090930938720703 s).
+In mga master problem solve
+Solving the master problem required 0.002663135528564453 seconds
+Solving the subproblems required 0.1764240264892578 seconds
+k = 7      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4688.4065311497725     TrueSystemCost_new = 4688.4065311497725       MGABudget Violation = 0.09143310446348377       CPU Time = 1.2241570949554443
+Updating the master problem....done (it took 0.0002741813659667969 s).
+In mga master problem solve
+Solving the master problem required 0.002588987350463867 seconds
+Solving the subproblems required 0.3118250370025635 seconds
+k = 8      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4572.906298929974     TrueSystemCost_new = 4572.906298929974       MGABudget Violation = 0.06454533861375199       CPU Time = 1.5389351844787598
+Updating the master problem....done (it took 0.00021004676818847656 s).
+In mga master problem solve
+Solving the master problem required 0.0025489330291748047 seconds
+Solving the subproblems required 0.158156156539917 seconds
+k = 9      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4572.906298929974     TrueSystemCost_new = 4807.8157685022525       MGABudget Violation = 0.11923086341619837       CPU Time = 1.6999080181121826
+Updating the master problem....done (it took 0.0001990795135498047 s).
+In mga master problem solve
+Solving the master problem required 0.0026280879974365234 seconds
+Solving the subproblems required 0.1968228816986084 seconds
+k = 10      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4514.762552314216     TrueSystemCost_new = 4514.762552314216       MGABudget Violation = 0.05100982085257955       CPU Time = 1.8996350765228271
+MGA iteration finished
+Average Master Time = 0.0033923255072699655
+Average Subop Time = 0.18656630516052247
+Master/Subop Ratio = 0.01818294843943655
+  1.899705 seconds (53.72 k allocations: 9.250 MiB, 1.44% gc time)
+In mga master problem solve
+Solving the master problem required 0.003248929977416992 seconds
+Solving the subproblems required 0.09491300582885742 seconds
+k = 1      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 5277.49776599576     TrueSystemCost_new = 5277.49776599576       MGABudget Violation = 0.22857003382069704       CPU Time = 0.09821677207946777
+Updating the master problem....done (it took 0.0001678466796875 s).
+In mga master problem solve
+Solving the master problem required 0.0036499500274658203 seconds
+Solving the subproblems required 0.13253283500671387 seconds
+k = 2      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 5124.943001828042     TrueSystemCost_new = 5124.943001828042       MGABudget Violation = 0.19305619372384972       CPU Time = 0.2346479892730713
+Updating the master problem....done (it took 0.0001850128173828125 s).
+In mga master problem solve
+Solving the master problem required 0.004006862640380859 seconds
+Solving the subproblems required 0.1811978816986084 seconds
+k = 3      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 5118.917567986621     TrueSystemCost_new = 5118.917567986621       MGABudget Violation = 0.19165350862826602       CPU Time = 0.4201200008392334
+Updating the master problem....done (it took 0.00019097328186035156 s).
+In mga master problem solve
+Solving the master problem required 0.004524946212768555 seconds
+Solving the subproblems required 0.19652104377746582 seconds
+k = 4      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4653.458203286307     TrueSystemCost_new = 4653.458203286307       MGABudget Violation = 0.08329734197735925       CPU Time = 0.6214489936828613
+Updating the master problem....done (it took 0.0002739429473876953 s).
+In mga master problem solve
+Solving the master problem required 0.004229068756103516 seconds
+Solving the subproblems required 0.1521308422088623 seconds
+k = 5      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4653.458203286307     TrueSystemCost_new = 4696.587658538954       MGABudget Violation = 0.09333762217223204       CPU Time = 0.7784388065338135
+Updating the master problem....done (it took 0.00020599365234375 s).
+In mga master problem solve
+Solving the master problem required 0.0043561458587646484 seconds
+Solving the subproblems required 0.15379691123962402 seconds
+k = 6      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4618.074577347281     TrueSystemCost_new = 4618.074577347281       MGABudget Violation = 0.0750602446929786       CPU Time = 0.9368798732757568
+Updating the master problem....done (it took 0.00019788742065429688 s).
+In mga master problem solve
+Solving the master problem required 0.004492998123168945 seconds
+Solving the subproblems required 0.16614198684692383 seconds
+k = 7      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4529.659580249823     TrueSystemCost_new = 4529.659580249823       MGABudget Violation = 0.05447776019167344       CPU Time = 1.107792854309082
+Updating the master problem....done (it took 0.00018405914306640625 s).
+In mga master problem solve
+Solving the master problem required 0.004972934722900391 seconds
+Solving the subproblems required 0.15980792045593262 seconds
+k = 8      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4424.041362811362     TrueSystemCost_new = 4424.041362811362       MGABudget Violation = 0.029890468500803537       CPU Time = 1.2728428840637207
+MGA iteration finished
+Average Master Time = 0.00427351679120745
+Average Subop Time = 0.15463030338287354
+Master/Subop Ratio = 0.02763699415777499
+  1.272917 seconds (42.83 k allocations: 7.389 MiB)
+In mga master problem solve
+Solving the master problem required 0.003181934356689453 seconds
+Solving the subproblems required 0.10336685180664062 seconds
+k = 1      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4334.568698477235     TrueSystemCost_new = 4334.568698477235       MGABudget Violation = 0.009061765368938489       CPU Time = 0.10660290718078613
+MGA iteration finished
+Average Master Time = NaN
+Average Subop Time = 0.10336685180664062
+Master/Subop Ratio = NaN
+  0.106672 seconds (4.42 k allocations: 878.109 KiB)
+In mga master problem solve
+Solving the master problem required 0.0031218528747558594 seconds
+Solving the subproblems required 0.09847307205200195 seconds
+k = 1      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 1.0509171233598802e6     TrueSystemCost_new = 1.0509171233598802e6       MGABudget Violation = 243.64724440208033       CPU Time = 0.10165286064147949
+Updating the master problem....done (it took 0.00016498565673828125 s).
+In mga master problem solve
+Solving the master problem required 0.003448009490966797 seconds
+Solving the subproblems required 0.10942387580871582 seconds
+k = 2      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 28989.417890771994     TrueSystemCost_new = 28989.417890771994       MGABudget Violation = 5.748563750796419       CPU Time = 0.2147660255432129
+Updating the master problem....done (it took 0.0001671314239501953 s).
+In mga master problem solve
+Solving the master problem required 0.0033621788024902344 seconds
+Solving the subproblems required 0.1765439510345459 seconds
+k = 3      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 14979.915489798672     TrueSystemCost_new = 14979.915489798672       MGABudget Violation = 2.487235067822087       CPU Time = 0.3949148654937744
+Updating the master problem....done (it took 0.00018787384033203125 s).
+In mga master problem solve
+Solving the master problem required 0.003612041473388672 seconds
+Solving the subproblems required 0.21702218055725098 seconds
+k = 4      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 6928.764641024008     TrueSystemCost_new = 6928.764641024008       MGABudget Violation = 0.612975123212085       CPU Time = 0.6158230304718018
+Updating the master problem....done (it took 0.00019097328186035156 s).
+In mga master problem solve
+Solving the master problem required 0.003821849822998047 seconds
+Solving the subproblems required 0.20251893997192383 seconds
+k = 5      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 6741.577144658311     TrueSystemCost_new = 6741.577144658311       MGABudget Violation = 0.5693989894195539       CPU Time = 0.8224539756774902
+Updating the master problem....done (it took 0.00027298927307128906 s).
+In mga master problem solve
+Solving the master problem required 0.004197835922241211 seconds
+Solving the subproblems required 0.18304109573364258 seconds
+k = 6      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4989.366881080308     TrueSystemCost_new = 4989.366881080308       MGABudget Violation = 0.16149488064750125       CPU Time = 1.0100560188293457
+Updating the master problem....done (it took 0.00026702880859375 s).
+In mga master problem solve
+Solving the master problem required 0.005548954010009766 seconds
+Solving the subproblems required 0.17886114120483398 seconds
+k = 7      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4989.366881080308     TrueSystemCost_new = 6110.194490307664       MGABudget Violation = 0.4224168695961422       CPU Time = 1.194788932800293
+Updating the master problem....done (it took 0.0001838207244873047 s).
+In mga master problem solve
+Solving the master problem required 0.004389047622680664 seconds
+Solving the subproblems required 0.16969585418701172 seconds
+k = 8      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4930.323181948732     TrueSystemCost_new = 4930.323181948732       MGABudget Violation = 0.14774985930303589       CPU Time = 1.369140863418579
+Updating the master problem....done (it took 0.00018095970153808594 s).
+In mga master problem solve
+Solving the master problem required 0.004414081573486328 seconds
+Solving the subproblems required 0.20058703422546387 seconds
+k = 9      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4577.083510136348     TrueSystemCost_new = 4577.083510136348       MGABudget Violation = 0.06551776849257798       CPU Time = 1.5744049549102783
+Updating the master problem....done (it took 0.00019979476928710938 s).
+In mga master problem solve
+Solving the master problem required 0.005346059799194336 seconds
+Solving the subproblems required 0.18824505805969238 seconds
+k = 10      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4577.083510136348     TrueSystemCost_new = 4833.7245527406685       MGABudget Violation = 0.1252622740087594       CPU Time = 1.768251895904541
+Updating the master problem....done (it took 0.000186920166015625 s).
+In mga master problem solve
+Solving the master problem required 0.003609895706176758 seconds
+Solving the subproblems required 0.18849587440490723 seconds
+k = 11      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4577.083510136348     TrueSystemCost_new = 4585.251020513712       MGABudget Violation = 0.06741911624211243       CPU Time = 1.9606008529663086
+Updating the master problem....done (it took 0.0001900196075439453 s).
+In mga master problem solve
+Solving the master problem required 0.006064176559448242 seconds
+Solving the subproblems required 0.19698810577392578 seconds
+k = 12      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4565.024035974586     TrueSystemCost_new = 4565.024035974586       MGABudget Violation = 0.06271039476439967       CPU Time = 2.163935899734497
+Updating the master problem....done (it took 0.00027489662170410156 s).
+In mga master problem solve
+Solving the master problem required 0.00617218017578125 seconds
+Solving the subproblems required 0.1590580940246582 seconds
+k = 13      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4565.024035974586     TrueSystemCost_new = 4626.3845492350765       MGABudget Violation = 0.07699475663328104       CPU Time = 2.329511880874634
+Updating the master problem....done (it took 0.00019598007202148438 s).
+In mga master problem solve
+Solving the master problem required 0.005352020263671875 seconds
+Solving the subproblems required 0.21190714836120605 seconds
+k = 14      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4413.169910976204     TrueSystemCost_new = 4413.169910976204       MGABudget Violation = 0.027359659291397814       CPU Time = 2.5470569133758545
+MGA iteration finished
+Average Master Time = 0.004597810598520132
+Average Subop Time = 0.17720438752855575
+Master/Subop Ratio = 0.025946369966596983
+  2.547135 seconds (75.64 k allocations: 12.970 MiB)
+In mga master problem solve
+Solving the master problem required 0.0034990310668945312 seconds
+Solving the subproblems required 0.19237995147705078 seconds
+k = 1      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4448.801240290888     TrueSystemCost_new = 4448.801240290888       MGABudget Violation = 0.035654420445684766       CPU Time = 0.1959381103515625
+MGA iteration finished
+Average Master Time = NaN
+Average Subop Time = 0.19237995147705078
+Master/Subop Ratio = NaN
+  0.196010 seconds (4.42 k allocations: 879.688 KiB)
+In mga master problem solve
+Solving the master problem required 0.0035898685455322266 seconds
+Solving the subproblems required 0.04074907302856445 seconds
+k = 1      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 18864.686985967997     TrueSystemCost_new = 18864.686985967997       MGABudget Violation = 3.391586724621682       CPU Time = 0.044406890869140625
+Updating the master problem....done (it took 0.00020599365234375 s).
+In mga master problem solve
+Solving the master problem required 0.0033528804779052734 seconds
+Solving the subproblems required 0.040431976318359375 seconds
+k = 2      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 5645.9857766446     TrueSystemCost_new = 5645.9857766446       MGABudget Violation = 0.3143518470546717       CPU Time = 0.08847689628601074
+Updating the master problem....done (it took 0.00017714500427246094 s).
+In mga master problem solve
+Solving the master problem required 0.003237009048461914 seconds
+Solving the subproblems required 0.08166313171386719 seconds
+k = 3      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4800.526785832624     TrueSystemCost_new = 4800.526785832624       MGABudget Violation = 0.1175340316822954       CPU Time = 0.17362284660339355
+Updating the master problem....done (it took 0.0001609325408935547 s).
+In mga master problem solve
+Solving the master problem required 0.003192901611328125 seconds
+Solving the subproblems required 0.10665106773376465 seconds
+k = 4      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4530.441928901735     TrueSystemCost_new = 4530.441928901735       MGABudget Violation = 0.054659886296194414       CPU Time = 0.2837388515472412
+Updating the master problem....done (it took 0.0003151893615722656 s).
+In mga master problem solve
+Solving the master problem required 0.003777027130126953 seconds
+Solving the subproblems required 0.0934150218963623 seconds
+k = 5      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4530.441928901735     TrueSystemCost_new = 4554.205853078938       MGABudget Violation = 0.06019198624670765       CPU Time = 0.38130784034729004
+Updating the master problem....done (it took 0.00016498565673828125 s).
+In mga master problem solve
+Solving the master problem required 0.0020809173583984375 seconds
+Solving the subproblems required 0.11719584465026855 seconds
+k = 6      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4427.686055967388     TrueSystemCost_new = 4427.686055967388       MGABudget Violation = 0.03073893135053055       CPU Time = 0.5008318424224854
+MGA iteration finished
+Average Master Time = 0.003634786605834961
+Average Subop Time = 0.08001768589019775
+Master/Subop Ratio = 0.04542479034975724
+  0.500910 seconds (31.66 k allocations: 5.494 MiB)
+In mga master problem solve
+Solving the master problem required 0.0029540061950683594 seconds
+Solving the subproblems required 0.12253999710083008 seconds
+k = 1      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 18865.08181904511     TrueSystemCost_new = 18865.08181904511       MGABudget Violation = 3.391678639409411       CPU Time = 0.12555503845214844
+Updating the master problem....done (it took 0.00019788742065429688 s).
+In mga master problem solve
+Solving the master problem required 0.0037178993225097656 seconds
+Solving the subproblems required 0.13765788078308105 seconds
+k = 2      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 16699.35340527277     TrueSystemCost_new = 16699.35340527277       MGABudget Violation = 2.8875099692304107       CPU Time = 0.2672090530395508
+Updating the master problem....done (it took 0.0001919269561767578 s).
+In mga master problem solve
+Solving the master problem required 0.0037469863891601562 seconds
+Solving the subproblems required 0.12797880172729492 seconds
+k = 3      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 5620.504091496143     TrueSystemCost_new = 5620.504091496143       MGABudget Violation = 0.30841986258537235       CPU Time = 0.39921116828918457
+Updating the master problem....done (it took 0.0002541542053222656 s).
+In mga master problem solve
+Solving the master problem required 0.004015922546386719 seconds
+Solving the subproblems required 0.1494748592376709 seconds
+k = 4      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 5598.075397490738     TrueSystemCost_new = 5598.075397490738       MGABudget Violation = 0.3031985962628513       CPU Time = 0.5530481338500977
+Updating the master problem....done (it took 0.00027298927307128906 s).
+In mga master problem solve
+Solving the master problem required 0.004168987274169922 seconds
+Solving the subproblems required 0.1591169834136963 seconds
+k = 5      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 5598.075397490738     TrueSystemCost_new = 5654.515438498753       MGABudget Violation = 0.31633750151011375       CPU Time = 0.7166740894317627
+Updating the master problem....done (it took 0.000247955322265625 s).
+In mga master problem solve
+Solving the master problem required 0.004283905029296875 seconds
+Solving the subproblems required 0.14320707321166992 seconds
+k = 6      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 5551.027189761129     TrueSystemCost_new = 5551.027189761129       MGABudget Violation = 0.29224605384132685       CPU Time = 0.864501953125
+Updating the master problem....done (it took 0.00021004676818847656 s).
+In mga master problem solve
+Solving the master problem required 0.003692150115966797 seconds
+Solving the subproblems required 0.12070322036743164 seconds
+k = 7      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4583.654934021034     TrueSystemCost_new = 4583.654934021034       MGABudget Violation = 0.06704755681693841       CPU Time = 0.9891860485076904
+Updating the master problem....done (it took 0.0001900196075439453 s).
+In mga master problem solve
+Solving the master problem required 0.004160881042480469 seconds
+Solving the subproblems required 0.10799503326416016 seconds
+k = 8      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4570.485985349028     TrueSystemCost_new = 4570.485985349028       MGABudget Violation = 0.06398190403360714       CPU Time = 1.101613998413086
+Updating the master problem....done (it took 0.00021195411682128906 s).
+In mga master problem solve
+Solving the master problem required 0.00453495979309082 seconds
+Solving the subproblems required 0.0986788272857666 seconds
+k = 9      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4367.635212453617     TrueSystemCost_new = 4367.635212453617       MGABudget Violation = 0.01675945279498547       CPU Time = 1.2051260471343994
+MGA iteration finished
+Average Master Time = 0.004064708948135376
+Average Subop Time = 0.12970585293240017
+Master/Subop Ratio = 0.03133789922536351
+  1.205203 seconds (48.10 k allocations: 8.267 MiB)
+In mga master problem solve
+Solving the master problem required 0.0036008358001708984 seconds
+Solving the subproblems required 0.20755696296691895 seconds
+k = 1      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 12935.619271461086     TrueSystemCost_new = 12935.619271461086       MGABudget Violation = 2.011335089183508       CPU Time = 0.21122384071350098
+Updating the master problem....done (it took 0.00023889541625976562 s).
+In mga master problem solve
+Solving the master problem required 0.003993034362792969 seconds
+Solving the subproblems required 0.18710994720458984 seconds
+k = 2      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 12935.619271461086     TrueSystemCost_new = 17877.28252243774       MGABudget Violation = 3.161724848986158       CPU Time = 0.40263986587524414
+Updating the master problem....done (it took 0.00021004676818847656 s).
+In mga master problem solve
+Solving the master problem required 0.004176139831542969 seconds
+Solving the subproblems required 0.169083833694458 seconds
+k = 3      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 11639.66937549147     TrueSystemCost_new = 11639.66937549147       MGABudget Violation = 1.709645675351817       CPU Time = 0.5762059688568115
+Updating the master problem....done (it took 0.00028204917907714844 s).
+In mga master problem solve
+Solving the master problem required 0.004834175109863281 seconds
+Solving the subproblems required 0.2200169563293457 seconds
+k = 4      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 10199.537063972255     TrueSystemCost_new = 10199.537063972255       MGABudget Violation = 1.374391454294727       CPU Time = 0.8014240264892578
+Updating the master problem....done (it took 0.00020194053649902344 s).
+In mga master problem solve
+Solving the master problem required 0.0041010379791259766 seconds
+Solving the subproblems required 0.17782998085021973 seconds
+k = 5      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 5970.133557137717     TrueSystemCost_new = 5970.133557137717       MGABudget Violation = 0.38981151891077       CPU Time = 0.9836678504943848
+Updating the master problem....done (it took 0.0002639293670654297 s).
+In mga master problem solve
+Solving the master problem required 0.0026018619537353516 seconds
+Solving the subproblems required 0.19938111305236816 seconds
+k = 6      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 5810.736805443118     TrueSystemCost_new = 5810.736805443118       MGABudget Violation = 0.3527049048858197       CPU Time = 1.1860058307647705
+Updating the master problem....done (it took 0.00018978118896484375 s).
+In mga master problem solve
+Solving the master problem required 0.0023620128631591797 seconds
+Solving the subproblems required 0.1455228328704834 seconds
+k = 7      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4817.856920917454     TrueSystemCost_new = 4817.856920917454       MGABudget Violation = 0.12156838386799816       CPU Time = 1.3341529369354248
+Updating the master problem....done (it took 0.00015616416931152344 s).
+In mga master problem solve
+Solving the master problem required 0.0018858909606933594 seconds
+Solving the subproblems required 0.18961191177368164 seconds
+k = 8      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4741.776990890401     TrueSystemCost_new = 4741.776990890401       MGABudget Violation = 0.103857429481876       CPU Time = 1.5258879661560059
+Updating the master problem....done (it took 0.00022292137145996094 s).
+In mga master problem solve
+Solving the master problem required 0.0027871131896972656 seconds
+Solving the subproblems required 0.1922461986541748 seconds
+k = 9      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4690.638197233072     TrueSystemCost_new = 4690.638197233072       MGABudget Violation = 0.09195262303023741       CPU Time = 1.72123384475708
+Updating the master problem....done (it took 0.00021600723266601562 s).
+In mga master problem solve
+Solving the master problem required 0.0026350021362304688 seconds
+Solving the subproblems required 0.2214369773864746 seconds
+k = 10      ApproxSystemCost = 4295.642593188938     TrueSystemCost = 4472.797289820737     TrueSystemCost_new = 4472.797289820737       MGABudget Violation = 0.04124055779516927       CPU Time = 1.9456119537353516
+MGA iteration finished
+Average Master Time = 0.0035915374755859375
+Average Subop Time = 0.1909796714782715
+Master/Subop Ratio = 0.01880586267525631
+  1.945701 seconds (53.82 k allocations: 9.292 MiB, 1.24% gc time)
+["MA_natural_gas_combined_cycle", "CT_natural_gas_combined_cycle", "ME_natural_gas_combined_cycle", "MA_solar_pv", "CT_onshore_wind", "CT_solar_pv", "ME_onshore_wind", "MA_battery", "CT_battery", "ME_battery", "Line_1", "Line_2"]["MA_natural_gas_combined_cycle", "CT_natural_gas_combined_cycle", "ME_natural_gas_combined_cycle", "MA_solar_pv", "CT_onshore_wind", "CT_solar_pv", "ME_onshore_wind", "MA_battery", "CT_battery", "ME_battery", "Line_1", "Line_2"]["MA_natural_gas_combined_cycle", "CT_natural_gas_combined_cycle", "ME_natural_gas_combined_cycle", "MA_solar_pv", "CT_onshore_wind", "CT_solar_pv", "ME_onshore_wind", "MA_battery", "CT_battery", "ME_battery", "Line_1", "Line_2"]["MA_natural_gas_combined_cycle", "CT_natural_gas_combined_cycle", "ME_natural_gas_combined_cycle", "MA_solar_pv", "CT_onshore_wind", "CT_solar_pv", "ME_onshore_wind", "MA_battery", "CT_battery", "ME_battery", "Line_1", "Line_2"]["MA_natural_gas_combined_cycle", "CT_natural_gas_combined_cycle", "ME_natural_gas_combined_cycle", "MA_solar_pv", "CT_onshore_wind", "CT_solar_pv", "ME_onshore_wind", "MA_battery", "CT_battery", "ME_battery", "Line_1", "Line_2"]["MA_natural_gas_combined_cycle", "CT_natural_gas_combined_cycle", "ME_natural_gas_combined_cycle", "MA_solar_pv", "CT_onshore_wind", "CT_solar_pv", "ME_onshore_wind", "MA_battery", "CT_battery", "ME_battery", "Line_1", "Line_2"]["MA_natural_gas_combined_cycle", "CT_natural_gas_combined_cycle", "ME_natural_gas_combined_cycle", "MA_solar_pv", "CT_onshore_wind", "CT_solar_pv", "ME_onshore_wind", "MA_battery", "CT_battery", "ME_battery", "Line_1", "Line_2"]["MA_natural_gas_combined_cycle", "CT_natural_gas_combined_cycle", "ME_natural_gas_combined_cycle", "MA_solar_pv", "CT_onshore_wind", "CT_solar_pv", "ME_onshore_wind", "MA_battery", "CT_battery", "ME_battery", "Line_1", "Line_2"]["MA_natural_gas_combined_cycle", "CT_natural_gas_combined_cycle", "ME_natural_gas_combined_cycle", "MA_solar_pv", "CT_onshore_wind", "CT_solar_pv", "ME_onshore_wind", "MA_battery", "CT_battery", "ME_battery", "Line_1", "Line_2"]10×23 DataFrame
+ Row │ MA_natural_gas_combined_cycle  CT_natural_gas_combined_cycle  ME_natural_gas_combined_cycle  MA_solar_pv     CT_onshore_wind  CT_solar_pv     ME_onshore_wind  MA_battery     CT_battery    ME_battery   Line_1          Line_2          FixedCost  OpCost     TotalCost  Zone1_TotalCost  Zone2_TotalCost  Zone3_TotalCost  TotalEmissions  Zone1_TotalEmissions  Zone2_TotalEmissions  Zone3_TotalEmissions  MGAIteration
+     │ Float64                        Float64                        Float64                        Float64         Float64          Float64         Float64          Float64        Float64       Float64      Float64         Float64         Float64    Float64    Float64    Float64          Float64          Float64          Float64         Float64               Float64               Float64               Int64
+─────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   1 │                 54754.0                       38442.2                         1213.99           2.59485          2.87642         1.36436          3.61757        12.2235       10.7733      12.6665      2944.03            2.49524      1.82383e9  2.0813e9   3.90513e9        1.1904e9         1.18643e9        1.18835e9       4.35014e7             1.64601e7           2.7036e7            5324.55                   0
+   2 │                     1.0398e5                      1.36061e-7                     1.24933e-7     4.96282e-8       1.41356e-7      2.01501e-7       3.41901e-7      6.72107e-7    6.81668e-7   6.41149e-7  2950.0           104.814        2.00509e9  2.402e9    4.40708e9        2.36901e9        2.36901e9        2.44679e9       4.45593e7             4.45593e7           0.000112558            4.82352e-7             1
+   3 │                 78018.9                        3293.91                           2.903e-8       7.25133e-11   2891.15            9.1725e-11    2054.86          194.295       390.65         9.49912e-7     1.79484e-10     4.40767e-10  2.31556e9  2.1325e9   4.44806e9        1.86837e9        1.8628e9         1.84293e9       3.84176e7             3.57316e7           2.68594e6              1.16954e-7             2
+   4 │                 20421.8                       41375.4                        25170.8            1.2117e-8        4.62312e-9   3008.05             2.97261e-8   1994.61          1.88599e-7   5.40896     2950.0          2000.0          2.29291e9  2.22186e9  4.51476e9        9.56842e8        7.44888e8        7.43866e8       4.2304e7              1.4188e7            2.60427e7              2.07327e6              3
+   5 │                 43816.4                       41954.8                            1.85133e-7  7531.23             2.06305e-9      2.30125e-8       1.21281e-8      2.28458       1.03426e-8  85.8431      2950.0          2000.0          2.49052e9  1.93352e9  4.42404e9        1.82097e9        1.72825e9        1.74689e9       3.81608e7             1.20096e7           2.61512e7              6.40191e-6             4
+   6 │                 51040.5                       62954.9                            4.59189e-8     1.32711e-8       2.14384e-8      2.96137e-8       3.78245e-8      1.53901e-7    1.02381e-7   1.36545e-7  2950.0          2000.0          2.22182e9  2.11275e9  4.33457e9        1.14269e9        1.11406e9        1.12344e9       4.35076e7             1.64627e7           2.70449e7              4.39364e-7             5
+   7 │                 19777.5                       44483.9                        25032.2         5802.28             8.95398e-8      1.15188e-7       2.10138e-7    200.49          3.12768e-7   3.7576      2950.0          2000.0          2.41218e9  2.00099e9  4.41317e9        1.20702e9        1.093e9          1.09395e9       3.99984e7             1.12673e7           2.71585e7              1.57253e6              6
+   8 │                 50891.3                       64997.1                          146.291          1.85418e-9       2.82444e-10     5.29296e-10      6.82852e-10     1.96812e-9    1.44282e-9   2.04017e-9  2950.0             3.38816e-9   2.22181e9  2.227e9    4.4488e9         1.11523e9        1.11122e9        1.25951e9       4.3507e7              1.64593e7           2.70467e7           1027.68                   7
+   9 │                     1.04068e5                     6.82954e-8                     5.25251e-8     1.13405e-8       8.00958e-9      7.03683e-9       9.4623e-9      83.0882       82.0644      81.4591      1522.13          214.246        2.00461e9  2.42308e9  4.42769e9        2.37498e9        2.46608e9        2.38282e9       4.4559e7              4.4559e7            5.64851e-5             8.81708e-8             8
+  10 │                102350.0                           3.37281e-8                   986.712          1.60482e-9       4.98924e-9      2.1398e-9        4.06575e-9      1.54121e-8    1.39706e-6   2.65491e-8  1583.24            2.58645e-9   1.97589e9  2.39175e9  4.36764e9        2.3381e9         2.40063e9        2.34306e9       4.45613e7             4.45563e7           2.79018e-5          5035.27                   9
+Writing Output
+Running with crossover on
+Time elapsed for writing capacity is
+0.637307501
+Time elapsed for writing network expansion is
+0.10982391
+Thu May  8 03:39:45 PM EDT 2025
