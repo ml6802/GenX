@@ -269,7 +269,7 @@ function run_genx_case_benders!(case::AbstractString, mysetup::Dict)
         dfResults = make_benders_results_df(planning_sol,operational_sol,case,mysetup,myinputs,myinputs_decomp)
         println("Running Modelling to Generate Alternatives with Cutting-Plane Algorithm")
         # Run MGA
-        benders_inputs["mga_vectors"] = generate_vecs(myinputs, mysetup)
+        benders_inputs["cap_vectors"], benders_inputs["line_vectors"] = generate_vecs(myinputs, mysetup)
         results, sumtime_df = run_benders_mga(benders_inputs,mysetup, myinputs, opt_stats)
         write_benders_mga_results!(dfResults, results, case, mysetup, myinputs, myinputs_decomp, sumtime_df)
     end

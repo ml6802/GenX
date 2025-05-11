@@ -148,7 +148,6 @@ function write_capacity_benders(inputs::Dict, master_sol::NamedTuple)
 				mult = cap_size(inputs["RESOURCES"][parse(Int64,num[1])])
 			end
 			cap_vec[parse(Int64,num[1])] += master_sol_df.vals[i]*mult
-			counter +=1
 		elseif name[1] == "vRETCAP"
 			num = split(name[2], "]")
 			mult=1
@@ -160,9 +159,12 @@ function write_capacity_benders(inputs::Dict, master_sol::NamedTuple)
 	end
 	for i in eachindex(master_sol_df.key)
 		name = split(master_sol_df.key[i], "[")
+		println(name)
 		if name[1] == "vNEW_TRANS_CAP"
 			num = split(name[2], "]")
-			cap_vec[counter+parse(Int64,num[1])] = master_sol_df.vals[i]
+			cap_vec[length(resources)+parse(Int64,num[1])] = master_sol_df.vals[i]
+			println(cap_vec[length(resources)+parse(Int64,num[1])])
+			println(master_sol_df.vals[i])
 		end
 	end
 	println(cap_vec)
