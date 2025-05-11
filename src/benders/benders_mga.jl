@@ -7,7 +7,8 @@ function run_benders_mga(benders_inputs::Dict{Any,Any},setup::Dict, inputs::Dict
     master_vars = benders_inputs["planning_variables"];
     EP_subprob = benders_inputs["subproblems"];
     master_vars_sub = benders_inputs["planning_variables_sub"];
-    mga_vectors = benders_inputs["mga_vectors"]
+    cap_vectors = benders_inputs["cap_vectors"]
+    line_vectors = benders_inputs["line_vectors"]
 
     cut_counter=0
     
@@ -24,7 +25,11 @@ function run_benders_mga(benders_inputs::Dict{Any,Any},setup::Dict, inputs::Dict
     sumtime_df = DataFrame(:MGA_it => 0, :Iterations => length(opt_stats.UB_hist), :Iteration_Time => opt_stats.cpu_time[end]) 
 
 
-    (TechTypes, Zones, Iterations) = size(mga_vectors)
+    (TechTypes, Zones, Iterations) = size(cap_vectors)
+    println(Iterations)
+    (lines, num) = size(line_vectors)
+    println(size(cap_vectors))
+    println(line_vectors)
     retain_master_cuts = setup["ModelingToGenerateAlternativeRetainBendersCuts"];
     println("Cut Setting " * string(retain_master_cuts))
     setup["BD_Stab_Method"] = "off"
@@ -47,7 +52,7 @@ function run_benders_mga(benders_inputs::Dict{Any,Any},setup::Dict, inputs::Dict
             println("No cut-retention method specified, defaulting to least-cost cuts")
             forget_cuts_master!(EP_master, opt_cuts)
         end
-        @objective(EP_master,Min,sum(mga_vectors[tt,z,iteration]*EP_master[:vSumvCap][tt,z] for z in 1:Zones, tt in 1:TechTypes))
+        @objective(EP_master,Min,sum(cap_vectors[tt,z,iteration]*EP_master[:vSumvCap][tt,z] for z in 1:Zones, tt in 1:TechTypes) + sum(line_vectors[l,iteration]*EP_master[:vNEW_TRANS_CAP][l] for l in 1:lines))
       #  if setup["BD_IntegerMethod"] == 2 && setup["IntegerInvestments"] == 1
         #    all_master_vars = all_variables(EP_master);
     	#	integer_vars = all_master_vars[is_integer.(all_master_vars)];
@@ -313,17 +318,19 @@ function mga_cutting_plane(EP_master::Model, master_vars::Vector{String},EP_subp
 end
 
 
-function make_rand_vecs(iterations::Int64, TechTypes::Int64, Zones::Int64)
-    vecs = rand(Float64,(TechTypes,Zones,iterations))
-    return vecs
+function make_rand_vecs(iterations::Int64, TechTypes::Int64, n_lines::Int64, Zones::Int64)
+    gen_vecs = rand(Float64,(TechTypes,Zones,iterations))
+    line_vecs = rand(Float64,(n_lines,iterations))
+    return gen_vecs, line_vecs
 end
 
-function make_capMM_vecs(iterations::Int64, TechTypes::Int64, Zones::Int64)
-    vecs =  unique_int(rand(-1:1,TechTypes,2*iterations))#unique_int(rand(-1:1,TechTypes,Zones,2*iterations))
-    #check_it_a!(vecs,iterations)
-    check_it_a_ag!(vecs,iterations)
-    cap_vecs = convert_ag_to_disag(vecs,Zones)
-    return cap_vecs
+function make_capMM_vecs(iterations::Int64, TechTypes::Int64, n_lines::Int64,Zones::Int64)
+    cap_vecs =  rand(-1:1,TechTypes,Zones,2*iterations)
+    cap_vecs = check_it_a(cap_vecs,iterations)
+    line_vecs = rand(-1:1,n_lines,iterations)
+    #check_it_a_ag!(vecs,iterations)
+    #cap_vecs = convert_ag_to_disag(vecs,Zones)
+    return cap_vecs, line_vecs
 end
 
 function unique_int(points::AbstractArray)
@@ -348,12 +355,15 @@ function unique_int(points::AbstractArray)
     return uniques
 end
 
-function make_combo_vecs(iterations::Int64, TechTypes::Int64, Zones::Int64, ratio::Float64)
-    rand_vecs = make_rand_vecs(ceil(Int64,iterations*ratio),TechTypes,Zones)
-    cap_vecs = make_capMM_vecs(floor(Int64,iterations*(1-ratio)),TechTypes, Zones)
-    vecs = cat(rand_vecs,cap_vecs,dims=3)
-    vecs = vecs[:,:,1:iterations]
-    return vecs
+function make_combo_vecs(iterations::Int64, TechTypes::Int64,n_lines::Int64, Zones::Int64, ratio::Float64)
+    rand_vecs, r_line_vecs = make_rand_vecs(ceil(Int64,iterations*ratio),TechTypes,n_lines,Zones)
+    cap_vecs, c_line_vecs = make_capMM_vecs(floor(Int64,iterations*(1-ratio)),TechTypes,n_lines,Zones)
+    
+    gen_vecs = cat(rand_vecs,cap_vecs,dims=3)
+    gen_vecs = vecs[:,:,1:iterations]
+    
+    line_vecs = cat(r_line_vecs, c_line_vecs, dims = 2)
+    return gen_vecs, line_vecs
 end
 
 function convert_ag_to_disag(ag_vecs::AbstractArray, Zones::Int64)
@@ -377,7 +387,7 @@ function check_it_a_ag!(a::AbstractArray, iterations::Int64)
     end
 end
 
-function check_it_a!(a::AbstractArray, iterations::Int64)
+function check_it_a(a::AbstractArray, iterations::Int64)
     (r,c,i) = size(a)
     if iterations < i
         a = a[1:r,1:c, 1:iterations]
@@ -405,6 +415,7 @@ end
 function generate_vecs(inputs::Dict, setup::Dict)
     iterations = setup["ModelingToGenerateAlternativeIterations"]
     TechTypes = collect(eachindex(unique(inputs["RESOURCES"].resource_type)))[end]
+    n_lines = length(inputs["EXPANSION_LINES"])
     zones = inputs["Z"]
     method = setup["MGAMethod"]
     cluster_vecs = setup["ClusterMGAVecs"]
@@ -414,15 +425,19 @@ function generate_vecs(inputs::Dict, setup::Dict)
     
     if method == 0
         ratio = find_ratio(setup)
-        mats = make_combo_vecs(iterations,TechTypes,zones,ratio)
+        mats, line_vecs = make_combo_vecs(iterations,TechTypes,n_lines,zones,ratio)
     elseif method == 1
-        mats = make_rand_vecs(iterations,TechTypes,zones)
+        mats, line_vecs = make_rand_vecs(iterations,TechTypes,n_lines,zones)
     elseif method == 2
-        mats = make_capMM_vecs(iterations,TechTypes,zones)
+        mats, line_vecs = make_capMM_vecs(iterations,TechTypes,n_lines,zones)
     end
+    println(size(mats))
     max_mats = -1.0 .* mats
+    max_line_vecs = -1.0 .* line_vecs
     all_mats = cat(mats, max_mats, dims=3)
+    all_line_vecs = cat(line_vecs, max_line_vecs, dims=2)
     
+    println(size(all_mats))
     if cluster_vecs == 1
         nclusters= setup["NumMGACluster"]
         focus_cluster = setup["FocusCluster"]
@@ -449,7 +464,7 @@ function generate_vecs(inputs::Dict, setup::Dict)
             all_mats[:,:,i] = reshape(all_vecs[i,:], (r,c))
         end
     end
-    return all_mats
+    return all_mats, all_line_vecs
 end
 
 function kmeanscluster_vecs(vecs::AbstractArray, nclusters::Int64)

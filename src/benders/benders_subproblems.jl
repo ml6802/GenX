@@ -1,4 +1,3 @@
-
 function generate_operation_subproblem(setup::Dict, inputs::Dict, OPTIMIZER::MOI.OptimizerWithAttributes)
 
     ## Start pre-solve timer
