@@ -236,19 +236,6 @@ function run_genx_case_benders!(case::AbstractString, mysetup::Dict)
     opt_stats = (cpu_time=cpu_time, UB_hist = UB_hist)
     println("Benders decomposition took $(cpu_time[end]) seconds to run")
 
-    """ MGA Functionality """
-    if mysetup["ModelingToGenerateAlternatives"] == 1
-        # Write least-cost solution into DF for MGA results
-        dfResults = make_benders_results_df(planning_sol,operational_sol,case,mysetup,myinputs,myinputs_decomp)
-        println("Running Modelling to Generate Alternatives with Cutting-Plane Algorithm")
-        # Run MGA
-        benders_inputs["mga_vectors"] = generate_vecs(myinputs, mysetup)
-        results, sumtime_df = run_benders_mga(benders_inputs,mysetup, myinputs, opt_stats)
-        write_benders_mga_results!(dfResults, results, case, mysetup, myinputs, myinputs_decomp, sumtime_df)
-    end
-
-    
-
     println("Writing Output")
 
     if mysetup["BD_Stab_Method"]=="int_level_set" 
@@ -269,8 +256,23 @@ function run_genx_case_benders!(case::AbstractString, mysetup::Dict)
 		mkdir(outputs_path)
 	end
     
-    elapsed_time = @elapsed write_benders_output(LB_hist,UB_hist,cpu_time,feasibility_hist,outputs_path,mysetup,myinputs,planning_problem);
+    planning_problem=write_benders_output(LB_hist,UB_hist,cpu_time,feasibility_hist,outputs_path,mysetup,myinputs,planning_problem);
+    
 
+    """ MGA Functionality """
+    if mysetup["ModelingToGenerateAlternatives"] == 1
+        # Write least-cost solution into DF for MGA results
+        zone_inv_cost = make_benders_zonal_invcost(myinputs, planning_problem)
+        planning_sol =  (LB = objective_value(planning_problem), inv_cost =value(planning_problem[:eObj]), zone_inv_cost = zone_inv_cost,values =Dict([s=>value.(variable_by_name(planning_problem,s)) for s in benders_inputs["planning_variables"]]), theta = value.(planning_problem[:vTHETA])) 
+        set_attribute(planning_problem, "Crossover", 0)
+        operational_sol = solve_dist_subproblems(benders_inputs["subproblems"],planning_sol,myinputs);
+        dfResults = make_benders_results_df(planning_sol,operational_sol,case,mysetup,myinputs,myinputs_decomp)
+        println("Running Modelling to Generate Alternatives with Cutting-Plane Algorithm")
+        # Run MGA
+        benders_inputs["mga_vectors"] = generate_vecs(myinputs, mysetup)
+        results, sumtime_df = run_benders_mga(benders_inputs,mysetup, myinputs, opt_stats)
+        write_benders_mga_results!(dfResults, results, case, mysetup, myinputs, myinputs_decomp, sumtime_df)
+    end
 end
 
 

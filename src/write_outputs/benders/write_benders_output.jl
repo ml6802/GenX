@@ -41,6 +41,8 @@ function write_benders_output(LB_hist::Vector{Float64},UB_hist::Vector{Float64},
 	planning_problem)
 	CSV.write(joinpath(outpath, "benders_convergence.csv"),dfConv)
 	YAML.write_file(joinpath(outpath, "run_settings.yml"),setup)
+
+	return planning_problem
 end
 
 
@@ -135,7 +137,6 @@ function write_capacity_benders(inputs::Dict, master_sol::NamedTuple)
 	master_sol_df = DataFrame(key = collect(keys(master_sol.values)), vals = collect(master_sol.values[i] for i in collect(keys(master_sol.values))))
 	sort!(master_sol_df,:key)
 	capacity_names = vcat(resources,lines)
-	print(capacity_names)
 	cap_vec = [existing_cap_mw;zeros(length(lines))]
 	counter = 0
 	for i in eachindex(master_sol_df.key)
@@ -143,20 +144,16 @@ function write_capacity_benders(inputs::Dict, master_sol::NamedTuple)
 		if name[1] == "vCAP"
 			num = split(name[2], "]")
 			mult=1
-			try 
-				mult = inputs["RESOURCES"].cap_size
-			catch
-				mult = 1
+			if parse(Int64,num[1]) in inputs["COMMIT"]
+				mult = cap_size(inputs["RESOURCES"][parse(Int64,num[1])])
 			end
 			cap_vec[parse(Int64,num[1])] += master_sol_df.vals[i]*mult
 			counter +=1
 		elseif name[1] == "vRETCAP"
 			num = split(name[2], "]")
 			mult=1
-			try 
-				mult = inputs["RESOURCES"].cap_size
-			catch
-				mult = 1
+			if parse(Int64,num[1]) in inputs["COMMIT"]
+				mult = cap_size(inputs["RESOURCES"][parse(Int64,num[1])])
 			end
 			cap_vec[parse(Int64,num[1])] -= master_sol_df.vals[i]*mult
 		end
@@ -168,12 +165,9 @@ function write_capacity_benders(inputs::Dict, master_sol::NamedTuple)
 			cap_vec[counter+parse(Int64,num[1])] = master_sol_df.vals[i]
 		end
 	end
+	println(cap_vec)
 	df_summary = DataFrame(cap_vec', capacity_names)
-	#cap_mat = Array{Union{String,Float64},2}(undef,(3,length(capacity_names)))
-	#cap_mat[1,:] = reshape(capacity_names,(1,:))
-	#cap_mat[2,:] = cap_vec'
-	#cap_mat = add_types(inputs,cap_mat)
-	#df_summary = summarize_type_capacities(inputs, cap_mat, cap_mat[3,:])
+	println(df_summary)
 	return df_summary
 end
 
@@ -208,14 +202,13 @@ function make_benders_results_df(master_sol::NamedTuple, subop_sol::Dict, path::
 end
 
 function write_benders_mga_results!(Results_df::DataFrame, results::AbstractArray, path::AbstractString, setup::Dict, inputs::Dict, inputs_decomp::Dict, sumtime_df::DataFrame)
-	num_its = 2*setup["ModelingToGenerateAlternativeIterations"]-1
+	num_its = 2*setup["ModelingToGenerateAlternativeIterations"]
 	for i in 1:num_its
 		temp_df = make_benders_results_df(results[i,1],results[i,2],path,setup,inputs,inputs_decomp)
 		append!(Results_df,temp_df)
 	end
 	iterations = collect(0:num_its)
 	Results_df[!,:MGAIteration] .= iterations
-	println(Results_df)
 	outpath = joinpath(path,"Outputs")
 	if setup["OverwriteResults"] == 1
 		# Overwrite existing results if dir exists

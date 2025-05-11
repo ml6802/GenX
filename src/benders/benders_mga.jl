@@ -66,15 +66,14 @@ function run_benders_mga(benders_inputs::Dict{Any,Any},setup::Dict, inputs::Dict
 	    #else
 	        @time EP_master, master_sol_final, subop_sol,ApproxSystemCost_hist, TrueSystemCost_hist, cpu_time = mga_cutting_plane(EP_master,master_vars,EP_subprob, master_vars_sub,setup,inputs,iteration);
 	   # end
+        println(EP_master[:eTotalCap])
         results[iteration,:] = [master_sol_final,subop_sol]
     
         time_df = DataFrame(:MGA_it => iteration, :Iterations => length(TrueSystemCost_hist), :Iteration_Time => cpu_time[end])
         append!(sumtime_df, time_df)
     end
-
     return results, sumtime_df
 end
-
 
 function name_cuts!(EP_master::Model, counter::Int64)
     for con in all_constraints(EP_master,include_variable_in_set_constraints=false)
@@ -277,6 +276,23 @@ function mga_cutting_plane(EP_master::Model, master_vars::Vector{String},EP_subp
             println("Average Master Time = "*string(master_avg))
             println("Average Subop Time = "*string(subop_avg))
             println("Master/Subop Ratio = "*string(ms_ratio))
+
+            println("Rerunning with crossover on")
+            set_attribute(EP_master, "Crossover", 1)
+            start_master_sol = time()
+            master_sol = solve_mga_master_problem(EP_master,master_vars, inputs,id, k,mga_it);
+            cpu_master_sol = time()-start_master_sol;
+            println("Solving the master problem required $cpu_master_sol seconds")
+
+            start_subop_sol = time();
+            subop_sol = solve_dist_subproblems(EP_subprob,master_sol,inputs);
+            cpu_subop_sol = time()-start_subop_sol;
+            push!(sub_times, cpu_subop_sol)
+            println("Solving the subproblems required $cpu_subop_sol seconds")
+
+            set_attribute(EP_master, "Crossover", 0)
+            TrueSystemCost_final = sum(subop_sol[w].op_cost for w in keys(subop_sol))+master_sol.inv_cost;
+            append!(TrueSystemCost_hist,TrueSystemCost_final)
             return (EP_master=EP_master,master_sol = master_sol_final,subop_sol=subop_sol,ApproxSystemCost_hist = ApproxSystemCost_hist,TrueSystemCost_hist = TrueSystemCost_hist,cpu_time = cpu_time)
 		elseif cpu_time[end] >= MaxCpuTime
 			return (EP_master=EP_master,master_sol = master_sol_final,subop_sol=subop_sol,ApproxSystemCost_hist = ApproxSystemCost_hist,TrueSystemCost_hist = TrueSystemCost_hist,cpu_time = cpu_time)
@@ -390,8 +406,6 @@ function generate_vecs(inputs::Dict, setup::Dict)
     iterations = setup["ModelingToGenerateAlternativeIterations"]
     TechTypes = collect(eachindex(unique(inputs["RESOURCES"].resource_type)))[end]
     zones = inputs["Z"]
-    println(TechTypes)
-    println(iterations)
     method = setup["MGAMethod"]
     cluster_vecs = setup["ClusterMGAVecs"]
 
