@@ -71,7 +71,6 @@ function run_benders_mga(benders_inputs::Dict{Any,Any},setup::Dict, inputs::Dict
 	    #else
 	        @time EP_master, master_sol_final, subop_sol,ApproxSystemCost_hist, TrueSystemCost_hist, cpu_time = mga_cutting_plane(EP_master,master_vars,EP_subprob, master_vars_sub,setup,inputs,iteration);
 	   # end
-        println(EP_master[:eTotalCap])
         results[iteration,:] = [master_sol_final,subop_sol]
     
         time_df = DataFrame(:MGA_it => iteration, :Iterations => length(TrueSystemCost_hist), :Iteration_Time => cpu_time[end])
@@ -227,6 +226,7 @@ function mga_cutting_plane(EP_master::Model, master_vars::Vector{String},EP_subp
 	solver_start_time = time()
 	id=1
 	iteration=1
+	indicator = 0
 
 	#### Algorithm parameters:
 	
@@ -274,31 +274,24 @@ function mga_cutting_plane(EP_master::Model, master_vars::Vector{String},EP_subp
 		println("k = ", k,"      ApproxSystemCost = ", ApproxSystemCost,"     TrueSystemCost = ", TrueSystemCost,"     TrueSystemCost_new = ", TrueSystemCost_new,"       MGABudget Violation = ", (TrueSystemCost_new-setup["MGABudget"])/abs(setup["MGABudget"]),"       CPU Time = ",cpu_time[end])
 
         if (isapprox(TrueSystemCost_new, setup["MGABudget"], rtol=setup["RelaxBudget"]) && setup["RelaxBudget"] > 0) || TrueSystemCost_new <= setup["MGABudget"]
-            master_avg = mean(master_times)
-            subop_avg = mean(sub_times)
-            ms_ratio = master_avg/subop_avg
-            println("MGA iteration finished")
-            println("Average Master Time = "*string(master_avg))
-            println("Average Subop Time = "*string(subop_avg))
-            println("Master/Subop Ratio = "*string(ms_ratio))
-
-            println("Rerunning with crossover on")
-            set_attribute(EP_master, "Crossover", 1)
-            start_master_sol = time()
-            master_sol = solve_mga_master_problem(EP_master,master_vars, inputs,id, k,mga_it);
-            cpu_master_sol = time()-start_master_sol;
-            println("Solving the master problem required $cpu_master_sol seconds")
-
-            start_subop_sol = time();
-            subop_sol = solve_dist_subproblems(EP_subprob,master_sol,inputs);
-            cpu_subop_sol = time()-start_subop_sol;
-            push!(sub_times, cpu_subop_sol)
-            println("Solving the subproblems required $cpu_subop_sol seconds")
-
-            set_attribute(EP_master, "Crossover", 0)
-            TrueSystemCost_final = sum(subop_sol[w].op_cost for w in keys(subop_sol))+master_sol.inv_cost;
-            append!(TrueSystemCost_hist,TrueSystemCost_final)
-            return (EP_master=EP_master,master_sol = master_sol_final,subop_sol=subop_sol,ApproxSystemCost_hist = ApproxSystemCost_hist,TrueSystemCost_hist = TrueSystemCost_hist,cpu_time = cpu_time)
+            if indicator == 0
+                println("Rerunning with crossover on")
+                set_attribute(EP_master, "Crossover", 1)
+                TrueSystemCost = 1000000000
+                TrueSystemCostNew = 1000000000
+                indicator = 1
+            else
+                set_attribute(EP_master, "Crossover", 0)
+                master_avg = mean(master_times)
+                subop_avg = mean(sub_times)
+                ms_ratio = master_avg/subop_avg
+                println("MGA iteration finished")
+                println("Average Master Time = "*string(master_avg))
+                println("Average Subop Time = "*string(subop_avg))
+                println("Master/Subop Ratio = "*string(ms_ratio))
+    
+                return (EP_master=EP_master,master_sol = master_sol_final,subop_sol=subop_sol,ApproxSystemCost_hist = ApproxSystemCost_hist,TrueSystemCost_hist = TrueSystemCost_hist,cpu_time = cpu_time)
+		    end
 		elseif cpu_time[end] >= MaxCpuTime
 			return (EP_master=EP_master,master_sol = master_sol_final,subop_sol=subop_sol,ApproxSystemCost_hist = ApproxSystemCost_hist,TrueSystemCost_hist = TrueSystemCost_hist,cpu_time = cpu_time)
         else
@@ -318,8 +311,12 @@ function mga_cutting_plane(EP_master::Model, master_vars::Vector{String},EP_subp
 end
 
 
-function make_rand_vecs(iterations::Int64, TechTypes::Int64, n_lines::Int64, Zones::Int64)
+function make_rand_vecs(iterations::Int64, TechTypes::Int64, n_lines::Int64, Zones::Int64, ag::Bool)
     gen_vecs = rand(Float64,(TechTypes,Zones,iterations))
+    if ag == true
+        gen_vecs = rand(Float64,(TechTypes,iterations))
+    end
+        
     line_vecs = rand(Float64,(n_lines,iterations))
     return gen_vecs, line_vecs
 end

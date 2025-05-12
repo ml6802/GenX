@@ -159,17 +159,12 @@ function write_capacity_benders(inputs::Dict, master_sol::NamedTuple)
 	end
 	for i in eachindex(master_sol_df.key)
 		name = split(master_sol_df.key[i], "[")
-		println(name)
 		if name[1] == "vNEW_TRANS_CAP"
 			num = split(name[2], "]")
 			cap_vec[length(resources)+parse(Int64,num[1])] = master_sol_df.vals[i]
-			println(cap_vec[length(resources)+parse(Int64,num[1])])
-			println(master_sol_df.vals[i])
 		end
 	end
-	println(cap_vec)
 	df_summary = DataFrame(cap_vec', capacity_names)
-	println(df_summary)
 	return df_summary
 end
 
