@@ -13,6 +13,6 @@
 
 module add julia/1.9.1
 module add gurobi/10.0.1
-julia --project="/home/ml6802/GenX-Bend-0.4/GenX" -p4 Run.jl
+julia --project="/home/ml6802/GenX-Bend-0.4/GenX" -p4 Run_dist.jl
 
 date
