@@ -227,7 +227,6 @@ function mga_cutting_plane(EP_master::Model, master_vars::Vector{String},EP_subp
 	id=1
 	iteration=1
 	indicator = 0
-    indic2 = 0
 
 	#### Algorithm parameters:
 	
@@ -262,12 +261,8 @@ function mga_cutting_plane(EP_master::Model, master_vars::Vector{String},EP_subp
 		println("Solving the subproblems required $cpu_subop_sol seconds")
 
 		TrueSystemCost_new = sum(subop_sol[w].op_cost for w in keys(subop_sol))+master_sol.inv_cost;
-		if TrueSystemCost_new <= TrueSystemCost && indic2 == 0
+		if TrueSystemCost_new <= TrueSystemCost
         	TrueSystemCost = copy(TrueSystemCost_new);
-			master_sol_final = deepcopy(master_sol);
-            #master_sol = deepcopy(master_sol_temp);
-        elseif TrueSystemCost_new >= TrueSystemCost && indic2 == 1
-            TrueSystemCost = copy(TrueSystemCost_new);
 			master_sol_final = deepcopy(master_sol);
 		end
 
@@ -277,36 +272,12 @@ function mga_cutting_plane(EP_master::Model, master_vars::Vector{String},EP_subp
 		
 		println("k = ", k,"      ApproxSystemCost = ", ApproxSystemCost,"     TrueSystemCost = ", TrueSystemCost,"     TrueSystemCost_new = ", TrueSystemCost_new,"       MGABudget Violation = ", (TrueSystemCost_new-setup["MGABudget"])/abs(setup["MGABudget"]),"       CPU Time = ",cpu_time[end])
 
-        if (isapprox(TrueSystemCost_new, setup["MGABudget"], rtol=setup["RelaxBudget"]) && setup["RelaxBudget"] > 0 && indic2 == 0) || (TrueSystemCost_new <= setup["MGABudget"] && indic2 == 0)
-            if k == 1
-                indic2 = 1
-                println("Need to increase cost")
-                continue
-            end
-            if indicator == 0
-                println("Rerunning with crossover on")
-                set_attribute(EP_master, "Crossover", 1)
-                TrueSystemCost = 1000000000
-                TrueSystemCostNew = 1000000000
-                indicator = 1
-            else
-                set_attribute(EP_master, "Crossover", 0)
-                master_avg = mean(master_times)
-                subop_avg = mean(sub_times)
-                ms_ratio = master_avg/subop_avg
-                println("MGA iteration finished")
-                println("Average Master Time = "*string(master_avg))
-                println("Average Subop Time = "*string(subop_avg))
-                println("Master/Subop Ratio = "*string(ms_ratio))
-    
-                return (EP_master=EP_master,master_sol = master_sol_final,subop_sol=subop_sol,ApproxSystemCost_hist = ApproxSystemCost_hist,TrueSystemCost_hist = TrueSystemCost_hist,cpu_time = cpu_time)
-		    end
-        elseif (isapprox(TrueSystemCost_new, setup["MGABudget"], rtol=setup["RelaxBudget"]) && setup["RelaxBudget"] > 0 && indic2 == 1) || (TrueSystemCost_new >= setup["MGABudget"] && indic2 == 1)
+        if (isapprox(TrueSystemCost_new, setup["MGABudget"], rtol=setup["RelaxBudget"]) && setup["RelaxBudget"] > 0) || (TrueSystemCost_new <= setup["MGABudget"])
                 if indicator == 0
                     println("Rerunning with crossover on")
                     set_attribute(EP_master, "Crossover", 1)
-                    TrueSystemCost = 1000000000
-                    TrueSystemCostNew = 1000000000
+                    TrueSystemCost = 1000000000.0
+                    TrueSystemCostNew = 1000000000.0
                     indicator = 1
                 else
                     set_attribute(EP_master, "Crossover", 0)
@@ -318,8 +289,8 @@ function mga_cutting_plane(EP_master::Model, master_vars::Vector{String},EP_subp
                     println("Average Subop Time = "*string(subop_avg))
                     println("Master/Subop Ratio = "*string(ms_ratio))
         
-                    return (EP_master=EP_master,master_sol = master_sol_final,subop_sol=subop_sol,ApproxSystemCost_hist = ApproxSystemCost_hist,TrueSystemCost_hist = TrueSystemCost_hist,cpu_time = cpu_time)
-                end
+                return (EP_master=EP_master,master_sol = master_sol_final,subop_sol=subop_sol,ApproxSystemCost_hist = ApproxSystemCost_hist,TrueSystemCost_hist = TrueSystemCost_hist,cpu_time = cpu_time)
+		    end
 		elseif cpu_time[end] >= MaxCpuTime
 			return (EP_master=EP_master,master_sol = master_sol_final,subop_sol=subop_sol,ApproxSystemCost_hist = ApproxSystemCost_hist,TrueSystemCost_hist = TrueSystemCost_hist,cpu_time = cpu_time)
         else
