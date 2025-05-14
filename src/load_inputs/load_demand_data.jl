@@ -169,7 +169,20 @@ function load_demand_data!(setup::Dict, p::Portfolio, inputs::Dict)
 
     inputs["START_SUBPERIODS"] = 1:hours_per_subperiod:T # set of indexes for all time periods that start a subperiod (e.g. sample day/week)
     inputs["INTERIOR_SUBPERIODS"] = setdiff(1:T, inputs["START_SUBPERIODS"]) # set of indexes for all time periods that do not start a subperiod
-
+#=
+    mutable struct DemandRequirement{T <: PSY.StaticInjection} <: DemandTechnology
+        name::String
+        value_of_lost_load::Float64
+        power_systems_type::String
+        peak_demand_mw::Float64
+        unserved_demand_curve::PSY.ValueCurve
+        internal::InfrastructureSystemsInternal
+        id::Int64
+        ext::Dict
+        region::Vector{RegionTopology}
+        available::Bool
+    end
+=#
     # Demand in MW for each zone
     scale_factor = setup["ParameterScale"] == 1 ? ModelScalingFactor : 1
     # Max value of non-served energy
