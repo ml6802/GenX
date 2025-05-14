@@ -273,21 +273,21 @@ function mga_cutting_plane(EP_master::Model, master_vars::Vector{String},EP_subp
 		println("k = ", k,"      ApproxSystemCost = ", ApproxSystemCost,"     TrueSystemCost = ", TrueSystemCost,"     TrueSystemCost_new = ", TrueSystemCost_new,"       MGABudget Violation = ", (TrueSystemCost_new-setup["MGABudget"])/abs(setup["MGABudget"]),"       CPU Time = ",cpu_time[end])
 
         if (isapprox(TrueSystemCost_new, setup["MGABudget"], rtol=setup["RelaxBudget"]) && setup["RelaxBudget"] > 0) || (TrueSystemCost_new <= setup["MGABudget"])
-                if indicator == 0
-                    println("Rerunning with crossover on")
-                    set_attribute(EP_master, "Crossover", 1)
-                    TrueSystemCost = 1000000000.0
-                    TrueSystemCostNew = 1000000000.0
-                    indicator = 1
-                else
-                    set_attribute(EP_master, "Crossover", 0)
-                    master_avg = mean(master_times)
-                    subop_avg = mean(sub_times)
-                    ms_ratio = master_avg/subop_avg
-                    println("MGA iteration finished")
-                    println("Average Master Time = "*string(master_avg))
-                    println("Average Subop Time = "*string(subop_avg))
-                    println("Master/Subop Ratio = "*string(ms_ratio))
+            if indicator == 0
+                println("Rerunning with crossover on")
+                set_attribute(EP_master, "Crossover", 1)
+                TrueSystemCost = 1000000000.0
+                TrueSystemCostNew = 1000000000.0
+                indicator = 1
+            else
+                set_attribute(EP_master, "Crossover", 0)
+                master_avg = mean(master_times)
+                subop_avg = mean(sub_times)
+                ms_ratio = master_avg/subop_avg
+                println("MGA iteration finished")
+                println("Average Master Time = "*string(master_avg))
+                println("Average Subop Time = "*string(subop_avg))
+                println("Master/Subop Ratio = "*string(ms_ratio))
         
                 return (EP_master=EP_master,master_sol = master_sol_final,subop_sol=subop_sol,ApproxSystemCost_hist = ApproxSystemCost_hist,TrueSystemCost_hist = TrueSystemCost_hist,cpu_time = cpu_time)
 		    end
