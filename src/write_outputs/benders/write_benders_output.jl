@@ -316,12 +316,13 @@ function make_benders_zonal_opcost(inputs::Dict,EP::Model)
 			tempCVar += eCVarFlex_in
 			tempCTotal += eCVarFlex_in
 		end
-
-		#if setup["UCommit"] >= 1
+		"""
+		if setup["UCommit"] >= 1
 			eCStart = sum(value.(EP[:eCStart][COMMIT_ZONE,:]))
 			tempCStart += eCStart
 			tempCTotal += eCStart
-		#end
+		end
+		"""
 
 		tempCNSE = sum(value.(EP[:eCNSE][:,:,z]))
 		tempCTotal += tempCNSE

@@ -13,4 +13,4 @@ WriteOutputs: "annual"
 Benders: 1
 UCommit: 2
 IntegerInvestments: 1
-ParameterScale: 1
+ParameterScale: 0

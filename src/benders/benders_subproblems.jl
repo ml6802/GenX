@@ -166,14 +166,28 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
 		op_cost = objective_value(EP);
         zone_cost = make_benders_zonal_opcost(inputs,EP)
 		emissions = value.(EP[:eEmissionsByZone])
-		lambda = [dual(FixRef(variable_by_name(EP,y))) for y in planning_variables_sub];
+        lambda=[]
+        for y in planning_variables_sub
+            vy = variable_by_name(EP,y)
+		    if is_parameter(vy)
+                push!(lambda, dual(ParameterRef(vy)))
+                if dual(ParameterRef(vy)) > 0.1
+                    println("Dual value for parameter "*string(vy)*" is "*string(dual(ParameterRef(vy))))
+                end
+            else
+                push!(lambda, dual(FixRef(vy)))
+                if dual(FixRef(vy)) > 0.1
+                    println("Dual value for variable "*string(vy)*" is "*string(dual(FixRef(vy))))
+                end
+            end
+        end
 		theta_coeff = 1;
 		if haskey(EP,:eObjSlack)
 			feasibility_slack = value(EP[:eObjSlack]);
 		else
 			feasibility_slack = 0.0;
 		end
-		
+		println(lambda)
 	else
 		op_cost = 0;
         zone_cost = make_benders_zonal_opcost(inputs,EP)
@@ -202,9 +216,14 @@ function fix_planning_variables!(EP::Model,planning_sol::NamedTuple,planning_var
 	for y in planning_variables_sub
 		vy = variable_by_name(EP,y);
         if is_parameter(vy)
-            println("Setting parameter " * string(vy) * " to " * string(planning_sol.values[y]))
+            if planning_sol.values[y] > 0.1
+                println("Set parameter "*string(vy)*" to value "*string(planning_sol.values[y]))
+            end
             set_parameter_value(vy,planning_sol.values[y])
         else
+            if planning_sol.values[y] > 0.1
+                println("Fixed variable "*string(vy)*" to value "*string(planning_sol.values[y]))
+            end
             fix(vy,planning_sol.values[y];force=true)
         end
 		if is_integer(vy)

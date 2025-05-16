@@ -58,6 +58,8 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
         
 		cpu_subop_sol = time()-start_subop_sol;
 		println("Solving the subproblems required $cpu_subop_sol seconds")
+		println(planning_sol.inv_cost)
+		println(sum(subop_sol[w].op_cost for w in keys(subop_sol)))
 
 		UBnew = sum((subop_sol[w].theta_coeff==0 ? Inf : subop_sol[w].op_cost) for w in keys(subop_sol))+planning_sol.inv_cost;
 		if UBnew < UB

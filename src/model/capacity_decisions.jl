@@ -167,7 +167,15 @@ function transmission_capacity_decisions!(EP, inputs::Dict, setup::Dict)
             # Transmission network capacity reinforcements per line, integer
             @variable(EP, vNEW_TRANS_LINES[l in EXPANSION_LINES] in Int, lower_bound=0)
         elseif setup["DC_OPF"] == 1
-            @variable(EP, vNEW_TRANS_LINES[l in EXPANSION_LINES] in Parameter(0))
+            @variable(EP, vZ_SOS1_VAR[l in EXPANSION_LINES, i in 1:(1+inputs["Max_Trans_Cap"][l])] in Parameter(0)) #SOS1 variable
+	        @variable(EP, vNEW_TRANS_CAP_DECISION_INT[l in EXPANSION_LINES] in Parameter(0))
+            REINFORCEMENT_CAP_SIZE = inputs["Line_Reinforcement_Cap_Size"]
+            MAX_TRAN_EXPANSION_LIMIT=inputs["Max_Trans_Cap"]
+            EXPANSION_LEVELS=Dict{Int,Vector{Float64}}()
+            for l in EXPANSION_LINES
+                EXPANSION_LEVELS[l] = (0:1:MAX_TRAN_EXPANSION_LIMIT[l]) #-Might not need multiplication of this part -->* REINFORCEMENT_CAP_SIZE[l]
+            end
+            inputs["EXPANSION_LEVELS"] = EXPANSION_LEVELS
         else
             # Transmission network capacity reinforcements per line
             @variable(EP, vNEW_TRANS_CAP[l in EXPANSION_LINES]>=0)
@@ -180,10 +188,17 @@ function transmission_capacity_decisions!(EP, inputs::Dict, setup::Dict)
     ## Transmission power flow and loss related expressions:
     # Total availabile maximum transmission capacity is the sum of existing maximum transmission capacity plus new transmission capacity
     if NetworkExpansion == 1
-        if setup["IntegerInvestments"] == 1 || setup["DC_OPF"] == 1
+        if setup["IntegerInvestments"] == 1 && setup["DC_OPF"] == 0
             @expression(EP, eAvail_Trans_Cap[l = 1:L],
             if l in EXPANSION_LINES
                 eTransMax[l] + vNEW_TRANS_LINES[l]*inputs["Line_Reinforcement_Cap_Size"][l]
+            else
+                eTransMax[l]
+            end)
+        elseif setup["DC_OPF"] == 1
+            @expression(EP, eAvail_Trans_Cap[l = 1:L],
+            if l in EXPANSION_LINES
+                eTransMax[l] + vNEW_TRANS_CAP_DECISION_INT[l]*inputs["Line_Reinforcement_Cap_Size"][l]
             else
                 eTransMax[l]
             end)

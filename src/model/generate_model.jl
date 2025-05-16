@@ -162,7 +162,7 @@ function operation_model!(EP::Model,setup::Dict, inputs::Dict)
     if Z > 1 && setup["DC_OPF"] == 0
         transmission!(EP, inputs, setup)
     elseif Z > 1 && setup["DC_OPF"] != 0
-        dcopf_transmission!(EP, inputs, setup)
+        DC_OPF_transmission!(EP, inputs, setup)
     end
 
     if (setup["Benders"]==1 && (!isempty(inputs["STOR_LONG_DURATION"]) || !isempty(inputs["STOR_HYDRO_LONG_DURATION"])))||(inputs["REP_PERIOD"] > 1 && (!isempty(inputs["STOR_LONG_DURATION"]) || !isempty(inputs["STOR_HYDRO_LONG_DURATION"])))

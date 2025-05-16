@@ -34,6 +34,15 @@ function investment_transmission!(EP::Model, inputs::Dict, setup::Dict)
     if NetworkExpansion == 1
         # Network lines and zones that are expandable have non-negative maximum reinforcement inputs
         EXPANSION_LINES = inputs["EXPANSION_LINES"]
+        if setup["DC_OPF"] == 1
+            REINFORCEMENT_CAP_SIZE = inputs["Line_Reinforcement_Cap_Size"]
+            MAX_TRAN_EXPANSION_LIMIT=inputs["Max_Trans_Cap"]
+            EXPANSION_LEVELS=Dict{Int,Vector{Float64}}()
+            for l in EXPANSION_LINES
+                EXPANSION_LEVELS[l] = (0:1:MAX_TRAN_EXPANSION_LIMIT[l]) #-Might not need multiplication of this part -->* REINFORCEMENT_CAP_SIZE[l]
+            end
+            inputs["EXPANSION_LEVELS"] = EXPANSION_LEVELS
+        end
     end
 
     ### Variables ###
@@ -43,7 +52,10 @@ function investment_transmission!(EP::Model, inputs::Dict, setup::Dict)
     end
 
     if NetworkExpansion == 1
-        if setup["IntegerInvestments"] == 1 || setup["DC_OPF"] == 1
+        if setup["DC_OPF"] == 1
+            @variable(EP, 0<=vZ_SOS1_VAR[l in EXPANSION_LINES, i in 1:(1+inputs["Max_Trans_Cap"][l])]<=1) #SOS1 variable
+	        @variable(EP, vNEW_TRANS_CAP_DECISION_INT[l in EXPANSION_LINES], Int, lower_bound = 0)
+        elseif setup["IntegerInvestments"] == 1
             # Transmission network capacity reinforcements per line, integer
             @variable(EP, vNEW_TRANS_LINES[l in EXPANSION_LINES], Int, lower_bound=0)
         else
@@ -63,7 +75,14 @@ function investment_transmission!(EP::Model, inputs::Dict, setup::Dict)
     ## Transmission power flow and loss related expressions:
     # Total availabile maximum transmission capacity is the sum of existing maximum transmission capacity plus new transmission capacity
     if NetworkExpansion == 1
-        if setup["IntegerInvestments"] == 1 || setup["DC_OPF"] == 1
+        if setup["DC_OPF"] == 1
+            @expression(EP, eAvail_Trans_Cap[l = 1:L],
+            if l in EXPANSION_LINES
+                eTransMax[l] + vNEW_TRANS_CAP_DECISION_INT[l]*inputs["Line_Reinforcement_Cap_Size"][l]
+            else
+                eTransMax[l]
+            end)
+        elseif setup["IntegerInvestments"] == 1
             @expression(EP, eAvail_Trans_Cap[l = 1:L],
             if l in EXPANSION_LINES
                 eTransMax[l] + vNEW_TRANS_LINES[l]*inputs["Line_Reinforcement_Cap_Size"][l]
@@ -85,7 +104,12 @@ function investment_transmission!(EP::Model, inputs::Dict, setup::Dict)
     ## Objective Function Expressions ##
 
     if NetworkExpansion == 1
-        if setup["IntegerInvestments"] == 1 || setup["DC_OPF"] == 1
+        if setup["DC_OPF"] == 1
+            @expression(EP,
+                eTotalCNetworkExp,
+                sum(vNEW_TRANS_CAP_DECISION_INT[l] * inputs["pC_Line_Reinforcement"][l] * inputs["Line_Reinforcement_Cap_Size"][l]
+                for l in EXPANSION_LINES))
+        elseif setup["IntegerInvestments"] == 1
             @expression(EP,
                 eTotalCNetworkExp,
                 sum(vNEW_TRANS_LINES[l] * inputs["Line_Reinforcement_Cap_Size"][l] * inputs["pC_Line_Reinforcement"][l]
@@ -116,8 +140,16 @@ function investment_transmission!(EP::Model, inputs::Dict, setup::Dict)
     end
 
     # If network expansion is used:
+    
     if NetworkExpansion == 1
         # Transmission network related power flow and capacity constraints
+        # If network expansion is used:
+        if setup["DC_OPF"] == 1
+            @constraint(EP, cZ_SOS1_VAR[l in EXPANSION_LINES], vZ_SOS1_VAR[l,:] in SOS1())
+            @constraint(EP, cZ_SOS1_VAR_SUM_COND[l in EXPANSION_LINES], sum(vZ_SOS1_VAR[l,i] for i in 1:(1+inputs["Max_Trans_Cap"][l])) == 1)
+            @constraint(EP, cNEW_TRANS_CAP_DECISION[l in EXPANSION_LINES], vNEW_TRANS_CAP_DECISION_INT[l] == sum(vZ_SOS1_VAR[l,i].*EXPANSION_LEVELS[l][i] for i in 1:(1+inputs["Max_Trans_Cap"][l])))
+            # Transmission network related power flow and capacity constraints
+        end
         if MultiStage == 1
             # Constrain maximum possible flow for lines eligible for expansion regardless of previous expansions
             @constraint(EP,
@@ -125,11 +157,15 @@ function investment_transmission!(EP::Model, inputs::Dict, setup::Dict)
                 eAvail_Trans_Cap[l]<=inputs["pTrans_Max_Possible"][l])
         end
 
-        if setup["IntegerInvestments"] == 1 || setup["DC_OPF"] == 1
+        if setup["IntegerInvestments"] == 1 && setup["DC_OPF"] == 0
             # Constrain maximum single-stage line capacity reinforcement for lines eligible for expansion with integers
             @constraint(EP,
                 cMaxLineReinforcement[l in EXPANSION_LINES],
                 vNEW_TRANS_LINES[l]<=inputs["Line_Reinforcement_Cap_Size"][l]) 
+        elseif setup["DC_OPF"] == 1
+            @constraint(EP,
+                cMaxLineReinforcement[l in EXPANSION_LINES],
+                vNEW_TRANS_CAP_DECISION_INT[l]<=inputs["Max_Trans_Cap"][l])
         else        # Constrain maximum single-stage line capacity reinforcement for lines eligible for expansion
             @constraint(EP,
                 cMaxLineReinforcement[l in EXPANSION_LINES],
