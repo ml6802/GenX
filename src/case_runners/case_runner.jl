@@ -35,7 +35,8 @@ function run_genx_case!(case::AbstractString, optimizer::Any = HiGHS.Optimizer)
 
     if mysetup["MultiStage"] == 0
         if mysetup["Benders"] == 0
-            run_genx_case_simple!(case, mysetup, optimizer)
+            m = run_genx_case_simple!(case, mysetup, optimizer)
+            return m
         #elseif mysetup["PresetMGA"] == 1
          #   benders_settings_path = get_settings_path(case, "benders_settings.yml")
           #  mysetup_benders = configure_benders(benders_settings_path) 
@@ -95,6 +96,7 @@ function run_genx_case_simple!(case::AbstractString, mysetup::Dict, optimizer::A
     println("Solving Model")
     EP, solve_time = solve_model(EP, mysetup)
     myinputs["solve_time"] = solve_time # Store the model solve time in myinputs
+    return EP
 
     # Run MGA if the MGA flag is set to 1 else only save the least cost solution
     if has_values(EP)
