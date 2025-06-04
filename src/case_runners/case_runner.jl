@@ -88,6 +88,15 @@ function run_genx_case_simple!(case::AbstractString, mysetup::Dict, optimizer::A
     println("Loading Inputs")
     myinputs = load_inputs(mysetup, case)
 
+    if !(haskey(myinputs, "SOS1"))
+        myinputs["SOS1"] = 0
+    end
+
+    if !(haskey(mysetup, "SOS1"))
+        mysetup["SOS1"] = 0
+    end
+
+
     println("Generating the Optimization Model")
     time_elapsed = @elapsed EP = generate_model(mysetup, myinputs, OPTIMIZER)
     println("Time elapsed for model building is")
@@ -231,6 +240,17 @@ function run_genx_case_benders!(case::AbstractString, mysetup::Dict)
 
     myinputs = load_inputs(mysetup, case);
     myinputs_decomp = separate_inputs_subperiods(myinputs);
+    if !(haskey(myinputs, "SOS1"))
+        myinputs["SOS1"] = 0
+    end
+
+    if !(haskey(mysetup, "SOS1"))
+        mysetup["SOS1"] = 0
+    end
+
+    # if !(haskey(myinputs_decomp, "SOS1"))
+    #     myinputs_decomp["SOS1"] = 0
+    # end
 
     benders_inputs = generate_benders_inputs(mysetup,myinputs,myinputs_decomp)
     planning_problem, planning_sol,operational_sol, LB_hist,UB_hist,cpu_time,feasibility_hist  = benders(benders_inputs,mysetup,myinputs);
@@ -252,6 +272,7 @@ function run_genx_case_benders!(case::AbstractString, mysetup::Dict)
 
     println("Writing Output")
     return myinputs, UB_hist
+    #return myinputs, myinputs_decomp
 
     if mysetup["BD_Stab_Method"]=="int_level_set" 
         outputs_path = joinpath(case, "results_benders_int_level_set")

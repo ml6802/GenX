@@ -93,6 +93,7 @@ function solve_planning_problem(EP::Model,planning_variables::Vector{String},inp
 	else 
 		### The planning model is an LP
 		optimize!(EP)
+		println(termination_status(EP))
 		if has_values(EP)
 			neg_cap_bool = check_negative_capacities(EP);
 			

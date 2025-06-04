@@ -162,7 +162,11 @@ function operation_model!(EP::Model,setup::Dict, inputs::Dict)
     if Z > 1 && setup["DC_OPF"] == 0
         transmission!(EP, inputs, setup)
     elseif Z > 1 && setup["DC_OPF"] != 0
-        DC_OPF_transmission!(EP, inputs, setup)
+        if setup["SOS1"] == 0
+            DC_OPF_transmission_binary!(EP, inputs, setup)
+        else
+            DC_OPF_transmission!(EP, inputs, setup)
+        end
     end
 
     if (setup["Benders"]==1 && (!isempty(inputs["STOR_LONG_DURATION"]) || !isempty(inputs["STOR_HYDRO_LONG_DURATION"])))||(inputs["REP_PERIOD"] > 1 && (!isempty(inputs["STOR_LONG_DURATION"]) || !isempty(inputs["STOR_HYDRO_LONG_DURATION"])))
@@ -286,7 +290,11 @@ function planning_model!(EP::Model,setup::Dict, inputs::Dict)
     investment_discharge!(EP, inputs, setup)
 
     if inputs["Z"] > 1
-        investment_transmission!(EP, inputs, setup)
+        if inputs["SOS1"] == 1
+            investment_transmission!(EP, inputs, setup)
+        else
+            investment_transmission_binary!(EP, inputs, setup)
+        end
     end
 
     # Technologies
