@@ -241,11 +241,11 @@ function run_genx_case_benders!(case::AbstractString, mysetup::Dict)
     myinputs = load_inputs(mysetup, case);
     myinputs_decomp = separate_inputs_subperiods(myinputs);
     if !(haskey(myinputs, "SOS1"))
-        myinputs["SOS1"] = 0
+        myinputs["SOS1"] = 1
     end
 
     if !(haskey(mysetup, "SOS1"))
-        mysetup["SOS1"] = 0
+        mysetup["SOS1"] = 1
     end
 
     # if !(haskey(myinputs_decomp, "SOS1"))
