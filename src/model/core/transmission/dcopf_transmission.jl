@@ -31,7 +31,29 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
     L_cand = inputs["L_cand"]     # Number of candidate transmission lines
     Z_cand = inputs["Z_cand"]     # Number of candidate zones
     NetworkExpansion = setup["NetworkExpansion"]
-    BigM = 2.5.*inputs["pMax_Line_Reinforcement"]
+    BigM_vec = inputs["pMax_Line_Reinforcement"] # length of number of lines
+    quant_val = inputs["Line_Reinforcement_Cap_Size"]
+    num_steps = BigM_vec ./ quant_val
+    num_cols = maximum(num_steps)
+    if setup["tight_bigM"]
+        BigM = quant_val#.1 .*inputs["pMax_Line_Reinforcement"]
+    else
+        BigM = 2.5 * inputs["pMax_Line_Reinforcement"]
+    end
+
+    #for i in 1:length(BigM_vec)
+    #    for j in 1:Int(num_steps[i]+1)
+    #        # if j == 1
+    #            # BigM[i, j] = 300
+    #        # else
+    #            # BigM[i, j] = (j - 1) * quant_val[i]
+    #        # end
+    #        BigM[i, j] = (j - 1) * quant_val[i]
+    #    end
+    #end
+    inputs["BigM"] = BigM
+
+
     if NetworkExpansion == 1
         # Network lines and zones that are expandable have non-negative maximum reinforcement inputs
         EXPANSION_LINES = inputs["EXPANSION_LINES"]

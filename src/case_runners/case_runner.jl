@@ -28,14 +28,14 @@ run_genx_case!("path/to/case", HiGHS.Optimizer)
 run_genx_case!("path/to/case", Gurobi.Optimizer)
 ```
 """
-function run_genx_case!(case::AbstractString, optimizer::Any = HiGHS.Optimizer)
+function run_genx_case!(case::AbstractString, optimizer::Any = HiGHS.Optimizer; tight_bigM = false)
     genx_settings = get_settings_path(case, "genx_settings.yml") # Settings YAML file path
     writeoutput_settings = get_settings_path(case, "output_settings.yml") # Write-output settings YAML file path
     mysetup = configure_settings(genx_settings, writeoutput_settings) # mysetup dictionary stores settings and GenX-specific parameters
-
+    mysetup["tight_bigM"] = tight_bigM
     if mysetup["MultiStage"] == 0
         if mysetup["Benders"] == 0
-            m= run_genx_case_simple!(case, mysetup, optimizer)
+            m = run_genx_case_simple!(case, mysetup, optimizer)
             return m
         #elseif mysetup["PresetMGA"] == 1
          #   benders_settings_path = get_settings_path(case, "benders_settings.yml")
@@ -48,7 +48,7 @@ function run_genx_case!(case::AbstractString, optimizer::Any = HiGHS.Optimizer)
             mysetup_benders = configure_benders(benders_settings_path) 
             mysetup = merge(mysetup,mysetup_benders);
 
-            run_genx_case_benders!(case, mysetup)
+            return run_genx_case_benders!(case, mysetup)
         end
     else
         run_genx_case_multistage!(case, mysetup, optimizer)
@@ -233,7 +233,6 @@ function run_genx_case_benders!(case::AbstractString, mysetup::Dict)
     myinputs_decomp = separate_inputs_subperiods(myinputs);
 
     benders_inputs = generate_benders_inputs(mysetup,myinputs,myinputs_decomp)
-
     planning_problem, planning_sol,operational_sol, LB_hist,UB_hist,cpu_time,feasibility_hist  = benders(benders_inputs,mysetup,myinputs);
     opt_stats = (cpu_time=cpu_time, UB_hist = UB_hist)
     println("Benders decomposition took $(cpu_time[end]) seconds to run")
@@ -252,6 +251,7 @@ function run_genx_case_benders!(case::AbstractString, mysetup::Dict)
     
 
     println("Writing Output")
+    return myinputs, UB_hist
 
     if mysetup["BD_Stab_Method"]=="int_level_set" 
         outputs_path = joinpath(case, "results_benders_int_level_set")

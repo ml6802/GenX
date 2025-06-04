@@ -217,12 +217,12 @@ function fix_planning_variables!(EP::Model,planning_sol::NamedTuple,planning_var
 		vy = variable_by_name(EP,y);
         if is_parameter(vy)
             if planning_sol.values[y] > 0.1
-                println("Set parameter "*string(vy)*" to value "*string(planning_sol.values[y]))
+                #println("Set parameter "*string(vy)*" to value "*string(planning_sol.values[y]))
             end
             set_parameter_value(vy,planning_sol.values[y])
         else
             if planning_sol.values[y] > 0.1
-                println("Fixed variable "*string(vy)*" to value "*string(planning_sol.values[y]))
+                #println("Fixed variable "*string(vy)*" to value "*string(planning_sol.values[y]))
             end
             fix(vy,planning_sol.values[y];force=true)
         end
