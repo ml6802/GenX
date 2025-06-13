@@ -102,7 +102,6 @@ function load_network_data!(setup::Dict, path::AbstractString, inputs_nw::Dict)
         
         println("DC-OPF values successfully read!")
         println("DC-OPF Coefficients: ", inputs_nw["Max_Trans_Cap"])
-        
     end
 
     # Maximum possible flow after reinforcement for use in linear segments of piecewise approximation

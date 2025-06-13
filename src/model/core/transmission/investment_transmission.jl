@@ -178,7 +178,7 @@ end
 
 
 @doc raw"""
-    function investment_transmission!(EP::Model, inputs::Dict, setup::Dict)
+    function investment_transmission_binary!(EP::Model, inputs::Dict, setup::Dict)
 This function model transmission expansion and adds transmission reinforcement or construction costs to the objective function. Transmission reinforcement costs are equal to the sum across all lines of the product between the transmission reinforcement/construction cost, $pi^{TCAP}_{l}$, times the additional transmission capacity variable, $\bigtriangleup\varphi^{cap}_{l}$.
 ```math
 \begin{aligned}

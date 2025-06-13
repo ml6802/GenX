@@ -99,7 +99,7 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
             sum(inputs["pNet_Map_cand"][l, z] * vANGLE[z, t] for z in 1:Z)-vPROX_ANGLE[l,t,i] >= 0)
     @constraint(EP,
             cPOWER_FLOW_OPF_ANGLE_SOS1_4[l in EXPANSION_LINES, t = 1:T, i in 1:(1+inputs["Max_Trans_Cap"][l])], 
-            vPROX_ANGLE[l,t,i] <= BigM[l]*EP[:vZ_SOS1_VAR][l,i])
+            vPROX_ANGLE[l,t,i] <= 3.14*EP[:vZ_SOS1_VAR][l,i])
      # Bus angle limits (except slack bus)
     @constraints(EP,
         begin

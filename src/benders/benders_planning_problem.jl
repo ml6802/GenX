@@ -70,7 +70,6 @@ end
 
 
 function solve_planning_problem(EP::Model,planning_variables::Vector{String},inputs)
-	
 	if any(is_integer.(all_variables(EP)))
 		println("The planning model is a MILP")
 		optimize!(EP)

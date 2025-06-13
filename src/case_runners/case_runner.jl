@@ -89,11 +89,19 @@ function run_genx_case_simple!(case::AbstractString, mysetup::Dict, optimizer::A
     myinputs = load_inputs(mysetup, case)
 
     if !(haskey(myinputs, "SOS1"))
-        myinputs["SOS1"] = 0
+        myinputs["SOS1"] = 1
     end
 
     if !(haskey(mysetup, "SOS1"))
-        mysetup["SOS1"] = 0
+        mysetup["SOS1"] = 1
+    end
+
+    if !(haskey(myinputs, "relax_DCOPF"))
+        myinputs["relax_DCOPF"] = 0
+    end
+
+    if !(haskey(mysetup, "relax_DCOPF"))
+        mysetup["relax_DCOPF"] = 0
     end
 
 
@@ -248,11 +256,33 @@ function run_genx_case_benders!(case::AbstractString, mysetup::Dict)
         mysetup["SOS1"] = 1
     end
 
+    # if !(haskey(myinputs, "relax_DCOPF"))
+    #     myinputs["relax_DCOPF"] = 1
+    # end
+
+    # if !(haskey(mysetup, "relax_DCOPF"))
+    #     mysetup["relax_DCOPF"] = 1
+    # end
+
     # if !(haskey(myinputs_decomp, "SOS1"))
     #     myinputs_decomp["SOS1"] = 0
     # end
-
     benders_inputs = generate_benders_inputs(mysetup,myinputs,myinputs_decomp)
+
+    pvs = benders_inputs["planning_variables"]
+    p_problem = benders_inputs["planning_problem"]
+    # for v in pvs[1:42]
+    #     vv = variable_by_name(p_problem, v)
+    #     fix(vv, 0, force=true)
+    # end
+
+    # v_ones = ["vZ_SOS1_VAR[1,3]", "vZ_SOS1_VAR[2,1]", "vZ_SOS1_VAR[3,6]", "vZ_SOS1_VAR[4,1]", "vZ_SOS1_VAR[5,1]", "vZ_SOS1_VAR[6,1]"]
+
+    # for v in v_ones
+    #     vv = variable_by_name(p_problem, v)
+    #     fix(vv, 1, force=true)
+    # end
+
     planning_problem, planning_sol,operational_sol, LB_hist,UB_hist,cpu_time,feasibility_hist  = benders(benders_inputs,mysetup,myinputs);
     opt_stats = (cpu_time=cpu_time, UB_hist = UB_hist)
     println("Benders decomposition took $(cpu_time[end]) seconds to run")
@@ -271,7 +301,7 @@ function run_genx_case_benders!(case::AbstractString, mysetup::Dict)
     
 
     println("Writing Output")
-    return myinputs, UB_hist
+    return benders_inputs, UB_hist
     #return myinputs, myinputs_decomp
 
     if mysetup["BD_Stab_Method"]=="int_level_set" 

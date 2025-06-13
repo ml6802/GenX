@@ -190,11 +190,20 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
 		println(lambda)
 	else
 		op_cost = 0;
-        zone_cost = make_benders_zonal_opcost(inputs,EP)
-		emissions = value.(EP[:eEmissionsByZone])
-		lambda = zeros(length(planning_variables_sub));
-		theta_coeff = 0;
-		feasibility_slack = 0;
+        #zone_cost = make_benders_zonal_opcost(inputs,EP)
+		#emissions = value.(EP[:eEmissionsByZone])
+		#lambda = zeros(length(planning_variables_sub));
+		#theta_coeff = 0;
+		#feasibility_slack = 0;
+
+        acs = all_constraints(EP, include_variable_in_set_constraints = true)
+        println(length(acs))
+        for i in 1140:1150
+            println(i, "   ", acs[i])
+        end
+
+
+
         compute_conflict!(EP)
 				list_of_conflicting_constraints = ConstraintRef[];
 				for (F, S) in list_of_constraint_types(EP)
@@ -219,12 +228,12 @@ function fix_planning_variables!(EP::Model,planning_sol::NamedTuple,planning_var
             if planning_sol.values[y] > 0.1
                 #println("Set parameter "*string(vy)*" to value "*string(planning_sol.values[y]))
             end
-            set_parameter_value(vy,planning_sol.values[y])
+            set_parameter_value(vy,Int(round(planning_sol.values[y])))
         else
             if planning_sol.values[y] > 0.1
                 #println("Fixed variable "*string(vy)*" to value "*string(planning_sol.values[y]))
             end
-            fix(vy,planning_sol.values[y];force=true)
+            fix(vy,round(planning_sol.values[y]);force=true)
         end
 		if is_integer(vy)
 			unset_integer(vy)

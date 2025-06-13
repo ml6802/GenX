@@ -15,7 +15,7 @@ using JuMP
 # I also played with the big M value to see if it helped convergence. I cannot say it
 # improved convergence, but it can be set using the `tight_bigM` key word argument
 # passed to the `run_genx_case` function
-
+a=1
 
 ########### Case 1: 4 candidate line corridors, 3-6 lines per corridor ############
 m, inputs = run_genx_case!((@__DIR__)*"/Simple_four_bus_DC_OPF_v1/", Gurobi.Optimizer)
@@ -35,6 +35,12 @@ println("OBJECTIVE VALUE, Case 1, with Benders = ", minimum(UB_hist)) #REACHES T
 ########### Case 2: 6 candidate line corridors, 6 lines per corridor ###########
 m, inputs = run_genx_case!((@__DIR__)*"/Simple_four_bus_DC_OPF_v2/", Gurobi.Optimizer)
 println("OBJECTIVE VALUE, Case 1, no Benders = ", objective_value(m)) #REACHES TRUE SOLUTION
+
+vars = all_variables(m)
+
+for i in 40:80
+    println(vars[i], "  ", value(vars[i]))
+end
 
 inputs, UB_hist = run_genx_case!((@__DIR__)*"/Simple_four_bus_DC_OPF_v2_Benders/", Gurobi.Optimizer)
 println("OBJECTIVE VALUE, Case 1, with Benders = ", minimum(UB_hist)) #FEASIBILITY ISSUE AFTER 70 ITERATIONS
@@ -66,3 +72,37 @@ println("OBJECTIVE VALUE, Case 1, with Benders = ", minimum(UB_hist)) # Reaches 
 # NOTE: Benders is set up to run a relaxed version to generate initial cuts. This relaxed version
 # does reach the solution of 17000, but when the variables are unrelaxed, the lower bound becomes
 # invalid at some point and converges instead to 17500
+
+
+########### Case 4: 4 candidate line corridors, 3-6 lines per corridor ############
+m, inputs = run_genx_case!((@__DIR__)*"/Simple_four_bus_DC_OPF_v4/", Gurobi.Optimizer)
+println("OBJECTIVE VALUE, Case 1, no Benders = ", objective_value(m)) #REACHES TRUE SOLUTION
+
+vars = all_variables(m)
+
+for var in vars[1:30]
+    println(var, "   ", value(var))
+end
+
+
+inputs, UB_hist = run_genx_case!((@__DIR__)*"/Simple_four_bus_DC_OPF_v4_Benders/", Gurobi.Optimizer)
+println("OBJECTIVE VALUE, Case 1, with Benders = ", minimum(UB_hist)) #REACHES TRUE SOLUTION
+
+
+########### Case 5: 4 candidate line corridors, 3-6 lines per corridor ############
+m, inputs = run_genx_case!((@__DIR__)*"/Simple_four_bus_DC_OPF_v5/", Gurobi.Optimizer)
+println("OBJECTIVE VALUE, Case 1, no Benders = ", objective_value(m)) #REACHES TRUE SOLUTION
+
+
+inputs, UB_hist = run_genx_case!((@__DIR__)*"/Simple_four_bus_DC_OPF_v5_Benders/", Gurobi.Optimizer, tight_bigM = true)
+println("OBJECTIVE VALUE, Case 1, with Benders = ", minimum(UB_hist)) #REACHES TRUE SOLUTION
+
+
+
+########### Case 1: 4 candidate line corridors, 3-6 lines per corridor ############
+m, inputs = run_genx_case!((@__DIR__)*"/Simple_four_bus_DC_OPF_v6/", Gurobi.Optimizer, tight_bigM = true)
+println("OBJECTIVE VALUE, Case 1, no Benders = ", objective_value(m)) #REACHES TRUE SOLUTION
+
+
+inputs, UB_hist = run_genx_case!((@__DIR__)*"/Simple_four_bus_DC_OPF_v6_Benders/", Gurobi.Optimizer, tight_bigM=true)
+println("OBJECTIVE VALUE, Case 1, with Benders = ", minimum(UB_hist)) #REACHES TRUE SOLUTION
