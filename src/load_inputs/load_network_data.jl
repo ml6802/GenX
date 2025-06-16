@@ -13,7 +13,7 @@ function load_network_data!(setup::Dict, path::AbstractString, inputs_nw::Dict)
     to_floats(col::Symbol) = convert(Array{Float64}, as_vector(col))
 
     # Number of zones in the network
-    Z = length(as_vector(:Network_zones))
+    Z = maximum([length(as_vector(:Network_zones)), maximum(as_vector(:End_Zone))])
     inputs_nw["Z"] = Z
     # Number of lines in the network
     L = length(as_vector(:Network_Lines))
@@ -37,7 +37,7 @@ function load_network_data!(setup::Dict, path::AbstractString, inputs_nw::Dict)
         as_vector_cand(col::Symbol) = collect(skipmissing(candidate_network_var[!, col]))
         to_floats_cand(col::Symbol) = convert(Array{Float64}, as_vector_cand(col))
         # Number of zones in the candidate network
-        Z_cand = length(as_vector_cand(:Network_zones))
+        Z_cand = maximum([length(as_vector_cand(:Network_zones)), maximum(as_vector_cand(:End_Zone))])
         inputs_nw["Z_cand"] = Z_cand
         # Number of lines in the network
         L_cand = length(as_vector_cand(:Network_Lines))

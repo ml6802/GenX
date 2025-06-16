@@ -159,15 +159,7 @@ function operation_model!(EP::Model,setup::Dict, inputs::Dict)
         operational_reserves!(EP, inputs, setup)
     end
 
-    if Z > 1 && setup["DC_OPF"] == 0
-        transmission!(EP, inputs, setup)
-    elseif Z > 1 && setup["DC_OPF"] != 0
-        if setup["SOS1"] == 0
-            DC_OPF_transmission_binary!(EP, inputs, setup)
-        else
-            DC_OPF_transmission!(EP, inputs, setup)
-        end
-    end
+
 
     if (setup["Benders"]==1 && (!isempty(inputs["STOR_LONG_DURATION"]) || !isempty(inputs["STOR_HYDRO_LONG_DURATION"])))||(inputs["REP_PERIOD"] > 1 && (!isempty(inputs["STOR_LONG_DURATION"]) || !isempty(inputs["STOR_HYDRO_LONG_DURATION"])))
 		lds_slack!(EP,inputs,setup)
@@ -237,6 +229,12 @@ function operation_model!(EP::Model,setup::Dict, inputs::Dict)
         vre_stor!(EP, inputs, setup)
     end
 
+    if Z > 1 && setup["DC_OPF"] == 0
+        transmission!(EP, inputs, setup)
+    elseif Z > 1 && setup["DC_OPF"] != 0
+        DC_OPF_transmission!(EP, inputs, setup)
+    end
+
     # Policies
 
     if setup["OperationalReserves"] > 0
@@ -290,11 +288,7 @@ function planning_model!(EP::Model,setup::Dict, inputs::Dict)
     investment_discharge!(EP, inputs, setup)
 
     if inputs["Z"] > 1
-        if inputs["SOS1"] == 1
-            investment_transmission!(EP, inputs, setup)
-        else
-            investment_transmission_binary!(EP, inputs, setup)
-        end
+        investment_transmission!(EP, inputs, setup)
     end
 
     # Technologies
@@ -527,9 +521,9 @@ function generate_model_legacy(setup::Dict, inputs::Dict, OPTIMIZER::MOI.Optimiz
     ## Power balance constraints
     # demand = generation + storage discharge - storage charge - demand deferral + deferred demand satisfaction - demand curtailment (NSE)
     #          + incoming power flows - outgoing power flows - flow losses - charge of heat storage + generation from NACC
-    @constraint(EP,
-        cPowerBalance[t = 1:T, z = 1:Z],
-        EP[:ePowerBalance][t, z]==inputs["pD"][t, z])
+    # @constraint(EP,
+        # cPowerBalance[t = 1:T, z = 1:Z],
+        # EP[:ePowerBalance][t, z]==inputs["pD"][t, z])
 
     ## Record pre-solver time
     presolver_time = time() - presolver_start_time

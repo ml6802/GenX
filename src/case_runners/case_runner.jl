@@ -82,31 +82,18 @@ function run_genx_case_simple!(case::AbstractString, mysetup::Dict, optimizer::A
     println("Configuring Solver")
     OPTIMIZER = configure_solver(settings_path, optimizer)
 
-    #### Running a case
 
+    if !(haskey(mysetup, "ptdf"))
+        mysetup["ptdf"] = 1
+    end
     ### Load inputs
     println("Loading Inputs")
     myinputs = load_inputs(mysetup, case)
-
-    if !(haskey(myinputs, "SOS1"))
-        myinputs["SOS1"] = 1
-    end
-
-    if !(haskey(mysetup, "SOS1"))
-        mysetup["SOS1"] = 1
-    end
-
-    if !(haskey(myinputs, "relax_DCOPF"))
-        myinputs["relax_DCOPF"] = 0
-    end
-
-    if !(haskey(mysetup, "relax_DCOPF"))
-        mysetup["relax_DCOPF"] = 0
-    end
-
+    
 
     println("Generating the Optimization Model")
-    time_elapsed = @elapsed EP = generate_model(mysetup, myinputs, OPTIMIZER)
+    time_elapsed = 0# @elapsed 
+    EP = generate_model(mysetup, myinputs, OPTIMIZER)
     println("Time elapsed for model building is")
     println(time_elapsed)
 
@@ -248,40 +235,8 @@ function run_genx_case_benders!(case::AbstractString, mysetup::Dict)
 
     myinputs = load_inputs(mysetup, case);
     myinputs_decomp = separate_inputs_subperiods(myinputs);
-    if !(haskey(myinputs, "SOS1"))
-        myinputs["SOS1"] = 1
-    end
-
-    if !(haskey(mysetup, "SOS1"))
-        mysetup["SOS1"] = 1
-    end
-
-    # if !(haskey(myinputs, "relax_DCOPF"))
-    #     myinputs["relax_DCOPF"] = 1
-    # end
-
-    # if !(haskey(mysetup, "relax_DCOPF"))
-    #     mysetup["relax_DCOPF"] = 1
-    # end
-
-    # if !(haskey(myinputs_decomp, "SOS1"))
-    #     myinputs_decomp["SOS1"] = 0
-    # end
+    
     benders_inputs = generate_benders_inputs(mysetup,myinputs,myinputs_decomp)
-
-    pvs = benders_inputs["planning_variables"]
-    p_problem = benders_inputs["planning_problem"]
-    # for v in pvs[1:42]
-    #     vv = variable_by_name(p_problem, v)
-    #     fix(vv, 0, force=true)
-    # end
-
-    # v_ones = ["vZ_SOS1_VAR[1,3]", "vZ_SOS1_VAR[2,1]", "vZ_SOS1_VAR[3,6]", "vZ_SOS1_VAR[4,1]", "vZ_SOS1_VAR[5,1]", "vZ_SOS1_VAR[6,1]"]
-
-    # for v in v_ones
-    #     vv = variable_by_name(p_problem, v)
-    #     fix(vv, 1, force=true)
-    # end
 
     planning_problem, planning_sol,operational_sol, LB_hist,UB_hist,cpu_time,feasibility_hist  = benders(benders_inputs,mysetup,myinputs);
     opt_stats = (cpu_time=cpu_time, UB_hist = UB_hist)
@@ -298,11 +253,8 @@ function run_genx_case_benders!(case::AbstractString, mysetup::Dict)
         write_benders_mga_results!(dfResults, results, case, mysetup, myinputs, myinputs_decomp, sumtime_df)
     end
 
-    
-
     println("Writing Output")
     return benders_inputs, UB_hist
-    #return myinputs, myinputs_decomp
 
     if mysetup["BD_Stab_Method"]=="int_level_set" 
         outputs_path = joinpath(case, "results_benders_int_level_set")
