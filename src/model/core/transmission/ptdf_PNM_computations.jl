@@ -163,10 +163,11 @@ function get_ptdf_vector(ptdf_mat, line_idx, cand_num, line_map)
     # pass the matrix, line index, cand number; return vector for buses
 end
 
-function get_ptdf_line_diff(ptdf_mat, line_idx, cand_num, line_map)
+function get_ptdf_line_diff(ptdf_mat, line_idx, cand_num, line_virtual_idx, line_map)
     line_tuple = line_map[line_idx]
+    line_virtual_tuple = line_map[line_virtual_idx]
     line_key = (line_tuple[1], line_tuple[2], cand_num)
     line_lookup = ptdf_mat.lookup[2]
     bus_vector = ptdf_mat.data[:, line_lookup[line_key]]
-    return bus_vector[line_tuple[1]] - bus_vector[line_tuple[2]]
+    return bus_vector[line_virtual_tuple[1]] - bus_vector[line_virtual_tuple[2]]
 end

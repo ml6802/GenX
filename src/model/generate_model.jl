@@ -267,9 +267,11 @@ function operation_model!(EP::Model,setup::Dict, inputs::Dict)
     ## Power balance constraints
     # demand = generation + storage discharge - storage charge - demand deferral + deferred demand satisfaction - demand curtailment (NSE)
     #          + incoming power flows - outgoing power flows - flow losses - charge of heat storage + generation from NACC
-    @constraint(EP,
-        cPowerBalance[t = 1:T, z = 1:Z],
-        EP[:ePowerBalance][t, z]==inputs["pD"][t, z])
+    if setup["ptdf"] == 0
+        @constraint(EP,
+            cPowerBalance[t = 1:T, z = 1:Z],
+            EP[:ePowerBalance][t, z]==inputs["pD"][t, z])
+    end
 
 end
 
@@ -522,8 +524,8 @@ function generate_model_legacy(setup::Dict, inputs::Dict, OPTIMIZER::MOI.Optimiz
     # demand = generation + storage discharge - storage charge - demand deferral + deferred demand satisfaction - demand curtailment (NSE)
     #          + incoming power flows - outgoing power flows - flow losses - charge of heat storage + generation from NACC
     # @constraint(EP,
-        # cPowerBalance[t = 1:T, z = 1:Z],
-        # EP[:ePowerBalance][t, z]==inputs["pD"][t, z])
+    #     cPowerBalance[t = 1:T, z = 1:Z],
+    #     EP[:ePowerBalance][t, z]==inputs["pD"][t, z])
 
     ## Record pre-solver time
     presolver_time = time() - presolver_start_time

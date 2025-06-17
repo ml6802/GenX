@@ -233,6 +233,17 @@ function run_genx_case_benders!(case::AbstractString, mysetup::Dict)
     end
     mysetup["settings_path"] = settings_path;
 
+    if !(haskey(mysetup, "ptdf"))
+        if !(haskey(mysetup, "SOS1"))
+            println("RUNNING PTDF")
+            mysetup["SOS1"] = 0
+            mysetup["ptdf"] = 1
+        else
+            mysetup["SOS1"] = 1
+            mysetup["ptdf"] = 0
+        end
+    end
+
     myinputs = load_inputs(mysetup, case);
     myinputs_decomp = separate_inputs_subperiods(myinputs);
     

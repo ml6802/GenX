@@ -58,6 +58,29 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
         # Network lines and zones that are expandable have non-negative maximum reinforcement inputs
         EXPANSION_LINES = inputs["EXPANSION_LINES"]
         EXPANSION_LEVELS = inputs["EXPANSION_LEVELS"]
+        if setup["DC_OPF"] == 1
+            if setup["ptdf"] == 1
+                line_map = Dict()
+                cand_line_map = Dict()
+
+                line_adj = inputs["pNet_Map"]
+                cand_line_adj = inputs["pNet_Map_cand"]
+                for i in 1:size(line_adj)[1]
+                    from_idx = findfirst(x -> x == 1, line_adj[i, :])
+                    to_idx = findfirst(x -> x == -1, line_adj[i, :])
+                    line_map[i] = (from_idx, to_idx)
+                end
+                for i in 1:size(cand_line_adj)[1]
+                    from_idx = findfirst(x -> x == 1, cand_line_adj[i, :])
+                    to_idx = findfirst(x -> x == -1, cand_line_adj[i, :])
+                    cand_line_map[i] = (from_idx, to_idx)
+                end
+
+
+                inputs["Line_Map"] = line_map
+                inputs["Cand_Line_Map"] = cand_line_map
+            end
+        end
     end
 
 
@@ -142,25 +165,12 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
         cand_line_map = inputs["Cand_Line_Map"]
         @variable(EP, p_virtual[l in EXPANSION_LINES, i in 1:(inputs["Max_Trans_Cap"][l]), t in 1:T])
 
-        # @expression(EP, 
-        #     eVIRTUAL_SUM[l in EXPANSION_LINES, i in 1:(inputs["Max_Trans_Cap"][l]), t in 1:T],
-        #         (get_ptdf_line_diff(ptdf_by_line, l, i, line_map)) * p_virtual[l, i, t]
-        # )
-
-        # @expression(EP, 
-        #     eVIRTUAL_SUM_EXISTING[l in EXPANSION_LINES, t in 1:T],
-        #     sum(
-        #         (get_ptdf_line_diff(ptdf_by_line, l, 0, cand_line_map)) * p_virtual[l, i, t] 
-        #         for i in 1:(inputs["Max_Trans_Cap"][l])
-        #     )
-        # )
-
         # The following constraints assume EXPANSION_LINES == existing lines
         @expression(EP, 
             eFLOW_LINES[l in EXPANSION_LINES, t in 1:T],
             sum(get_ptdf_vector(ptdf_by_line, l, 0, line_map)[z] * p_bus[z, t] for z in 1:Z) + 
             sum(
-                (get_ptdf_line_diff(ptdf_by_line, l, 0, cand_line_map)) * p_virtual[ll, i, t] 
+                (get_ptdf_line_diff(ptdf_by_line, l, 0, ll, line_map)) * p_virtual[ll, i, t] 
                 for ll in EXPANSION_LINES, i in 1:(inputs["Max_Trans_Cap"][ll])
             )
         )
@@ -174,7 +184,7 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
             eCAND_FLOW_LINES[l in EXPANSION_LINES, i in 1:(inputs["Max_Trans_Cap"][l]), t in 1:T],
             p_virtual[l, i, t] -
             sum(get_ptdf_vector(ptdf_by_line, l, i, cand_line_map)[z] * p_bus[z, t] for z in 1:Z) - 
-            sum(get_ptdf_line_diff(ptdf_by_line, l, i, line_map) * p_virtual[ll, ii, t] for ll in EXPANSION_LINES, ii in 1:(inputs["Max_Trans_Cap"][ll]))
+            sum(get_ptdf_line_diff(ptdf_by_line, l, i, ll, cand_line_map) * p_virtual[ll, ii, t] for ll in EXPANSION_LINES, ii in 1:(inputs["Max_Trans_Cap"][ll]))
         )
 
         F_cand = inputs["Line_Reinforcement_Cap_Size"]
@@ -188,7 +198,7 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
             eCAND_FLOW_LINES[l, i, t] <= F_cand[l] * EP[:vZ_BUILD][l, i]
         ) # 19 for existing lines in paper https://ietresearch.onlinelibrary.wiley.com/doi/epdf/10.1049/iet-gtd.2015.1573
         
-        M = 5 .* F_cand
+        M = 10 .* F_cand
         @constraint(EP, 
             cBIGM_PTDF_LOWER[l in EXPANSION_LINES, i in 1:(inputs["Max_Trans_Cap"][l]), t in 1:T],
             p_virtual[l, i, t] >= -M[l] * (1 - EP[:vZ_BUILD][l, i])
@@ -204,9 +214,11 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
             EP[:vFLOW][l, t] == eFLOW_LINES[l, t]
         )
 
-        # @constraint(EP, [l in EXPANSION_LINES, t in 1:T],
-        #    EP[:vCANDFLOW][l, t] == sum(eCAND_FLOW_LINES[l, i, t] for i in 1:(inputs["Max_Trans_Cap"][l]))
-        # )
+        @constraint(EP, [l in EXPANSION_LINES, t in 1:T],
+            EP[:vCANDFLOW][l, t] == sum(sum(get_ptdf_vector(ptdf_by_line, l, i, cand_line_map)[z] * p_bus[z, t] for z in 1:Z) + 
+            sum(get_ptdf_line_diff(ptdf_by_line, l, i, ll, cand_line_map) * p_virtual[ll, ii, t] for ll in EXPANSION_LINES, ii in 1:(inputs["Max_Trans_Cap"][ll])) for i in 1:(inputs["Max_Trans_Cap"][l]))
+        )
+
 
         # for existing line corridors, define (1)
 
@@ -221,9 +233,6 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
         # define x1 >= x2 >= x3 >= ...
 
     end
-
-
-
 
 
     @expression(EP,

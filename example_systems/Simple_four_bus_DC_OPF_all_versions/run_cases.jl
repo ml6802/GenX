@@ -4,7 +4,7 @@ using GenX
 using Gurobi
 using JuMP
 
-# True solution in call cases is 17000
+# True solution in all cases is 17000
 # There are three different cases with different network structures
 # Each case starts with virtually no transmission. Case 1 has four possible line
 # corridors with 3-6 lines per corridor. Case 2 has six possible line corridors 
@@ -18,7 +18,7 @@ using JuMP
 a=1
 
 ########### Case 1: 4 candidate line corridors, 3-6 lines per corridor ############
-m, inputs = run_genx_case!((@__DIR__)*"/Simple_four_bus_DC_OPF_v1/", Gurobi.Optimizer)
+m, inputs = run_genx_case!((@__DIR__)*"/Simple_four_bus_DC_OPF_v3_Benders/", Gurobi.Optimizer)
 println("OBJECTIVE VALUE, Case 1, no Benders = ", objective_value(m)) #REACHES TRUE SOLUTION
 
 inputs, UB_hist = run_genx_case!((@__DIR__)*"/Simple_four_bus_DC_OPF_v1_Benders/", Gurobi.Optimizer)
