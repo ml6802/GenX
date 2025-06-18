@@ -52,7 +52,7 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 
     #### Run Benders iterations
     for k = 0:MaxIter
-		
+		println(planning_sol)
 		start_subop_sol = time();
 
         subop_sol = solve_dist_subproblems(subproblems,planning_sol,inputs);
