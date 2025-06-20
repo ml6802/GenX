@@ -14,3 +14,6 @@ Benders: 1
 UCommit: 2
 IntegerInvestments: 1
 ParameterScale: 0
+ptdf: 1
+tight_bigM: True
+SOS1: 0 # Activate SOS1 constraints; 0 = not active; 1 = active systemwide

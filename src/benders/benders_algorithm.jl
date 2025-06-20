@@ -80,6 +80,7 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 		unst_planning_sol = solve_planning_problem(planning_problem,planning_variables,inputs);
 		cpu_planning_sol = time()-start_planning_sol;
 		println("Solving the planning problem required $cpu_planning_sol seconds")
+		println(unst_planning_sol)
 
 		LB = max(LB,unst_planning_sol.LB);
 		
