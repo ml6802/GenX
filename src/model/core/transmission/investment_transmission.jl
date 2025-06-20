@@ -54,6 +54,10 @@ function investment_transmission!(EP::Model, inputs::Dict, setup::Dict)
     if NetworkExpansion == 1
         if setup["DC_OPF"] == 1
 	        @variable(EP, vNEW_TRANS_CAP_DECISION_INT[l in EXPANSION_LINES, i in 1:inputs["Max_Trans_Cap"][l]], Bin)
+            @constraint(EP, 
+                    cBUILD_SEQUENCE[l in EXPANSION_LINES, i in 1:(inputs["Max_Trans_Cap"][l]-1)],
+                    EP[:vNEW_TRANS_CAP_DECISION_INT][l, i] >= EP[:vNEW_TRANS_CAP_DECISION_INT][l, i + 1]
+                )
         elseif setup["IntegerInvestments"] == 1
             # Transmission network capacity reinforcements per line, integer
             @variable(EP, vNEW_TRANS_LINES[l in EXPANSION_LINES], Int, lower_bound=0)
