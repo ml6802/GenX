@@ -14,3 +14,7 @@ Benders: 1
 UCommit: 2
 IntegerInvestments: 1
 ParameterScale: 0
+ptdf: 1
+SOS1: 0
+tight_bigM: True
+OverwriteResults: 1 # Overwrite results; 0 = not active; 1 = active
