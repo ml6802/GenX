@@ -38,6 +38,7 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 
     #### Initialize UB and LB
 	planning_sol = solve_planning_problem(planning_problem,planning_variables,inputs);
+	println(planning_problem)
 	subop_sol = Dict()
 
     UB = Inf;
@@ -61,6 +62,7 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 		println("Solving the subproblems required $cpu_subop_sol seconds")
 		println(planning_sol.inv_cost)
 		println(sum(subop_sol[w].op_cost for w in keys(subop_sol)))
+		println.(subop_sol[w].theta_coeff for w in keys(subop_sol))
 
 		UBnew = sum((subop_sol[w].theta_coeff==0 ? Inf : subop_sol[w].op_cost) for w in keys(subop_sol))+planning_sol.inv_cost;
 		if UBnew < UB
@@ -78,8 +80,10 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 
 		start_planning_sol = time()
 		unst_planning_sol = solve_planning_problem(planning_problem,planning_variables,inputs);
+		println(planning_problem)
 		cpu_planning_sol = time()-start_planning_sol;
 		println("Solving the planning problem required $cpu_planning_sol seconds")
+		println(unst_planning_sol)
 
 		LB = max(LB,unst_planning_sol.LB);
 		

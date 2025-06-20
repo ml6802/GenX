@@ -115,7 +115,7 @@ function calculate_ptdf_matrices(inputs::Dict, slack_bus::Int=1; tol = eps())
 
     ptdf_mat = PowerNetworkMatrices._calculate_PTDF_matrix_KLU(A, BA, Set([slack_bus]), Float64[])# [1.0 for i in 1:num_buses])
 
-    ptdf_data = PTDF(PNM.sparsify(ptdf_mat, tol), (buses, all_lines), (bus_map, line_map), subnetworks, ref_bus_position, Base.RefValue(tol), RadialNetworkReduction())
+    ptdf_data = PTDF(PowerNetworkMatrices.sparsify(ptdf_mat, tol), (buses, all_lines), (bus_map, line_map), subnetworks, ref_bus_position, Base.RefValue(tol), RadialNetworkReduction())
 
     # need to build ptdf for each line; 
         # Need to build a 3 entry tuple I think with the third dim being cand line num
@@ -150,7 +150,7 @@ function calculate_ptdf_matrices(inputs::Dict, slack_bus::Int=1; tol = eps())
         end
     end
 
-    ptdf_data_by_line = PTDF(PNM.sparsify(ptdf_by_line, tol), (buses, all_ind_lines), (bus_map, ind_line_map), Dict{Int, Set{Int}}(), ref_bus_position, Base.RefValue(tol), RadialNetworkReduction())
+    ptdf_data_by_line = PTDF(PowerNetworkMatrices.sparsify(ptdf_by_line, tol), (buses, all_ind_lines), (bus_map, ind_line_map), Dict{Int, Set{Int}}(), ref_bus_position, Base.RefValue(tol), RadialNetworkReduction())
 
     return ptdf_data, ptdf_data_by_line
 end
