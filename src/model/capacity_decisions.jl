@@ -188,7 +188,7 @@ function transmission_capacity_decisions!(EP, inputs::Dict, setup::Dict)
                 inputs["EXPANSION_LEVELS"] = EXPANSION_LEVELS
                 @variable(EP, vZ_BUILD[l in EXPANSION_LINES, i in 1:(inputs["Max_Trans_Cap"][l])] in Parameter(0)) #PTDF variable
             else
-                @variable(EP, vNEW_TRANS_CAP_DECISION_INT[l in EXPANSION_LINES, i in 1:inputs["Max_Trans_Cap"][l]], Bin)
+                @variable(EP, vNEW_TRANS_CAP_DECISION_INT[l in EXPANSION_LINES, i in 1:inputs["Max_Trans_Cap"][l]] in Parameter(0))
                 REINFORCEMENT_CAP_SIZE = inputs["Line_Reinforcement_Cap_Size"]
                 MAX_TRAN_EXPANSION_LIMIT=inputs["Max_Trans_Cap"]
                 EXPANSION_LEVELS=Dict{Int,Vector{Float64}}()

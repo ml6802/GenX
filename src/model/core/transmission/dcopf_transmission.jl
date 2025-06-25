@@ -84,16 +84,17 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
     end
 
 
-    ### DC-OPF variables ###
-    # Note, these are definable without overwriting the existing variables in the model because transmission.jl is not called when this file is called.
-    # Power flow on each existing transmission line "l" at hour "t"
-    @variable(EP, vFLOW[l = 1:L, t = 1:T])
+    
 
-    # Power flow on each candidate transmission line "l" at hour "t"
-    @variable(EP, vCANDFLOW[l = 1:L_cand, t = 1:T])
+    if setup["ptdf"] == 0 && setup["SOS1"] == 1
+            ### DC-OPF variables ###
+        # Note, these are definable without overwriting the existing variables in the model because transmission.jl is not called when this file is called.
+        # Power flow on each existing transmission line "l" at hour "t"
+        @variable(EP, vFLOW[l = 1:L, t = 1:T])
 
+        # Power flow on each candidate transmission line "l" at hour "t"
+        @variable(EP, vCANDFLOW[l = 1:L_cand, t = 1:T])
 
-    if setup["ptdf"] == 0
         # Voltage angle variables of each zone "z" at hour "t" 
         @variable(EP, vANGLE[z = 1:Z, t = 1:T])
 
@@ -151,7 +152,22 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
         )
         # Slack Bus angle limit
         @constraint(EP, cANGLE_SLACK[t = 1:T], vANGLE[1, t]==0)
-    else #PTDF constraints
+
+        @expression(EP,
+            eCand_Flow[l in EXPANSION_LINES, t = 1:T], EP[:vCANDFLOW][l, t])
+
+        @expression(EP,
+            eNet_Export_Cand_Flows[z = 1:Z, t = 1:T],
+            sum(inputs["pNet_Map_cand"][l, z] * EP[:vCANDFLOW][l, t] for l in EXPANSION_LINES))
+    elseif setup["ptdf"] == 1 #PTDF constraints
+            ### DC-OPF variables ###
+        # Note, these are definable without overwriting the existing variables in the model because transmission.jl is not called when this file is called.
+        # Power flow on each existing transmission line "l" at hour "t"
+        @variable(EP, vFLOW[l = 1:L, t = 1:T])
+
+        # Power flow on each candidate transmission line "l" at hour "t"
+        @variable(EP, vCANDFLOW[l = 1:L_cand, t = 1:T])
+
         ptdf_nodal, ptdf_by_line = calculate_ptdf_matrices(inputs) #TODO: Add slack bus to inputs if we go this route of doing ptdf
         inputs["ptdf_by_line"] = ptdf_by_line
         
@@ -219,6 +235,12 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
             sum(get_ptdf_line_diff(ptdf_by_line, l, i, ll, cand_line_map) * p_virtual[ll, ii, t] for ll in EXPANSION_LINES, ii in 1:(inputs["Max_Trans_Cap"][ll])) for i in 1:(inputs["Max_Trans_Cap"][l]))
         )
 
+        @expression(EP,
+        eCand_Flow[l in EXPANSION_LINES, t = 1:T], EP[:vCANDFLOW][l, t])
+
+        @expression(EP,
+            eNet_Export_Cand_Flows[z = 1:Z, t = 1:T],
+            sum(inputs["pNet_Map_cand"][l, z] * EP[:vCANDFLOW][l, t] for l in EXPANSION_LINES))
 
         # for existing line corridors, define (1)
 
@@ -232,6 +254,59 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
         # define virtual inputs for each node
         # define x1 >= x2 >= x3 >= ...
 
+    else
+            ### DC-OPF variables ###
+        # Note, these are definable without overwriting the existing variables in the model because transmission.jl is not called when this file is called.
+        # Power flow on each existing transmission line "l" at hour "t"
+        @variable(EP, vFLOW[l = 1:L, t = 1:T])
+
+        # Power flow on each candidate transmission line "l" at hour "t"
+        @variable(EP, vCANDFLOW[l = 1:L_cand, t = 1:T, i in 1:inputs["Max_Trans_Cap"][l]])
+
+        # Voltage angle variables of each zone "z" at hour "t" 
+        @variable(EP, vANGLE[z = 1:Z, t = 1:T])
+
+        @variable(EP, vPROX_ANGLE[l in EXPANSION_LINES, t = 1:T, i in 1:(1+inputs["Max_Trans_Cap"][l])])
+
+        ### DC-OPF constraints ###
+
+        # Power flow constraint existing lines:: vFLOW = DC_OPF_coeff * (vANGLE[START_ZONE] - vANGLE[END_ZONE])
+        @constraint(EP,
+            cPOWER_FLOW_OPF[l = 1:L, t = 1:T],
+            EP[:vFLOW][l,
+                t]==inputs["pDC_OPF_coeff"][l] *
+                    sum(inputs["pNet_Map"][l, z] * vANGLE[z, t] for z in 1:Z))
+
+        #Power Flow in the candidate expansion lines
+        @constraint(EP,
+            cPOWER_FLOW_OPF_EXPANSION_FORWARD[l in EXPANSION_LINES, t = 1:T, i in 1:inputs["Max_Trans_Cap"][l]],
+                EP[:vCANDFLOW][l,t,i]-inputs["pDC_OPF_coeff_cand"][l] *
+                        sum(inputs["pNet_Map_cand"][l, z] * vANGLE[z, t] for z in 1:Z) <= BigM[l]*(1-EP[:vNEW_TRANS_CAP_DECISION_INT][l,i]))
+        @constraint(EP,
+            cPOWER_FLOW_OPF_EXPANSION_REVERSE[l in EXPANSION_LINES, t = 1:T, i in 1:inputs["Max_Trans_Cap"][l]],
+                EP[:vCANDFLOW][l,t,i]-inputs["pDC_OPF_coeff_cand"][l] *
+                        sum(inputs["pNet_Map_cand"][l, z] * vANGLE[z, t] for z in 1:Z) >= -BigM[l]*(1-EP[:vNEW_TRANS_CAP_DECISION_INT][l,i]))
+
+        @constraints(EP,
+        begin
+            cMaxFlow_out_existing[l = 1:L, t = 1:T], EP[:vFLOW][l, t] <= EP[:eTransMax][l]
+            cMaxFlow_in_existing[l = 1:L, t = 1:T], EP[:vFLOW][l, t] >= -EP[:eTransMax][l]
+        end)
+
+        @constraints(EP,
+        begin
+            cMaxFlow_out_candidate[l in EXPANSION_LINES, t = 1:T, i in 1:inputs["Max_Trans_Cap"][l]], EP[:vCANDFLOW][l, t, i] <= EP[:vNEW_TRANS_CAP_DECISION_INT][l,i]*inputs["Line_Reinforcement_Cap_Size"][l]
+            cMaxFlow_in_candidate[l in EXPANSION_LINES, t = 1:T, i in 1:inputs["Max_Trans_Cap"][l]], EP[:vCANDFLOW][l, t, i] >= -EP[:vNEW_TRANS_CAP_DECISION_INT][l,i]*inputs["Line_Reinforcement_Cap_Size"][l]
+        end)
+
+        @expression(EP,
+        eCand_Flow[l in EXPANSION_LINES, t = 1:T],
+        sum(EP[:vCANDFLOW][l, t, i] for i in 1:inputs["Max_Trans_Cap"][l]))
+
+        @expression(EP,
+            eNet_Export_Cand_Flows[z = 1:Z, t = 1:T],
+            sum(inputs["pNet_Map_cand"][l, z] * EP[:eCand_Flow][l, t] for l in EXPANSION_LINES))
+
     end
 
 
@@ -239,12 +314,7 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
         eNet_Export_Flows[z = 1:Z, t = 1:T],
         sum(inputs["pNet_Map"][l, z] * EP[:vFLOW][l, t] for l in 1:L))
 
-    @expression(EP,
-        eCand_Flow[l in EXPANSION_LINES, t = 1:T], EP[:vCANDFLOW][l, t])
-
-    @expression(EP,
-        eNet_Export_Cand_Flows[z = 1:Z, t = 1:T],
-        sum(inputs["pNet_Map_cand"][l, z] * EP[:vCANDFLOW][l, t] for l in EXPANSION_LINES))
+    
 
     # Export and import expressions
     @expression(EP, ePowerBalanceNetExportFlows[t = 1:T, z = 1:Z],
