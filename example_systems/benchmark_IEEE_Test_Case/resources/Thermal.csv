@@ -1,0 +1,11 @@
+Resource,Zone,Model,New_Build,Can_Retire,Existing_Cap_MW,Min_Cap_MW,Max_Cap_MW,Inv_Cost_per_MWyr,Fixed_OM_Cost_per_MWyr,Var_OM_Cost_per_MWh,Start_Cost_per_MW,Start_Fuel_MMBTU_per_MW,Cap_Size,Heat_Rate_MMBTU_per_MWh,Fuel,Min_Power,Ramp_Up_Percentage,Ramp_Dn_Percentage,Up_Time,Down_Time,Reg_Max,Rsv_Max,Reg_Cost,Rsv_Cost,MGA,Resource_Type,region,cluster
+z1_natural_gas,1,2,0,0,332.4,0,0,0,0,0,0,0,250,3430.293932,natural_gas,0,0.300842359,0.300842359,0,0,0,0,0,0,0,natural_gas,BUS1,1
+z2_natural_gas,2,2,0,0,140,0,0,0,0,0,0,0,300,5500,natural_gas,0,0.714285714,0.714285714,0,0,0,0,0,0,0,natural_gas,BUS2,1
+z15_natural_gas,15,2,0,0,80,0,0,0,0,0,0,0,270,360,natural_gas,0,1.25,1.25,0,0,0,0,0,0,0,natural_gas,BUS15,1
+z16_natural_gas,16,2,0,0,80,0,0,0,0,0,0,0,270,315,natural_gas,0,1.25,1.25,0,0,0,0,0,0,0,natural_gas,BUS16,1
+z27_natural_gas,27,2,0,0,40,0,0,0,0,0,0,0,270,350,natural_gas,0,2.5,2.5,0,0,0,0,0,0,0,natural_gas,BUS27,1
+z36_natural_gas,36,2,0,0,50,0,0,0,0,0,0,0,270,366.7,natural_gas,0,2,2,0,0,0,0,0,0,0,natural_gas,BUS36,1
+z37_natural_gas,37,2,0,0,30,0,0,0,0,0,0,0,270,375,natural_gas,0,3.333333333,3.333333333,0,0,0,0,0,0,0,natural_gas,BUS37,1
+z41_natural_gas,41,2,0,0,55,0,0,0,0,0,0,0,270,437.5,natural_gas,0,1.818181818,1.818181818,0,0,0,0,0,0,0,natural_gas,BUS41,1
+z45_natural_gas,45,2,0,0,332.4,0,0,0,0,0,0,0,270,1630.293932,natural_gas,0,0.300842359,0.300842359,0,0,0,0,0,0,0,natural_gas,BUS45,1
+z46_natural_gas,46,2,0,0,140,0,0,0,0,0,0,0,270,3700,natural_gas,0,0.714285714,0.714285714,0,0,0,0,0,0,0,natural_gas,BUS46,1
