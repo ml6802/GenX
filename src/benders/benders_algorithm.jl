@@ -25,17 +25,24 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
     integer_investment = setup["IntegerInvestments"]
 
 	integer_routine_flag = false
-"""
-	if integer_investment == 1 && stab_method != "off"
-		all_planning_variables = all_variables(planning_problem);
-		integer_variables = all_planning_variables[is_integer.(all_planning_variables)];
-		binary_variables = all_planning_variables[is_binary.(all_planning_variables)];
-		unset_integer.(integer_variables)
-		unset_binary.(binary_variables)
-		integer_routine_flag = true;
-	end
-	"""
+	# if integer_investment == 1 && stab_method != "off"
+	# 	all_planning_variables = all_variables(planning_problem);
+	# 	integer_variables = all_planning_variables[is_integer.(all_planning_variables)];
+	# 	binary_variables = all_planning_variables[is_binary.(all_planning_variables)];
+	# 	unset_integer.(integer_variables)
+	# 	unset_binary.(binary_variables)
+	# 	set_upper_bound.(binary_variables, 1)
+	# 	set_lower_bound.(binary_variables, 0)
+	# 	integer_routine_flag = true;
+	# end
 
+	# all_planning_variables = all_variables(planning_problem);
+		# integer_variables = all_planning_variables[is_integer.(all_planning_variables)];
+		# binary_variables = all_planning_variables[is_binary.(all_planning_variables)];
+		# unset_integer.(integer_variables)
+		# unset_binary.(binary_variables)
+		# set_upper_bound.(binary_variables, 1)
+		# set_lower_bound.(binary_variables, 0)
     #### Initialize UB and LB
 	planning_sol = solve_planning_problem(planning_problem,planning_variables,inputs);
 	subop_sol = Dict()
@@ -49,6 +56,7 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 	feasibility_hist = Float64[];
 
 	planning_sol_best = deepcopy(planning_sol);
+	build_decisions = zeros(76, 0)
 
     #### Run Benders iterations
     for k = 0:MaxIter
@@ -75,13 +83,39 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 		
 		time_planning_update = time()-time_start_update
 		println("done (it took $time_planning_update s).")
-
+		
+		avs = all_variables(planning_problem)
 		start_planning_sol = time()
-		unst_planning_sol = solve_planning_problem(planning_problem,planning_variables,inputs);
+		if k ==10
+			trans_cap_decisions = [0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0]
+			trans_cap_vars = avs[2:77]
+			for (idx, var) in enumerate(trans_cap_vars)
+				fix(var, trans_cap_decisions[idx], force = true)
+			end
+			unst_planning_sol = solve_planning_problem(planning_problem,planning_variables,inputs);
+			unfix.(trans_cap_vars)
+			for var in trans_cap_vars
+				if !(is_binary(var))
+					set_binary(var)
+				end
+			end
+		else
+			unst_planning_sol = solve_planning_problem(planning_problem,planning_variables,inputs);
+		end
 		cpu_planning_sol = time()-start_planning_sol;
 		println("Solving the planning problem required $cpu_planning_sol seconds")
-		println(unst_planning_sol)
+		#println(unst_planning_sol)
+		build_sols = zeros(76)
+		#println(collect(keys(unst_planning_sol.values)))
+		for i in 1:76
+			build_sols[i] = unst_planning_sol.values["vZ_BUILD[$i,1]"]
+		end
+			build_decisions = hcat(build_decisions, build_sols)
 
+
+
+		# optimize!(planning_problem)
+		# unst_planning_sol_LB = objective_value(planning_problem)
 		LB = max(LB,unst_planning_sol.LB);
 		
 		append!(LB_hist,LB)
@@ -148,14 +182,14 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 
     end
 
-	return (planning_problem=planning_problem,planning_sol = planning_sol_best,operational_sol = subop_sol,LB_hist = LB_hist,UB_hist = UB_hist,cpu_time = cpu_time,feasibility_hist = feasibility_hist)
+	return (planning_problem=planning_problem,planning_sol = planning_sol_best,operational_sol = subop_sol,LB_hist = LB_hist,UB_hist = UB_hist,cpu_time = cpu_time,feasibility_hist = feasibility_hist, build_decisions = build_decisions)
 end
 
 function update_planning_problem_multi_cuts!(EP::Model,subop_sol::Dict,planning_sol::NamedTuple,planning_variables_sub::Dict)
     
 	W = keys(subop_sol);
-	
+
     @constraint(EP,[w in W],subop_sol[w].theta_coeff*EP[:vTHETA][w] >= subop_sol[w].op_cost + sum(subop_sol[w].lambda[i]*(variable_by_name(EP,planning_variables_sub[w][i]) - planning_sol.values[planning_variables_sub[w][i]]) for i in 1:length(planning_variables_sub[w])));
 
-       
+
 end

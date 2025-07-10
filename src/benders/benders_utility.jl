@@ -10,20 +10,30 @@ function separate_inputs_subperiods(inputs::Dict)
     for w in 1:number_periods
         inputs_all[w] = deepcopy(inputs);
         Tw = (w-1)*hours_per_subperiod+1:w*hours_per_subperiod;
-        inputs_all[w]["omega"] = inputs["omega"][Tw];
+        if haskey(inputs, "omega")
+            inputs_all[w]["omega"] = inputs["omega"][Tw];
+        end
         inputs_all[w]["REP_PERIOD"]=1;
         STARTS = 1:hours_per_subperiod:hours_per_subperiod;
         INTERIORS = setdiff(1:hours_per_subperiod,STARTS);   
         inputs_all[w]["INTERIOR_SUBPERIODS"] = INTERIORS;
         inputs_all[w]["START_SUBPERIODS"] = STARTS;
-        inputs_all[w]["pP_Max"] = inputs["pP_Max"][:,Tw];
+        if haskey(inputs, "pP_Max")
+            inputs_all[w]["pP_Max"] = inputs["pP_Max"][:,Tw];
+        end
         inputs_all[w]["T"] = hours_per_subperiod;
         for ks in keys(inputs["fuel_costs"])
             inputs_all[w]["fuel_costs"][ks] = inputs["fuel_costs"][ks][Tw];
         end
-        inputs_all[w]["Weights"] = [inputs["Weights"][w]];
-        inputs_all[w]["pD"] = inputs["pD"][Tw,:];
-        inputs_all[w]["C_Start"] = inputs["C_Start"][:,Tw]; 
+        if haskey(inputs, "Weights")
+            inputs_all[w]["Weights"] = [inputs["Weights"][w]];
+        end
+        if haskey(inputs, "pD")
+            inputs_all[w]["pD"] = inputs["pD"][Tw,:];
+        end
+        if haskey(inputs, "C_start")
+            inputs_all[w]["C_Start"] = inputs["C_Start"][:,Tw]; 
+        end
         inputs_all[w]["SubPeriod"] = w;
 		if haskey(inputs,"Period_Map")
 			inputs_all[w]["SubPeriod_Index"] = inputs["Period_Map"].Rep_Period[findfirst(inputs["Period_Map"].Rep_Period_Index.==w)];

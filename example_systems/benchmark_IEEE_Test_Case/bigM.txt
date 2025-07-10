@@ -1,0 +1,373 @@
+
+Gurobi 12.0.2 (win64) logging started Tue Jul  8 10:38:20 2025
+
+Set parameter LogFile to value "c:\Users\dc0173\Documents\Princeton\git\forked\Mike\new_GenX\GenX\example_systems\benchmark_IEEE_Test_Case/bigM.txt"
+
+Gurobi 12.0.2 (win64) logging started Tue Jul  8 10:38:20 2025
+
+Set parameter LogFile to value "c:\Users\dc0173\Documents\Princeton\git\forked\Mike\new_GenX\GenX\example_systems\benchmark_IEEE_Test_Case/bigM.txt"
+Gurobi Optimizer version 12.0.2 build v12.0.2rc0 (win64 - Windows 11.0 (26100.2))
+
+CPU model: Intel(R) Core(TM) Ultra 7 165U, instruction set [SSE2|AVX|AVX2]
+Thread count: 12 physical cores, 14 logical processors, using up to 14 threads
+
+Non-default parameters:
+TimeLimit  300
+MIPGap  0.001
+
+Optimize a model with 20904 rows, 13973 columns and 54936 nonzeros
+Model fingerprint: 0x19667e7b
+Variable types: 13897 continuous, 76 integer (76 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 6e+03]
+  Objective range  [1e+00, 2e+06]
+  Bounds range     [0e+00, 0e+00]
+  RHS range        [3e-06, 3e+02]
+Found heuristic solution: objective 1.059668e+10
+Presolve removed 9768 rows and 5617 columns
+Presolve time: 0.05s
+Presolved: 11136 rows, 8356 columns, 41304 nonzeros
+Variable types: 8280 continuous, 76 integer (76 binary)
+
+Root relaxation: objective 1.855189e+06, 5157 iterations, 0.24 seconds (0.27 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 1855188.77    0   14 1.0597e+10 1855188.77   100%     -    0s
+H    0     0                    1.696720e+07 1865278.27  89.0%     -    0s
+     0     0 1866274.00    0   17 1.6967e+07 1866274.00  89.0%     -    0s
+H    0     0                    1.693886e+07 1866274.00  89.0%     -    0s
+H    0     0                    2031408.3348 1866274.00  8.13%     -    0s
+     0     0 1866406.80    0   17 2031408.33 1866406.80  8.12%     -    0s
+     0     0 1866409.70    0   17 2031408.33 1866409.70  8.12%     -    0s
+     0     0 1866409.70    0   17 2031408.33 1866409.70  8.12%     -    0s
+     0     0 1866409.70    0   17 2031408.33 1866409.70  8.12%     -    0s
+     0     0 1866409.70    0   17 2031408.33 1866409.70  8.12%     -    0s
+     0     0 1866409.70    0   17 2031408.33 1866409.70  8.12%     -    0s
+     0     0 1869687.63    0   25 2031408.33 1869687.63  7.96%     -    1s
+     0     0 1870091.08    0   22 2031408.33 1870091.08  7.94%     -    1s
+     0     0 1870116.21    0   22 2031408.33 1870116.21  7.94%     -    1s
+     0     0 1870118.24    0   22 2031408.33 1870118.24  7.94%     -    1s
+     0     0 1872413.31    0   22 2031408.33 1872413.31  7.83%     -    1s
+     0     0 1872508.40    0   22 2031408.33 1872508.40  7.82%     -    1s
+     0     0 1872521.66    0   22 2031408.33 1872521.66  7.82%     -    2s
+     0     0 1872521.73    0   22 2031408.33 1872521.73  7.82%     -    2s
+H    0     0                    2014951.6753 1872521.73  7.07%     -    2s
+     0     0 1872979.77    0   23 2014951.68 1872979.77  7.05%     -    2s
+H    0     0                    1977323.8257 1873079.36  5.27%     -    2s
+     0     0 1873079.36    0   23 1977323.83 1873079.36  5.27%     -    2s
+     0     0 1873127.32    0   23 1977323.83 1873127.32  5.27%     -    2s
+     0     0 1873133.24    0   23 1977323.83 1873133.24  5.27%     -    2s
+     0     0 1873133.73    0   23 1977323.83 1873133.73  5.27%     -    2s
+     0     0 1873335.05    0   24 1977323.83 1873335.05  5.26%     -    2s
+     0     0 1873391.07    0   24 1977323.83 1873391.07  5.26%     -    2s
+     0     0     cutoff    0      1977323.83 1977323.83  0.00%     -    2s
+
+Cutting planes:
+  Gomory: 1
+  Implied bound: 78
+  MIR: 534
+  RLT: 3
+  Relax-and-lift: 3
+
+Explored 1 nodes (11155 simplex iterations) in 2.95 seconds (2.85 work units)
+Thread count was 14 (of 14 available processors)
+
+Solution count 6: 1.97732e+06 2.01495e+06 2.03141e+06 ... 1.05967e+10
+
+Optimal solution found (tolerance 1.00e-03)
+Best objective 1.977323825733e+06, best bound 1.977323825733e+06, gap 0.0000%
+
+User-callback calls 860, time in user-callback 0.00 sec
+
+Gurobi 12.0.2 (win64) logging started Tue Jul  8 10:45:20 2025
+
+Set parameter LogFile to value "c:\Users\dc0173\Documents\Princeton\git\forked\Mike\new_GenX\GenX\example_systems\benchmark_IEEE_Test_Case/bigM.txt"
+
+Gurobi 12.0.2 (win64) logging started Tue Jul  8 10:45:20 2025
+
+Set parameter LogFile to value "c:\Users\dc0173\Documents\Princeton\git\forked\Mike\new_GenX\GenX\example_systems\benchmark_IEEE_Test_Case/bigM.txt"
+Gurobi Optimizer version 12.0.2 build v12.0.2rc0 (win64 - Windows 11.0 (26100.2))
+
+CPU model: Intel(R) Core(TM) Ultra 7 165U, instruction set [SSE2|AVX|AVX2]
+Thread count: 12 physical cores, 14 logical processors, using up to 14 threads
+
+Non-default parameters:
+TimeLimit  300
+MIPGap  0.001
+
+Optimize a model with 21024 rows, 13973 columns and 55296 nonzeros
+Model fingerprint: 0xb20e211f
+Variable types: 13897 continuous, 76 integer (76 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 6e+03]
+  Objective range  [1e+00, 2e+06]
+  Bounds range     [0e+00, 0e+00]
+  RHS range        [3e-06, 3e+02]
+Found heuristic solution: objective 1.059668e+10
+Presolve removed 9840 rows and 5617 columns
+Presolve time: 0.07s
+Presolved: 11184 rows, 8356 columns, 41400 nonzeros
+Variable types: 8280 continuous, 76 integer (76 binary)
+
+Root relaxation: objective 1.855189e+06, 5130 iterations, 0.19 seconds (0.26 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 1855188.77    0   14 1.0597e+10 1855188.77   100%     -    0s
+H    0     0                    1.696720e+07 1865279.38  89.0%     -    0s
+     0     0 1865279.38    0   17 1.6967e+07 1865279.38  89.0%     -    0s
+H    0     0                    1.693886e+07 1865293.24  89.0%     -    1s
+     0     0 1865388.24    0   17 1.6939e+07 1865388.24  89.0%     -    1s
+     0     0 1865388.69    0   17 1.6939e+07 1865388.69  89.0%     -    1s
+     0     0 1865418.24    0   17 1.6939e+07 1865418.24  89.0%     -    1s
+     0     0 1865445.72    0   17 1.6939e+07 1865445.72  89.0%     -    1s
+     0     0 1865445.72    0   17 1.6939e+07 1865445.72  89.0%     -    1s
+     0     0 1869865.40    0   22 1.6939e+07 1869865.40  89.0%     -    1s
+     0     0 1870229.96    0   22 1.6939e+07 1870229.96  89.0%     -    2s
+     0     0 1870361.58    0   22 1.6939e+07 1870361.58  89.0%     -    2s
+     0     0 1870384.94    0   22 1.6939e+07 1870384.94  89.0%     -    2s
+     0     0 1870394.78    0   23 1.6939e+07 1870394.78  89.0%     -    2s
+     0     0 1870394.78    0   23 1.6939e+07 1870394.78  89.0%     -    2s
+     0     0 1872314.14    0   23 1.6939e+07 1872314.14  88.9%     -    2s
+     0     0 1872677.68    0   23 1.6939e+07 1872677.68  88.9%     -    3s
+     0     0 1872677.68    0   24 1.6939e+07 1872677.68  88.9%     -    3s
+     0     0 1872677.68    0   24 1.6939e+07 1872677.68  88.9%     -    3s
+     0     0 1872759.38    0   24 1.6939e+07 1872759.38  88.9%     -    3s
+H    0     0                    1964729.9398 1872760.81  4.68%     -    3s
+     0     0 1872798.20    0   24 1964729.94 1872798.20  4.68%     -    3s
+     0     0 1872800.72    0   24 1964729.94 1872800.72  4.68%     -    3s
+     0     0 1872933.29    0   22 1964729.94 1872933.29  4.67%     -    4s
+     0     0 1872951.53    0   23 1964729.94 1872951.53  4.67%     -    4s
+     0     0 1872951.55    0   23 1964729.94 1872951.55  4.67%     -    4s
+     0     0 1872977.58    0   23 1964729.94 1872977.58  4.67%     -    4s
+     0     0 1873034.25    0   23 1964729.94 1873034.25  4.67%     -    4s
+     0     0 1873034.25    0   24 1964729.94 1873034.25  4.67%     -    4s
+     0     0 1873034.25    0   24 1964729.94 1873034.25  4.67%     -    5s
+     0     0 1873034.25    0   23 1964729.94 1873034.25  4.67%     -    5s
+     0     0 1873034.25    0   23 1964729.94 1873034.25  4.67%     -    5s
+     0     0 1873034.25    0   23 1964729.94 1873034.25  4.67%     -    5s
+     0     0 1873034.25    0   23 1964729.94 1873034.25  4.67%     -    6s
+     0     2 1873034.25    0   23 1964729.94 1873034.25  4.67%     -    6s
+   127   151 1883068.67   10   24 1964729.94 1877929.84  4.42%   372   10s
+   355   380 1897725.06   28   14 1964729.94 1877929.84  4.42%   320   15s
+H  653   711                    1946115.4949 1877929.84  3.50%   251   19s
+   710   719 1934174.73   56    2 1946115.49 1878877.44  3.45%   240   20s
+   997   966 1891616.64   15   16 1946115.49 1879932.80  3.40%   228   25s
+  1337  1283 1899276.15   23   17 1946115.49 1879932.80  3.40%   213   31s
+  1614  1576 1901827.42   28   16 1946115.49 1884695.24  3.16%   207   35s
+  2020  1816 1925810.76   30   23 1946115.49 1884695.24  3.16%   192   47s
+  2025  1819 1935346.87   47   22 1946115.49 1884695.24  3.16%   192   50s
+  2056  1853 1916392.53   16   38 1946115.49 1884695.24  3.16%  10.1   55s
+  2136  1918 1927815.21   19   36 1946115.49 1884746.13  3.15%  20.9   60s
+  2515  2116 1940038.46   35   23 1946115.49 1884746.13  3.15%  39.1   65s
+* 2831  2132              61    1943694.7133 1889333.64  2.80%  46.9   68s
+H 2874  2062                    1934830.4483 1889333.64  2.35%  48.3   68s
+H 2878  1978                    1930952.7789 1889333.64  2.16%  48.3   68s
+H 2919  1892                    1928340.7785 1889333.64  2.02%  49.3   69s
+  2970  1841 1909850.95   35   17 1928340.78 1889333.64  2.02%  50.0   70s
+H 3195  1706                    1926545.6360 1889884.36  1.90%  54.9   73s
+  3383  1709 1909670.37   26   27 1926545.64 1894580.15  1.66%  59.3   75s
+  3838  1701 1911822.86   19   29 1926545.64 1895822.91  1.59%  65.7   81s
+  3881  1704 1923439.48   22   30 1926545.64 1896208.21  1.57%  66.7   86s
+  3953  1710 1908490.26   24   26 1926545.64 1896208.21  1.57%  67.3   90s
+H 3955  1569                    1922928.5455 1896208.21  1.39%  67.3   90s
+  4469  1713 1915403.61   32   23 1922928.55 1898230.51  1.28%  72.8   95s
+  5051  1680 1915496.61   24   26 1922928.55 1899552.48  1.22%  77.7  101s
+  5088  1682 1917784.30   25   24 1922928.55 1899552.48  1.22%  77.9  105s
+H 5116  1620                    1922844.3360 1899552.48  1.21%  78.2  107s
+  5323  1713     cutoff   24      1922844.34 1900469.47  1.16%  79.2  111s
+  5932  1841 1916541.50   31   21 1922844.34 1901473.49  1.11%  81.3  116s
+  6421  2028 1908011.50   26   27 1922844.34 1902244.81  1.07%  81.7  121s
+  6997  2284 1921580.19   36   15 1922844.34 1902887.08  1.04%  81.2  126s
+  7509  2500 1922318.78   27   27 1922844.34 1903345.95  1.01%  81.3  131s
+  8047  2633 1910097.48   31   24 1922844.34 1903793.74  0.99%  82.8  137s
+  8060  2650 1911875.01   32   22 1922844.34 1903807.64  0.99%  82.9  140s
+  8112  2683 1913070.78   34   21 1922844.34 1903808.19  0.99%  83.1  146s
+  8299  2853 1907629.93   28   25 1922844.34 1903851.14  0.99%  83.1  152s
+  9044  3117     cutoff   32      1922844.34 1904405.84  0.96%  83.1  157s
+  9828  3351 1918044.13   25   32 1922844.34 1904688.60  0.94%  84.1  162s
+ 10224  3520 1914369.62   23   27 1922844.34 1905042.30  0.93%  84.4  165s
+ 11127  3908     cutoff   36      1922844.34 1905368.27  0.91%  84.5  171s
+ 12126  4224     cutoff   23      1922844.34 1905768.42  0.89%  84.4  177s
+ 12636  4399 1912263.86   27   25 1922844.34 1906054.13  0.87%  84.6  180s
+ 13860  4818 1911632.45   31   23 1922844.34 1906627.89  0.84%  84.2  187s
+ 14465  5029 1913752.89   31   16 1922844.34 1906847.52  0.83%  84.1  191s
+ 15055  5197 1921144.67   26   26 1922844.34 1907021.41  0.82%  84.4  195s
+ 16512  5674 1919051.89   34   18 1922844.34 1907444.98  0.80%  83.4  203s
+ 17206  5923 1918528.09   32   21 1922844.34 1907616.27  0.79%  83.5  207s
+ 17980  6143 1917004.77   31   21 1922844.34 1907744.29  0.79%  83.1  213s
+ 18957  6148     cutoff   35      1922844.34 1907993.20  0.77%  82.4  218s
+ 18974  6156 1912794.50   19   23 1922844.34 1907993.20  0.77%  82.4  222s
+ 18989  6366 1916063.78   20   26 1922844.34 1907993.20  0.77%  82.5  227s
+ 19568  6634 1912939.59   26   23 1922844.34 1908044.31  0.77%  82.5  233s
+ 20496  6853 1914049.19   37   16 1922844.34 1908287.09  0.76%  82.2  239s
+ 21347  7092 1922109.29   44   15 1922844.34 1908428.30  0.75%  82.1  244s
+ 21558  7092 1914990.69   40   19 1922844.34 1908428.30  0.75%  82.1  245s
+ 22237  7302 1916621.47   35   20 1922844.34 1908577.51  0.74%  81.9  250s
+ 23104  7577 1921827.39   43   17 1922844.34 1908753.74  0.73%  81.8  256s
+ 24040  7773     cutoff   31      1922844.34 1908936.90  0.72%  81.6  262s
+ 24925  8027 1915378.63   35   17 1922844.34 1909082.05  0.72%  81.4  268s
+ 25853  8328     cutoff   36      1922844.34 1909206.19  0.71%  81.3  274s
+ 26881  8541     cutoff   27      1922844.34 1909385.13  0.70%  81.4  280s
+ 27856  8793 1915073.39   37   18 1922844.34 1909507.57  0.69%  81.4  288s
+ 28987  9070 1921305.26   37   20 1922844.34 1909665.13  0.69%  81.4  295s
+ 30118  9221 1916742.85   24   27 1922844.34 1909860.20  0.68%  81.3  300s
+
+Cutting planes:
+  Learned: 1
+  Gomory: 1
+  Implied bound: 103
+  Projected implied bound: 1
+  MIR: 44
+  Flow cover: 83
+  RLT: 1
+
+Explored 30889 nodes (2902746 simplex iterations) in 300.21 seconds (176.72 work units)
+Thread count was 14 (of 14 available processors)
+
+Solution count 10: 1.92284e+06 1.92293e+06 1.92655e+06 ... 1.69389e+07
+
+Time limit reached
+Best objective 1.922844335978e+06, best bound 1.909985860178e+06, gap 0.6687%
+
+User-callback calls 72944, time in user-callback 0.14 sec
+
+Gurobi 12.0.2 (win64) logging started Tue Jul  8 15:41:56 2025
+
+Set parameter LogFile to value "c:\Users\dc0173\Documents\Princeton\git\forked\Mike\new_GenX\GenX\example_systems\benchmark_IEEE_Test_Case/bigM.txt"
+
+Gurobi 12.0.2 (win64) logging started Tue Jul  8 15:41:56 2025
+
+Set parameter LogFile to value "c:\Users\dc0173\Documents\Princeton\git\forked\Mike\new_GenX\GenX\example_systems\benchmark_IEEE_Test_Case/bigM.txt"
+Gurobi Optimizer version 12.0.2 build v12.0.2rc0 (win64 - Windows 11.0 (26100.2))
+
+CPU model: Intel(R) Core(TM) Ultra 7 165U, instruction set [SSE2|AVX|AVX2]
+Thread count: 12 physical cores, 14 logical processors, using up to 14 threads
+
+Non-default parameters:
+TimeLimit  300
+MIPGap  0.001
+
+Optimize a model with 21024 rows, 13973 columns and 55296 nonzeros
+Model fingerprint: 0xb20e211f
+Variable types: 13897 continuous, 76 integer (76 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 6e+03]
+  Objective range  [1e+00, 2e+06]
+  Bounds range     [0e+00, 0e+00]
+  RHS range        [3e-06, 3e+02]
+Found heuristic solution: objective 1.059668e+10
+Presolve removed 9840 rows and 5617 columns
+Presolve time: 0.12s
+Presolved: 11184 rows, 8356 columns, 41400 nonzeros
+Variable types: 8280 continuous, 76 integer (76 binary)
+
+Root relaxation: objective 1.855189e+06, 5130 iterations, 0.27 seconds (0.26 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 1855188.77    0   14 1.0597e+10 1855188.77   100%     -    0s
+H    0     0                    1.696720e+07 1865279.38  89.0%     -    1s
+     0     0 1865279.38    0   17 1.6967e+07 1865279.38  89.0%     -    1s
+H    0     0                    1.693886e+07 1865293.24  89.0%     -    1s
+     0     0 1865388.24    0   17 1.6939e+07 1865388.24  89.0%     -    1s
+     0     0 1865388.69    0   17 1.6939e+07 1865388.69  89.0%     -    1s
+     0     0 1865418.24    0   17 1.6939e+07 1865418.24  89.0%     -    1s
+     0     0 1865445.72    0   17 1.6939e+07 1865445.72  89.0%     -    1s
+     0     0 1865445.72    0   17 1.6939e+07 1865445.72  89.0%     -    1s
+     0     0 1869865.40    0   22 1.6939e+07 1869865.40  89.0%     -    2s
+     0     0 1870229.96    0   22 1.6939e+07 1870229.96  89.0%     -    2s
+     0     0 1870361.58    0   22 1.6939e+07 1870361.58  89.0%     -    2s
+     0     0 1870384.94    0   22 1.6939e+07 1870384.94  89.0%     -    2s
+     0     0 1870394.78    0   23 1.6939e+07 1870394.78  89.0%     -    2s
+     0     0 1870394.78    0   23 1.6939e+07 1870394.78  89.0%     -    2s
+     0     0 1872314.14    0   23 1.6939e+07 1872314.14  88.9%     -    2s
+     0     0 1872677.68    0   23 1.6939e+07 1872677.68  88.9%     -    2s
+     0     0 1872677.68    0   24 1.6939e+07 1872677.68  88.9%     -    3s
+     0     0 1872677.68    0   24 1.6939e+07 1872677.68  88.9%     -    3s
+     0     0 1872759.38    0   24 1.6939e+07 1872759.38  88.9%     -    3s
+H    0     0                    1964729.9398 1872760.81  4.68%     -    3s
+     0     0 1872798.20    0   24 1964729.94 1872798.20  4.68%     -    3s
+     0     0 1872800.72    0   24 1964729.94 1872800.72  4.68%     -    4s
+     0     0 1872933.29    0   22 1964729.94 1872933.29  4.67%     -    4s
+     0     0 1872951.53    0   23 1964729.94 1872951.53  4.67%     -    4s
+     0     0 1872951.55    0   23 1964729.94 1872951.55  4.67%     -    4s
+     0     0 1872977.58    0   23 1964729.94 1872977.58  4.67%     -    4s
+     0     0 1873034.25    0   23 1964729.94 1873034.25  4.67%     -    4s
+     0     0 1873034.25    0   24 1964729.94 1873034.25  4.67%     -    5s
+     0     0 1873034.25    0   24 1964729.94 1873034.25  4.67%     -    5s
+     0     0 1873034.25    0   23 1964729.94 1873034.25  4.67%     -    5s
+     0     0 1873034.25    0   23 1964729.94 1873034.25  4.67%     -    5s
+     0     0 1873034.25    0   23 1964729.94 1873034.25  4.67%     -    5s
+     0     0 1873034.25    0   23 1964729.94 1873034.25  4.67%     -    5s
+     0     2 1873034.25    0   23 1964729.94 1873034.25  4.67%     -    6s
+   127   151 1883068.67   10   24 1964729.94 1877929.84  4.42%   372   10s
+   355   380 1897725.06   28   14 1964729.94 1877929.84  4.42%   320   15s
+H  653   711                    1946115.4949 1877929.84  3.50%   251   19s
+   710   719 1934174.73   56    2 1946115.49 1878877.44  3.45%   240   20s
+  1038  1016 1889788.69   15   15 1946115.49 1879932.80  3.40%   228   25s
+  1409  1342 1898253.38   24   17 1946115.49 1881500.77  3.32%   211   30s
+
+Gurobi 12.0.2 (win64) logging started Tue Jul  8 15:45:32 2025
+
+Set parameter LogFile to value "c:\Users\dc0173\Documents\Princeton\git\forked\Mike\new_GenX\GenX\example_systems\benchmark_IEEE_Test_Case/bigM.txt"
+
+Gurobi 12.0.2 (win64) logging started Tue Jul  8 15:47:20 2025
+
+Set parameter LogFile to value "c:\Users\dc0173\Documents\Princeton\git\forked\Mike\new_GenX\GenX\example_systems\benchmark_IEEE_Test_Case/bigM.txt"
+
+Gurobi 12.0.2 (win64) logging started Tue Jul  8 15:48:57 2025
+
+Set parameter LogFile to value "c:\Users\dc0173\Documents\Princeton\git\forked\Mike\new_GenX\GenX\example_systems\benchmark_IEEE_Test_Case/bigM.txt"
+
+Gurobi 12.0.2 (win64) logging started Tue Jul  8 15:49:21 2025
+
+Set parameter LogFile to value "c:\Users\dc0173\Documents\Princeton\git\forked\Mike\new_GenX\GenX\example_systems\benchmark_IEEE_Test_Case/bigM.txt"
+
+Gurobi 12.0.2 (win64) logging started Tue Jul  8 15:50:11 2025
+
+Set parameter LogFile to value "c:\Users\dc0173\Documents\Princeton\git\forked\Mike\new_GenX\GenX\example_systems\benchmark_IEEE_Test_Case/bigM.txt"
+
+Gurobi 12.0.2 (win64) logging started Tue Jul  8 15:51:09 2025
+
+Set parameter LogFile to value "c:\Users\dc0173\Documents\Princeton\git\forked\Mike\new_GenX\GenX\example_systems\benchmark_IEEE_Test_Case/bigM.txt"
+
+Gurobi 12.0.2 (win64) logging started Tue Jul  8 15:51:36 2025
+
+Set parameter LogFile to value "c:\Users\dc0173\Documents\Princeton\git\forked\Mike\new_GenX\GenX\example_systems\benchmark_IEEE_Test_Case/bigM.txt"
+
+Gurobi 12.0.2 (win64) logging started Tue Jul  8 15:52:21 2025
+
+Set parameter LogFile to value "c:\Users\dc0173\Documents\Princeton\git\forked\Mike\new_GenX\GenX\example_systems\benchmark_IEEE_Test_Case/bigM.txt"
+
+Gurobi 12.0.2 (win64) logging started Tue Jul  8 15:54:10 2025
+
+Set parameter LogFile to value "c:\Users\dc0173\Documents\Princeton\git\forked\Mike\new_GenX\GenX\example_systems\benchmark_IEEE_Test_Case/bigM.txt"
+
+Gurobi 12.0.2 (win64) logging started Tue Jul  8 15:55:13 2025
+
+Set parameter LogFile to value "c:\Users\dc0173\Documents\Princeton\git\forked\Mike\new_GenX\GenX\example_systems\benchmark_IEEE_Test_Case/bigM.txt"
+
+Gurobi 12.0.2 (win64) logging started Tue Jul  8 15:56:09 2025
+
+Set parameter LogFile to value "c:\Users\dc0173\Documents\Princeton\git\forked\Mike\new_GenX\GenX\example_systems\benchmark_IEEE_Test_Case/bigM.txt"
+
+Gurobi 12.0.2 (win64) logging started Tue Jul  8 15:56:51 2025
+
+Set parameter LogFile to value "c:\Users\dc0173\Documents\Princeton\git\forked\Mike\new_GenX\GenX\example_systems\benchmark_IEEE_Test_Case/bigM.txt"
+
+Gurobi 12.0.2 (win64) logging started Tue Jul  8 15:57:26 2025
+
+Set parameter LogFile to value "c:\Users\dc0173\Documents\Princeton\git\forked\Mike\new_GenX\GenX\example_systems\benchmark_IEEE_Test_Case/bigM.txt"
+
+Gurobi 12.0.2 (win64) logging started Tue Jul  8 16:05:31 2025
+
+Set parameter LogFile to value "c:\Users\dc0173\Documents\Princeton\git\forked\Mike\new_GenX\GenX\example_systems\benchmark_IEEE_Test_Case/bigM.txt"
+
+Gurobi 12.0.2 (win64) logging started Tue Jul  8 16:06:36 2025
+
+Set parameter LogFile to value "c:\Users\dc0173\Documents\Princeton\git\forked\Mike\new_GenX\GenX\example_systems\benchmark_IEEE_Test_Case/bigM.txt"

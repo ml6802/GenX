@@ -1,6 +1,6 @@
 # convert model to plasmo optigraph
 
-using Plasmo, JuMP
+using Plasmo, JuMP, Ipopt
 
 function get_unique_variable_names(vars::Vector{VariableRef})
     # Extract variable names and parse out the part before '['
@@ -56,6 +56,99 @@ function add_new_var!(node, JuMP_var, var_to_var, node_to_var)
 end
 
 function get_expr(con_obj, var_to_var, node_to_var)
+    if isa(con_obj.func, GenericAffExpr)
+        return get_linear_expression(con_obj, var_to_var, node_to_var)
+    elseif isa(con_obj.func, QuadExpr)
+        return get_quadratic_expression(con_obj, var_to_var, node_to_var)
+    end
+end
+
+function get_quadratic_expression(con_obj, var_to_var, node_to_var)
+    affvars = con_obj.func.aff.terms.keys
+    quadterms = collect(con_obj.func.terms.keys)
+    quadtermsa = [term.a for term in quadterms]
+    quadtermsb = [term.b for term in quadterms]
+    quadconstants = [con_obj.func.terms[term] for term in quadterms]
+    quadvars = unique(vcat(quadtermsa, quadtermsb))
+
+    # Convert the affine portion of the constraint
+    if all(x -> x in keys(var_to_var), affvars)
+        node_set = unique([JuMP.owner_model(var_to_var[var]) for var in affvars if (var in keys(var_to_var))])
+        owning_node = node_set[1]
+
+        if length(node_set) > 1
+            link = true
+        elseif length(node_set) == 1
+            link = false
+        else
+            error("variables don't have a node!")
+        end
+
+        new_expr = sum(var_to_var[var] * con_obj.func.aff.terms[var] for var in affvars)
+    elseif any(x -> x in keys(var_to_var), affvars)
+        new_vars = [i for i in affvars if !(i in keys(var_to_var))]
+        node_set = unique([JuMP.owner_model(var_to_var[var]) for var in affvars if (var in keys(var_to_var))])
+        owning_node = node_set[1]
+
+        if length(node_set) > 1
+            link = true
+        elseif length(node_set) == 1
+            link = false
+        else
+            error("variables don't have a node!")
+        end
+
+        for new_var in new_vars
+            add_new_var!(owning_node, new_var, var_to_var, node_to_var)
+        end
+
+        new_expr = sum(var_to_var[var] * con_obj.func.aff.terms[var] for var in affvars)
+    else
+        error("Constraint $con_obj aff term has no node :(")
+    end
+
+    # Convert the quadratic portion of the constraint
+    if all(x -> x in keys(var_to_var), quadvars)
+        node_set = unique([JuMP.owner_model(var_to_var[var]) for var in quadvars if (var in keys(var_to_var))])
+        owning_node = node_set[1]
+
+        if length(node_set) > 1
+            link = true
+        elseif length(node_set) == 1
+            link = false
+        else
+            error("variables don't have a node!")
+        end
+
+        quad_expr = sum(var_to_var[quadtermsa[i]] * var_to_var[quadtermsb[i]] * quadconstants[i] for i in 1:length(quadterms))
+    elseif any(x -> x in keys(var_to_var), quadvars)
+        new_vars = [i for i in quadvars if !(i in keys(var_to_var))]
+        node_set = unique([JuMP.owner_model(var_to_var[var]) for var in quadvars if (var in keys(var_to_var))])
+        owning_node = node_set[1]
+
+        if length(node_set) > 1
+            link = true
+        elseif length(node_set) == 1
+            link = false
+        else
+            error("variables don't have a node!")
+        end
+
+        for new_var in new_vars
+            add_new_var!(owning_node, new_var, var_to_var, node_to_var)
+        end
+
+        quad_expr = sum(var_to_var[quadtermsa[i]] * var_to_var[quadtermsb[i]] * quadconstants[i] for i in 1:length(quadterms))
+    else
+        error("Constraint $con_obj aff term has no node :(")
+    end
+
+    final_expr = quad_expr + new_expr
+
+    return final_expr, link, owning_node, union(affvars, quadvars)
+end
+
+function get_linear_expression(con_obj, var_to_var, node_to_var)
     vars = con_obj.func.terms.keys
 
     if all(x -> x in keys(var_to_var), vars)
@@ -93,7 +186,7 @@ function get_expr(con_obj, var_to_var, node_to_var)
         error("Constraint $con_obj has no node :(")
     end
 
-    return new_expr, link, owning_node
+    return new_expr, link, owning_node, vars
 end
 
 function build_graph_from_model(model, horizon)
@@ -102,7 +195,7 @@ function build_graph_from_model(model, horizon)
     parsed_vars = parse_variable_name.(avs)
     var_to_parse_map = Dict(avs[i] => parsed_vars[i] for i in 1:length(avs))
 
-    var_names = String.([:vZERO, :vZ_BUILD, :vP, :vNSE, :vFuel, :vStartFuel, :vFLOW, :vCANDFLOW, :p_bus, :p_virtual])
+    var_names = String.([:vZERO, :vZ_BUILD, :vP, :vNSE, :vFuel, :vStartFuel, :vFLOW, :vCANDFLOW, :p_bus, :p_virtual, :vCANDFLOW_TOTAL, :vCANDPROX])
     idx_map = Dict(
         "vP" => 2,
         "vNSE" => 2,
@@ -113,29 +206,11 @@ function build_graph_from_model(model, horizon)
         "p_bus" => 2,
         "p_virtual" => 3,
         "vANGLE" => 2,
-        "vPROX_ANGLE" => 2
+        "vPROX_ANGLE" => 2,
+        "vCANDFLOW_TOTAL" => 2,
+        "vCANDPROX" => 2,
     )
     master_names = String.([:vZERO, :vZ_BUILD, :vNEW_TRANS_CAP_DECISION_INT, :vRETCAP])#, :vFuel])
-
-
-    # vZero - var
-    # vZ_BUILD - sparse array
-    # vP - matrix
-    # vNSE - array
-    # vFuel - dense array
-    # vStartFuel - dense
-    # vFLOW - matrix
-    # vCANDFLOW - matrix
-    # p_bus - matrix
-    # p_virtual - sparse
-
-    # time point idx to node
-    # get time point from var name
-    # map var_name to idx of time point
-    # add variables to all applicable nodes
-    # map variables to variables
-    # loop through constraints 
-        # add constraints to same problem if applicable
 
     graph = OptiGraph()
     @optinode(graph, master)
@@ -152,69 +227,6 @@ function build_graph_from_model(model, horizon)
 
     acs = all_constraints(model, include_variable_in_set_constraints = false)
 
-    # for i in 1:length(bus_names)
-    #     for j in 1:horizon
-    #         optinode = graph[:bus][bus_names[i], j]
-    #         node_to_var[optinode] = Any[]
-    #     end
-    # end
-    # for i in 1:length(arc_names)
-    #     for j in 1:horizon
-    #         optinode = graph[:arc][arc_names[i], j]
-    #         node_to_var[optinode] = Any[]
-    #     end
-    # end
-
-    # function match_data_to_node(data, axis1, axis2, node_to_var = node_to_var)
-    #     if eltype(axis1) == String
-    #         for (i, name) in enumerate(axis1)
-    #             for (j, time) in enumerate(axis2)
-    #                 var = data[i, j]
-    #                 push!(node_to_var[name_to_node[name][j]], var)
-    #             end
-    #         end
-    #         # Test if it is in the lines, tts, or gens
-    #     elseif eltype(axis1) == Int64
-    #         for (i, num) in enumerate(axis1)
-    #             for (j, time) in enumerate(axis2)
-    #                 var = data[i, j]
-    #                 push!(node_to_var[bus_to_node[bus_number_to_name[num]][j]], var)
-    #             end
-    #         end
-    #     else
-    #         error("Type is incorrect")
-    #     end
-    # end
-
-    # for (i, set) in enumerate(var_sets)
-    #     var_set = variables[var_sets[i]]
-    #     if typeof(var_set) <: JuMP.Containers.DenseAxisArray
-    #         if length(var_set.axes) == 2
-    #             axis1 = var_set.axes[1]
-    #             axis2 = var_set.axes[2]
-    #             data = var_set.data
-    #             match_data_to_node(data, axis1, axis2)
-    #         elseif length(var_set.axes) == 1
-    #             continue
-    #         else
-    #             error("variable set is the wrong length")
-    #         end
-    #         #println(i, "  DENSE")
-    #     elseif typeof(var_set) <: JuMP.Containers.SparseAxisArray
-    #         #println(i, "    SPARSE")
-    #         data = var_set.data
-    #         for key in keys(data)
-    #             name = key[1]
-    #             time = key[3]
-    #             var = data[key]
-
-    #             push!(node_to_var[name_to_node[name][time]], var)
-    #         end
-    #     else
-    #         println(i, " did not enter")
-    #         println(typeof(var_set))
-    #     end
-    # end
 
     for var in avs
         parsed_info = var_to_parse_map[var]
@@ -235,43 +247,72 @@ function build_graph_from_model(model, horizon)
     con_to_con = Dict()
     graph_con_to_con = Dict()
 
+    adj_node_idx = [[6,7], [12,13], [18, 19], [24, 1]]
+    adj_node_idx = [[4,5], [8,9], [12,13], [16,17], [20,21], [24,1]]
+    #adj_node_idx = []
+
+    adj_node_sets = []#[union(Set([n[j] for j in idxs]), Set([master])) for idxs in adj_node_idx] 
+
+    #println(adj_node_sets)
     for (i, con) in enumerate(acs)
         con_obj = constraint_object(con)
         if typeof(con_obj.set) == MOI.EqualTo{Float64}
-            new_expr, link, owning_node = get_expr(con_obj, var_to_var, node_to_var)
-            if link
-                graph_con = @linkconstraint(graph, new_expr == con_obj.set.value)
-            else
-                graph_con = @constraint(owning_node, new_expr == con_obj.set.value)
+            new_expr, link, owning_node, vars = get_expr(con_obj, var_to_var, node_to_var)
+            nodes = Set([JuMP.owner_model(var) for var in vars])
+            
+            if !(nodes in adj_node_sets)
+                if link
+                    graph_con = @linkconstraint(graph, new_expr == con_obj.set.value)
+                else
+                    graph_con = @constraint(owning_node, new_expr == con_obj.set.value)
+                end
+                con_to_con[con] = graph_con
+                graph_con_to_con[graph_con] = con
             end
         elseif typeof(con_obj.set) == MOI.LessThan{Float64}
             new_expr, link, owning_node = get_expr(con_obj, var_to_var, node_to_var)
+            nodes = Set([JuMP.owner_model(var) for var in keys(new_expr.terms)])
+
+            if !(nodes in adj_node_sets)
             if link
                 graph_con = @linkconstraint(graph, new_expr <= con_obj.set.upper)
             else
                 graph_con = @constraint(owning_node, new_expr <= con_obj.set.upper)
             end
+                con_to_con[con] = graph_con
+                graph_con_to_con[graph_con] = con
+            end
         elseif typeof(con_obj.set) == MOI.GreaterThan{Float64}
             new_expr, link, owning_node = get_expr(con_obj, var_to_var, node_to_var)
+            nodes = Set([JuMP.owner_model(var) for var in keys(new_expr.terms)])
+
+            if !(nodes in adj_node_sets)
             if link
                 graph_con = @linkconstraint(graph, new_expr >= con_obj.set.lower)
             else
                 graph_con = @constraint(owning_node, new_expr >= con_obj.set.lower)
             end
+                con_to_con[con] = graph_con
+                graph_con_to_con[graph_con] = con
+            end
         elseif typeof(con_obj.set) == MOI.Interval{Float64}
             new_expr, link, owning_node = get_expr(con_obj, var_to_var, node_to_var)
+            nodes = Set([JuMP.owner_model(var) for var in keys(new_expr.terms)])
+
+            if !(nodes in adj_node_sets)
             if link
                 graph_con = @linkconstraint(graph, con_obj.set.lower <= new_expr <= con_obj.set.upper)
             else
                 graph_con = @constraint(owning_node, con_obj.set.lower <= new_expr <= con_obj.set.upper)
             end
-
+                con_to_con[con] = graph_con
+                graph_con_to_con[graph_con] = con
+            end
         else
             println(con_obj.set)
             error("constraint object does not match types")
         end
-        con_to_con[con] = graph_con
-        graph_con_to_con[graph_con] = con
+
     end
 
     jm_obj_func = objective_function(model)
@@ -292,47 +333,156 @@ function build_graph_from_model(model, horizon)
     return graph, var_to_var, con_to_con, graph_con_to_con
 end
 
-g, v_to_v, ctc, gctc = build_graph_from_model(m, 24)
+g, v_to_v, ctc, gctc = build_graph_from_model(m, 24);
 
-node_membership_vector = [1,2,2,2,2,2,2,2,2,1,3,3,3,3,3,3,3,3,3,3,3,3,3,3,1]
-#node_membership_vector = [1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]
-#node_membership_vector = Int.(zeros(70 + 1))
-#node_membership_vector[1] = 1
-#node_membership_vector[2:end] .= 2
-#
+set_to_node_objectives(g)
+solver = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 60, "MIPGap" => 1e-3)#, "LogFile" => (@__DIR__)*"/bigM.txt")
+set_optimizer(g, solver)
+# optimize!(g)
+
+#node_membership_vector = [1,2,2,2,2,2,2,2,2,1,3,3,3,3,3,3,3,3,3,3,3,3,3,3,1]
+node_membership_vector = [1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]
+node_membership_vector = Int.(zeros(70 + 1))
+node_membership_vector[1] = 1
+node_membership_vector[2:end] .= 2
+node_membership_vector = [1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]
+#node_membership_vector = [1,1,2,2,2,2,2,3,3,3,3,3,3,4,4,4,4,4,4,5,5,5,5,5,5]
+
+#node_membership_vector = [1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7]
+
+
+#node_membership_vector = [1,2,2,2,2,2,2,2,2,1,3,3,3,3,3,3,3,3,3,3,3,3,3,3,1]
+
 
 node_partition = Partition(g, node_membership_vector)
 apply_partition!(g, node_partition)
 
 solver = optimizer_with_attributes(Gurobi.Optimizer, "MIPGap" => 1e-3, "OutputFlag" => 0, "TimeLimit" => 200, "InfUnbdInfo" => true, "BarHomogeneous" => 1, "Method" => 2, "Crossover" => 0)
+solver = optimizer_with_attributes(Gurobi.Optimizer, "MIPGap" => 1e-3, "OutputFlag" => 0, "TimeLimit" => 200, "InfUnbdInfo" => true)#, "QCPDual" => 1, "PreSolve" => 0, "NonConvex" => -1)
+solver_ipopt = optimizer_with_attributes(Ipopt.Optimizer, "print_level" => 0)
 
 using PlasmoBenders
 
-# root_graph = getsubgraphs(g)[1]
+root_graph = getsubgraphs(g)[1]
+sub_problem = getsubgraphs(g)[2]
 
+#set_optimizer_attribute(root_graph, "OutputFlag", 1)
+#set_optimizer_attribute(sub_problem, "OutputFlag", 1)
+set_optimizer(root_graph, solver)
+set_optimizer(sub_problem, solver_ipopt)
 # root_avs = all_variables(root_graph)
 # root_bin_vars = root_avs[JuMP.is_binary.(root_avs)]
 
 # unset_binary.(root_bin_vars)
 # set_upper_bound.(root_bin_vars, 1)
 # set_lower_bound.(root_bin_vars, 0)
+
 ba = BendersAlgorithm(
     g, 
     getsubgraphs(g)[1],
-    solver = solver,
-    max_iters = 50, 
+    max_iters = 100, 
     regularize=false,
     #feasibility_cuts = true,
-    tol = 1e-3
+    tol = 1e-5
 );
 
 run_algorithm!(ba)
 
+
+#g, v_to_v, ctc, gctc = build_graph_from_model(m, 24);
+
+ba_vflows = zeros(76, 24)
+ba_vcandflows = zeros(76, 24)
+ba_vP = zeros(10, 24)
+ba_builds = zeros(76)
+
+for j in 1:24
+    for i in 1:76
+        flow_var = m[:vFLOW][i,j]
+        candflow_var = m[:vCANDFLOW][i,j,1]
+        ba_vflows[i,j] = value(ba, v_to_v[flow_var])
+        ba_vcandflows[i, j] = value(ba, v_to_v[candflow_var])
+    end
+    for i in 1:10
+        vP_var = m[:vP][i,j]
+        ba_vP[i,j] = value(ba, v_to_v[vP_var])
+    end    
+end
+for i in 1:76
+    build_var = m[:vNEW_TRANS_CAP_DECISION_INT][i, 1]
+    ba_builds[i] = value(ba, v_to_v[build_var])
+end
+
+using JLD2
+# jldsave(
+#     (@__DIR__)*"/Benders_solutions.jld2",
+#     build = ba_builds,
+#     vP = ba_vP,
+#     flows = ba_vflows,
+#     candflows = ba_vcandflows
+# )
+
+data = jldopen((@__DIR__)*"/bigM_solutions.jld2")
+
+# get residuals
+flow_residuals = data["flows"] .- ba_vflows
+candflow_residuals = data["candflows"] .- ba_vcandflows
+build_residuals = data["build"] .- ba_builds
+vP_residuals = data["vP"] .- ba_vP
+using DataFrames, CSV
+
+# df = DataFrame()
+# df[!, "UB"] = ba.upper_bounds
+# df[!, "UB_best"] = [minimum(ba.upper_bounds[1:i]) for i in 1:length(ba.upper_bounds)]
+# df[!, "LB"] = ba.lower_bounds
+# df[!, "Time"] = ba.time_iterations
+# CSV.write((@__DIR__)*"/PTDF.csv", df)
+
+# ba.max_iters = ba.current_iter + 100
+# ba.best_upper_bound = Inf
+# set_binary.(root_bin_vars)
+# run_algorithm!(ba)
+#=s
+
+for i in 1:length(root_bin_vars)
+    println(i)
+    ba.best_upper_bound = Inf
+    #if i <= 30
+    #    ba.max_iters += 3
+    #else
+    #    ba.max_iters += 1
+    #end
+    ba.max_iters += 1
+    set_binary(root_bin_vars[i])
+    run_algorithm!(ba)
+end
+ba.max_iters += 30
+run_algorithm!(ba)
+=#
+
+#=
+iters = ba.max_iters
+first_time = 577
+ubs = ba.upper_bounds[first_time:iters]
+ubs = [minimum(ubs[1:i]) for i in 1:length(ubs)]
+
+plot([1, iters], [1.9228e6, 1.9228e6], color = "red", label = :none, legend =:bottomright, yaxis = :log10)
+plot!(first_time:iters, ubs, color = "black", label = :none, linewidth = 2)
+plot!(2:iters, ba.lower_bounds[2:end], color = "black", linestyle = :dash, label = :none, linewidth = 2)
+
+plot!([], [], color = "red", label = "Optimal")
+plot!([], [], color = "black", label = "Upper Bound")
+plot!([], [], color = "black", label = "Lower Bound", linestyle = :dash)
+ylabel!("Objective Value")
+xlabel!("Iteration")
+title!("Benchmark 49-Bus Case")
 # ba.best_upper_bound = Inf
 # ba.max_iters = 300
 # set_binary.(root_bin_vars)
 # run_algorithm!(ba)
+=#
 a=1
+
 
 #=
 run_algorithm!(ba)

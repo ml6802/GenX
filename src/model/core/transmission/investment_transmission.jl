@@ -83,6 +83,15 @@ function investment_transmission!(EP::Model, inputs::Dict, setup::Dict)
             elseif setup["SOS1"] == 1
                 @variable(EP, 0<=vZ_SOS1_VAR[l in EXPANSION_LINES, i in 1:(1+inputs["Max_Trans_Cap"][l])]<=1) #SOS1 variable
 	            @variable(EP, vNEW_TRANS_CAP_DECISION_INT[l in EXPANSION_LINES], Int, lower_bound = 0)
+            elseif setup["disaggregate"] == 1
+                @variable(EP, vNEW_TRANS_CAP_DECISION_INT[l in EXPANSION_LINES, i in 1:(inputs["Max_Trans_Cap"][l]+1)], Bin) #binary decisions function as SOS1 vars
+                @constraint(EP, SOS1_CONSTRAINT[l in EXPANSION_LINES], sum(vNEW_TRANS_CAP_DECISION_INT[l, i] for i in 1:(inputs["Max_Trans_Cap"][l]+1)) == 1)
+                #@constraint(EP, 
+                #        cBUILD_SEQUENCE[l in EXPANSION_LINES, i in 1:(inputs["Max_Trans_Cap"][l]-1)],
+                #        EP[:vNEW_TRANS_CAP_DECISION_INT][l, i] >= EP[:vNEW_TRANS_CAP_DECISION_INT][l, i + 1]
+                #)
+            elseif setup["bilinear"] == 1
+	            @variable(EP, vNEW_TRANS_CAP_DECISION_INT[l in EXPANSION_LINES], Int, lower_bound = 0)
             else
                 @variable(EP, vNEW_TRANS_CAP_DECISION_INT[l in EXPANSION_LINES, i in 1:inputs["Max_Trans_Cap"][l]], Bin)
                 @constraint(EP, 
@@ -119,7 +128,7 @@ function investment_transmission!(EP::Model, inputs::Dict, setup::Dict)
                         eTransMax[l]
                     end
                 )
-            elseif setup["SOS1"] == 1
+            elseif setup["SOS1"] == 1 || setup["bilinear"] == 1
                 @expression(EP, eAvail_Trans_Cap[l = 1:L],
                 if l in EXPANSION_LINES
                     eTransMax[l] + vNEW_TRANS_CAP_DECISION_INT[l]*inputs["Line_Reinforcement_Cap_Size"][l]
@@ -165,12 +174,17 @@ function investment_transmission!(EP::Model, inputs::Dict, setup::Dict)
                         )
                     for l in EXPANSION_LINES)
                 )
-            elseif setup["SOS1"] == 1
+            elseif setup["SOS1"] == 1 || setup["bilinear"] == 1
                 @expression(EP,
                     eTotalCNetworkExp,
                     sum(vNEW_TRANS_CAP_DECISION_INT[l] * inputs["pC_Line_Reinforcement"][l] * inputs["Line_Reinforcement_Cap_Size"][l]
                     for l in EXPANSION_LINES)
                 )
+            elseif setup["disaggregate"] == 1
+                @expression(EP,
+                eTotalCNetworkExp,
+                sum(sum(vNEW_TRANS_CAP_DECISION_INT[l,i] * (i - 1) for i in 1:inputs["Max_Trans_Cap"][l]+1) * inputs["Line_Reinforcement_Cap_Size"][l]* inputs["pC_Line_Reinforcement"][l] 
+                for l in EXPANSION_LINES))
             else
                 @expression(EP,
                 eTotalCNetworkExp,
@@ -233,7 +247,7 @@ function investment_transmission!(EP::Model, inputs::Dict, setup::Dict)
                 cMaxLineReinforcement[l in EXPANSION_LINES],
                 vNEW_TRANS_LINES[l]<=inputs["Line_Reinforcement_Cap_Size"][l]) 
         elseif setup["DC_OPF"] == 1
-            if setup["ptdf"] == 0 && setup["SOS1"] == 1
+            if (setup["ptdf"] == 0 && setup["SOS1"] == 1) || setup["bilinear"] == 1
                 @constraint(EP,
                     cMaxLineReinforcement[l in EXPANSION_LINES],
                     vNEW_TRANS_CAP_DECISION_INT[l]<=inputs["Max_Trans_Cap"][l])

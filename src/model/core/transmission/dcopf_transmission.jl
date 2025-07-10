@@ -253,7 +253,117 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
         # define balance variables
         # define virtual inputs for each node
         # define x1 >= x2 >= x3 >= ...
+    elseif setup["bilinear"] == 1
+        @variable(EP, vFLOW[l = 1:L, t = 1:T])
+        @variable(EP, vCANDFLOW[l = 1:L_cand, t = 1:T])
+        @variable(EP, vANGLE[z = 1:Z, t = 1:T])
 
+        @constraint(EP,
+            cPOWER_FLOW_OPF[l = 1:L, t = 1:T],
+            EP[:vFLOW][l,
+                t]==inputs["pDC_OPF_coeff"][l] *
+                    sum(inputs["pNet_Map"][l, z] * vANGLE[z, t] for z in 1:Z))
+
+        @constraints(EP,
+        begin
+            cMaxFlow_out_existing[l = 1:L, t = 1:T], EP[:vFLOW][l, t] <= EP[:eTransMax][l]
+            cMaxFlow_in_existing[l = 1:L, t = 1:T], EP[:vFLOW][l, t] >= -EP[:eTransMax][l]
+        end
+        )
+
+        @constraint(EP,
+            cCANDFLOW[l in EXPANSION_LINES, t = 1:T],
+            vCANDFLOW[l, t] == inputs["pDC_OPF_coeff_cand"][l] *
+                        sum(inputs["pNet_Map_cand"][l, z] * vANGLE[z, t] for z in 1:Z) * EP[:vNEW_TRANS_CAP_DECISION_INT][l]
+        )
+
+        # Slack Bus angle limit
+        @constraint(EP, cANGLE_SLACK[t = 1:T], vANGLE[1, t]==0)
+        
+        @expression(EP,
+            eCand_Flow[l in EXPANSION_LINES, t = 1:T], EP[:vCANDFLOW][l, t])
+
+        @expression(EP,
+            eNet_Export_Cand_Flows[z = 1:Z, t = 1:T],
+            sum(inputs["pNet_Map_cand"][l, z] * EP[:vCANDFLOW][l, t] for l in EXPANSION_LINES))
+
+    elseif setup["disaggregate"] == 1
+        @variable(EP, vFLOW[l = 1:L, t = 1:T])
+
+        # Power flow on each candidate transmission line "l" at hour "t"
+        @variable(EP, vCANDFLOW[l = 1:L_cand, t = 1:T, i in 1:inputs["Max_Trans_Cap"][l]+1])
+
+        # Voltage angle variables of each zone "z" at hour "t" 
+        @variable(EP, vANGLE[z = 1:Z, t = 1:T])
+
+        @variable(EP, vCANDFLOW_TOTAL[l = 1:L_cand, t = 1:T])
+        @variable(EP, vCANDPROX[l = 1:L_cand, t = 1:T])
+
+        # Power FLow on existing lines
+        @constraint(EP,
+            cPOWER_FLOW_OPF[l = 1:L, t = 1:T],
+            EP[:vFLOW][l,
+                t]==inputs["pDC_OPF_coeff"][l] *
+                    sum(inputs["pNet_Map"][l, z] * vANGLE[z, t] for z in 1:Z)
+        )
+
+        @constraints(EP,
+        begin
+            cMaxFlow_out_existing[l = 1:L, t = 1:T], EP[:vFLOW][l, t] <= EP[:eTransMax][l]
+            cMaxFlow_in_existing[l = 1:L, t = 1:T], EP[:vFLOW][l, t] >= -EP[:eTransMax][l]
+        end)
+
+        # lower and upper bounds on vCANDFLOW <= EP[vZ] * inputs["Line_Reinforcemnet_CAPSIZE][l]
+        # vcand_tot = 
+        # vcand_total = sum(i * vcandflow)
+        # add note to other file that says only one x and be one at a time
+        # 
+
+        # #Power Flow in the candidate expansion lines
+        # @constraint(EP,
+        #     cPOWER_FLOW_OPF_EXPANSION_FORWARD[l in EXPANSION_LINES, t = 1:T, i in 1:inputs["Max_Trans_Cap"][l]+1],
+        #         EP[:vCANDFLOW][l,t,i]-inputs["pDC_OPF_coeff_cand"][l] *
+        #                 sum(inputs["pNet_Map_cand"][l, z] * vANGLE[z, t] for z in 1:Z) <= BigM[l]*(1-EP[:vNEW_TRANS_CAP_DECISION_INT][l,i])
+        # )
+        # @constraint(EP,
+        #     cPOWER_FLOW_OPF_EXPANSION_REVERSE[l in EXPANSION_LINES, t = 1:T, i in 1:inputs["Max_Trans_Cap"][l]],
+        #         EP[:vCANDFLOW][l,t,i]-inputs["pDC_OPF_coeff_cand"][l] *
+        #                 sum(inputs["pNet_Map_cand"][l, z] * vANGLE[z, t] for z in 1:Z) >= -BigM[l]*(1-EP[:vNEW_TRANS_CAP_DECISION_INT][l,i])
+        # )
+
+        @constraints(EP,
+        begin
+            cMaxFlow_out_candidate[l in EXPANSION_LINES, t = 1:T, i in 1:inputs["Max_Trans_Cap"][l]+1], EP[:vCANDFLOW][l, t, i] <= EP[:vNEW_TRANS_CAP_DECISION_INT][l,i]*inputs["Line_Reinforcement_Cap_Size"][l]
+            cMaxFlow_in_candidate[l in EXPANSION_LINES, t = 1:T, i in 1:inputs["Max_Trans_Cap"][l]+1], EP[:vCANDFLOW][l, t, i] >= -EP[:vNEW_TRANS_CAP_DECISION_INT][l,i]*inputs["Line_Reinforcement_Cap_Size"][l]
+        end)
+
+        # These two constraints ensure that one of the vCANDFLOWs takes a value of the angle difference * reactance
+        @constraint(EP,
+            cPROX_CANDFLOW1[l in EXPANSION_LINES, t = 1:T],
+            vCANDPROX[l, t] == sum(vCANDFLOW[l, t, i] for i in 1:inputs["Max_Trans_Cap"][l]+1)
+        )
+
+        @constraint(EP,
+            cPROX_CANDFLOW2[l in EXPANSION_LINES, t = 1:T],
+            vCANDPROX[l, t] == inputs["pDC_OPF_coeff_cand"][l] *
+                        sum(inputs["pNet_Map_cand"][l, z] * vANGLE[z, t] for z in 1:Z)
+        )
+
+        @constraint(EP, 
+            cTOTAL_CANDFLOW[l = 1:L_cand, t = 1:T],
+            vCANDFLOW_TOTAL[l, t] == sum((i - 1) * vCANDFLOW[l, t, i] for i in 1:inputs["Max_Trans_Cap"][l]+1)
+        )
+
+        # Slack Bus angle limit
+        @constraint(EP, cANGLE_SLACK[t = 1:T], vANGLE[1, t]==0)
+
+        @expression(EP,
+        eCand_Flow[l in EXPANSION_LINES, t = 1:T], EP[:vCANDFLOW_TOTAL][l, t])
+
+        @expression(EP,
+            eNet_Export_Cand_Flows[z = 1:Z, t = 1:T],
+            sum(inputs["pNet_Map_cand"][l, z] * EP[:eCand_Flow][l, t] for l in EXPANSION_LINES)
+        )
     else
             ### DC-OPF variables ###
         # Note, these are definable without overwriting the existing variables in the model because transmission.jl is not called when this file is called.
@@ -306,6 +416,9 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
         @expression(EP,
             eNet_Export_Cand_Flows[z = 1:Z, t = 1:T],
             sum(inputs["pNet_Map_cand"][l, z] * EP[:eCand_Flow][l, t] for l in EXPANSION_LINES))
+
+        # Slack Bus angle limit
+        @constraint(EP, cANGLE_SLACK[t = 1:T], vANGLE[1, t]==0)
 
     end
 

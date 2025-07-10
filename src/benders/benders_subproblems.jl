@@ -196,14 +196,6 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
 		#theta_coeff = 0;
 		#feasibility_slack = 0;
 
-        acs = all_constraints(EP, include_variable_in_set_constraints = true)
-        println(length(acs))
-        for i in 1140:1150
-            println(i, "   ", acs[i])
-        end
-
-
-
         compute_conflict!(EP)
 				list_of_conflicting_constraints = ConstraintRef[];
 				for (F, S) in list_of_constraint_types(EP)

@@ -84,7 +84,13 @@ function run_genx_case_simple!(case::AbstractString, mysetup::Dict, optimizer::A
 
 
     if !(haskey(mysetup, "ptdf"))
-        mysetup["ptdf"] = 1
+        mysetup["ptdf"] = 0
+    end
+    if !(haskey(mysetup, "disaggregate"))
+        mysetup["disaggregate"] = 0
+    end
+    if !(haskey(mysetup, "bilinear"))
+        mysetup["bilinear"] = 0
     end
     ### Load inputs
     println("Loading Inputs")
@@ -96,6 +102,7 @@ function run_genx_case_simple!(case::AbstractString, mysetup::Dict, optimizer::A
     EP = generate_model(mysetup, myinputs, OPTIMIZER)
     println("Time elapsed for model building is")
     println(time_elapsed)
+    #set_optimizer_attribute(EP, "TimeLimit", 5)
 
     println("Solving Model")
     EP, solve_time = solve_model(EP, mysetup)
@@ -248,8 +255,9 @@ function run_genx_case_benders!(case::AbstractString, mysetup::Dict)
     myinputs_decomp = separate_inputs_subperiods(myinputs);
     
     benders_inputs = generate_benders_inputs(mysetup,myinputs,myinputs_decomp)
+    println(mysetup)
 
-    planning_problem, planning_sol,operational_sol, LB_hist,UB_hist,cpu_time,feasibility_hist  = benders(benders_inputs,mysetup,myinputs);
+    planning_problem, planning_sol,operational_sol, LB_hist,UB_hist,cpu_time,feasibility_hist, build_decisions  = benders(benders_inputs,mysetup,myinputs);
     opt_stats = (cpu_time=cpu_time, UB_hist = UB_hist)
     println("Benders decomposition took $(cpu_time[end]) seconds to run")
 
@@ -265,7 +273,7 @@ function run_genx_case_benders!(case::AbstractString, mysetup::Dict)
     end
 
     println("Writing Output")
-    return benders_inputs, UB_hist
+    return benders_inputs, (build_decisions, UB_hist, LB_hist)
 
     if mysetup["BD_Stab_Method"]=="int_level_set" 
         outputs_path = joinpath(case, "results_benders_int_level_set")
