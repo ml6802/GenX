@@ -88,6 +88,8 @@ function load_demand_data!(setup::Dict, path::AbstractString, inputs::Dict)
     inputs["pMax_D_Curtail"] = as_vector(:Max_Demand_Curtailment)
 
     println("Demand (load) data Successfully Read!")
+
+    #println("Demand data:", inputs["pD"])
 end
 
 # ensure that the length of demand data exactly matches

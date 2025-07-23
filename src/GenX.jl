@@ -11,7 +11,6 @@ export write_outputs
 export cluster_inputs
 export mga
 export morris
-export simple_operation
 export choose_output_dir
 export restr_casefolder
 export operation_model!
@@ -53,7 +52,7 @@ const PNM = PowerNetworkMatrices
 # To translate MW to GW, divide by ModelScalingFactor
 # To translate $ to $M, multiply by ModelScalingFactor^2
 # To translate $/MWh to $M/GWh, multiply by ModelScalingFactor
-const ModelScalingFactor = 1e+3
+const ModelScalingFactor = 1e+2
 
 const GRB_ENV = Ref{Gurobi.Env}()
 function __init__()
@@ -87,9 +86,13 @@ include_all_in_folder("write_outputs")
 
 include("time_domain_reduction/time_domain_reduction.jl")
 include("time_domain_reduction/precluster.jl")
+include("time_domain_reduction/full_time_series_reconstruction.jl")
 
 include_all_in_folder("multi_stage")
 include_all_in_folder("additional_tools")
 include_all_in_folder("benders") 
  
+
+include("startup/genx_startup.jl")
+
 end

@@ -19,13 +19,17 @@ function load_inputs(setup::Dict, path::AbstractString)
     policies_path = joinpath(path, setup["PoliciesFolder"])
     ## Declare Dict (dictionary) object used to store parameters
     inputs = Dict()
+    candidate_line_flag = false # Flag to set to true for candidate line data
     # Read input data about power network topology, operating and expansion attributes
     if isfile(joinpath(system_path, "Network.csv"))
-        network_var = load_network_data!(setup, system_path, inputs)
+        filename = "Network.csv"
+        network_var, candidate_network_var = load_network_data!(setup, system_path, inputs, filename)
     else
         inputs["Z"] = 1
         inputs["L"] = 0
     end
+
+
 
     # Read temporal-resolved load data, and clustering information if relevant
     load_demand_data!(setup, path, inputs)
@@ -42,6 +46,9 @@ function load_inputs(setup::Dict, path::AbstractString)
         load_cap_reserve_margin!(setup, policies_path, inputs)
         if inputs["Z"] > 1
             load_cap_reserve_margin_trans!(setup, inputs, network_var)
+            if setup["DC_OPF"] == 1
+                load_cap_reserve_margin_trans!(setup, inputs, candidate_network_var)
+            end
         end
     end
 
@@ -68,6 +75,11 @@ function load_inputs(setup::Dict, path::AbstractString)
 
     if !isempty(inputs["VRE_STOR"])
         load_vre_stor_variability!(setup, path, inputs)
+    end
+
+    # Read in hydrogen damand data
+    if setup["HydrogenMinimumProduction"] == 1
+        load_hydrogen_demand!(setup, policies_path, inputs)
     end
 
     # Read in mapping of modeled periods to representative periods

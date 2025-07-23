@@ -23,6 +23,10 @@ function write_outputs(EP::Model, path::AbstractString, setup::Dict, inputs::Dic
         mkpath(path)
     end
 
+    if setup["OutputFullTimeSeries"] == 1
+        mkpath(joinpath(path, setup["OutputFullTimeSeriesFolder"]))
+    end
+
     # https://jump.dev/MathOptInterface.jl/v0.9.10/apireference/#MathOptInterface.TerminationStatusCode
     status = termination_status(EP)
 
@@ -43,6 +47,7 @@ function write_outputs(EP::Model, path::AbstractString, setup::Dict, inputs::Dic
     # Dict containing the list of outputs to write
     output_settings_d = setup["WriteOutputsSettingsDict"]
     write_settings_file(path, setup)
+    write_system_env_summary(path)
 
     output_settings_d["WriteStatus"] && write_status(path, inputs, setup, EP)
 
@@ -56,7 +61,7 @@ function write_outputs(EP::Model, path::AbstractString, setup::Dict, inputs::Dic
         optimize!(EP)
     end
 
-    if output_settings_d["WriteCosts"]
+    #=if output_settings_d["WriteCosts"]
         elapsed_time_costs = @elapsed write_costs(path, inputs, setup, EP)
         println("Time elapsed for writing costs is")
         println(elapsed_time_costs)
@@ -66,7 +71,7 @@ function write_outputs(EP::Model, path::AbstractString, setup::Dict, inputs::Dic
         elapsed_time_capacity = @elapsed dfCap = write_capacity(path, inputs, setup, EP)
         println("Time elapsed for writing capacity is")
         println(elapsed_time_capacity)
-    end
+    end=#
 
     if output_settings_d["WritePower"] || output_settings_d["WriteNetRevenue"]
         elapsed_time_power = @elapsed dfPower = write_power(path, inputs, setup, EP)
@@ -74,7 +79,7 @@ function write_outputs(EP::Model, path::AbstractString, setup::Dict, inputs::Dic
         println(elapsed_time_power)
     end
 
-    if output_settings_d["WriteCharge"]
+    #=if output_settings_d["WriteCharge"]
         elapsed_time_charge = @elapsed write_charge(path, inputs, setup, EP)
         println("Time elapsed for writing charge is")
         println(elapsed_time_charge)
@@ -102,6 +107,29 @@ function write_outputs(EP::Model, path::AbstractString, setup::Dict, inputs::Dic
         elapsed_time_nse = @elapsed write_nse(path, inputs, setup, EP)
         println("Time elapsed for writing nse is")
         println(elapsed_time_nse)
+    end=#
+
+    if inputs["Z"] > 1
+        if setup["NetworkExpansion"] == 1 && output_settings_d["WriteNWExpansion"]
+            elapsed_time_expansion = @elapsed write_nw_expansion(path, inputs, setup, EP)
+            println("Time elapsed for writing network expansion is")
+            println(elapsed_time_expansion)
+        end
+        
+        if output_settings_d["WriteTransmissionFlows"]
+            elapsed_time_flows = @elapsed write_transmission_flows(path, inputs, setup, EP)
+            println("Time elapsed for writing transmission flows is")
+            println(elapsed_time_flows)
+        end
+
+        #=if output_settings_d["WriteTransmissionLosses"]
+            elapsed_time_losses = @elapsed write_transmission_losses(path,
+                inputs,
+                setup,
+                EP)
+            println("Time elapsed for writing transmission losses is")
+            println(elapsed_time_losses)
+        end=#
     end
 
     if output_settings_d["WritePowerBalance"]
@@ -110,30 +138,7 @@ function write_outputs(EP::Model, path::AbstractString, setup::Dict, inputs::Dic
         println(elapsed_time_power_balance)
     end
 
-    if inputs["Z"] > 1
-        if output_settings_d["WriteTransmissionFlows"]
-            elapsed_time_flows = @elapsed write_transmission_flows(path, inputs, setup, EP)
-            println("Time elapsed for writing transmission flows is")
-            println(elapsed_time_flows)
-        end
-
-        if output_settings_d["WriteTransmissionLosses"]
-            elapsed_time_losses = @elapsed write_transmission_losses(path,
-                inputs,
-                setup,
-                EP)
-            println("Time elapsed for writing transmission losses is")
-            println(elapsed_time_losses)
-        end
-
-        if setup["NetworkExpansion"] == 1 && output_settings_d["WriteNWExpansion"]
-            elapsed_time_expansion = @elapsed write_nw_expansion(path, inputs, setup, EP)
-            println("Time elapsed for writing network expansion is")
-            println(elapsed_time_expansion)
-        end
-    end
-
-    if output_settings_d["WriteEmissions"]
+    #=if output_settings_d["WriteEmissions"]
         elapsed_time_emissions = @elapsed write_emissions(path, inputs, setup, EP)
         println("Time elapsed for writing emissions is")
         println(elapsed_time_emissions)
@@ -203,6 +208,12 @@ function write_outputs(EP::Model, path::AbstractString, setup::Dict, inputs::Dic
                 println(elapsed_time_rsv)
             end
         end
+
+        # fusion is only applicable to UCommit=1 resources
+        if output_settings_d["WriteFusion"] && has_fusion(inputs)
+            write_fusion_net_capacity_factor(path, inputs, setup, EP)
+            write_fusion_pulse_starts(path, inputs, setup, EP)
+        end
     end
 
     # Output additional variables related inter-period energy transfer via storage
@@ -244,8 +255,8 @@ function write_outputs(EP::Model, path::AbstractString, setup::Dict, inputs::Dic
     end
 
     if has_maintenance(inputs) && output_settings_d["WriteMaintenance"]
-        write_maintenance(path, inputs, EP)
-    end
+        write_maintenance(path, inputs, setup, EP)
+    end=#
 
     #Write angles when DC_OPF is activated
     if setup["DC_OPF"] == 1 && output_settings_d["WriteAngles"]
@@ -255,7 +266,7 @@ function write_outputs(EP::Model, path::AbstractString, setup::Dict, inputs::Dic
     end
 
     # Temporary! Suppress these outputs until we know that they are compatable with multi-stage modeling
-    if setup["MultiStage"] == 0
+    #=if setup["MultiStage"] == 0
         dfEnergyRevenue = DataFrame()
         dfChargingcost = DataFrame()
         dfSubRevenue = DataFrame()
@@ -426,7 +437,7 @@ function write_outputs(EP::Model, path::AbstractString, setup::Dict, inputs::Dic
             println(elapsed_time_max_cap_req)
         end
 
-        if !isempty(inputs["ELECTROLYZER"]) && has_duals(EP)
+        if setup["HydrogenMinimumProduction"] == 1 && has_duals(EP)
             if output_settings_d["WriteHydrogenPrices"]
                 elapsed_time_hydrogen_prices = @elapsed write_hydrogen_prices(path,
                     inputs,
@@ -435,7 +446,7 @@ function write_outputs(EP::Model, path::AbstractString, setup::Dict, inputs::Dic
                 println("Time elapsed for writing hydrogen prices is")
                 println(elapsed_time_hydrogen_prices)
             end
-            if setup["HydrogenHourlyMatching"] == 1 &&
+            if setup["HourlyMatching"] == 1 &&
                output_settings_d["WriteHourlyMatchingPrices"]
                 elapsed_time_hourly_matching_prices = @elapsed write_hourly_matching_prices(
                     path,
@@ -466,7 +477,7 @@ function write_outputs(EP::Model, path::AbstractString, setup::Dict, inputs::Dic
             println("Time elapsed for writing net revenue is")
             println(elapsed_time_net_rev)
         end
-    end
+    end=#
     ## Print confirmation
     println("Wrote outputs to $path")
 
@@ -479,7 +490,7 @@ end # END output()
 Internal function for writing annual outputs. 
 """
 function write_annual(fullpath::AbstractString, dfOut::DataFrame)
-    push!(dfOut, ["Total" 0 sum(dfOut[!, :AnnualSum])])
+    push!(dfOut, ["Total" 0 sum(dfOut[!, :AnnualSum], init = 0.0)])
     CSV.write(fullpath, dfOut)
     return nothing
 end
@@ -499,11 +510,13 @@ function write_fulltimeseries(fullpath::AbstractString,
                     Symbol("AnnualSum");
                     [Symbol("t$t") for t in 1:T]]
     rename!(dfOut, auxNew_Names)
-    total = DataFrame(["Total" 0 sum(dfOut[!, :AnnualSum]) fill(0.0, (1, T))], auxNew_Names)
-    total[!, 4:(T + 3)] .= sum(dataOut, dims = 1)
+    total = DataFrame(
+        ["Total" 0 sum(dfOut[!, :AnnualSum], init = 0.0) fill(0.0, (1, T))], auxNew_Names)
+    total[!, 4:(T + 3)] .= sum(dataOut, dims = 1, init = 0.0)
     dfOut = vcat(dfOut, total)
+
     CSV.write(fullpath, dftranspose(dfOut, false), writeheader = false)
-    return nothing
+    return dfOut
 end
 
 """
@@ -513,4 +526,93 @@ Internal function for writing settings files
 """
 function write_settings_file(path, setup)
     YAML.write_file(joinpath(path, "run_settings.yml"), setup)
+end
+
+"""
+    write_system_env_summary(path::AbstractString)
+
+Write a summary of the current testing environment to a YAML file. The summary 
+includes information like the CPU name and architecture, number of CPU threads, 
+JIT status, operating system kernel, machine name, Julia standard library path, 
+Julia version and GenX version.
+
+# Arguments
+- `path::AbstractString`: The directory path where the YAML file will be written.
+
+# Output
+Writes a file named `env_summary.yml` in the specified directory.
+
+"""
+function write_system_env_summary(path::AbstractString)
+    v = pkgversion(GenX)
+    env_summary = Dict(
+        :ARCH => getproperty(Sys, :ARCH),
+        :CPU_NAME => getproperty(Sys, :CPU_NAME),
+        :CPU_THREADS => getproperty(Sys, :CPU_THREADS),
+        :JIT => getproperty(Sys, :JIT),
+        :KERNEL => getproperty(Sys, :KERNEL),
+        :MACHINE => getproperty(Sys, :MACHINE),
+        :JULIA_STDLIB => getproperty(Sys, :STDLIB),
+        :JULIA_VERSION => VERSION,
+        :GENX_VERSION => v
+    )
+
+    YAML.write_file(joinpath(path, "system_summary.yml"), env_summary)
+end
+
+# used by ucommit. Could be used by more functions as well.
+function _create_annualsum_df(inputs::Dict, set::Vector{Int64}, data::Matrix{Float64})
+    resources = inputs["RESOURCE_NAMES"][set]
+    zones = inputs["R_ZONES"][set]
+    weight = inputs["omega"]
+    df_annual = DataFrame(Resource = resources, Zone = zones)
+    df_annual.AnnualSum = data * weight
+    return df_annual
+end
+
+function write_temporal_data(
+        df_annual, data, path::AbstractString, setup::Dict, filename::AbstractString)
+    filepath = joinpath(path, filename * ".csv")
+    if setup["WriteOutputs"] == "annual"
+        # df_annual is expected to have an AnnualSum column.
+        write_annual(filepath, df_annual)
+    else # setup["WriteOutputs"] == "full"
+        df_full = write_fulltimeseries(filepath, data, df_annual)
+        if setup["OutputFullTimeSeries"] == 1 && setup["TimeDomainReduction"] == 1
+            write_full_time_series_reconstruction(path, setup, df_full, filename)
+            @info("Writing Full Time Series for "*filename)
+        end
+    end
+    return nothing
+end
+
+@doc raw"""write_full_time_series_reconstruction(path::AbstractString,
+                            setup::Dict,
+                            DF::DataFrame,
+                            name::String)
+Create a DataFrame with all 8,760 hours of the year from the reduced output.
+
+This function calls `full_time_series_reconstruction()``, which uses Period_map.csv to create a new DataFrame with 8,760 time steps, as well as other pre-existing rows such as "Zone".
+For each 52 weeks of the year, the corresponding representative week is taken from the input DataFrame and copied into the new DataFrame. Representative periods that 
+represent more than one week will appear multiple times in the output. 
+
+Note: Currently, TDR only gives the representative periods in Period_map for 52 weeks, when a (non-leap) year is 52 weeks + 24 hours. This function takes the last 24 hours of 
+the time series and copies them to get up to all 8,760 hours in a year.
+
+This function is called when output files with time series data (e.g. power.csv, emissions.csv) are created, if the setup key "OutputFullTimeSeries" is set to "1".
+
+# Arguments
+- `path` (AbstractString): Path input to the results folder
+- `setup` (Dict): Case setup
+- `DF` (DataFrame): DataFrame to be reconstructed
+- `name` (String): Name desired for the .csv file
+
+"""
+function write_full_time_series_reconstruction(
+        path::AbstractString, setup::Dict, DF::DataFrame, name::String)
+    FullTimeSeriesFolder = setup["OutputFullTimeSeriesFolder"]
+    output_path = joinpath(path, FullTimeSeriesFolder)
+    dfOut_full = full_time_series_reconstruction(path, setup, dftranspose(DF, false))
+    CSV.write(joinpath(output_path, "$name.csv"), dfOut_full, header = false)
+    return nothing
 end

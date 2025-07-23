@@ -7,8 +7,81 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [0.4.4] - 2025-02-04
+
 ### Added
-- Add objective scaler for addressing problem ill-conditioning (#667)
+- Add Windows OS to GitHub Actions test matrix.
+
+### Fixed
+- Fix path manipulation crash on Windows with TDR & reconstruction (#827).
+
+## [0.4.3] - 2025-01-29
+
+### Changed
+- Changed the output filename for RSV from `reg_dn.csv` to `reserves.csv` (#814).
+- Created link in the thermal doc page to fuels page for piecewise linear cost curve documentation (#820).
+- Doc rendering fix in fuel.jl (#821).
+
+### Fixed
+- Fixed capacity reserve margin formulation for asymmetric storage
+when OperationalReserves is on. (#818)
+
+## [0.4.2] - 2024-12-23
+
+### Added
+- Fusion plant optional features for thermal plants (#743).
+- Support for reusing the same Gurobi environment for multiple solves when 
+number of concurrent Gurobi uses is limited (#783).
+- Additional long-duration storage constraints to bound state of charge in 
+non-representative periods (#781).
+- New version of `add_similar_to_expression!` to support arrays of `Number`s. (#798)
+- New settings flag `LDSAdditionalConstraints` to provide flexibility in 
+activating new long-duration storage constraints (#781). Can be set in the GenX 
+settings file (PR #801).
+
+### Changed
+- The `charge.csv` and `storage.csv` files now include only resources with 
+charge and storage variables (#760 and #763).
+- Deduplicated docs on optimized scheduled maintenance for thermal resources (#745).
+- Removed the `CapRes_*` columns from `Network.csv` since they were not being used (#784).
+
+### Fixed
+- Add constraint to ensure that electricity charged from the grid cannot exceed 
+the charging capacity of the storage component in VRE_STOR (#770).
+- Update `getproperty` function for vectors of resources to ensure compatibility 
+with Julia v1.11 (#785).
+- Fixed cost calculation in `write_costs.jl` when no resources are present in 
+a zone. (#796)
+- Added `eTotalCMaxCapSlack` to calculation of `cUnmetPolicyPenalty` in 
+`write_costs.jl` (#806).
+
+## [0.4.1] - 2024-08-20
+
+### Added
+- Objective scaler for addressing problem ill-conditioning (#667)
+- Workflow that ensures that CHANGELOG.md and the version number are updated (#711)
+- Print GenX version at startup and export it to disk (#712)
+- Option to output results with time series reconstructed for the entire year (#700)
+- Default settings in multitage optimization (#703)
+- Option to write results after each iteration of a multistage run (Myopic) (#704)
+- Option to precompile `run_genx_case!` and `cluster_inputs` to speedup TTFX of GenX (#718)
+- Co-location of electrolyzers to VRE_STOR and enabled regional hydrogen production limits (#678)
+
+### Fixed
+- Formatting and images in tutorials 3, 5, 6, and 8 to address issue #697 (#698)
+- `devbranch` in the docs `make.jl` file to track the develop branch (#710)
+- `TDR` to load `Fuels_data.csv` w/wo optional `None` column (#720)
+- Include comprehensive list of all settings flags (that are currently in GenX) in the docs (#721)
+- Allow `load_vre_stor_variability!` to load only wind or solar resources as 
+part of the VRE_STOR module (#728)
+- Typo in HydrogenMinimumProduction setting key (#746)
+- Default value of `Cap_Size` attribute for thermal generators (#747)
+- Text to doc pages for retrofits (#730)
+
+### Changed
+- Generalized the cHourlyMatching constraint in electrolyzer.jl and implemented it similarly 
+to the other policies, making it easier for developers to add further contributions 
+to the constraint (#725).
 
 ## [0.4.0] - 2024-03-18
 
@@ -43,7 +116,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   non-zero in multi-stage GenX (#666)
 - Added condition number scaling added to objective function (#667)
 - Added versioned doc-pages for v0.3.6 and v0.4.0
-
 - Added a warning message in write_costs_multistage mentioning th approximate value of costs currently.
 
 ### Fixed

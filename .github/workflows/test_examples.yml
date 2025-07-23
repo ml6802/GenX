@@ -12,18 +12,22 @@ jobs:
     strategy:
       matrix:
         branch: ["main", "develop"]
-        version: ["1.8", "1.9", '1']
+        version: ["1.9", "1.10", '1']
+        include:
+          - version: '1'
+            os: windows-latest
+            arch: x64
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: ${{ matrix.branch }}
-      - uses: julia-actions/cache@v1.2.2
       - uses: julia-actions/setup-julia@latest
         with:
           version: ${{ matrix.version }}
-      - uses: julia-actions/julia-buildpkg@v1
+      - uses: julia-actions/cache@v2
+      - uses: julia-actions/julia-buildpkg@latest
       - name: Test examples
         shell: julia --project=. --color=yes {0}
         run: |

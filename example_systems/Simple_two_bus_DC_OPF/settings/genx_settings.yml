@@ -1,5 +1,13 @@
 PrintModel: 1 # Write the model formulation as an output; 0 = active; 1 = not active
+<<<<<<< HEAD
 NetworkExpansion: 1 # Transmission network expansion; 0 = not active; 1 = active systemwide
+=======
+<<<<<<<< HEAD:example_systems/9_IEEE_9_bus_DC_OPF/settings/genx_settings.yml
+NetworkExpansion: 1 # Transmission network expansion; 0 = not active; 1 = active systemwide
+========
+NetworkExpansion: 1 # Transmission network expansionl; 0 = not active; 1 = active systemwide
+>>>>>>>> upstream_sam/DC_OPF_transmission_expansion:example_systems/Simple_two_bus_DC_OPF/settings/genx_settings.yml
+>>>>>>> upstream_sam/DC_OPF_transmission_expansion
 Trans_Loss_Segments: 0 # Number of segments used in piecewise linear approximation of transmission losses; 1 = linear, >2 = piecewise quadratic
 EnergyShareRequirement: 0 # Minimum qualifying renewables penetration; 0 = not active; 1 = active systemwide
 CapacityReserveMargin: 0 # Number of capacity reserve margin constraints; 0 = not active; 1 = active systemwide
@@ -9,8 +17,22 @@ MinCapReq: 0  # Activate minimum technology carveout constraints; 0 = not active
 MaxCapReq: 0  # Activate maximum technology carveout constraints; 0 = not active; 1 = active
 WriteShadowPrices: 1 # Write shadow prices of LP or relaxed MILP; 0 = not active; 1 = active
 DC_OPF: 1 #Flag for running DC-OPF: 0 = not active (transport model); 1 = active
+<<<<<<< HEAD
 WriteOutputs: "annual"
 Benders: 1
 UCommit: 2
 IntegerInvestments: 1
 ParameterScale: 0
+=======
+<<<<<<<< HEAD:example_systems/9_IEEE_9_bus_DC_OPF/settings/genx_settings.yml
+WriteOutputs: "annual"
+Benders: 1
+UCommit: 2
+========
+ComputeConflicts: 1 # Flag for computing conflicts; 0 = not active; 1 = active
+WriteOutputs: "full"
+ParameterScale: 0 # Flag for scaling parameters; 0 = not active; 1 = active
+UCommit: 0 # Flag for unit commitment; 0 = not active; 1 = active
+SOS1: 0 # Flag for SOS1 constraints; 0 = not active; 1 = active
+>>>>>>>> upstream_sam/DC_OPF_transmission_expansion:example_systems/Simple_two_bus_DC_OPF/settings/genx_settings.yml
+>>>>>>> upstream_sam/DC_OPF_transmission_expansion
