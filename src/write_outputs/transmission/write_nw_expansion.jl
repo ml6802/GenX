@@ -53,4 +53,29 @@ function write_nw_expansion(path::AbstractString, inputs::Dict, setup::Dict, EP:
 
         CSV.write(joinpath(path, "network_expansion.csv"), dfTransCap)
     end
+
+    dfTransCap = DataFrame(Line = 1:L,
+        New_Trans_Capacity = convert(Array{Float64}, transcap),
+        Cost_Trans_Capacity = convert(Array{Float64},
+            transcap .* inputs["pC_Line_Reinforcement"]))
+
+    if setup["ParameterScale"] == 1
+        dfTransCap.New_Trans_Capacity *= ModelScalingFactor  # GW to MW
+        dfTransCap.Cost_Trans_Capacity *= ModelScalingFactor^2  # MUSD to USD
+    end
+
+    CSV.write(joinpath(path, "network_expansion.csv"), dfTransCap)
+    return dfTransCap
+end
+
+function process_transmission_capacity(case, inputs, setup, EP)
+    df_transmission = GenX.write_nw_expansion(case, inputs, setup, EP)
+    
+    # Process transmission data
+    df_transmission = df_transmission |>
+        df -> select!(df, [:Line, :New_Trans_Capacity]) |>
+        df -> transform!(df, 
+            :Line => (x -> ["line_$x" for x in x]) => :Resource,
+            :New_Trans_Capacity => :EndCap
+        )
 end

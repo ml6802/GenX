@@ -41,7 +41,8 @@ function default_settings()
         "ObjScale" => 1,
         "Benders"=>0,
         "LDES_Feasible"=>1,
-        "IntegerInvestments"=>0)
+        "IntegerInvestments"=>0,
+        "InputType" => 1)
 end
 
 @doc raw"""

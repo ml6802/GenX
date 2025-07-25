@@ -232,6 +232,135 @@ function calculate_integer_quotients(df::DataFrame)
     return quotients
 end
 
+
+@doc raw"""
+    load_network_data_p!(setup::Dict, p::Portfolio, inputs_nw::Dict)
+
+Function for reading input parameters related to the electricity transmission network from portfolio
+"""
+function load_network_data!(setup::Dict, p::Portfolio, inputs::Dict)
+    scale_factor = setup["ParameterScale"] == 1 ? ModelScalingFactor : 1
+
+    regions = get_regions(RegionTopology, p) #FIXME: this has to be generalized to Zones
+    @assert length(unique(typeof.(regions))) == 1 "All regions must either be `Zones` or `Nodes`"
+    lines = collect(get_technologies(TransmissionTechnology, p)) #FIXME: check this when switching to zones
+
+    # Number of zones in the network
+    Z = length(regions)
+    inputs["Z"] = Z
+    # Number of lines in the network
+    L = length(lines)
+    inputs["L"] = L
+
+    # Topology of the network source-sink matrix
+    inputs["pNet_Map"] = load_network_map(lines, Z, L)
+
+    # Transmission capacity of the network (in MW)
+    inputs["pTrans_Max"] = [existing_cap_mw(p, l) for l in lines] / scale_factor  # convert to GW
+
+    if setup["Trans_Loss_Segments"] == 1
+        # Line percentage Loss - valid for case when modeling losses as a fixed percent of absolute value of power flows
+        inputs["pPercent_Loss"] = [line_loss(l) for l in lines]
+    elseif setup["Trans_Loss_Segments"] >= 2
+        # Transmission line voltage (in kV)
+        inputs["kV"] = [voltage(l) for l in lines]
+        # Transmission line resistance (in Ohms) - Used when modeling quadratic transmission losses
+        inputs["Ohms"] = [resistance(l) for l in lines]
+    end
+
+    ## Inputs for the DC-OPF 
+    if setup["DC_OPF"] == 1
+        if setup["NetworkExpansion"] == 1
+            @warn("Because the DC_OPF flag is active, GenX will not allow any transmission capacity expansion. Set the DC_OPF flag to 0 if you want to optimize tranmission capacity expansion.")
+            setup["NetworkExpansion"] = 0
+        end
+        println("Reading DC-OPF values...")
+        # Transmission line voltage (in kV)
+        line_voltage_kV = [voltage(l) for l in lines]
+        # Transmission line reactance (in Ohms)
+        line_reactance_Ohms = [resistance(l) for l in lines]
+        # Line angle limit (in radians)
+        inputs["Line_Angle_Limit"] = [deg2rad(10.0) for l in lines] #FIXME
+        # DC-OPF coefficient for each line (in MW when not scaled, in GW when scaled) 
+        # MW = (kV)^2/Ohms 
+        inputs["pDC_OPF_coeff"] = ((line_voltage_kV .^ 2) ./ line_reactance_Ohms) /
+                                     scale_factor
+    end
+
+    # Maximum possible flow after reinforcement for use in linear segments of piecewise approximation
+    inputs["pTrans_Max_Possible"] = inputs["pTrans_Max"]
+
+    if setup["NetworkExpansion"] == 1
+        # Read between zone network reinforcement costs per peak MW of capacity added
+        inputs["pC_Line_Reinforcement"] = [line_reinforcement_cost(l) for l in lines] /
+                                             scale_factor # convert to million $/GW/yr with objective function in millions
+        # Maximum reinforcement allowed in MW
+        #NOTE: values <0 indicate no expansion possible
+        inputs["pMax_Line_Reinforcement"] = map(x -> max(0, x),
+            [line_reinforcement_max(l) for l in lines]) / scale_factor # convert to GW
+        inputs["pTrans_Max_Possible"] += inputs["pMax_Line_Reinforcement"]
+    end
+
+    # Multi-Stage
+    # Confirm this works later when I can test a multi-stage problem
+    if setup["MultiStage"] == 1
+        # Weighted Average Cost of Capital for Transmission Expansion
+        if setup["NetworkExpansion"] >= 1
+            inputs["transmission_WACC"] = [get_wacc(l) for l in lines]
+            inputs["Capital_Recovery_Period_Trans"] = [get_capital_recovery_factor(l) for l in lines]
+        end
+
+        # Max Flow Possible on Each Line
+        inputs["pLine_Max_Flow_Possible_MW"] = to_floats(:Line_Max_Flow_Possible_MW) /
+                                                  scale_factor # Convert to GW
+    end
+
+    # Transmission line (between zone) loss coefficient (resistance/voltage^2)
+    inputs["pTrans_Loss_Coef"] = zeros(Float64, L)
+    if setup["Trans_Loss_Segments"] == 1
+        inputs["pTrans_Loss_Coef"] = inputs["pPercent_Loss"]
+    elseif setup["Trans_Loss_Segments"] >= 2
+        # If zones are connected, loss coefficient is R/V^2 where R is resistance in Ohms and V is voltage in Volts
+        inputs["pTrans_Loss_Coef"] = (inputs["Ohms"] / 10^6) ./
+                                        (inputs["kV"] / 10^3)^2 * scale_factor # 1/GW ***
+    end
+
+    ## Sets and indices for transmission losses and expansion
+    inputs["TRANS_LOSS_SEGS"] = setup["Trans_Loss_Segments"] # Number of segments used in piecewise linear approximations quadratic loss functions
+    inputs["LOSS_LINES"] = findall(inputs["pTrans_Loss_Coef"] .!= 0) # Lines for which loss coefficients apply (are non-zero);
+
+    if setup["NetworkExpansion"] == 1
+        # Network lines and zones that are expandable have non-negative maximum reinforcement inputs
+        inputs["EXPANSION_LINES"] = findall(inputs["pMax_Line_Reinforcement"] .>= 0)
+        inputs["NO_EXPANSION_LINES"] = findall(inputs["pMax_Line_Reinforcement"] .< 0)
+    end
+
+    println("Network Data Successfully Read!")
+
+end
+
+@doc raw"""
+    load_network_map_port(lines::Vector{NodalACTransportTechnology}, Z, L)
+
+Loads the network map from a list-style interface from portfolio
+```
+..., Network_Lines, Start_Zone, End_Zone, ...
+                 1,           1,       2,
+                 2,           1,       3,
+```
+"""
+function load_network_map(lines::Vector{TransmissionTechnology}, Z, L)
+    mat = zeros(L, Z)
+    start_regions = [start_region(l) for l in lines]
+    end_regions = [end_region(l) for l in lines]
+    for l in 1:L
+        mat[l, zone_id(start_regions[l])] = 1
+        mat[l, zone_id(end_regions[l])] = -1
+    end
+    mat
+end
+
+
 @doc raw"""
     load_network_map_from_list(network_var::DataFrame, Z, L, list_columns)
 

@@ -8,7 +8,7 @@ Possible values:
 - :Vre
 - :Hydro
 - :Storage
-- :MustRun
+- :MustRun 
 - :FlexDemand
 - :VreStorage
 - :Electrolyzer
@@ -809,6 +809,7 @@ down_time(r::Thermal) = get(r, :down_time, default_zero)
 function pwfu_fuel_usage_zero_load_mmbtu_per_h(r::Thermal)
     get(r, :pwfu_fuel_usage_zero_load_mmbtu_per_h, default_zero)
 end
+fuel_costs(r::Thermal) = get(r, :fuel_costs, default_zero)
 
 # VRE interface
 """

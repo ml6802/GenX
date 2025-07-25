@@ -92,6 +92,116 @@ function load_demand_data!(setup::Dict, path::AbstractString, inputs::Dict)
     #println("Demand data:", inputs["pD"])
 end
 
+@doc raw"""
+	load_demand_data_p!(setup::Dict, p::Portfolio, inputs::Dict)
+
+Read input parameters related to electricity demand (load) from portfolio
+"""
+function load_demand_data!(setup::Dict, p::Portfolio, inputs::Dict)
+
+    # Load related inputs
+    # Loads DemandRequirement and DemandSideTechnology (for flexible demand and demand curtailment)
+    # from the portfolio
+    demand_in = collect(get_technologies(DemandRequirement, p))
+    # segments = collect(get_technologies(DemandSideTechnology, p))
+    # This is the demand TS for zone-1 just for verification
+    first_d = demand_in[1]
+    show_time_series(first_d)
+    T=0
+    for d in demand_in
+        load_data = []
+        keys_ = get_time_series_keys(d)
+        println("keys_ = $keys_")
+        names = [x.name for x in keys_] 
+        println("names = $names")
+        types = [x.time_series_type for x in keys_]
+        println("types = $types")
+        feats = [x.features for x in keys_]
+        println("feats = $feats")
+        lengths = [x.length for x in keys_]
+        T=sum(lengths)
+        println("T = $T")
+        println("lengths = $lengths")
+        temp_first_feats = Dict(Symbol.(keys(feats[1])) .=> values(feats[2]))
+        println("temp_first_feats = $temp_first_feats")
+        key_feats_first = collect(keys(feats[1]))
+        println("key_feats_first = $key_feats_first")
+        vals_feats_first = collect(values(feats[1]))
+        println("vals_feats_first = $vals_feats_first")
+        vals_feats_first[1]
+        ts_vals = [IS.get_time_series_values(type, d, name; temp_first_feats...) for type in types, name in names]
+        println("ts_vals = $ts_vals")
+        if isempty(ts_vals)
+            error("Time series data for $keys_ not found.")
+        end
+        id = PSIP.get_id(d.region)
+        #r
+        inputs["pD"][:, id] = reduce(vcat, ts_vals)
+    end
+
+    inputs["T"] = T
+    inputs["pD"] = zeros( T, length(demand_in) )
+    inputs["pD"][:, id] = load_data
+    # Number of demand curtailment/lost load segments
+    SEG = length(segments[1].segments) # Upcoming feature in DemandRequirement
+
+    ## Set indices for internal use
+    
+    inputs["SEG"] = SEG
+
+    inputs["omega"] = zeros(Float64, T) # weights associated with operational sub-period in the model - sum of weight = 8760
+    # Weights for each period - assumed same weights for each sub-period within a period
+    inputs["Weights"] = p.internal.ext["Sub_Weights"] # Weights each period
+
+    # Total number of periods and subperiods #If these fields are needed, create an ext object in the portfolio which is a dictionary with these fields
+    inputs["REP_PERIOD"] = convert(Int16, p.internal.ext["Rep_Periods"])
+    inputs["H"] = convert(Int64, p.internal.ext["Timesteps_per_Rep_Period"])
+
+    # Creating sub-period weights from weekly weights
+    for w in 1:inputs["REP_PERIOD"]
+        for h in 1:inputs["H"]
+            t = inputs["H"] * (w - 1) + h
+            inputs["omega"][t] = inputs["Weights"][w] / inputs["H"]
+        end
+    end
+
+    # Create time set steps indicies
+    inputs["hours_per_subperiod"] = div.(T, inputs["REP_PERIOD"]) # total number of hours per subperiod
+    hours_per_subperiod = inputs["hours_per_subperiod"] # set value for internal use
+
+    inputs["START_SUBPERIODS"] = 1:hours_per_subperiod:T # set of indexes for all time periods that start a subperiod (e.g. sample day/week)
+    inputs["INTERIOR_SUBPERIODS"] = setdiff(1:T, inputs["START_SUBPERIODS"]) # set of indexes for all time periods that do not start a subperiod
+#=
+    mutable struct DemandRequirement{T <: PSY.StaticInjection} <: DemandTechnology
+        name::String
+        value_of_lost_load::Float64
+        power_systems_type::String
+        peak_demand_mw::Float64
+        unserved_demand_curve::PSY.ValueCurve
+        internal::InfrastructureSystemsInternal
+        id::Int64
+        ext::Dict
+        region::Vector{RegionTopology}
+        available::Bool
+    end
+=#
+    # Demand in MW for each zone
+    scale_factor = setup["ParameterScale"] == 1 ? ModelScalingFactor : 1
+    # Max value of non-served energy
+    inputs["Voll"] = [s.voll / scale_factor for s in segments] # convert from $/MWh $ million/GWh (assuming objective is divided by 1000)
+    # Getting the demand in MW for each zone and for each rep reiod
+    
+
+    # Cost of non-served energy/demand curtailment
+    # Cost of each segment reported as a fraction of value of non-served energy - scaled implicitly
+    inputs["pC_D_Curtail"] = segments[1].curtailment_cost * inputs["Voll"][1]
+
+    # Maximum hourly demand curtailable as % of the max demand (for each segment)
+    inputs["pMax_D_Curtail"] = segments[1].max_demand_curtailment
+    println("Demand (load) data Successfully Read!")
+    
+end
+
 # ensure that the length of demand data exactly matches
 # the number of subperiods times their length
 # and that the number of subperiods equals the list of provided weights
