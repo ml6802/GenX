@@ -19,9 +19,10 @@ function load_inputs(setup::Dict, path::AbstractString)
     policies_path = joinpath(path, setup["PoliciesFolder"])
     ## Declare Dict (dictionary) object used to store parameters
     inputs = Dict()
-    # Read input data about power network topology, operating and expansion attributes
+    candidate_line_flag = false
     if isfile(joinpath(system_path, "Network.csv"))
-        network_var = load_network_data!(setup, system_path, inputs)
+        filename = "Network.csv"
+        network_var, candidate_network_var = load_network_data!(setup, system_path, inputs, filename)
     else
         inputs["Z"] = 1
         inputs["L"] = 0
