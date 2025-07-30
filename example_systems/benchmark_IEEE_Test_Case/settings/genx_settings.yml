@@ -17,4 +17,5 @@ SOS1: 0 # Flag for SOS1 constraints; 0 = not active; 1 = active
 ptdf: 0
 disaggregate: 0
 bilinear: 1
-Benders: 0
+Benders: 1
+Solver: "Gurobi"

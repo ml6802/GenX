@@ -14,3 +14,4 @@ Benders: 1
 UCommit: 2
 IntegerInvestments: 1
 ParameterScale: 1
+bilinear: 1

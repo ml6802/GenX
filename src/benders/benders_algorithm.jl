@@ -86,22 +86,22 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 		
 		avs = all_variables(planning_problem)
 		start_planning_sol = time()
-		if k ==10
-			trans_cap_decisions = [0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0]
-			trans_cap_vars = avs[2:77]
-			for (idx, var) in enumerate(trans_cap_vars)
-				fix(var, trans_cap_decisions[idx], force = true)
-			end
-			unst_planning_sol = solve_planning_problem(planning_problem,planning_variables,inputs);
-			unfix.(trans_cap_vars)
-			for var in trans_cap_vars
-				if !(is_binary(var))
-					set_binary(var)
-				end
-			end
-		else
-			unst_planning_sol = solve_planning_problem(planning_problem,planning_variables,inputs);
-		end
+		#if k ==10
+		#	trans_cap_decisions = [0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0]
+		#	trans_cap_vars = avs[2:77]
+		#	for (idx, var) in enumerate(trans_cap_vars)
+		#		fix(var, trans_cap_decisions[idx], force = true)
+		#	end
+		#	unst_planning_sol = solve_planning_problem(planning_problem,planning_variables,inputs);
+		#	unfix.(trans_cap_vars)
+		#	for var in trans_cap_vars
+		#		if !(is_binary(var))
+		#			set_binary(var)
+		#		end
+		#	end
+		#else
+		unst_planning_sol = solve_planning_problem(planning_problem,planning_variables,inputs);
+		#end
 		cpu_planning_sol = time()-start_planning_sol;
 		println("Solving the planning problem required $cpu_planning_sol seconds")
 
