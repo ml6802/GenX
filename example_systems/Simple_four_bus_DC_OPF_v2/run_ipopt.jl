@@ -1,11 +1,10 @@
 using Revise
 
 using GenX
-using Gurobi
+using Ipopt
 using JuMP
 
-m, inputs = run_genx_case!(dirname(@__FILE__), Gurobi.Optimizer)
-println(value.(m[:vCANDFLOW]))
+m, inputs = run_genx_case!(dirname(@__FILE__), Ipopt.Optimizer)
 #inputs = run_genx_case!(d"irname(@__FILE__), Gurobi.Optimizer)
 
 #=

@@ -27,23 +27,24 @@ function investment_transmission!(EP::Model, inputs::Dict, setup::Dict)
     println("Investment Transmission Module")
 
     L = inputs["L"]     # Number of transmission lines
-    L_cand = inputs["L_cand"]     # Number of candidate transmission lines
     NetworkExpansion = setup["NetworkExpansion"]
     MultiStage = setup["MultiStage"]
-    REINFORCEMENT_CAP_SIZE = inputs["Line_Reinforcement_Cap_Size"]
-    MAX_TRAN_EXPANSION_LIMIT=inputs["Max_Trans_Cap"]
-    # Network lines and zones that are expandable have non-negative maximum reinforcement inputs
-        EXPANSION_LINES = inputs["EXPANSION_LINES"]
-    EXPANSION_LEVELS=Dict{Int,Vector{Float64}}()
-    for l in EXPANSION_LINES
-        EXPANSION_LEVELS[l] = (0:1:MAX_TRAN_EXPANSION_LIMIT[l]) #-Might not need multiplication of this part -->* REINFORCEMENT_CAP_SIZE[l]
-    end
-    inputs["EXPANSION_LEVELS"] = EXPANSION_LEVELS
+    
 
     if NetworkExpansion == 1
         
-        if setup["DC_OPF"] == 1
-            
+            if setup["DC_OPF"] == 1
+                L_cand = inputs["L_cand"]     # Number of candidate transmission lines
+                REINFORCEMENT_CAP_SIZE = inputs["Line_Reinforcement_Cap_Size"]
+                MAX_TRAN_EXPANSION_LIMIT=inputs["Max_Trans_Cap"]
+                # Network lines and zones that are expandable have non-negative maximum reinforcement inputs
+                EXPANSION_LINES = inputs["EXPANSION_LINES"]
+                EXPANSION_LEVELS=Dict{Int,Vector{Float64}}()
+                for l in EXPANSION_LINES
+                    EXPANSION_LEVELS[l] = (0:1:MAX_TRAN_EXPANSION_LIMIT[l]) #-Might not need multiplication of this part -->* REINFORCEMENT_CAP_SIZE[l]
+                end
+                inputs["EXPANSION_LEVELS"] = EXPANSION_LEVELS
+                
             if setup["ptdf"] == 1
                 line_map = Dict()
                 cand_line_map = Dict()
