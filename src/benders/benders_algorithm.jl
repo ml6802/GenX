@@ -104,13 +104,7 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 		end
 		cpu_planning_sol = time()-start_planning_sol;
 		println("Solving the planning problem required $cpu_planning_sol seconds")
-		#println(unst_planning_sol)
-		build_sols = zeros(76)
-		#println(collect(keys(unst_planning_sol.values)))
-		for i in 1:76
-			build_sols[i] = unst_planning_sol.values["vZ_BUILD[$i,1]"]
-		end
-			build_decisions = hcat(build_decisions, build_sols)
+
 
 
 
