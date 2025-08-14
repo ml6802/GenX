@@ -10,7 +10,10 @@ MaxCapReq: 0  # Activate maximum technology carveout constraints; 0 = not active
 WriteShadowPrices: 1 # Write shadow prices of LP or relaxed MILP; 0 = not active; 1 = active
 DC_OPF: 1 #Flag for running DC-OPF: 0 = not active (transport model); 1 = active
 WriteOutputs: "annual"
-Benders: 1
-UCommit: 2
+Benders: 0
+UCommit: 0
+SOS1: 0 # Flag for SOS1 constraints; 0 = not active; 1 = active
+ptdf: 0
+bilinear: 1
 IntegerInvestments: 1
 ParameterScale: 1

@@ -6,7 +6,19 @@ using Revise
 using GenX
 using Gurobi, JuMP
 
-m, inputs = run_genx_case!(dirname(@__FILE__), Gurobi.Optimizer);
+m1, inputs, settings = run_genx_case!(dirname(@__FILE__), Gurobi.Optimizer, tight_bigM = true);
+
+
+#=
+for var in m1[:slack_vFLOW]
+    fix(var, 0, force = true)
+end
+for var in m1[:slackup_vCANDFLOW]
+    fix(var, 0, force = true)
+end
+for var in m1[:slackdown_vCANDFLOW]
+    fix(var, 0, force = true)
+end
 
 
 flow_sols = value.(m[:vFLOW])
@@ -30,6 +42,7 @@ using JLD2
 #     candflows = candflow_mat
 # )
 
+#data = jldopen((@__DIR__)*"/bigM_solutions.jld2")
 
 # sols_sparse = value.(m[:vNEW_TRANS_CAP_DECISION_INT])
 # sols = zeros(76, 1)
@@ -74,3 +87,4 @@ using JLD2
 # title!("Benchmark 49-Bus Case")
 
 # #savefig((@__DIR__)*"/Benders_Comp2.png")
+=#

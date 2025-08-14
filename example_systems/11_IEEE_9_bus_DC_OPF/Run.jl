@@ -1,3 +1,8 @@
-using GenX
+a=1
 
-run_genx_case!(dirname(@__FILE__))
+using Revise
+
+using GenX
+using Gurobi, JuMP
+
+m, inputs = run_genx_case!(dirname(@__FILE__), Gurobi.Optimizer)

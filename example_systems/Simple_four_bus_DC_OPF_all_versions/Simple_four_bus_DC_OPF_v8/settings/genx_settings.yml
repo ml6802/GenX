@@ -14,3 +14,4 @@ Benders: 0
 UCommit: 2
 IntegerInvestments: 1
 ParameterScale: 0
+SOS1: 0 # Flag for SOS1 constraints; 0 = not active; 1 = active

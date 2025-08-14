@@ -92,6 +92,12 @@ function run_genx_case_simple!(case::AbstractString, mysetup::Dict, optimizer::A
     if !(haskey(mysetup, "bilinear"))
         mysetup["bilinear"] = 0
     end
+    if !(haskey(mysetup, "SOS1"))
+        mysetup["SOS1"] = 0
+    end
+    if !(haskey(mysetup, "unfix_slacks"))
+        mysetup["unfix_slacks"] = 0
+    end
     ### Load inputs
     println("Loading Inputs")
     myinputs = load_inputs(mysetup, case)
@@ -102,12 +108,12 @@ function run_genx_case_simple!(case::AbstractString, mysetup::Dict, optimizer::A
     EP = generate_model(mysetup, myinputs, OPTIMIZER)
     println("Time elapsed for model building is")
     println(time_elapsed)
-    #set_optimizer_attribute(EP, "TimeLimit", 5)
+    set_optimizer_attribute(EP, "TimeLimit", 3)
 
     println("Solving Model")
     EP, solve_time = solve_model(EP, mysetup)
     myinputs["solve_time"] = solve_time # Store the model solve time in myinputs
-    return EP, myinputs
+    return EP, myinputs, mysetup
 
     # Run MGA if the MGA flag is set to 1 else only save the least cost solution
     if has_values(EP)

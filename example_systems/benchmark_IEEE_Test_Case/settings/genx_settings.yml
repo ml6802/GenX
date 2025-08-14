@@ -16,5 +16,6 @@ UCommit: 0 # Flag for unit commitment; 0 = not active; 1 = active
 SOS1: 0 # Flag for SOS1 constraints; 0 = not active; 1 = active
 ptdf: 0
 disaggregate: 0
-bilinear: 1
+bilinear: 0
 Benders: 0
+fix_slacks: 0
