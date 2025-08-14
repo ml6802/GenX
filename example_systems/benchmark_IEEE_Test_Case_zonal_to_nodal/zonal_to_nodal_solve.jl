@@ -29,7 +29,7 @@ if !(haskey(setup, "unfix_slacks"))
     setup["unfix_slacks"] = 0
 end
 
-inputs = load_inputs(mysetup, case)
+inputs = GenX.load_inputs(setup, case)
 
 # define node to zone mapping
 n2z_map = Dict{Int, Int}()
