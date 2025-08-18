@@ -243,7 +243,94 @@ function load_network_data!(setup::Dict, p::Portfolio, inputs::Dict)
 
     regions = get_regions(RegionTopology, p) #FIXME: this has to be generalized to Zones
     @assert length(unique(typeof.(regions))) == 1 "All regions must either be `Zones` or `Nodes`"
-    lines = collect(get_technologies(TransmissionTechnology, p)) #FIXME: check this when switching to zones
+        
+    # DEBUG: Check what technology types are available
+    println("=== DEBUGGING PORTFOLIO CONTENTS ===")
+    
+    # Check all available technology types - we need to try specific types
+    try
+        all_supply = collect(get_technologies(SupplyTechnology, p))
+        println("SupplyTechnology count: ", length(all_supply))
+        if !isempty(all_supply)
+            println("SupplyTechnology types: ", unique(typeof.(all_supply)))
+        end
+    catch e
+        println("No SupplyTechnology found: ", e)
+    end
+    
+    try
+        all_storage = collect(get_technologies(StorageTechnology, p))
+        println("StorageTechnology count: ", length(all_storage))
+        if !isempty(all_storage)
+            println("StorageTechnology types: ", unique(typeof.(all_storage)))
+        end
+    catch e
+        println("No StorageTechnology found: ", e)
+    end
+    
+    # Try different technology types
+    try
+        agg_transport = collect(get_technologies(AggregateTransportTechnology, p))
+        println("AggregateTransportTechnology count: ", length(agg_transport))
+        if !isempty(agg_transport)
+            println("AggregateTransportTechnology types: ", unique(typeof.(agg_transport)))
+        end
+    catch e
+        println("No AggregateTransportTechnology found: ", e)
+    end
+    
+    try
+        transmission = collect(get_technologies(TransmissionTechnology, p))
+        println("TransmissionTechnology count: ", length(transmission))
+        if !isempty(transmission)
+            println("TransmissionTechnology types: ", unique(typeof.(transmission)))
+        end
+    catch e
+        println("No TransmissionTechnology found: ", e)
+    end
+    
+    # Check what's actually in the portfolio at a high level
+    println("Portfolio summary:")
+    try
+        println("  - Has supply technologies: ", has_technologies(SupplyTechnology, p))
+    catch e
+        println("  - Error checking supply technologies: ", e)
+    end
+    
+    try
+        println("  - Has storage technologies: ", has_technologies(StorageTechnology, p))
+    catch e
+        println("  - Error checking storage technologies: ", e)
+    end
+    
+    try
+        println("  - Has aggregate transport technologies: ", has_technologies(AggregateTransportTechnology, p))
+    catch e
+        println("  - Error checking aggregate transport technologies: ", e)
+    end
+    
+    try
+        println("  - Has transmission technologies: ", has_technologies(TransmissionTechnology, p))
+    catch e
+        println("  - Error checking transmission technologies: ", e)
+    end
+    
+    println("====================================")
+    
+    # Try to get any technologies that exist
+    agg_transport = collect(get_technologies(AggregateTransportTechnology, p))
+    transmission = collect(get_technologies(TransmissionTechnology, p))
+    
+    # Use whichever collection has data
+    lines = if !isempty(agg_transport)
+        println("Using AggregateTransportTechnology")
+        agg_transport
+    elseif !isempty(transmission)
+        println("Using TransmissionTechnology")
+        transmission
+    else
+        error("No transmission technologies found in portfolio. Check if your portfolio has network data loaded.")
+    end
 
     # Number of zones in the network
     Z = length(regions)
@@ -255,90 +342,100 @@ function load_network_data!(setup::Dict, p::Portfolio, inputs::Dict)
     println("Number of regions: ", regions)
     println("Number of lines: ", L)
     println("Number of transmission technologies: ", lines)
-    # Topology of the network source-sink matrix
-    inputs["pNet_Map"] = load_network_map(lines, Z, L, p)
+    
+    # Only proceed if we have lines
+    if L > 0
+        # Topology of the network source-sink matrix
+        inputs["pNet_Map"] = load_network_map(lines, Z, L, p)
 
-    # Transmission capacity of the network (in MW)
-    inputs["pTrans_Max"] = [existing_cap_mw(p, l) for l in lines] / scale_factor  # convert to GW
+        # Transmission capacity of the network (in MW)
+        inputs["pTrans_Max"] = [existing_cap_mw(p, l) for l in lines] / scale_factor  # convert to GW
+        
+        
 
-    if setup["Trans_Loss_Segments"] == 1
-        # Line percentage Loss - valid for case when modeling losses as a fixed percent of absolute value of power flows
-        inputs["pPercent_Loss"] = [line_loss(l) for l in lines]
-    elseif setup["Trans_Loss_Segments"] >= 2
-        # Transmission line voltage (in kV)
-        inputs["kV"] = [voltage(l) for l in lines]
-        # Transmission line resistance (in Ohms) - Used when modeling quadratic transmission losses
-        inputs["Ohms"] = [resistance(l) for l in lines]
-    end
+        if setup["Trans_Loss_Segments"] == 1
+            # Line percentage Loss - valid for case when modeling losses as a fixed percent of absolute value of power flows
+            inputs["pPercent_Loss"] = [line_loss(l) for l in lines]
+        elseif setup["Trans_Loss_Segments"] >= 2
+            # Transmission line voltage (in kV)
+            inputs["kV"] = [voltage(l) for l in lines]
+            # Transmission line resistance (in Ohms) - Used when modeling quadratic transmission losses
+            inputs["Ohms"] = [resistance(l) for l in lines]
+        end
 
-    ## Inputs for the DC-OPF 
-    if setup["DC_OPF"] == 1
+        ## Inputs for the DC-OPF
+        if setup["DC_OPF"] == 1
+            if setup["NetworkExpansion"] == 1
+                @warn("Because the DC_OPF flag is active, GenX will not allow any transmission capacity expansion. Set the DC_OPF flag to 0 if you want to optimize tranmission capacity expansion.")
+                setup["NetworkExpansion"] = 0
+            end
+            println("Reading DC-OPF values...")
+            # Transmission line voltage (in kV)
+            line_voltage_kV = [voltage(l) for l in lines]
+            # Transmission line reactance (in Ohms)
+            line_reactance_Ohms = [resistance(l) for l in lines]
+            # Line angle limit (in radians)
+            inputs["Line_Angle_Limit"] = [deg2rad(10.0) for l in lines] #FIXME
+            # DC-OPF coefficient for each line (in MW when not scaled, in GW when scaled) 
+            # MW = (kV)^2/Ohms 
+            inputs["pDC_OPF_coeff"] = ((line_voltage_kV .^ 2) ./ line_reactance_Ohms) /
+                                        scale_factor
+        end
+
+        # Maximum possible flow after reinforcement for use in linear segments of piecewise approximation
+        inputs["pTrans_Max_Possible"] = inputs["pTrans_Max"]
+
         if setup["NetworkExpansion"] == 1
-            @warn("Because the DC_OPF flag is active, GenX will not allow any transmission capacity expansion. Set the DC_OPF flag to 0 if you want to optimize tranmission capacity expansion.")
-            setup["NetworkExpansion"] = 0
-        end
-        println("Reading DC-OPF values...")
-        # Transmission line voltage (in kV)
-        line_voltage_kV = [voltage(l) for l in lines]
-        # Transmission line reactance (in Ohms)
-        line_reactance_Ohms = [resistance(l) for l in lines]
-        # Line angle limit (in radians)
-        inputs["Line_Angle_Limit"] = [deg2rad(10.0) for l in lines] #FIXME
-        # DC-OPF coefficient for each line (in MW when not scaled, in GW when scaled) 
-        # MW = (kV)^2/Ohms 
-        inputs["pDC_OPF_coeff"] = ((line_voltage_kV .^ 2) ./ line_reactance_Ohms) /
-                                     scale_factor
-    end
-
-    # Maximum possible flow after reinforcement for use in linear segments of piecewise approximation
-    inputs["pTrans_Max_Possible"] = inputs["pTrans_Max"]
-
-    if setup["NetworkExpansion"] == 1
-        # Read between zone network reinforcement costs per peak MW of capacity added
-        inputs["pC_Line_Reinforcement"] = [line_reinforcement_cost(l) for l in lines] /
-                                             scale_factor # convert to million $/GW/yr with objective function in millions
-        # Maximum reinforcement allowed in MW
-        #NOTE: values <0 indicate no expansion possible
-        inputs["pMax_Line_Reinforcement"] = map(x -> max(0, x),
-            [line_reinforcement_max(l) for l in lines]) / scale_factor # convert to GW
-        inputs["pTrans_Max_Possible"] += inputs["pMax_Line_Reinforcement"]
-    end
-
-    # Multi-Stage
-    # Confirm this works later when I can test a multi-stage problem
-    if setup["MultiStage"] == 1
-        # Weighted Average Cost of Capital for Transmission Expansion
-        if setup["NetworkExpansion"] >= 1
-            inputs["transmission_WACC"] = [get_wacc(l) for l in lines]
-            inputs["Capital_Recovery_Period_Trans"] = [get_capital_recovery_factor(l) for l in lines]
+            # Read between zone network reinforcement costs per peak MW of capacity added
+            inputs["pC_Line_Reinforcement"] = [line_reinforcement_cost(l) for l in lines] /
+                                                scale_factor # convert to million $/GW/yr with objective function in millions
+            # Maximum reinforcement allowed in MW
+            #NOTE: values <0 indicate no expansion possible
+            inputs["pMax_Line_Reinforcement"] = map(x -> max(0, x),
+                [line_reinforcement_max(l) for l in lines]) / scale_factor # convert to GW
+            inputs["pTrans_Max_Possible"] += inputs["pMax_Line_Reinforcement"]
         end
 
-        # Max Flow Possible on Each Line
-        inputs["pLine_Max_Flow_Possible_MW"] = to_floats(:Line_Max_Flow_Possible_MW) /
-                                                  scale_factor # Convert to GW
+        # Multi-Stage
+        # Confirm this works later when I can test a multi-stage problem
+        if setup["MultiStage"] == 1
+            # Weighted Average Cost of Capital for Transmission Expansion
+            if setup["NetworkExpansion"] >= 1
+                inputs["transmission_WACC"] = [get_wacc(l) for l in lines]
+                inputs["Capital_Recovery_Period_Trans"] = [get_capital_recovery_factor(l) for l in lines]
+            end
+
+            # Max Flow Possible on Each Line
+            inputs["pLine_Max_Flow_Possible_MW"] = to_floats(:Line_Max_Flow_Possible_MW) /
+                                                    scale_factor # Convert to GW
+        end
+
+        # Transmission line (between zone) loss coefficient (resistance/voltage^2)
+        inputs["pTrans_Loss_Coef"] = zeros(Float64, L)
+        if setup["Trans_Loss_Segments"] == 1
+            inputs["pTrans_Loss_Coef"] = inputs["pPercent_Loss"]
+        elseif setup["Trans_Loss_Segments"] >= 2
+            # If zones are connected, loss coefficient is R/V^2 where R is resistance in Ohms and V is voltage in Volts
+            inputs["pTrans_Loss_Coef"] = (inputs["Ohms"] / 10^6) ./
+                                            (inputs["kV"] / 10^3)^2 * scale_factor # 1/GW ***
+        end
+
+        ## Sets and indices for transmission losses and expansion
+        inputs["TRANS_LOSS_SEGS"] = setup["Trans_Loss_Segments"] # Number of segments used in piecewise linear approximations quadratic loss functions
+        inputs["LOSS_LINES"] = findall(inputs["pTrans_Loss_Coef"] .!= 0) # Lines for which loss coefficients apply (are non-zero);
+
+        if setup["NetworkExpansion"] == 1
+            # Network lines and zones that are expandable have non-negative maximum reinforcement inputs
+            inputs["EXPANSION_LINES"] = findall(inputs["pMax_Line_Reinforcement"] .>= 0)
+            inputs["NO_EXPANSION_LINES"] = findall(inputs["pMax_Line_Reinforcement"] .< 0)
+        end
+
+        println("Network Data Successfully Read!")
+    else
+        @warn("No transmission lines found in portfolio. Network functionality will be limited.")
+        inputs["pNet_Map"] = zeros(0, Z)
+        inputs["pTrans_Max"] = Float64[]
     end
-
-    # Transmission line (between zone) loss coefficient (resistance/voltage^2)
-    inputs["pTrans_Loss_Coef"] = zeros(Float64, L)
-    if setup["Trans_Loss_Segments"] == 1
-        inputs["pTrans_Loss_Coef"] = inputs["pPercent_Loss"]
-    elseif setup["Trans_Loss_Segments"] >= 2
-        # If zones are connected, loss coefficient is R/V^2 where R is resistance in Ohms and V is voltage in Volts
-        inputs["pTrans_Loss_Coef"] = (inputs["Ohms"] / 10^6) ./
-                                        (inputs["kV"] / 10^3)^2 * scale_factor # 1/GW ***
-    end
-
-    ## Sets and indices for transmission losses and expansion
-    inputs["TRANS_LOSS_SEGS"] = setup["Trans_Loss_Segments"] # Number of segments used in piecewise linear approximations quadratic loss functions
-    inputs["LOSS_LINES"] = findall(inputs["pTrans_Loss_Coef"] .!= 0) # Lines for which loss coefficients apply (are non-zero);
-
-    if setup["NetworkExpansion"] == 1
-        # Network lines and zones that are expandable have non-negative maximum reinforcement inputs
-        inputs["EXPANSION_LINES"] = findall(inputs["pMax_Line_Reinforcement"] .>= 0)
-        inputs["NO_EXPANSION_LINES"] = findall(inputs["pMax_Line_Reinforcement"] .< 0)
-    end
-
-    println("Network Data Successfully Read!")
 
 end
 
@@ -367,7 +464,7 @@ function load_network_map(lines::Vector{TransmissionTechnology}, Z, L)
     mat
 end
 
-function load_network_map(lines::Vector{TransmissionTechnology}, Z, L, p::Portfolio)
+function load_network_map(lines::Vector{AggregateTransportTechnology}, Z, L, p::Portfolio)
     mat = zeros(L, Z)
     start_regions = [start_region(l) for l in lines]
     end_regions = [end_region(l) for l in lines]
@@ -383,6 +480,30 @@ function load_network_map(lines::Vector{TransmissionTechnology}, Z, L, p::Portfo
     for l in 1:L
         start_idx = region_to_index[zone_id_inter(start_regions[l])]
         end_idx = region_to_index[zone_id_inter(end_regions[l])]
+        println("Line ", l, " from ", start_idx, " to ", end_idx)
+        mat[l, start_idx] = 1
+        mat[l, end_idx] = -1
+    end
+    mat
+end
+
+function load_network_map(lines::Vector{TransmissionTechnology}, Z, L, p::Portfolio)
+    mat = zeros(L, Z)
+    start_regions = [start_region(l) for l in lines]
+    end_regions = [end_region(l) for l in lines]
+    
+    # Get sorted region IDs for mapping
+    sorted_regions = zone_id(RegionTopology, p)
+    region_to_index = Dict(get_id(region) => i for (i, region) in enumerate(sorted_regions))
+    
+    for l in 1:L
+        println("Line ", l, " from ", start_regions[l], " to ", end_regions[l])
+        println("Line ", l, " from ", zone_id_inter(start_regions[l]), " to ", zone_id_inter(end_regions[l]))
+    end
+    for l in 1:L
+        start_idx = region_to_index[zone_id_inter(start_regions[l])]
+        end_idx = region_to_index[zone_id_inter(end_regions[l])]
+        println("Line ", l, " from ", start_idx, " to ", end_idx)
         mat[l, start_idx] = 1
         mat[l, end_idx] = -1
     end

@@ -106,11 +106,11 @@ function load_demand_data!(setup::Dict, p::Portfolio, inputs::Dict)
     # segments = collect(get_technologies(DemandSideTechnology, p))
     # This is the demand TS for zone-1 just for verification
     first_d = demand_in[1]
-    show_time_series(first_d)
+    IS.show_time_series(first_d)
     T=0
     for d in demand_in
         load_data = []
-        keys_ = get_time_series_keys(d)
+        keys_ = IS.get_time_series_keys(d)
         println("keys_ = $keys_")
         names = [x.name for x in keys_] 
         println("names = $names")
