@@ -1,7 +1,8 @@
 start_region(t::TransmissionTechnology) = get_start_node(t)
 end_region(t::TransmissionTechnology) = get_end_node(t)
 
-zone_id(t::RegionTopology) = get_id(t)
+zone_id_inter(t::RegionTopology) = get_id(t)
+zone_id(::Type{T}, p::Portfolio) where T<:RegionTopology = sort(collect(get_regions(T, p)), by=x->get_id(x))
 
 start_region(t::AggregateTransportTechnology) = get_start_region(t)
 end_region(t::AggregateTransportTechnology) = get_end_region(t)

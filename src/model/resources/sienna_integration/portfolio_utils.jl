@@ -5,6 +5,7 @@ get_out(x::InOut) = x.out
 
 get_parameter_type(t::SupplyTechnology{T}) where T = T
 get_parameter_type(t::StorageTechnology{T}) where T = T
+get_parameter_type(::NodalACTransportTechnology{T}) where T = T
 
 function existing_cap_mw(p::Portfolio, t::Union{ResourceTechnology, TransmissionTechnology})
     if IS.has_supplemental_attributes(ExistingCapacity, t)

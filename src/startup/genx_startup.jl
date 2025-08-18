@@ -55,13 +55,13 @@ function _precompile()
         "Example: `ENV[\"GENX_PRECOMPILE\"] = \"false\"`."
     redirect_stdout(devnull) do
         warnerror_logger = ConsoleLogger(stderr, Logging.Warn)
-        with_logger(warnerror_logger) do
-            @compile_workload begin
-                case = joinpath(pkgdir(GenX), "precompile/case")
-                _precompile_tdr(case)   # Precompile TDR
-                run_genx_case!(case, HiGHS.Optimizer)   # Precompile run_genx_case!
-            end
-        end
+        # with_logger(warnerror_logger) do
+        #     @compile_workload begin
+        #         case = joinpath(pkgdir(GenX), "precompile/case")
+        #         _precompile_tdr(case)   # Precompile TDR
+        #         run_genx_case!(case, HiGHS.Optimizer)   # Precompile run_genx_case!
+        #     end
+        # end
     end
     isdir("precompile/case/results") &&
         rm("precompile/case/results"; force = true, recursive = true)   # Clean up

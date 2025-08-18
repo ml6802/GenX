@@ -1,9 +1,10 @@
 ENV["GENX_PRECOMPILE"] = "false"
 
 using Pkg;
-project_dir = dirname(dirname(@__DIR__))
+project_dir = "/Users/sc87/code/NREL_Sienna/PowerSystemsInvestmentsPortfolios.jl"
 println("Activating project at: $project_dir")
 Pkg.activate(project_dir);
+#Pkg.add("GenX")
 using Revise
 using GenX
 using PowerSystemsInvestmentsPortfolios
@@ -709,22 +710,8 @@ function load_rts(case_name::AbstractString)
     using the database_to_portfolio function.
     """
 
-    #using Pkg
-
-    # Check if we're already in the correct project environment
-    #current_project = Pkg.project().path
-    #project_dir = dirname(dirname(@__DIR__))  # Go up two levels from scripts/formatter to project root
-
-    # Only activate if we're not already in the right project
-    #=if !occursin("PowerSystemsInvestmentsPortfolios", current_project)
-        println("Activating project environment...")
-        Pkg.activate(project_dir)
-    else
-        println("Already in PowerSystemsInvestmentsPortfolios project environment")
-    end=#
-
     # Define the database file path
-    database_filepath = case_name
+    database_filepath = joinpath(case_name, "sys_DA.sqlite")
 
     # Define the portfolio parameters
     discount_rate = 0.05
@@ -834,7 +821,7 @@ end
 
 if read_from_json == false && rts_case == true
     # Build portfolio from the function above and then run GenX
-    case = joinpath(@__DIR__, "/Users/sc87/code/GenX_PowerGenome/GenX_Benders_DC_OPF/GenX/example_systems/RTS_Case_Latest/sys_DA.sqlite")
+    case = joinpath(@__DIR__, "/Users/sc87/code/GenX_PowerGenome/GenX_Benders_DC_OPF/GenX/example_systems/RTS_Case_Latest/")
     p = load_rts(case)
 elseif read_from_json == true && rts_case == true
     # Load portfolio from file

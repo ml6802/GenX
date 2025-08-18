@@ -251,9 +251,12 @@ function load_network_data!(setup::Dict, p::Portfolio, inputs::Dict)
     # Number of lines in the network
     L = length(lines)
     inputs["L"] = L
-
+    println("Number of zones: ", Z)
+    println("Number of regions: ", regions)
+    println("Number of lines: ", L)
+    println("Number of transmission technologies: ", lines)
     # Topology of the network source-sink matrix
-    inputs["pNet_Map"] = load_network_map(lines, Z, L)
+    inputs["pNet_Map"] = load_network_map(lines, Z, L, p)
 
     # Transmission capacity of the network (in MW)
     inputs["pTrans_Max"] = [existing_cap_mw(p, l) for l in lines] / scale_factor  # convert to GW
@@ -354,12 +357,37 @@ function load_network_map(lines::Vector{TransmissionTechnology}, Z, L)
     start_regions = [start_region(l) for l in lines]
     end_regions = [end_region(l) for l in lines]
     for l in 1:L
+        println("Line ", l, " from ", start_regions[l], " to ", end_regions[l])
+        println("Line ", l, " from ", zone_id(start_regions[l]), " to ", zone_id(end_regions[l]))
+    end
+    for l in 1:L
         mat[l, zone_id(start_regions[l])] = 1
         mat[l, zone_id(end_regions[l])] = -1
     end
     mat
 end
 
+function load_network_map(lines::Vector{TransmissionTechnology}, Z, L, p::Portfolio)
+    mat = zeros(L, Z)
+    start_regions = [start_region(l) for l in lines]
+    end_regions = [end_region(l) for l in lines]
+        
+    # Get sorted region IDs for mapping
+    sorted_regions = zone_id(RegionTopology, p)
+    region_to_index = Dict(get_id(region) => i for (i, region) in enumerate(sorted_regions))
+    
+    for l in 1:L
+        println("Line ", l, " from ", start_regions[l], " to ", end_regions[l])
+        println("Line ", l, " from ", zone_id_inter(start_regions[l]), " to ", zone_id_inter(end_regions[l]))
+    end
+    for l in 1:L
+        start_idx = region_to_index[zone_id_inter(start_regions[l])]
+        end_idx = region_to_index[zone_id_inter(end_regions[l])]
+        mat[l, start_idx] = 1
+        mat[l, end_idx] = -1
+    end
+    mat
+end
 
 @doc raw"""
     load_network_map_from_list(network_var::DataFrame, Z, L, list_columns)

@@ -28,7 +28,7 @@ run_genx_case!("path/to/case", HiGHS.Optimizer)
 run_genx_case!("path/to/case", Gurobi.Optimizer)
 ```
 """
-function run_genx_case!(case::AbstractString; optimizer::Any = HiGHS.Optimizer, portfolio::Portfolio = Portfolio(0.0); tight_bigM = false)
+function run_genx_case!(case::AbstractString; optimizer::Any = HiGHS.Optimizer, portfolio::Portfolio = Portfolio(0.0), tight_bigM = false)
     print_genx_version() # Log the GenX version
     genx_settings = get_settings_path(case, "genx_settings.yml") # Settings YAML file path
     writeoutput_settings = get_settings_path(case, "output_settings.yml") # Write-output settings YAML file path
