@@ -50,7 +50,71 @@ max_cap_mw(t::SupplyTechnology) = get_max_cap_mw(t)
 min_cap_mw(t::SupplyTechnology) = get_min_cap_mw(t)
 """Get [`SupplyTechnology`](@ref) `up_time`."""
 up_time(t::SupplyTechnology) = get_time_limits(t).up
-fuel_costs(t::SupplyTechnology) = PSY.get_fuel_cost(PSY.get_variable(get_operation_costs(t)))
+#fuel_costs(t::SupplyTechnology) = PSY.get_fuel_cost(PSY.get_variable(get_operation_costs(t)))
+#=fuel_costs(t::SupplyTechnology) = begin
+    variable_cost = PSY.get_variable(get_operation_costs(t))
+    fuel_curve = IS.get_fuel_curve(IS.get_value_curve(variable_cost))
+    PSY.get_fuel_cost(fuel_curve)
+end=#
+
+# ...existing code...
+fuel_costs(t::SupplyTechnology) = begin
+    fuel_obj = get_fuel(t)
+    
+    # Handle the case where fuel_obj is a Vector{ThermalFuels}
+    if fuel_obj isa Vector
+        if isempty(fuel_obj)
+            return 0.0  # No fuels available
+        end
+        
+        # Get the first fuel (primary fuel)
+        primary_fuel = fuel_obj[1]
+        println("Primary fuel type: ", typeof(primary_fuel))
+        println("Primary fuel fieldnames: ", fieldnames(typeof(primary_fuel)))
+        
+        # Now try to get the cost from the individual fuel object
+        if hasfield(typeof(primary_fuel), :cost)
+            return primary_fuel.cost
+        elseif hasfield(typeof(primary_fuel), :fuel_cost)
+            return primary_fuel.fuel_cost
+        elseif hasfield(typeof(primary_fuel), :price)
+            return primary_fuel.price
+        elseif hasfield(typeof(primary_fuel), :value)
+            return primary_fuel.value  # This should work based on your output
+        elseif hasmethod(PSY.get_fuel_cost, (typeof(primary_fuel),))
+            return PSY.get_fuel_cost(primary_fuel)
+        else
+            # Try to get cost based on fuel name/type
+            fuel_name = get_name(primary_fuel)
+            println("Fuel name: ", fuel_name)
+            
+            # Default fuel costs by name ($/MMBtu)
+            default_costs = Dict(
+                "natural_gas" => 3.0,
+                "coal" => 2.0,
+                "oil" => 5.0,
+                "nuclear" => 1.0,
+                "biomass" => 4.0
+            )
+            
+            return get(default_costs, lowercase(string(fuel_name)), 3.0)
+        end
+    else
+        # Single fuel object case
+        if hasfield(typeof(fuel_obj), :cost)
+            return fuel_obj.cost
+        elseif hasfield(typeof(fuel_obj), :fuel_cost)
+            return fuel_obj.fuel_cost
+        elseif hasfield(typeof(fuel_obj), :price)
+            return fuel_obj.price
+        elseif hasfield(typeof(fuel_obj), :value)
+            return fuel_obj.value
+        else
+            return 0.0
+        end
+    end
+end
+# ...existing code...
 # """Get [`SupplyTechnology`](@ref) `financial_data`."""
 # get_financial_data(value::SupplyTechnology) = value.financial_data
 # """Get [`SupplyTechnology`](@ref) `base_power`."""
