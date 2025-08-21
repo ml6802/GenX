@@ -61,7 +61,7 @@ function get_genx_type(t::SupplyTechnology{PSY.RenewableDispatch})
 end
 
 function get_genx_type(t::SupplyTechnology{PSY.RenewableNonDispatch})
-    return GenX.Vre
+    return GenX.MustRun
 end
 
 function get_genx_type(t::StorageTechnology)
