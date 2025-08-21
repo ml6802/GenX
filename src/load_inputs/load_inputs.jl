@@ -162,7 +162,7 @@ function load_inputs_portfolio(setup::Dict, portfolio::PSIP.Portfolio, path::Abs
 
     # Read temporal-resolved load data, and clustering information if relevant
     load_demand_data!(setup, portfolio, inputs)
-    #load_demand_data!(setup, path, inputs)
+    # load_demand_data!(setup, path, inputs)
     # Read fuel cost data, including time-varying fuel costs
     load_fuels_data!(setup, portfolio, inputs)
     # Read in generator/resource related inputs

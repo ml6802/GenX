@@ -26,6 +26,7 @@ export run_timedomainreduction!
 
 using JuMP # used for mathematical programming
 using DataFrames #This package allows put together data into a matrix
+using TimeSeries
 using CSV
 using StatsBase
 using LinearAlgebra
@@ -51,7 +52,7 @@ using PowerSystemsInvestmentsPortfolios
 const PSIP=PowerSystemsInvestmentsPortfolios
 const IS=InfrastructureSystems
 const PSY=PowerSystems
-
+const TS=TimeSeries
 const PNM = PowerNetworkMatrices
 
 # Global scaling factor used when ParameterScale is on to shift values from MW to GW
