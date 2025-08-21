@@ -60,6 +60,10 @@ function get_genx_type(t::SupplyTechnology{PSY.RenewableDispatch})
     return GenX.Vre
 end
 
+function get_genx_type(t::SupplyTechnology{PSY.RenewableNonDispatch})
+    return GenX.Vre
+end
+
 function get_genx_type(t::StorageTechnology)
     return GenX.Storage
 end
@@ -428,6 +432,15 @@ function translate_resource_dict(p::Portfolio, t::SupplyTechnology{PSY.Renewable
     )
 end
 
+function translate_resource_dict(p::Portfolio, t::SupplyTechnology{PSY.RenewableNonDispatch})
+    default_attributes = default_resource_dict(p, t)
+    return merge(default_attributes,
+        Dict(
+            :vre_bins => 1
+        )
+    )
+end
+
 """
     create_resources_sametype_from_portfolio(p::Portfolio, PortfolioType, scale_factor::Float64)
 
@@ -520,10 +533,22 @@ function create_resource_array(inputs::Dict,
         p::Portfolio,
         scale_factor::Float64 = 1.0)
 
+    technologies = [i for i in get_technologies(ResourceTechnology, p) if !(occursin("SYNC_COND", i.name))]
+    for (i, t) in enumerate(technologies)
+        t.id = i
+    end
+
     resources = []
     # for (psip_type, genx_type) in resource_type_mapping
-    for t in get_technologies(ResourceTechnology, p)
+    for t in technologies
+        # if typeof(t) == SupplyTechnology{PSY.RenewableNonDispatch}
+        #     continue
+        # end
+        if occursin("SYNC_COND", t.name)
+            continue
+        end
         resource = translate_resource_dict(p, t)
+        println(typeof(resource))
         # scale_resources_data!(resource, scale_factor)
         genx_type = get_genx_type(t)
         push!(resources, genx_type(resource))
