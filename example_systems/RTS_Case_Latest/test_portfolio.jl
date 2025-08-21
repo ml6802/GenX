@@ -1,9 +1,9 @@
 ENV["GENX_PRECOMPILE"] = "false"
 
 using Pkg;
-project_dir = "/Users/sc87/code/NREL_Sienna/PowerSystemsInvestmentsPortfolios.jl"
-println("Activating project at: $project_dir")
-Pkg.activate(project_dir);
+#project_dir = "/Users/sc87/code/NREL_Sienna/PowerSystemsInvestmentsPortfolios.jl"
+#println("Activating project at: $project_dir")
+#Pkg.activate(project_dir);
 #Pkg.add("GenX")
 using Revise
 using GenX
@@ -821,11 +821,11 @@ end
 
 if read_from_json == false && rts_case == true
     # Build portfolio from the function above and then run GenX
-    case = joinpath(@__DIR__, "/Users/sc87/code/GenX_PowerGenome/GenX_Benders_DC_OPF/GenX/example_systems/RTS_Case_Latest/")
+    case = @__DIR__#joinpath(@__DIR__, "/Users/sc87/code/GenX_PowerGenome/GenX_Benders_DC_OPF/GenX/example_systems/RTS_Case_Latest/")
     p = load_rts(case)
 elseif read_from_json == true && rts_case == true
     # Load portfolio from file
-    case = joinpath(@__DIR__, "/Users/sc87/code/GenX_PowerGenome/PSIP_GenX/GenX/example_systems/portfolio_julia_20250512")
+    case = @__DIR__#joinpath(@__DIR__, "/Users/sc87/code/GenX_PowerGenome/PSIP_GenX/GenX/example_systems/portfolio_julia_20250512")
     case_json = joinpath(case, "portfolio_julia.json")
     p = PSIP.Portfolio(case_json)
 elseif read_from_json == false && rts_case == false
@@ -841,6 +841,8 @@ end
 # Run GenX case
 # run_genx_case!(case; optimizer = Gurobi.Optimizer, portfolio = p)
 run_genx_case!(case; optimizer = Gurobi.Optimizer, portfolio = p)
+
+
 
 # Testing individual build and solve functions
 if read_from_json == false && rts_case == true
