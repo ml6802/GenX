@@ -6,6 +6,8 @@ get_out(x::InOut) = x.out
 get_parameter_type(t::SupplyTechnology{T}) where T = T
 get_parameter_type(t::StorageTechnology{T}) where T = T
 get_parameter_type(::NodalACTransportTechnology{T}) where T = T
+get_existing_technologies(ec::ExistingCapacity) = ec.existing_technologies
+get_storage_capacity(ers::PSY.EnergyReservoirStorage) = ers.storage_capacity
 
 function existing_cap_mw(p::Portfolio, t::Union{ResourceTechnology, TransmissionTechnology})
     if IS.has_supplemental_attributes(ExistingCapacity, t)
@@ -19,7 +21,7 @@ end
 
 function existing_cap_mwh(p::Portfolio, t::StorageTechnology)
     if IS.has_supplemental_attributes(ExistingCapacity, t)
-        gen_names = IS.get_existing_technologies(IS.get_supplemental_attributes(ExistingCapacity, t)[1])
+        gen_names = get_existing_technologies(IS.get_supplemental_attributes(ExistingCapacity, t)[1])
         comp = PSY.get_component.(get_parameter_type(t), Ref(p.base_system), gen_names)
         return sum(get_storage_capacity(t) for t in comp)
     else

@@ -535,6 +535,7 @@ resource_type_mga(r::AbstractResource) = r.resource_type
 
 zone_id(r::AbstractResource) = r.zone
 zone_id(rs::Vector{T}) where {T <: AbstractResource} = zone_id.(rs)
+zone_id(node::Node) = node.id
 
 # getter for boolean attributes (true or false) with validation
 function new_build(r::AbstractResource)

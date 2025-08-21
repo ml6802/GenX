@@ -112,17 +112,17 @@ function load_demand_data!(setup::Dict, p::Portfolio, inputs::Dict)
     for (zone_idx, d) in enumerate(demand_in)
         load_data = []
         keys_ = IS.get_time_series_keys(d)
-        println("keys_ = $keys_")
+        #println("keys_ = $keys_")
         names = [x.name for x in keys_] 
-        println("names = $names")
+        #println("names = $names")
         types = [x.time_series_type for x in keys_]
-        println("types = $types")
+        #println("types = $types")
         feats = [x.features for x in keys_]
-        println("feats = $feats")
+        #println("feats = $feats")
         lengths = [x.length for x in keys_]
         T=sum(lengths)
-        println("T = $T")
-        println("lengths = $lengths")
+        #println("T = $T")
+        #println("lengths = $lengths")
 ##Uncomment these lines if using predictive timeseries, like in Stochastic Optimization
         #=temp_first_feats = Dict(Symbol.(keys(feats[1])) .=> values(feats[2]))
         println("temp_first_feats = $temp_first_feats")
@@ -134,13 +134,13 @@ function load_demand_data!(setup::Dict, p::Portfolio, inputs::Dict)
         ts_vals = [IS.get_time_series_values(type, d, name; temp_first_feats...) for type in types, name in names]=#
 ##Uncomment the above lines if using predictive timeseries, like in Stochastic Optimization
         ts_vals = PSIP.get_data(IS.get_time_series(d, keys_[1]))
-        println("ts_vals = $ts_vals")
+        #println("ts_vals = $ts_vals")
         if isempty(ts_vals)
             error("Time series data for $keys_ not found.")
         end
         # Get the region ID for this demand zone
         id = PSIP.get_id(d.region[1])
-        println("Zone $zone_idx has region ID: $id")
+        #println("Zone $zone_idx has region ID: $id")
 
         # Extract values from TimeArray - this is the key fix!
         if ts_vals isa TS.TimeArray
@@ -160,7 +160,7 @@ function load_demand_data!(setup::Dict, p::Portfolio, inputs::Dict)
     for (zone_idx, (id, demand_values)) in enumerate(all_demand_data)
         # Use zone_idx for matrix column, since we may not have sequential region IDs
         inputs["pD"][:, zone_idx]  = demand_values
-        println("Loaded demand data for zone $zone_idx (region ID: $id)")
+        #println("Loaded demand data for zone $zone_idx (region ID: $id)")
     end
 
     # Apply scaling factor

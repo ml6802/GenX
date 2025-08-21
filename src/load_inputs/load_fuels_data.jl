@@ -74,8 +74,10 @@ function collect_unique_fuels(p::Portfolio, T::Int, scale_factor::Number)
     fuel_CO2_dict = Dict{String, Float64}()
     seen_fuel_costs = Set{Union{Float64, IS.TimeSeriesKey}}()
     unique_fuel_count = 0
-    
-    for tech in get_technologies(SupplyTechnology{PSY.ThermalStandard}, p)
+
+    thermal_techs = [i for i in get_technologies(SupplyTechnology{PSY.ThermalStandard}, p) if !(occursin("SYNC_COND", i.name))]
+
+    for tech in thermal_techs
         tech_fuel_cost = fuel_costs(tech)
         
         if tech_fuel_cost ∉ seen_fuel_costs
