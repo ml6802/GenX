@@ -1,10 +1,32 @@
 ENV["GENX_PRECOMPILE"] = "false"
 
 using Pkg;
-#project_dir = "/Users/sc87/code/NREL_Sienna/PowerSystemsInvestmentsPortfolios.jl"
-#println("Activating project at: $project_dir")
-#Pkg.activate(project_dir);
-#Pkg.add("GenX")
+# Use relative paths from this file's location
+project_dir = abspath(joinpath(@__DIR__, "..", "..", "..", "..", "..", "NREL_Sienna", "PowerSystemsInvestmentsPortfolios.jl"))
+println("Activating project at: $project_dir")
+Pkg.activate(project_dir);
+
+# Add your local GenX as a development dependency
+genx_path = abspath(joinpath(@__DIR__, "..", ".."))
+println("Adding GenX from: $genx_path")
+Pkg.develop(path=genx_path)
+
+#=Uses @__DIR__ to get the current file's directory
+Uses joinpath() for cross-platform path handling
+Uses abspath() to resolve the full absolute path
+Works on any machine where the repository structure is the same
+Includes debug prints so you can verify the paths are correct
+The relative path navigation assumes your repository structure is:
+
+code/
+├── GenX_PowerGenome/
+│   └── GenX_Benders_DC_OPF/
+│       └── GenX/
+│           └── example_systems/
+│               └── RTS_Case_Latest/  # ← This file
+│                       └── test_portfolio.jl  # ← This file
+└── NREL_Sienna/
+    └── PowerSystemsInvestmentsPortfolios.jl/=#
 using Revise
 using GenX
 using PowerSystemsInvestmentsPortfolios
