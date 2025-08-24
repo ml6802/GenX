@@ -170,7 +170,7 @@ function load_inputs_portfolio(setup::Dict, portfolio::PSIP.Portfolio, path::Abs
     # Read in generator/resource availability profiles
     load_generators_variability!(setup, portfolio, inputs)
 
-    validatetimebasis(inputs)
+    #validatetimebasis(inputs)
 
     #Need to do this one
     if setup["CapacityReserveMargin"] == 1 #TODO
@@ -205,10 +205,11 @@ function load_inputs_portfolio(setup::Dict, portfolio::PSIP.Portfolio, path::Abs
         load_vre_stor_variability!(setup, path, inputs)
     end
 
+    #=NOT NEEDED IF NO TDR
     # Read in mapping of modeled periods to representative periods
     if is_period_map_necessary(inputs) && is_period_map_exist(setup, path)
         load_period_map!(setup, path, inputs)
-    end
+    end=#
 
     # Virtual charge discharge cost
     scale_factor = setup["ParameterScale"] == 1 ? ModelScalingFactor : 1
