@@ -3,6 +3,7 @@
 
 Read input parameters related to hourly maximum capacity factors for generators, storage, and flexible demand resources
 """
+const PSIP = PowerSystemsInvestmentsPortfolios
 function load_generators_variability!(setup::Dict, path::AbstractString, inputs::Dict)
 
     # Hourly capacity factors
@@ -89,7 +90,7 @@ function load_generators_variability!(setup::Dict, p::Portfolio, inputs::Dict)
                     println("Resource: ", r.name, " (ID: ", rid, ")")
                     IS.show_time_series(r)
                     println("########################################")
-                    IS.get_time_series_array(IS.SingleTimeSeries, r, "capacity_factor")
+                    PSIP.get_time_series_array(IS.SingleTimeSeries, r, "capacity_factor")
                     println("########################################")
 
                     # Filter for capacity_factor time series only
