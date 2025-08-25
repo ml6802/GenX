@@ -87,7 +87,7 @@ function load_generators_variability!(setup::Dict, p::Portfolio, inputs::Dict)
                     feats = [x.features for x in keys_]
                     println("########################################")
                     println("Resource: ", r.name, " (ID: ", rid, ")")
-                    #IS.show_time_series(r)
+                    IS.show_time_series(r)
                     println("########################################")
                     IS.get_time_series_array(IS.SingleTimeSeries, r, "capacity_factor")
                     println("########################################")
