@@ -160,7 +160,6 @@ function load_demand_data!(setup::Dict, p::Portfolio, inputs::Dict)
     for (zone_idx, (id, demand_values)) in enumerate(all_demand_data)
         # Use zone_idx for matrix column, since we may not have sequential region IDs
         inputs["pD"][:, zone_idx]  = demand_values
-        #println("Loaded demand data for zone $zone_idx (region ID: $id)")
     end
 
     # Apply scaling factor

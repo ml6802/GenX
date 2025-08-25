@@ -205,6 +205,7 @@ function load_inputs_portfolio(setup::Dict, portfolio::PSIP.Portfolio, path::Abs
         load_vre_stor_variability!(setup, path, inputs)
     end
 
+    #=NOT NEEDED IF NO TDR
     # Read in mapping of modeled periods to representative periods
     if !haskey(inputs, "REP_PERIOD")
         inputs["REP_PERIOD"] = 1
@@ -212,6 +213,7 @@ function load_inputs_portfolio(setup::Dict, portfolio::PSIP.Portfolio, path::Abs
     if is_period_map_necessary(inputs) && is_period_map_exist(setup, path)
         load_period_map!(setup, path, inputs)
     end
+    =#
     if !haskey(inputs, "START_SUBPERIODS")
         inputs["START_SUBPERIODS"] = [1]
     end
