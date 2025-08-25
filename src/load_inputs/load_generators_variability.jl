@@ -86,12 +86,12 @@ function load_generators_variability!(setup::Dict, p::Portfolio, inputs::Dict)
                     names = [x.name for x in keys_]
                     types = [x.time_series_type for x in keys_]
                     feats = [x.features for x in keys_]
-                    println("########################################")
-                    println("Resource: ", r.name, " (ID: ", rid, ")")
-                    IS.show_time_series(r)
-                    println("########################################")
-                    PSIP.get_time_series_array(IS.SingleTimeSeries, r, "capacity_factor")
-                    println("########################################")
+                    #println("########################################")
+                    #println("Resource: ", r.name, " (ID: ", rid, ")")
+                    #IS.show_time_series(r)
+                    #println("########################################")
+                    #PSIP.get_time_series_array(IS.SingleTimeSeries, r, "capacity_factor")
+                    #println("########################################")
 
                     # Filter for capacity_factor time series only
                     capacity_factor_indices = findall(name -> name == "capacity_factor", names)
@@ -101,15 +101,15 @@ function load_generators_variability!(setup::Dict, p::Portfolio, inputs::Dict)
                         cf_idx = capacity_factor_indices[1]
                         cf_name = names[cf_idx]
                         cf_type = types[cf_idx]
-                        cf_feat = feats[cf_idx]
+                        #cf_feat = feats[cf_idx]
                         
                         # Extract time series values for capacity_factor
-                        if !isempty(cf_feat)
-                            temp_first_feats = Dict(Symbol.(keys(cf_feat)) .=> values(cf_feat))
+                        #if !isempty(cf_feat)
+                            #temp_first_feats = Dict(Symbol.(keys(cf_feat)) .=> values(cf_feat))
                             
-                            ts_vals = IS.get_time_series_values(cf_type, r, cf_name; temp_first_feats...)
+                            #ts_vals = IS.get_time_series_values(cf_type, r, cf_name; temp_first_feats...)
                             #ts_vals = PSIP.get_data(IS.get_time_series(d, keys_[1]))
-                            
+                            ts_vals = IS.get_time_series_values(cf_type, r, cf_name)
                             if !isempty(ts_vals)
                                 var_data = reduce(vcat, ts_vals)
                                 
@@ -118,26 +118,26 @@ function load_generators_variability!(setup::Dict, p::Portfolio, inputs::Dict)
                                     # Take only the first T values if longer than T
                                     inputs["pP_Max"][row_idx, :] = var_data[1:T]
                                     @info "Capacity factor data loaded for resource $(r.name) (used first $T of $(length(var_data)) values)"
-                                    IS.show_time_series(r)
+                                    #IS.show_time_series(r)
                                 else
                                     @info "Capacity factor time series too short for resource $(r.name). Expected at least $T, got $(length(var_data)). Using default availability of 1.0."
-                                    IS.show_time_series(r)
+                                    #IS.show_time_series(r)
                                 end
                             else
                                 @info "No capacity factor time series values found for resource $(r.name). Using default availability of 1.0."
-                                IS.show_time_series(r)
+                                #IS.show_time_series(r)
                             end
-                        else
-                            @info "No features found for capacity factor time series for resource $(r.name). Using default availability of 1.0."
-                            IS.show_time_series(r)
-                        end
+                        #else
+                            #@info "No features found for capacity factor time series for resource $(r.name). Using default availability of 1.0."
+                            #IS.show_time_series(r)
+                        #end
                     else
                         @info "No capacity_factor time series found for resource $(r.name). Using default availability of 1.0."
-                        IS.show_time_series(r)
+                        #IS.show_time_series(r)
                     end
                 else
                     @info "No time series keys found for resource $(r.name). Using default availability of 1.0."
-                    IS.show_time_series(r)
+                    #IS.show_time_series(r)
                 end
                 
             catch e
