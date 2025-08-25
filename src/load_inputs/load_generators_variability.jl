@@ -86,12 +86,6 @@ function load_generators_variability!(setup::Dict, p::Portfolio, inputs::Dict)
                     names = [x.name for x in keys_]
                     types = [x.time_series_type for x in keys_]
                     feats = [x.features for x in keys_]
-                    #println("########################################")
-                    #println("Resource: ", r.name, " (ID: ", rid, ")")
-                    #IS.show_time_series(r)
-                    #println("########################################")
-                    #PSIP.get_time_series_array(IS.SingleTimeSeries, r, "capacity_factor")
-                    #println("########################################")
 
                     # Filter for capacity_factor time series only
                     capacity_factor_indices = findall(name -> name == "capacity_factor", names)
@@ -101,43 +95,82 @@ function load_generators_variability!(setup::Dict, p::Portfolio, inputs::Dict)
                         cf_idx = capacity_factor_indices[1]
                         cf_name = names[cf_idx]
                         cf_type = types[cf_idx]
-                        #cf_feat = feats[cf_idx]
                         
                         # Extract time series values for capacity_factor
-                        #if !isempty(cf_feat)
-                            #temp_first_feats = Dict(Symbol.(keys(cf_feat)) .=> values(cf_feat))
+                        ts_vals = IS.get_time_series_values(cf_type, r, cf_name)
+                        if !isempty(ts_vals)
+                            var_data = reduce(vcat, ts_vals)
                             
-                            #ts_vals = IS.get_time_series_values(cf_type, r, cf_name; temp_first_feats...)
-                            #ts_vals = PSIP.get_data(IS.get_time_series(d, keys_[1]))
-                            ts_vals = IS.get_time_series_values(cf_type, r, cf_name)
-                            if !isempty(ts_vals)
-                                var_data = reduce(vcat, ts_vals)
-                                
-                                # Only use time series if length >= T
-                                if length(var_data) >= T
-                                    # Take only the first T values if longer than T
-                                    inputs["pP_Max"][row_idx, :] = var_data[1:T]
-                                    @info "Capacity factor data loaded for resource $(r.name) (used first $T of $(length(var_data)) values)"
-                                    #IS.show_time_series(r)
-                                else
-                                    @info "Capacity factor time series too short for resource $(r.name). Expected at least $T, got $(length(var_data)). Using default availability of 1.0."
-                                    #IS.show_time_series(r)
-                                end
+                            # Only use time series if length >= T
+                            if length(var_data) >= T
+                                # Take only the first T values if longer than T
+                                inputs["pP_Max"][row_idx, :] = var_data[1:T]
+                                @info "Capacity factor data loaded for resource $(r.name) (used first $T of $(length(var_data)) values)"
                             else
-                                @info "No capacity factor time series values found for resource $(r.name). Using default availability of 1.0."
-                                #IS.show_time_series(r)
+                                @info "Capacity factor time series too short for resource $(r.name). Expected at least $T, got $(length(var_data)). Using default availability of 1.0."
                             end
-                        #else
-                            #@info "No features found for capacity factor time series for resource $(r.name). Using default availability of 1.0."
-                            #IS.show_time_series(r)
-                        #end
+                        else
+                            @info "No capacity factor time series values found for resource $(r.name). Using default availability of 1.0."
+                        end
                     else
                         @info "No capacity_factor time series found for resource $(r.name). Using default availability of 1.0."
-                        #IS.show_time_series(r)
                     end
                 else
                     @info "No time series keys found for resource $(r.name). Using default availability of 1.0."
-                    #IS.show_time_series(r)
+                end
+                
+                # If var_data is all zeros or empty, try to load from CSV files
+                if isempty(var_data) || all(x -> x == 0.0, var_data)
+                    @info "Attempting to load time series from CSV files for resource $(r.name) (ID: $rid)"
+                    
+                    # Define the timeseries data files and their paths
+                    timeseries_files = [
+                        "CSP/DAY_AHEAD_Natural_Inflow.csv",
+                        "Hydro/DAY_AHEAD_hydro.csv", 
+                        "PV/DAY_AHEAD_pv.csv",
+                        "RTPV/DAY_AHEAD_rtpv.csv",
+                        "WIND/DAY_AHEAD_wind.csv"
+                    ]
+                    
+                    # Try to find the resource ID in the CSV files
+                    data_loaded = false
+                    for ts_file in timeseries_files
+                        try
+                            # Construct the full path to the timeseries file
+                            ts_path = joinpath(dirname(dirname(@__DIR__)), "example_systems", "RTS_Case_Latest", "RTS_Data", "timeseries_data_files", ts_file)
+                            
+                            if isfile(ts_path)
+                                # Load the CSV file
+                                ts_df = load_dataframe(ts_path)
+                                
+                                # Check if resource ID exists as a column (convert to string to match column names)
+                                rid_str = string(rid)
+                                if rid_str in names(ts_df)
+                                    # Extract the time series data for this resource
+                                    csv_var_data = ts_df[!, rid_str]
+                                    
+                                    # Remove any missing values and convert to Float64
+                                    csv_var_data = Float64.(filter(!ismissing, csv_var_data))
+                                    
+                                    if length(csv_var_data) >= T
+                                        # Take only the first T values
+                                        inputs["pP_Max"][row_idx, :] = csv_var_data[1:T]
+                                        @info "Successfully loaded time series from $ts_file for resource $(r.name) (ID: $rid) - used first $T of $(length(csv_var_data)) values"
+                                        data_loaded = true
+                                        break
+                                    elseif length(csv_var_data) > 0
+                                        @warn "Time series in $ts_file for resource $(r.name) (ID: $rid) too short: $(length(csv_var_data)) < $T. Using default availability of 1.0."
+                                    end
+                                end
+                            end
+                        catch csv_error
+                            @debug "Error reading $ts_file for resource $(r.name): $csv_error"
+                        end
+                    end
+                    
+                    if !data_loaded
+                        @info "No suitable time series data found in CSV files for resource $(r.name) (ID: $rid). Using default availability of 1.0."
+                    end
                 end
                 
             catch e
