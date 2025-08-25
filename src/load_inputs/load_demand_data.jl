@@ -171,7 +171,7 @@ function load_demand_data!(setup::Dict, p::Portfolio, inputs::Dict)
     # SEG = length(segments[1].segments) # Upcoming feature in DemandRequirement
     SEG = 1  # Default to 1 for now
     inputs["SEG"] = SEG
-
+    inputs["omega"] = fill(1.0, T)
 ###Uncomment these lines if using TDR
     #=inputs["omega"] = zeros(Float64, T) # weights associated with operational sub-period in the model - sum of weight = 8760
     # Weights for each period - assumed same weights for each sub-period within a period
@@ -205,9 +205,10 @@ function load_demand_data!(setup::Dict, p::Portfolio, inputs::Dict)
     # Cost of non-served energy/demand curtailment
     # Cost of each segment reported as a fraction of value of non-served energy - scaled implicitly
     #*inputs["pC_D_Curtail"] = segments[1].curtailment_cost * inputs["Voll"][1]
-
+    inputs["pC_D_Curtail"] = [inputs["Voll"][1] for s in 1:SEG] #NOTE: DAVID NEEDS TO FIX THIS
     # Maximum hourly demand curtailable as % of the max demand (for each segment)
     #*inputs["pMax_D_Curtail"] = segments[1].max_demand_curtailment
+    inputs["pMax_D_Curtail"] = [1.0 for s in 1:SEG]
     println("Demand (load) data Successfully Read!")
     
 end

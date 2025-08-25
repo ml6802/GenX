@@ -24,7 +24,7 @@ resource_id(t::SupplyTechnology) = get_id(t)
 start_fuel_mmbtu_per_mw(t::SupplyTechnology) = get_start_fuel_mmbtu_per_mw(t)
 """Get [`SupplyTechnology`](@ref) `variable_om_cost_per_mwh`."""
 var_om_cost_per_mwh(t::SupplyTechnology) = IS.get_proportional_term(IS.get_vom_cost(PSY.get_variable(get_operation_costs(t))))
-PSY.get_fixed(c::PSY.RenewableGenerationCost) = c.variable.vom_cost.function_data.constant_term + c.variable.value_curve.function_data.constant_term
+PSY.get_fixed(c::PSY.RenewableGenerationCost) = c.variable.value_curve.function_data.constant_term
 """Get [`SupplyTechnology`](@ref) `fixed_om_cost_per_mwhyr`."""
 fixed_om_cost_per_mwyr(t::SupplyTechnology) = PSY.get_fixed(get_operation_costs(t))
 """Get [`SupplyTechnology`](@ref) `fuel`."""
@@ -38,7 +38,7 @@ region(t::SupplyTechnology) = get_region(t)
 """Get [`SupplyTechnology`](@ref) `ramp_up_percentage`."""
 ramp_up_fraction(t::SupplyTechnology) = get_ramp_limits(t).up
 """Get [`SupplyTechnology`](@ref) `unit_size`."""
-cap_size(t::SupplyTechnology) = get_unit_size(t)
+cap_size(t::SupplyTechnology) = get_capacity_limits(t)[:max]#get_unit_size(t)
 """Get [`SupplyTechnology`](@ref) `min_generation_percentage`."""
 min_power(t::SupplyTechnology) = get_min_generation_fraction(t)
 """Get [`SupplyTechnology`](@ref) `start_cost_per_mw`."""

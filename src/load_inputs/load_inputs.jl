@@ -170,7 +170,7 @@ function load_inputs_portfolio(setup::Dict, portfolio::PSIP.Portfolio, path::Abs
     # Read in generator/resource availability profiles
     load_generators_variability!(setup, portfolio, inputs)
 
-    validatetimebasis(inputs)
+    #validatetimebasis(inputs)
 
     #Need to do this one
     if setup["CapacityReserveMargin"] == 1 #TODO
@@ -197,17 +197,32 @@ function load_inputs_portfolio(setup::Dict, portfolio::PSIP.Portfolio, path::Abs
         load_energy_share_requirement!(setup, policies_path, inputs)
     end
 
-    if setup["CO2Cap"] >= 1
-        load_co2_cap!(setup, portfolio, inputs)
-    end
+    # if setup["CO2Cap"] >= 1
+    #     load_co2_cap!(setup, portfolio, inputs)
+    # end
 
     if !isempty(inputs["VRE_STOR"]) #TODO
         load_vre_stor_variability!(setup, path, inputs)
     end
 
     # Read in mapping of modeled periods to representative periods
+    if !haskey(inputs, "REP_PERIOD")
+        inputs["REP_PERIOD"] = 1
+    end
     if is_period_map_necessary(inputs) && is_period_map_exist(setup, path)
         load_period_map!(setup, path, inputs)
+    end
+    if !haskey(inputs, "START_SUBPERIODS")
+        inputs["START_SUBPERIODS"] = [1]
+    end
+    if !haskey(inputs, "INTERIOR_SUBPERIODS")
+        inputs["INTERIOR_SUBPERIODS"] = [i for i in 2:inputs["T"]]
+    end
+    if !haskey(inputs, "hours_per_subperiod")
+        inputs["hours_per_subperiod"] = 8784
+    end
+    if !haskey(inputs, "NCO2Cap")
+        inputs["NCO2Cap"] = 0
     end
 
     # Virtual charge discharge cost

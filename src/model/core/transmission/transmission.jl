@@ -302,7 +302,7 @@ function transmission!(EP::Model, inputs::Dict, setup::Dict)
                     # (and takes on value of the full positive flow), forcing all other vTAUX_NEG segments (s>=1) to be zero
                     cTAuxSegmentZeroNeg[l in LOSS_LINES, t = 1:T],
                     vTAUX_NEG[l, 0, t] <=
-                    inputs["pTrans_Max_Possible"][l] * (1 - vTAUX_NEG_ON[l, 1, t])
+                    inputs[""][l] * (1 - vTAUX_NEG_ON[l, 1, t])
                 end)
         end
     end # End if(TRANS_LOSS_SEGS > 0) block

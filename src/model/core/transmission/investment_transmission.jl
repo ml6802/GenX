@@ -29,11 +29,11 @@ function investment_transmission!(EP::Model, inputs::Dict, setup::Dict)
     println("Investment Transmission Module")
 
     L = inputs["L"]     # Number of transmission lines
-    L_cand = inputs["L_cand"]     # Number of candidate transmission lines
     NetworkExpansion = setup["NetworkExpansion"]
     MultiStage = setup["MultiStage"]
 
     if NetworkExpansion == 1
+        L_cand = inputs["L_cand"]     # Number of candidate transmission lines
         # Network lines and zones that are expandable have non-negative maximum reinforcement inputs
         EXPANSION_LINES = inputs["EXPANSION_LINES"]
         if setup["DC_OPF"] == 1

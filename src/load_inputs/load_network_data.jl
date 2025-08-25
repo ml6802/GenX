@@ -363,6 +363,7 @@ function load_network_data!(setup::Dict, p::Portfolio, inputs::Dict)
             inputs["Ohms"] = [resistance(l) for l in lines]
         end
 
+        println("ENTERING DCOPF")
         ## Inputs for the DC-OPF
         if setup["DC_OPF"] == 1
             if setup["NetworkExpansion"] == 1
@@ -374,6 +375,13 @@ function load_network_data!(setup::Dict, p::Portfolio, inputs::Dict)
             line_voltage_kV = [voltage(l) for l in lines]
             # Transmission line reactance (in Ohms)
             line_reactance_Ohms = [resistance(l) for l in lines]
+
+            for l in 1:length(lines)
+                if line_voltage_kV[l] == 0
+                    line_voltage_kV[l] = 10
+                end
+            end
+
             # Line angle limit (in radians)
             inputs["Line_Angle_Limit"] = [deg2rad(10.0) for l in lines] #FIXME
             # DC-OPF coefficient for each line (in MW when not scaled, in GW when scaled) 

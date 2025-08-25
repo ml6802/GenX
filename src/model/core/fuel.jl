@@ -184,7 +184,7 @@ function fuel!(EP::Model, inputs::Dict, setup::Dict)
 
     @expression(EP, eCFuelStart[y = 1:G, t = 1:T],
         if y in SINGLE_FUEL
-            (fuel_costs[fuel(gen[y])][t] * EP[:vStartFuel][y, t])
+            (fuel_costs[fuel(gen[y])][mod1(t, 24)] * EP[:vStartFuel][y, t])
         else
             sum(EP[:eCFuelOut_multi_start][y, i, t] for i in 1:max_fuels)
         end)
@@ -209,7 +209,7 @@ function fuel!(EP::Model, inputs::Dict, setup::Dict)
 
     @expression(EP, eCFuelOut[y = 1:G, t = 1:T],
         if y in SINGLE_FUEL
-            (fuel_costs[fuel(gen[y])][t] * EP[:vFuel][y, t])
+            (fuel_costs[fuel(gen[y])][mod1(t, 24)] * EP[:vFuel][y, t])
         else
             sum(EP[:eCFuelOut_multi][y, i, t] for i in 1:max_fuels)
         end)
