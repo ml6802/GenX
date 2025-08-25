@@ -838,11 +838,82 @@ else
     case_json = joinpath(case, "portfolio_julia.json")
     p = PSIP.Portfolio(case_json)
 end
+
+
+ts = collect(get_technologies(ResourceTechnology, p));
+
+for (i, t) in enumerate(ts)
+    if typeof(t) == SupplyTechnology{PSY.ThermalStandard}
+        println(i, "   ", typeof(t.operation_costs.variable))
+    end
+    # if IS.has_supplemental_attributes(ExistingCapacity, t)
+        # println("Resource ", i, " (", typeof(t), ") has supplemental attributes.")
+        # break
+    # end
+end
+ts4 = ts[4]
+
+
+genx_settings = GenX.get_settings_path(case, "genx_settings.yml") # Settings YAML file path
+writeoutput_settings = GenX.get_settings_path(case, "output_settings.yml") # Write-output settings YAML file path
+mysetup = GenX.configure_settings(genx_settings, writeoutput_settings) # mysetup dictionary stores settings and GenX-specific parameters
+
+mysetup["DC_OPF"] = 1
+myinputs = GenX.load_inputs(mysetup, case, p)
+
+# rs = myinputs["RESOURCES"]
+# for (i, r) in enumerate(rs)
+#     println(i, "   ", GenX.cap_size(r))
+# end
+
+# add candidate data
+L_cand = myinputs["L"]
+myinputs["L_cand"] = L_cand
+myinputs["pNet_Map_cand"] = copy(myinputs["pNet_Map"])
+myinputs["pDC_OPF_coeff_cand"] = copy(myinputs["pDC_OPF_coeff"])
+myinputs["LineAngle_Limit"] = [6.282 for i in 1:L_cand]
+myinputs["Line_Angle_Limit_cand"] = myinputs["Line_Angle_Limit"]
+
+# one level of expansion for each line
+# equal to half of existing capacity for any given line pTrans_Max
+myinputs["Line_Reinforcement_Cap_Size"] = [i * .5 for i in myinputs["pTrans_Max"]]
+myinputs["Max_Trans_Cap"] = [1 for i in myinputs["pTrans_Max"]]
+myinputs["pMax_Line_Reinforcement"] = [myinputs["Line_Reinforcement_Cap_Size"][i] * myinputs["Max_Trans_Cap"][i] for i in 1:L_cand]
+myinputs["pTrans_Max_Possible"] = myinputs["pTrans_Max"] .+ myinputs["pMax_Line_Reinforcement"]
+
+
+EXPANSION_LEVELS = Dict{Int, Vector}()
+for i in 1:L_cand
+    EXPANSION_LEVELS[i] = (0:1:myinputs["Max_Trans_Cap"][i])
+end
+#EXPANSION_LEVELS = [[1] for i in 1:L_cand] # needs to be a dictionary
+EXPANSION_LINES = [i for i in 1:L_cand]
+
+myinputs["EXPANSION_LINES"] = EXPANSION_LINES
+myinputs["EXPANSION_LEVELS"] = EXPANSION_LEVELS
+
+lines = collect(get_technologies(TransmissionTechnology, p));
+myinputs["pC_Line_Reinforcement"] = zeros(length(lines))
+using Random
+Random.seed!(1)
+for i in 1:length(lines)
+    distance = 60 * rand()
+    size_mw = myinputs["Line_Reinforcement_Cap_Size"][i]
+    myinputs["pC_Line_Reinforcement"][i] = distance * size_mw * 2#000
+end
+
+
+# get 1/2 of existing line capacity? 
+# multiply existing line capacity by expansion size
+
+# pC_Line_Reinforcement - cost
+
 # Run GenX case
 # run_genx_case!(case; optimizer = Gurobi.Optimizer, portfolio = p)
-run_genx_case!(case; optimizer = Gurobi.Optimizer, portfolio = p)
+m = run_genx_case!(case; optimizer = Gurobi.Optimizer, portfolio = p)
 
-
+a=1
+#=
 
 # Testing individual build and solve functions
 if read_from_json == false && rts_case == true
@@ -925,3 +996,4 @@ for k in keys
         print("\nKey not in portfolio inputs: ", k)
     end
 end
+=#
