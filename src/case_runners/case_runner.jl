@@ -108,7 +108,6 @@ function run_genx_case_simple!(case::AbstractString, mysetup::Dict, optimizer::A
     EP = generate_model(mysetup, myinputs, OPTIMIZER)
     println("Time elapsed for model building is")
     println(time_elapsed)
-    set_optimizer_attribute(EP, "TimeLimit", 3)
 
     println("Solving Model")
     EP, solve_time = solve_model(EP, mysetup)

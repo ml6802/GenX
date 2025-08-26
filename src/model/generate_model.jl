@@ -138,6 +138,7 @@ function operation_model!(EP::Model,setup::Dict, inputs::Dict)
 
     # Energy losses related to technologies
     create_empty_expression!(EP, :eELOSSByZone, Z)
+    create_empty_expression!(EP, :eLosses_By_Zone, (Z, T))
 
     # Initialize Capacity Reserve Margin Expression
     if setup["CapacityReserveMargin"] > 0
