@@ -54,7 +54,7 @@ function load_fuels_data!(setup::Dict, p::Portfolio, inputs::Dict)
     scale_factor = setup["ParameterScale"] == 1 ? ModelScalingFactor : 1
 
     # Process fuels data
-    fuels_data = collect_unique_fuels(p, T, scale_factor)
+    fuels_data = collect_unique_fuels(p, T, scale_factor, inputs)
 
     # Add default "None" fuel if missing
     add_default_fuel!(fuels_data, T)
@@ -84,7 +84,7 @@ function load_fuels_data!(setup::Dict, p::Portfolio, inputs::Dict)
 end
 
 # Fuel costs & CO2 emissions rate for each fuel type
-function collect_unique_fuels(p::Portfolio, T::Int, scale_factor::Number)
+function collect_unique_fuels(p::Portfolio, T::Int, scale_factor::Number, inputs::Dict)
     fuel_names = String[]
     rid_fuel_name_map = Dict{Int, String}()
     fuel_costs_dict = Dict{String, Any}()
@@ -93,10 +93,12 @@ function collect_unique_fuels(p::Portfolio, T::Int, scale_factor::Number)
     unique_fuel_count = 0
 
     thermal_techs = [i for i in get_technologies(SupplyTechnology{PSY.ThermalStandard}, p) if !(occursin("SYNC_COND", i.name))]
-
     for tech in thermal_techs
         tech_fuel_cost = fuel_costs(tech)
-        
+        fuel_data = create_fuel_entry(tech, unique_fuel_count, T, scale_factor)
+        rid_fuel_name_map[resource_id(tech)] = fuel_data.name
+        fuel_costs_dict[fuel_data.name] = fuel_data.cost
+        fuel_CO2_dict[fuel_data.name] = fuel_data.co2_content
         if tech_fuel_cost ∉ seen_fuel_costs
             unique_fuel_count += 1
             fuel_data = create_fuel_entry(tech, unique_fuel_count, T, scale_factor)
@@ -104,7 +106,7 @@ function collect_unique_fuels(p::Portfolio, T::Int, scale_factor::Number)
             
             # Update all dictionaries
             push!(fuel_names, fuel_data.name)
-            rid_fuel_name_map[resource_id(tech)] = fuel_data.name
+            #rid_fuel_name_map[tech_to_index[resource_id(tech)]] = fuel_data.name
             fuel_costs_dict[fuel_data.name] = fuel_data.cost
             fuel_CO2_dict[fuel_data.name] = fuel_data.co2_content
         end

@@ -571,6 +571,15 @@ function create_resource_array(inputs::Dict,
         error("No resources data found. Check data path or configuration file \"genx_settings.yml\" inside Settings.")
 
     resources = reduce(vcat, resources)
+
+    old_rid_fuel_name_map = inputs["rid_fuel_name_map"]
+    new_rid_fuel_name_map = Dict{Int, String}()
+    for key in keys(old_rid_fuel_name_map)
+        new_rid = technology_to_index[key]
+        new_rid_fuel_name_map[new_rid] = old_rid_fuel_name_map[key]
+    end
+    inputs["rid_fuel_name_map"] = new_rid_fuel_name_map
+
     update_fuel_costs!(resources, inputs)
     return resources
 end

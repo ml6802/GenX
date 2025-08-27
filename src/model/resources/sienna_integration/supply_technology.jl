@@ -1,5 +1,5 @@
 can_retire(t::ResourceTechnology) = IS.has_supplemental_attributes(RetirementPotential, t)
-IS.get_proportional_term(c::IS.PiecewiseIncrementalCurve) = first(c.function_data.y_coords)
+IS.get_proportional_term(c::IS.PiecewiseIncrementalCurve) = first(c.initial_input)
 """Get [`SupplyTechnology`](@ref) `heat_rate_mmbtu_per_mwh`."""
 heat_rate_mmbtu_per_mwh(t::SupplyTechnology) = IS.get_proportional_term(IS.get_value_curve(PSY.get_variable(get_operation_costs(t))))
 """Get [`SupplyTechnology`](@ref) `capital_costs`."""
@@ -11,7 +11,7 @@ lifetime(t::SupplyTechnology) = get_lifetime(t)
 """Get [`SupplyTechnology`](@ref) `ramp_dn_percentage`."""
 ramp_down_fraction(t::SupplyTechnology) = get_ramp_limits(t).down
 """Get [`SupplyTechnology`](@ref) `available`."""
-new_build(t::SupplyTechnology) = Bool(get_available(t) && IS.has_supplemental_attributes(ExistingCapacity, t))
+new_build(t::SupplyTechnology) = Bool(get_available(t) && !(IS.has_supplemental_attributes(ExistingCapacity, t)))
 """Get [`SupplyTechnology`](@ref) `co2`."""
 co2_content(t::SupplyTechnology) = get_co2(t)
 """Get [`SupplyTechnology`](@ref) `name`."""
