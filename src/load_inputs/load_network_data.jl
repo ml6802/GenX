@@ -472,6 +472,13 @@ function load_network_map(lines::Vector{TransmissionTechnology}, Z, L)
     mat
 end
 
+function region_sorting(lines::Vector{TransmissionTechnology}, Z, L, p::Portfolio, inputs::Dict)
+    # Sort regions based on their IDs
+    sorted_regions = sort(unique([start_region(l) for l in lines] ∪ [end_region(l) for l in lines]))
+    region_to_index = Dict(region => i for (i, region) in enumerate(sorted_regions))
+    inputs["region_to_index"] = region_to_index
+end
+
 function load_network_map(lines::Vector{AggregateTransportTechnology}, Z, L, p::Portfolio)
     mat = zeros(L, Z)
     start_regions = [start_region(l) for l in lines]

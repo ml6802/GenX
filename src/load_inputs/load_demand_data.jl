@@ -97,7 +97,7 @@ end
 
 Read input parameters related to electricity demand (load) from portfolio
 """
-function load_demand_data!(setup::Dict, p::Portfolio, inputs::Dict)
+function load_demand_data!(setup::Dict, p::Portfolio, inputs::Dict, path::AbstractString)
 
     # Load related inputs
     # Loads DemandRequirement and DemandSideTechnology (for flexible demand and demand curtailment)
@@ -134,13 +134,14 @@ function load_demand_data!(setup::Dict, p::Portfolio, inputs::Dict)
         ts_vals = [IS.get_time_series_values(type, d, name; temp_first_feats...) for type in types, name in names]=#
 ##Uncomment the above lines if using predictive timeseries, like in Stochastic Optimization
         ts_vals = PSIP.get_data(IS.get_time_series(d, keys_[1]))
-        #println("ts_vals = $ts_vals")
+        PSIP.get_peak_demand_mw(d) #Wait for Jerry's unit conversion fix
+        println("ts_vals = $ts_vals")
         if isempty(ts_vals)
             error("Time series data for $keys_ not found.")
         end
         # Get the region ID for this demand zone
         id = PSIP.get_id(d.region[1])
-        #println("Zone $zone_idx has region ID: $id")
+        println("Zone $zone_idx has region ID: $id")
 
         # Extract values from TimeArray - this is the key fix!
         if ts_vals isa TS.TimeArray
@@ -160,11 +161,16 @@ function load_demand_data!(setup::Dict, p::Portfolio, inputs::Dict)
     for (zone_idx, (id, demand_values)) in enumerate(all_demand_data)
         # Use zone_idx for matrix column, since we may not have sequential region IDs
         inputs["pD"][:, zone_idx]  = demand_values
+        println("Zone $zone_idx (Region ID: $id) demand values loaded.")
+        print("Demand values: $demand_values")
     end
 
     # Apply scaling factor
     scale_factor = setup["ParameterScale"] == 1 ? ModelScalingFactor : 1
     inputs["pD"] = inputs["pD"] / scale_factor
+
+    # Validate demand totals against DAY_AHEAD_regional_Load.csv
+    validate_demand_totals(setup, inputs, all_demand_data, scale_factor, path)
 
     # Number of demand curtailment/lost load segments
     # SEG = length(segments[1].segments) # Upcoming feature in DemandRequirement
@@ -298,5 +304,80 @@ function prevent_doubled_timedomainreduction(path::AbstractString)
               the number of representative periods (:Rep_Period) is ($representative_periods)
               and the number of subperiod weight entries (:Sub_Weights) is ($num_sub_weights).
               Each of these must be 1: only a single period can have TimeDomainReduction applied.""")
+    end
+end
+
+"""
+    validate_demand_totals(setup::Dict, inputs::Dict, all_demand_data::Vector, scale_factor::Float64)
+
+Validate that the sum of demand values across all nodes matches the regional totals 
+from DAY_AHEAD_regional_Load.csv file.
+"""
+function validate_demand_totals(setup::Dict, inputs::Dict, all_demand_data::Vector, scale_factor::Float64, path::AbstractString)
+    try
+        # Try to load the DAY_AHEAD_regional_Load.csv file
+        csv_path = joinpath(dirname(path), "DAY_AHEAD_regional_Load.csv")
+        if !isfile(csv_path)
+            @warn "DAY_AHEAD_regional_Load.csv not found at $csv_path. Skipping demand validation."
+            return
+        end
+        
+        # Load the CSV file
+        regional_demand_df = CSV.read(csv_path, DataFrame)
+        
+        # Sum demand across all zones for each hour from portfolio data
+        portfolio_hourly_totals = sum(inputs["pD"] * scale_factor, dims=2)[:, 1]  # Sum across zones, restore original scale
+        
+        # Find the "Period" column and get all columns after it (these should be the zone columns)
+        all_column_names = names(regional_demand_df)
+        period_col_idx = findfirst(name -> occursin("period", lowercase(string(name))), all_column_names)
+        
+        if period_col_idx === nothing
+            @warn "Period column not found in DAY_AHEAD_regional_Load.csv. Looking for zone columns by name pattern."
+            zone_columns = filter(name -> occursin("zone", lowercase(string(name))) || 
+                                        occursin("region", lowercase(string(name))) ||
+                                        occursin("load", lowercase(string(name))), 
+                                all_column_names)
+        else
+            # Get all columns after the Period column (these are the zone columns)
+            zone_columns = all_column_names[(period_col_idx + 1):end]
+            println("Found Period column at position $period_col_idx. Zone columns: $zone_columns")
+        end
+        
+        if length(zone_columns) >= 3
+            csv_hourly_totals = sum(Matrix(regional_demand_df[:, zone_columns[1:3]]), dims=2)[:, 1]
+            println("Using first 3 zone columns for validation: $(zone_columns[1:3])")
+        else
+            @warn "Expected at least 3 zone columns in DAY_AHEAD_regional_Load.csv, found $(length(zone_columns)). Skipping validation."
+            return
+        end
+        
+        # Ensure both arrays have the same length
+        min_length = min(length(portfolio_hourly_totals), length(csv_hourly_totals))
+        portfolio_subset = portfolio_hourly_totals[1:min_length]
+        csv_subset = csv_hourly_totals[1:min_length]
+        
+        # Compare the totals with tolerance for numerical precision
+        tolerance = 1e-6
+        differences = abs.(portfolio_subset - csv_subset)
+        max_difference = maximum(differences)
+        relative_error = max_difference / maximum(abs.(csv_subset))
+        
+        println("=== Demand Validation Results ===")
+        println("Portfolio total demand (first 5 hours): $(portfolio_subset[1:min(5, end)])")
+        println("CSV total demand (first 5 hours): $(csv_subset[1:min(5, end)])")
+        println("Maximum absolute difference: $max_difference")
+        println("Maximum relative error: $(relative_error * 100)%")
+        
+        if max_difference > tolerance
+            @warn "Demand validation failed! Maximum difference ($max_difference) exceeds tolerance ($tolerance)"
+            @warn "Portfolio and CSV demand totals do not match within expected precision"
+        else
+            println("✓ Demand validation passed! Portfolio and CSV totals match within tolerance.")
+        end
+        
+    catch e
+        @warn "Error during demand validation: $e"
+        @warn "Continuing without validation..."
     end
 end
