@@ -61,6 +61,23 @@ function load_fuels_data!(setup::Dict, p::Portfolio, inputs::Dict)
     
     # Update inputs dictionary
     update_inputs!(inputs, fuels_data)
+
+    function repeat_to_length(v::Vector, M::Int)
+        N = length(v)
+        reps = ceil(Int, M / N)           # how many times we need to repeat
+        long = repeat(v, reps)            # repeat enough times
+        return long[1:M]                  # truncate to exactly length M
+    end
+    
+    fuel_costs = inputs["fuel_costs"]
+    for key in keys(fuel_costs)
+        v = fuel_costs[key]
+        if length(v) < inputs["T"]
+            v = repeat_to_length(v, inputs["T"])
+            fuel_costs[key] = v
+        end
+    end
+    inputs["fuel_costs"] = fuel_costs
     
     println("Fuels data Successfully Read!")
     return nothing

@@ -534,9 +534,18 @@ function create_resource_array(inputs::Dict,
         scale_factor::Float64 = 1.0)
 
     technologies = [i for i in get_technologies(ResourceTechnology, p) if !(occursin("SYNC_COND", i.name))]
+    
+    technology_to_index = Dict{Int, Int}()
+    index_to_technology = Dict{Int, Int}()
+    
     for (i, t) in enumerate(technologies)
-        t.id = i
+        technology_to_index[t.id] = i
+        index_to_technology[i] = t.id
     end
+
+    region_to_index = inputs["region_to_index"]
+    inputs["technology_to_index"] = technology_to_index
+    inputs["index_to_technology"] = index_to_technology
 
     resources = []
     # for (psip_type, genx_type) in resource_type_mapping
@@ -548,10 +557,14 @@ function create_resource_array(inputs::Dict,
             continue
         end
         resource = translate_resource_dict(p, t)
-        println(typeof(resource))
         # scale_resources_data!(resource, scale_factor)
         genx_type = get_genx_type(t)
-        push!(resources, genx_type(resource))
+        new_resource = genx_type(resource)
+        old_zone = parent(new_resource)[:zone]
+        parent(new_resource)[:zone] = region_to_index[old_zone]
+        old_tech_id = parent(new_resource)[:id]
+        parent(new_resource)[:id] = technology_to_index[old_tech_id]
+        push!(resources, new_resource)
         @info resource_name(t) * " Successfully Read."
     end
     isempty(resources) &&

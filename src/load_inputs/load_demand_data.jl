@@ -108,6 +108,8 @@ function load_demand_data!(setup::Dict, p::Portfolio, inputs::Dict, path::Abstra
     first_d = demand_in[1]
     IS.show_time_series(first_d)
     T=0
+    region_to_index = inputs["region_to_index"]
+    index_to_region = inputs["index_to_region"]
     all_demand_data = []
     for (zone_idx, d) in enumerate(demand_in)
         load_data = []
@@ -134,35 +136,37 @@ function load_demand_data!(setup::Dict, p::Portfolio, inputs::Dict, path::Abstra
         ts_vals = [IS.get_time_series_values(type, d, name; temp_first_feats...) for type in types, name in names]=#
 ##Uncomment the above lines if using predictive timeseries, like in Stochastic Optimization
         ts_vals = PSIP.get_data(IS.get_time_series(d, keys_[1]))
-        PSIP.get_peak_demand_mw(d) #Wait for Jerry's unit conversion fix
-        println("ts_vals = $ts_vals")
+        max_demand = PSIP.get_peak_demand_mw(d) #Wait for Jerry's unit conversion fix
+        max_demand = 1#PSIP.get_peak_demand_mw(d) #Wait for Jerry's unit conversion fix
+        println("max_demand is ", max_demand)
+        #println("ts_vals = $ts_vals")
         if isempty(ts_vals)
             error("Time series data for $keys_ not found.")
         end
         # Get the region ID for this demand zone
         id = PSIP.get_id(d.region[1])
-        println("Zone $zone_idx has region ID: $id")
-
+        #println("Zone $zone_idx has region ID: $id")
+        genx_id = region_to_index[id]
         # Extract values from TimeArray - this is the key fix!
         if ts_vals isa TS.TimeArray
-            demand_values = values(ts_vals)  # Extract the actual numeric values
+            demand_values = values(ts_vals) .* max_demand  # Extract the actual numeric values
         else
-            demand_values = ts_vals  # If it's already a vector, use as-is
+            demand_values = ts_vals .* max_demand # If it's already a vector, use as-is
         end
         
         # Store the time series data
-        push!(all_demand_data, (id, demand_values))
+        push!(all_demand_data, (genx_id, demand_values))
     end
 
     inputs["T"] = T
     inputs["pD"] = zeros( T, length(demand_in) )
     
     # Populate the demand matrix
-    for (zone_idx, (id, demand_values)) in enumerate(all_demand_data)
+    for (genx_id, demand_values) in all_demand_data
         # Use zone_idx for matrix column, since we may not have sequential region IDs
-        inputs["pD"][:, zone_idx]  = demand_values
-        println("Zone $zone_idx (Region ID: $id) demand values loaded.")
-        print("Demand values: $demand_values")
+        inputs["pD"][:, genx_id]  = demand_values
+        println("Zone $genx_id (Region ID: $(index_to_region[genx_id])) demand values loaded.")
+        print("Demand values: $(sum(demand_values))")
     end
 
     # Apply scaling factor

@@ -53,6 +53,8 @@ function load_generators_variability!(setup::Dict, p::Portfolio, inputs::Dict)
     
     T = inputs["T"]
     G = inputs["G"]
+
+    index_to_technology = inputs["index_to_technology"]
     
     # Initialize the pP_Max matrix (G resources x T time steps)
     inputs["pP_Max"] = ones(Float64, G, T)
@@ -64,7 +66,7 @@ function load_generators_variability!(setup::Dict, p::Portfolio, inputs::Dict)
         # Find the resource with this name to get its ID
         for r in resources
             if r.name == resource_name
-                resource_id_to_index[r.id] = idx
+                resource_id_to_index[r.id] = idx #points from PSIP tech id to resource id
                 break
             end
         end

@@ -346,13 +346,15 @@ function load_network_data!(setup::Dict, p::Portfolio, inputs::Dict)
     # Only proceed if we have lines
     if L > 0
         # Topology of the network source-sink matrix
-        inputs["pNet_Map"] = load_network_map(lines, Z, L, p)
+        mat, region_to_index, index_to_region, region_to_area = load_network_map(lines, Z, L, p)
+        inputs["pNet_Map"] = mat
+        inputs["region_to_index"] = region_to_index
+        inputs["index_to_region"] = index_to_region
+        inputs["region_to_area"] = region_to_area
 
         # Transmission capacity of the network (in MW)
         inputs["pTrans_Max"] = [existing_cap_mw(p, l) for l in lines] / scale_factor  # convert to GW
         
-        
-
         if setup["Trans_Loss_Segments"] == 1
             # Line percentage Loss - valid for case when modeling losses as a fixed percent of absolute value of power flows
             inputs["pPercent_Loss"] = [line_loss(l) for l in lines]
@@ -479,50 +481,74 @@ function region_sorting(lines::Vector{TransmissionTechnology}, Z, L, p::Portfoli
     inputs["region_to_index"] = region_to_index
 end
 
-function load_network_map(lines::Vector{AggregateTransportTechnology}, Z, L, p::Portfolio)
-    mat = zeros(L, Z)
-    start_regions = [start_region(l) for l in lines]
-    end_regions = [end_region(l) for l in lines]
+# function load_network_map(lines::Vector{AggregateTransportTechnology}, Z, L, p::Portfolio)
+#     mat = zeros(L, Z)
+#     start_regions = [start_region(l) for l in lines]
+#     end_regions = [end_region(l) for l in lines]
         
-    # Get sorted region IDs for mapping
-    sorted_regions = zone_id(RegionTopology, p)
-    region_to_index = Dict(get_id(region) => i for (i, region) in enumerate(sorted_regions))
-    
-    # for l in 1:L
-    #     println("Line ", l, " from ", start_regions[l], " to ", end_regions[l])
-    #     println("Line ", l, " from ", zone_id_inter(start_regions[l]), " to ", zone_id_inter(end_regions[l]))
-    # end
-    for l in 1:L
-        start_idx = region_to_index[zone_id_inter(start_regions[l])]
-        end_idx = region_to_index[zone_id_inter(end_regions[l])]
-        #println("Line ", l, " from ", start_idx, " to ", end_idx)
-        mat[l, start_idx] = 1
-        mat[l, end_idx] = -1
-    end
-    mat
-end
+#     # Get sorted region IDs for mapping
+#     sorted_regions = zone_id(RegionTopology, p)
+#     region_to_index = Dict(get_id(region) => i for (i, region) in enumerate(sorted_regions))
 
-function load_network_map(lines::Vector{TransmissionTechnology}, Z, L, p::Portfolio)
+    
+#     # map node to region
+    
+#     # for l in 1:L
+#     #     println("Line ", l, " from ", start_regions[l], " to ", end_regions[l])
+#     #     println("Line ", l, " from ", zone_id_inter(start_regions[l]), " to ", zone_id_inter(end_regions[l]))
+#     # end
+#     for l in 1:L
+#         start_idx = region_to_index[zone_id_inter(start_regions[l])]
+#         end_idx = region_to_index[zone_id_inter(end_regions[l])]
+#         #println("Line ", l, " from ", start_idx, " to ", end_idx)
+#         mat[l, start_idx] = 1
+#         mat[l, end_idx] = -1
+#     end
+#     mat
+# end
+
+function load_network_map(lines::Vector{Tech}, Z, L, p::Portfolio) where {Tech<:Union{TransmissionTechnology, AggregateTransportTechnology}}
     mat = zeros(L, Z)
     start_regions = [start_region(l) for l in lines]
     end_regions = [end_region(l) for l in lines]
     
     # Get sorted region IDs for mapping
-    sorted_regions = zone_id(RegionTopology, p)
-    region_to_index = Dict(get_id(region) => i for (i, region) in enumerate(sorted_regions))
+    sorted_regions = sort([i.id for i in zone_id(RegionTopology, p)])
+    regions = zone_id(RegionTopology, p)
+
+    #region_to_index = Dict(get_id(region) => i for (i, region) in enumerate(sorted_regions))
+
+    region_to_index = Dict{Int, Int}()
+    index_to_region = Dict{Int, Int}()
+    region_to_area = Dict{Int, Int}()
+    buses = collect(PSY.get_components(PSY.Bus, p.base_system))
+    areas = unique([bus.area.name for bus in buses])
+    area_map = Dict{String, Int}()
+    for i in areas
+        area_idx = parse(Int, match(r"\d+$", i).match)
+        area_map[i] = area_idx
+    end
+    area_nums = sort([parse(Int, match(r"\d+$", s).match) for s in areas])
+    if last(area_nums) != length(area_nums)
+        @warn "area numbers on PSY buses are not consecutive"
+    end
+
+    for (i, region) in enumerate(regions)
+        region_to_index[region.id] = i
+        index_to_region[i] = region.id
+        bus = first(PSY.get_components_by_name(PSY.Bus, p.base_system, region.name))
+        area = bus.area.name
+        region_to_area[region.id] = area_map[area]
+    end
     
-    # for l in 1:L
-    #     println("Line ", l, " from ", start_regions[l], " to ", end_regions[l])
-    #     println("Line ", l, " from ", zone_id_inter(start_regions[l]), " to ", zone_id_inter(end_regions[l]))
-    # end
     for l in 1:L
         start_idx = region_to_index[zone_id_inter(start_regions[l])]
         end_idx = region_to_index[zone_id_inter(end_regions[l])]
-        #println("Line ", l, " from ", start_idx, " to ", end_idx)
+
         mat[l, start_idx] = 1
         mat[l, end_idx] = -1
     end
-    mat
+    mat, region_to_index, index_to_region, region_to_area
 end
 
 @doc raw"""
