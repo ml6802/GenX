@@ -137,7 +137,6 @@ function load_demand_data!(setup::Dict, p::Portfolio, inputs::Dict, path::Abstra
 ##Uncomment the above lines if using predictive timeseries, like in Stochastic Optimization
         ts_vals = PSIP.get_data(IS.get_time_series(d, keys_[1]))
         max_demand = PSIP.get_peak_demand_mw(d) #Wait for Jerry's unit conversion fix
-        max_demand = 1#PSIP.get_peak_demand_mw(d) #Wait for Jerry's unit conversion fix
         println("max_demand is ", max_demand)
         #println("ts_vals = $ts_vals")
         if isempty(ts_vals)
