@@ -69,3 +69,4 @@ fuel_costs(t::SupplyTechnology) = PSY.get_fuel_cost(PSY.get_variable(get_operati
 # get_ext(value::SupplyTechnology) = value.ext
 # """Get [`SupplyTechnology`](@ref) `balancing_topology`."""
 # get_balancing_topology(value::SupplyTechnology) = value.balancing_topology
+

@@ -106,7 +106,7 @@ function load_demand_data!(setup::Dict, p::Portfolio, inputs::Dict, path::Abstra
     # segments = collect(get_technologies(DemandSideTechnology, p))
     # This is the demand TS for zone-1 just for verification
     first_d = demand_in[1]
-    IS.show_time_series(first_d)
+    #IS.show_time_series(first_d)
     T=0
     region_to_index = inputs["region_to_index"]
     index_to_region = inputs["index_to_region"]
@@ -137,12 +137,13 @@ function load_demand_data!(setup::Dict, p::Portfolio, inputs::Dict, path::Abstra
 ##Uncomment the above lines if using predictive timeseries, like in Stochastic Optimization
         ts_vals = PSIP.get_data(IS.get_time_series(d, keys_[1]))
         max_demand = PSIP.get_peak_demand_mw(d) #Wait for Jerry's unit conversion fix
-        println("max_demand is ", max_demand)
+        #println("max_demand is ", max_demand)
         #println("ts_vals = $ts_vals")
         if isempty(ts_vals)
             error("Time series data for $keys_ not found.")
         end
         # Get the region ID for this demand zone
+        println("Region ID for demand with id $(PSIP.get_id(d)) is $(PSIP.get_region(d))")
         id = PSIP.get_id(d.region[1])
         #println("Zone $zone_idx has region ID: $id")
         genx_id = region_to_index[id]
