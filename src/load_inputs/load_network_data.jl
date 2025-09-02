@@ -353,7 +353,7 @@ function load_network_data!(setup::Dict, p::Portfolio, inputs::Dict)
         inputs["region_to_area"] = region_to_area
 
         # Transmission capacity of the network (in MW)
-        inputs["pTrans_Max"] = [existing_cap_mw(p, l) for l in lines] / scale_factor  # convert to GW
+        inputs["pTrans_Max"] = [PSIP.get_existing_capacity_mw(p, l) for l in lines] / scale_factor  # convert to GW
         
         if setup["Trans_Loss_Segments"] == 1
             # Line percentage Loss - valid for case when modeling losses as a fixed percent of absolute value of power flows
