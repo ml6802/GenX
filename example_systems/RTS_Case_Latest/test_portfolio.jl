@@ -889,6 +889,19 @@ myinputs = GenX.load_inputs(mysetup, case, p)
 # end
 
 # add candidate data
+genx_settings = GenX.get_settings_path(case, "genx_settings.yml") # Settings YAML file path
+writeoutput_settings = GenX.get_settings_path(case, "output_settings.yml") # Write-output settings YAML file path
+mysetup = GenX.configure_settings(genx_settings, writeoutput_settings) # mysetup dictionary stores settings and GenX-specific parameters
+
+mysetup["DC_OPF"] = 1
+myinputs = GenX.load_inputs(mysetup, case, p)
+mysetup["DC_OPF"] = 0
+mysetup["ptdf"] = 0
+mysetup["bilinear"] = 0
+mysetup["disaggregate"] = 0
+mysetup["unfix_slacks"] = 0
+mysetup["SOS1"] = 0
+
 L_cand = myinputs["L"]
 myinputs["L_cand"] = L_cand
 myinputs["pNet_Map_cand"] = copy(myinputs["pNet_Map"])
@@ -898,7 +911,7 @@ myinputs["Line_Angle_Limit_cand"] = myinputs["Line_Angle_Limit"]
 
 # one level of expansion for each line
 # equal to half of existing capacity for any given line pTrans_Max
-myinputs["Line_Reinforcement_Cap_Size"] = [i * .5 for i in myinputs["pTrans_Max"]]
+myinputs["Line_Reinforcement_Cap_Size"] = [i for i in myinputs["pTrans_Max"]]
 myinputs["Max_Trans_Cap"] = [1 for i in myinputs["pTrans_Max"]]
 myinputs["pMax_Line_Reinforcement"] = [myinputs["Line_Reinforcement_Cap_Size"][i] * myinputs["Max_Trans_Cap"][i] for i in 1:L_cand]
 myinputs["pTrans_Max_Possible"] = myinputs["pTrans_Max"] .+ myinputs["pMax_Line_Reinforcement"]
@@ -925,15 +938,10 @@ for i in 1:length(lines)
 end
 
 
-# get 1/2 of existing line capacity? 
-# multiply existing line capacity by expansion size
-
-# pC_Line_Reinforcement - cost
-
-# Run GenX case
-# run_genx_case!(case; optimizer = Gurobi.Optimizer, portfolio = p)
-m = run_genx_case!(case; optimizer = Gurobi.Optimizer, portfolio = p)
-
+solver = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 40000)
+mysetup["NetworkExpansion"] = 1
+EP = GenX.generate_model(mysetup, myinputs, solver)
+optimize!(EP)
 a=1
 #=
 
