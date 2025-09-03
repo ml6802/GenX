@@ -16,6 +16,7 @@ end_region(t::AggregateTransportTechnology) = get_end_region(t)
 line_loss(t::TransmissionTechnology) = get_line_loss(t)
 voltage(t::TransmissionTechnology) = get_voltage(t)
 resistance(t::TransmissionTechnology) = get_resistance(t)
+reactance(t::TransmissionTechnology) = get_reactance(t)
 angle_limit(t::TransmissionTechnology) = get_angle_limit(t)
 
 line_reinforcement_cost(t::TransmissionTechnology) = IS.get_proportional_term(GenX.get_capital_costs(t))
