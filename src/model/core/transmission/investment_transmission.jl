@@ -27,22 +27,6 @@ The additional transmission capacity, $\bigtriangleup\varphi^{cap}_{l} $, is con
 """
 function investment_transmission!(EP::Model, inputs::Dict, setup::Dict)
     println("Investment Transmission Module")
-# add candidate data
-L_cand = inputs["L"]
-Z_cand = inputs["Z"]
-inputs["L_cand"] = L_cand
-inputs["Z_cand"] = Z_cand
-inputs["pNet_Map_cand"] = copy(inputs["pNet_Map"])
-inputs["pDC_OPF_coeff_cand"] = copy(inputs["pDC_OPF_coeff"])
-inputs["LineAngle_Limit"] = [6.282 for i in 1:L_cand]
-inputs["Line_Angle_Limit_cand"] = inputs["Line_Angle_Limit"]
-
-# one level of expansion for each line
-# equal to half of existing capacity for any given line pTrans_Max
-inputs["Line_Reinforcement_Cap_Size"] = [i for i in inputs["pTrans_Max"]]
-inputs["Max_Trans_Cap"] = [1 for i in inputs["pTrans_Max"]]
-inputs["pMax_Line_Reinforcement"] = [inputs["Line_Reinforcement_Cap_Size"][i] * inputs["Max_Trans_Cap"][i] for i in 1:L_cand]
-inputs["pTrans_Max_Possible"] = inputs["pTrans_Max"] .+ inputs["pMax_Line_Reinforcement"]
     L = inputs["L"]     # Number of transmission lines
     NetworkExpansion = setup["NetworkExpansion"]
     MultiStage = setup["MultiStage"]

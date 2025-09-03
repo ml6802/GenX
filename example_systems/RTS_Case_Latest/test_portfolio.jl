@@ -875,20 +875,6 @@ for (i, t) in enumerate(ts)
 end
 ts4 = ts[4]
 
-
-genx_settings = GenX.get_settings_path(case, "genx_settings.yml") # Settings YAML file path
-writeoutput_settings = GenX.get_settings_path(case, "output_settings.yml") # Write-output settings YAML file path
-mysetup = GenX.configure_settings(genx_settings, writeoutput_settings) # mysetup dictionary stores settings and GenX-specific parameters
-
-mysetup["DC_OPF"] = 1
-myinputs = GenX.load_inputs(mysetup, case, p)
-
-# rs = myinputs["RESOURCES"]
-# for (i, r) in enumerate(rs)
-#     println(i, "   ", GenX.cap_size(r))
-# end
-
-# add candidate data
 genx_settings = GenX.get_settings_path(case, "genx_settings.yml") # Settings YAML file path
 writeoutput_settings = GenX.get_settings_path(case, "output_settings.yml") # Write-output settings YAML file path
 mysetup = GenX.configure_settings(genx_settings, writeoutput_settings) # mysetup dictionary stores settings and GenX-specific parameters
@@ -938,10 +924,10 @@ for i in 1:length(lines)
 end
 
 
-solver = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 40000)
+solver = GenX.optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 40000)
 mysetup["NetworkExpansion"] = 1
 EP = GenX.generate_model(mysetup, myinputs, solver)
-optimize!(EP)
+GenX.optimize!(EP)
 a=1
 #=
 
