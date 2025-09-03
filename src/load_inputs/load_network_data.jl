@@ -376,7 +376,7 @@ function load_network_data!(setup::Dict, p::Portfolio, inputs::Dict)
             # Transmission line voltage (in kV)
             line_voltage_kV = [voltage(l) for l in lines]
             # Transmission line reactance (in Ohms)
-            line_reactance_Ohms = [resistance(l) for l in lines]
+            line_reactance_Ohms = [reactance(l) for l in lines]
 
             for l in 1:length(lines)
                 if line_voltage_kV[l] == 0
