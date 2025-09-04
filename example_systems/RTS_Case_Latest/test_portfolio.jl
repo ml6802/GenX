@@ -928,88 +928,130 @@ solver = GenX.optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 40000)
 mysetup["NetworkExpansion"] = 1
 EP = GenX.generate_model(mysetup, myinputs, solver)
 GenX.optimize!(EP)
-a=1
-#=
 
-# Testing individual build and solve functions
-if read_from_json == false && rts_case == true
-    path = joinpath(@__DIR__, "/Users/sc87/code/GenX_PowerGenome/GenX_Benders_DC_OPF/GenX/example_systems/RTS_Case_Latest")
-elseif read_from_json == true && rts_case == true
-    # Load portfolio from JSON
-    case = joinpath(@__DIR__, "/Users/sc87/code/GenX_PowerGenome/GenX_Benders_DC_OPF/GenX/example_systems/RTS_Case_Latest")
-    case_json = joinpath(case, "portfolio_julia.json")
-    p = PSIP.Portfolio(case_json)
-elseif read_from_json == false && rts_case == false
-    # Build portfolio from the function above and then run GenX
-    path = joinpath(@__DIR__, "example_systems/1_three_zones")
-elseif read_from_json == false && rts_case == false
-    # Load portfolio from file
-    path = joinpath(@__DIR__, "/Users/sc87/code/GenX_PowerGenome/PSIP_GenX/GenX/example_systems/portfolio_julia_20250512")
+# Extract results and write capacities back to portfolio
+function extract_genx_results_to_psip_format(EP, myinputs, p)
+    """
+    Extract GenX optimization results and organize them according to PSIP struct format
+    """
+    results_dict = Dict()
+    
+    # Get all technologies from portfolio
+    supply_techs = collect(get_technologies(SupplyTechnology, p))
+    storage_techs = collect(get_technologies(StorageTechnology, p))
+    transport_techs = collect(get_technologies(TransmissionTechnology, p))
+    
+    # Extract capacity decisions for supply technologies
+    if haskey(EP.obj_dict, :vCAP) || haskey(EP.obj_dict, :eTotalCap)
+        cap_var = haskey(EP.obj_dict, :vCAP) ? EP.obj_dict[:vCAP] : EP.obj_dict[:eTotalCap]
+        
+        for (idx, tech) in enumerate(supply_techs)
+            tech_name = PSIP.get_name(tech)
+            if tech isa SupplyTechnology{ThermalStandard}
+                tech_type = SupplyTechnology{ThermalStandard}
+            elseif tech isa SupplyTechnology{RenewableDispatch}
+                tech_type = SupplyTechnology{RenewableDispatch}
+            else
+                tech_type = typeof(tech)
+            end
+            
+            # Get built capacity (total - initial)
+            total_cap = value(cap_var[idx])
+            initial_cap = PSIP.get_initial_capacity(tech)
+            built_cap = max(0.0, total_cap - initial_cap)
+            
+            results_dict[(tech_type, tech_name)] = built_cap
+            println("$(tech_type) $(tech_name): Built $(built_cap) MW")
+        end
+    end
+    
+    # Extract capacity decisions for storage technologies
+    if haskey(EP.obj_dict, :vCAPENERGY) && haskey(EP.obj_dict, :vCAP)
+        cap_power_var = EP.obj_dict[:vCAP]
+        cap_energy_var = EP.obj_dict[:vCAPENERGY]
+        
+        # Storage technologies come after supply technologies in the indexing
+        storage_start_idx = length(supply_techs) + 1
+        
+        for (idx, tech) in enumerate(storage_techs)
+            tech_name = PSIP.get_name(tech)
+            resource_idx = storage_start_idx + idx - 1
+            
+            # Get built capacities
+            total_power_cap = value(cap_power_var[resource_idx])
+            total_energy_cap = value(cap_energy_var[resource_idx])
+            
+            initial_power_cap = PSIP.get_existing_capacity_discharge(tech)
+            initial_energy_cap = PSIP.get_existing_capacity_energy(tech)
+            
+            built_power_cap = max(0.0, total_power_cap - initial_power_cap)
+            built_energy_cap = max(0.0, total_energy_cap - initial_energy_cap)
+            
+            results_dict[(StorageTechnology{Storage}, tech_name)] = (
+                build_p = built_power_cap,
+                build_e = built_energy_cap
+            )
+            println("StorageTechnology{Storage} $(tech_name): Built $(built_power_cap) MW power, $(built_energy_cap) MWh energy")
+        end
+    end
+    
+    # Extract transmission expansion results
+    if haskey(EP.obj_dict, :vNEW_TRANS_CAP) || haskey(EP.obj_dict, :vTRANS)
+        trans_var = haskey(EP.obj_dict, :vNEW_TRANS_CAP) ? EP.obj_dict[:vNEW_TRANS_CAP] : EP.obj_dict[:vTRANS]
+        
+        for (idx, tech) in enumerate(transport_techs)
+            tech_name = PSIP.get_name(tech)
+            built_trans_cap = value(trans_var[idx])
+            
+            if tech isa NodalACTransportTechnology{ACBranch}
+                tech_type = NodalACTransportTechnology{ACBranch}
+            else
+                tech_type = typeof(tech)
+            end
+            
+            results_dict[(tech_type, tech_name)] = built_trans_cap
+            println("$(tech_type) $(tech_name): Built $(built_trans_cap) MW transmission")
+        end
+    end
+    
+    return results_dict
 end
 
-settings_path = GenX.get_settings_path(path)
-genx_settings = GenX.get_settings_path(path, "genx_settings.yml") # Settings YAML file path, make sure InputType field is correct!
-writeoutput_settings = GenX.get_settings_path(path, "output_settings.yml") # Write-output settings YAML file path
-mysetup = GenX.configure_settings(genx_settings, writeoutput_settings) # mysetup dictionary stores settings and GenX-specific parameters
+# Extract results from GenX optimization
+genx_results = extract_genx_results_to_psip_format(EP, myinputs, p)
 
-optimizer = Gurobi.Optimizer
-OPTIMIZER = GenX.configure_solver(settings_path, optimizer)
+# Create investment schedule results in PSIP format
+investment_period = (Date("2025-01-01"), Date("2029-12-31"))  # Adjust dates as needed
+investment_schedule = Dict(investment_period => genx_results)
 
-# Build model with normal CSV inputs
-inputs_csv = GenX.load_inputs_csv(mysetup, path)
-EP_csv = GenX.generate_model(mysetup, inputs_csv, OPTIMIZER, settings_path)
-CSV.write("csv_model.csv", EP_csv.obj_dict)
-
-# Build model with with a PSIP portfolio
-inputs_p = GenX.load_inputs_portfolio(mysetup, p, path)
-#inputs_p["RESOURCES"] = inputs_csv["RESOURCES"]
-EP_p = GenX.generate_model(mysetup, inputs_p, OPTIMIZER, settings_path)
-CSV.write("portfolio_model.csv", EP_p.obj_dict)
-
-# Solve model with either set of inputs
-EP, solve_time = GenX.solve_model(EP_p, mysetup)
-EP, solve_time = GenX.solve_model(EP_csv, mysetup)
-
-# Comparing individual load functions
-
-# Initialize dictionaries
-inputs_p = Dict()
-inputs_csv = Dict()
-
-#run_genx_case!(dirname(@__FILE__))
-
-# Network Data
-GenX.load_network_data_p!(mysetup, p, inputs_p)
-GenX.load_network_data!(mysetup, joinpath(path, "system"), inputs_csv)
-
-GenX.load_demand_data!(mysetup, path, inputs_csv)
-GenX.load_demand_data!(mysetup, p, inputs_p)
-
-GenX.load_fuels_data!(mysetup, path, inputs_csv)
-GenX.load_fuels_data_p!(mysetup, p, inputs_p)
-
-GenX.load_resources_data!(inputs_csv, mysetup, path, joinpath(path, "resources"))
-GenX.load_resources_data_p!(inputs_p, mysetup, p, path, joinpath(path, "resources"))
-
-GenX.load_generators_variability!(mysetup, path, inputs_csv)
-GenX.load_generators_variability!(mysetup, p, inputs_p)
-
-# Test entire load inputs process
-inputs_csv = GenX.load_inputs_csv(mysetup, path)
-inputs_p = GenX.load_inputs_portfolio(mysetup, p, path)
-
-#Comparing individual values in the inputs dictionary. Note that resource data will not match even if they have the same fields, since
-#the order of the keys in the dictionary is not the same
-keys = [inputs_csv.keys[i]
-        for i in 1:length(inputs_csv.keys) if isassigned(inputs_csv.keys, i)]
-for k in keys
-    #print("\n", k)
-    if haskey(inputs_p, k)
-        if inputs_csv[k] != inputs_p[k]
-            print("\nKey does not match: ", k)
-        end
-    else
-        print("\nKey not in portfolio inputs: ", k)
+# Write capacities back to portfolio using GenX's format
+try
+    df_cap = prepare_capacity_df(case, myinputs, mysetup, EP)
+    final_cap = Dict{String, DataFrame}("stage_1" => df_cap)
+    GenX.set_capacity!(p, final_cap)
+    println("✅ Capacities successfully written back to portfolio")
+catch e
+    @warn "Failed to write capacities back to portfolio using GenX format: $e"
+    # Alternative: manually update portfolio with extracted results
+    println("📝 Manually updating portfolio with extracted results...")
+    for ((tech_type, tech_name), capacity) in genx_results
+        println("Would update $(tech_type) $(tech_name) with capacity: $(capacity)")
     end
 end
-=#
+
+# Create the final investment schedule results struct
+final_investment_results = InvestmentScheduleResults(investment_schedule)
+
+println("\n=== Investment Schedule Results ===")
+for (period, results) in final_investment_results.results
+    println("Investment Period: $(period[1]) to $(period[2])")
+    for ((tech_type, tech_name), capacity) in results
+        if capacity isa NamedTuple
+            println("  $(tech_type) '$(tech_name)': $(capacity)")
+        else
+            println("  $(tech_type) '$(tech_name)': $(capacity) MW")
+        end
+    end
+end
+
+
