@@ -122,6 +122,23 @@ function operation_model!(EP::Model,setup::Dict, inputs::Dict)
 
     create_empty_expression!(EP, :eGenerationByZone, (Z, T))
 
+    if haskey(inputs, "node_to_timeseries")
+        scale_factor = setup["ParameterScale"] == 1 ? ModelScalingFactor : 1
+        node_to_timeseries = inputs["node_to_timeseries"]
+        connected_nodes = sort(collect(keys(node_to_timeseries)))
+        voll = inputs["Voll"][1]
+        @variable(EP, vINTERZONAL_SLACK_UP[1:length(connected_nodes), 1:T] >= 0)
+        @variable(EP, vINTERZONAL_SLACK_DOWN[1:length(connected_nodes), 1:T] >= 0)
+
+        for (i, k) in enumerate(connected_nodes)
+            for t in 1:T
+                add_to_expression!(EP[:ePowerBalance][t, k], node_to_timeseries[k][t])
+                add_to_expression!(EP[:ePowerBalance][t, k], vINTERZONAL_SLACK_UP[i, t] - vINTERZONAL_SLACK_DOWN[i,t])
+                add_to_expression!(EP[:eObj], voll * (vINTERZONAL_SLACK_UP[i, t] + vINTERZONAL_SLACK_DOWN[i,t]))
+            end
+        end
+    end
+
     # Energy losses related to technologies
     create_empty_expression!(EP, :eELOSSByZone, Z)
 
