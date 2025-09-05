@@ -13,7 +13,7 @@ that incorporates several state-of-the-art practices in electricity system plann
 The model was [originally developed](https://energy.mit.edu/publication/enhanced-decision-support-changing-electricity-landscape/) by 
 [Jesse D. Jenkins](https://mae.princeton.edu/people/faculty/jenkins) and 
 [Nestor A. Sepulveda](https://energy.mit.edu/profile/nestor-sepulveda/) at the Massachusetts Institute of Technology and is now jointly maintained by 
-[a team of contributors](https://github.com/GenXProject/GenX#genx-team) at the Princeton University ZERO Lab (led by Jenkins), MIT (led by [Ruaridh MacDonald](https://energy.mit.edu/profile/ruaridh-macdonald/)), and NYU (led by [Dharik Mallapragada](https://engineering.nyu.edu/faculty/dharik-mallapragada)). 
+[a team of contributors](https://github.com/GenXProject/GenX#genx-team) at the Princeton University ZERO Lab (led by Jenkins), MIT (led by [Ruaridh MacDonald](https://energy.mit.edu/profile/ruaridh-macdonald/)), NYU (led by [Dharik Mallapragada](https://engineering.nyu.edu/faculty/dharik-mallapragada)), and Binghamton University (led by [Neha Patankar](https://www.binghamton.edu/ssie/people/profile.html?id=npatankar)).
 
 GenX is a constrained linear or mixed integer linear optimization model that determines the portfolio of electricity generation, 
 storage, transmission, and demand-side resource investments and operational decisions to meet electricity demand in one or more future planning years at lowest cost,
@@ -40,7 +40,8 @@ The 'main' branch is the current master branch of GenX. The various subdirectori
 
 ## Requirements
 
-GenX currently exists in version 0.4 and runs only on Julia v1.6.x, 1.7.x, 1.8.x, and 1.9.x, where x>=0 and a minimum version of JuMP v1.1.1. We recommend the users to either stick to a particular version of Julia to run GenX. If however, the users decide to switch between versions, it's very important to delete the old `Manifest.toml` file and do a fresh build of GenX when switching between Julia versions.
+GenX (v0.4.4) runs on Julia v1.6 through v1.9, with a minimum version of the package JuMP v1.1.1. Julia v1.10 and v1.11 are also supported. However, we recently noticed a decline in performance with Julia v1.10, which is currently under investigation. Therefore, **we recommend using Julia v1.9**, particularly for very large cases.
+We recommend the users to either stick to a particular version of Julia to run GenX. If however, the users decide to switch between versions, it's very important to delete the old `Manifest.toml` file and do a fresh build of GenX when switching between Julia versions.
 
 There is also an older version of GenX, which is also currently maintained and runs on Julia 1.3.x and 1.4.x series.
 For those users who has previously cloned GenX, and has been running it successfully so far,

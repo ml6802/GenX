@@ -122,6 +122,23 @@ function operation_model!(EP::Model,setup::Dict, inputs::Dict)
 
     create_empty_expression!(EP, :eGenerationByZone, (Z, T))
 
+    if haskey(inputs, "node_to_timeseries")
+        scale_factor = setup["ParameterScale"] == 1 ? ModelScalingFactor : 1
+        node_to_timeseries = inputs["node_to_timeseries"]
+        connected_nodes = sort(collect(keys(node_to_timeseries)))
+        voll = inputs["Voll"][1]
+        @variable(EP, vINTERZONAL_SLACK_UP[1:length(connected_nodes), 1:T] >= 0)
+        @variable(EP, vINTERZONAL_SLACK_DOWN[1:length(connected_nodes), 1:T] >= 0)
+
+        for (i, k) in enumerate(connected_nodes)
+            for t in 1:T
+                add_to_expression!(EP[:ePowerBalance][t, k], node_to_timeseries[k][t])
+                add_to_expression!(EP[:ePowerBalance][t, k], vINTERZONAL_SLACK_UP[i, t] - vINTERZONAL_SLACK_DOWN[i,t])
+                add_to_expression!(EP[:eObj], voll * (vINTERZONAL_SLACK_UP[i, t] + vINTERZONAL_SLACK_DOWN[i,t]))
+            end
+        end
+    end
+
     # Energy losses related to technologies
     create_empty_expression!(EP, :eELOSSByZone, Z)
 
@@ -361,9 +378,6 @@ function generate_model_legacy(setup::Dict, inputs::Dict, OPTIMIZER::MOI.Optimiz
     # Generate Energy Portfolio (EP) Model
     EP = Model(OPTIMIZER)
     set_string_names_on_creation(EP, Bool(setup["EnableJuMPStringNames"]))
-    # Introduce dummy variable fixed to zero to ensure that expressions like eTotalCap,
-    # eTotalCapCharge, eTotalCapEnergy and eAvail_Trans_Cap all have a JuMP variable
-    @variable(EP, vZERO==0)
 
     # Initialize Power Balance Expression
     # Expression for "baseline" power balance constraint
@@ -389,6 +403,11 @@ function generate_model_legacy(setup::Dict, inputs::Dict, OPTIMIZER::MOI.Optimiz
         create_empty_expression!(EP, :eESR, inputs["nESR"])
     end
 
+    # Hourly Matching Requirement
+    if setup["HourlyMatching"] == 1
+        create_empty_expression!(EP, :eHM, (T, Z))
+    end
+
     if setup["MinCapReq"] == 1
         create_empty_expression!(EP, :eMinCapRes, inputs["NumberOfMinCapReqs"])
     end
@@ -397,10 +416,14 @@ function generate_model_legacy(setup::Dict, inputs::Dict, OPTIMIZER::MOI.Optimiz
         create_empty_expression!(EP, :eMaxCapRes, inputs["NumberOfMaxCapReqs"])
     end
 
+    if setup["HydrogenMinimumProduction"] > 0
+        create_empty_expression!(EP, :eH2DemandRes, inputs["NumberOfH2DemandReqs"])
+    end
+
     # Infrastructure
     discharge!(EP, inputs, setup)
 
-    non_served_energy!(EP, inputs, setup)
+    #non_served_energy!(EP, inputs, setup)
 
     investment_discharge!(EP, inputs, setup)
 
@@ -416,13 +439,21 @@ function generate_model_legacy(setup::Dict, inputs::Dict, OPTIMIZER::MOI.Optimiz
         operational_reserves!(EP, inputs, setup)
     end
 
-    if Z > 1
+    if Z > 1 && setup["DC_OPF"] == 0
         investment_transmission!(EP, inputs, setup)
         transmission!(EP, inputs, setup)
     end
 
-    if Z > 1 && setup["DC_OPF"] != 0
-        dcopf_transmission!(EP, inputs, setup)
+    if Z > 1 && setup["DC_OPF"] == 1
+        if setup["SOS1"] == 1
+            # SOS1 DCOPF investment transmission
+            dcopf_investment_transmission_sos!(EP, inputs, setup)
+            dcopf_transmission_sos!(EP, inputs, setup)
+        else
+            # DCOPF investment transmission
+            dcopf_investment_transmission!(EP, inputs, setup)  
+            dcopf_transmission!(EP, inputs, setup)
+        end
     end
 
     if (setup["Benders"]==1 && (!isempty(inputs["STOR_LONG_DURATION"]) || !isempty(inputs["STOR_HYDRO_LONG_DURATION"])))||(inputs["REP_PERIOD"] > 1 && (!isempty(inputs["STOR_LONG_DURATION"]) || !isempty(inputs["STOR_HYDRO_LONG_DURATION"])))
@@ -451,19 +482,16 @@ function generate_model_legacy(setup::Dict, inputs::Dict, OPTIMIZER::MOI.Optimiz
         hydro_res!(EP, inputs, setup)
     end
 
-    if !isempty(inputs["ELECTROLYZER"])
-        electrolyzer!(EP, inputs, setup)
-    end
-
     # Model constraints, variables, expression related to reservoir hydropower resources with long duration storage
     if inputs["REP_PERIOD"] > 1 && !isempty(inputs["STOR_HYDRO_LONG_DURATION"])
-        hydro_inter_period_linkage!(EP, inputs)
+        hydro_inter_period_linkage!(EP, inputs, setup)
     end
 
     # Model constraints, variables, expression related to demand flexibility resources
     if !isempty(inputs["FLEX"])
         flexible_demand!(EP, inputs, setup)
     end
+
     # Model constraints, variables, expression related to thermal resource technologies
     if !isempty(inputs["THERM_ALL"])
         thermal!(EP, inputs, setup)
@@ -479,6 +507,11 @@ function generate_model_legacy(setup::Dict, inputs::Dict, OPTIMIZER::MOI.Optimiz
         vre_stor!(EP, inputs, setup)
     end
 
+    # Model constraints, variables, expressions related to telectrolyzers
+    if !isempty(inputs["ELECTROLYZER"]) ||
+       (!isempty(inputs["VRE_STOR"]) && !isempty(inputs["VS_ELEC"]))
+        electrolyzer!(EP, inputs, setup)
+    end
     # Policies
 
     if setup["OperationalReserves"] > 0
@@ -500,6 +533,11 @@ function generate_model_legacy(setup::Dict, inputs::Dict, OPTIMIZER::MOI.Optimiz
         energy_share_requirement!(EP, inputs, setup)
     end
 
+    # Energy Share Requirement
+    if setup["HourlyMatching"] == 1
+        hourly_matching!(EP, inputs)
+    end
+
     #Capacity Reserve Margin
     if setup["CapacityReserveMargin"] > 0
         cap_reserve_margin!(EP, inputs, setup)
@@ -511,6 +549,11 @@ function generate_model_legacy(setup::Dict, inputs::Dict, OPTIMIZER::MOI.Optimiz
 
     if setup["MaxCapReq"] == 1
         maximum_capacity_requirement!(EP, inputs, setup)
+    end
+
+    # Hydrogen demand limits
+    if setup["HydrogenMinimumProduction"] > 0
+        hydrogen_demand!(EP, inputs, setup)
     end
 
     if setup["ModelingToGenerateAlternatives"] == 1

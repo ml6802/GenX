@@ -1,3 +1,5 @@
+ENV["GENX_PRECOMPILE"] = "false" # Disable GenX precompilation for documentation build
+
 using Documenter
 using GenX
 import DataStructures: OrderedDict
@@ -70,13 +72,13 @@ pages = OrderedDict(
             "Thermal" => [
                 "Thermal" => "Model_Reference/Resources/thermal.md",
                 "Thermal Commit" => "Model_Reference/Resources/thermal_commit.md",
-                "Thermal No Commit" => "Model_Reference/Resources/thermal_no_commit.md"
+                "Thermal No Commit" => "Model_Reference/Resources/thermal_no_commit.md",
+                "Scheduled maintenance for Thermal Commit" => "Model_Reference/Resources/maintenance.md",
+                "Fusion" => "Model_Reference/Resources/fusion.md"
             ],
             "Hydrogen Electrolyzers" => "Model_Reference/Resources/electrolyzers.md",
-            "Scheduled maintenance for various resources" => "Model_Reference/Resources/maintenance.md",
             "Resource types" => "Model_Reference/Resources/resource.md"
         ],
-        "Maintenance" => "Model_Reference/maintenance_overview.md",
         "Policies" => "Model_Reference/policies.md",
         "Solver Configurations" => "Model_Reference/solver_configuration_api.md",
         "Inputs Functions" => "Model_Reference/load_inputs.md",
@@ -124,7 +126,7 @@ deploydocs(;
     repo = "github.com/GenXProject/GenX.jl.git",
     target = "build",
     branch = "gh-pages",
-    devbranch = "main",
+    devbranch = "develop",
     devurl = "dev",
     push_preview = true,
     versions = ["stable" => "v^", "v#.#.#", "dev" => "dev"],
