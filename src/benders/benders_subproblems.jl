@@ -1,4 +1,3 @@
-
 function generate_operation_subproblem(setup::Dict, inputs::Dict, OPTIMIZER::MOI.OptimizerWithAttributes)
 
     ## Start pre-solve timer
@@ -78,6 +77,7 @@ function init_dist_subproblems(setup::Dict,inputs_decomp::Dict,planning_variable
 
 	p_id = workers();
     np_id = length(p_id);
+    println("Workers = $p_id")
 
     planning_variables_sub = [Dict() for k in 1:np_id];
 

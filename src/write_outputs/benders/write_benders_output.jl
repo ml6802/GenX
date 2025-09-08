@@ -143,7 +143,7 @@ function write_capacity_benders(inputs::Dict, master_sol::NamedTuple)
 			num = split(name[2], "]")
 			mult=1
 			try 
-				mult = inputs["RESOURCES"].cap_size
+				mult = inputs["RESOURCES"].cap_size[i]
 			catch
 				mult = 1
 			end
@@ -153,7 +153,7 @@ function write_capacity_benders(inputs::Dict, master_sol::NamedTuple)
 			num = split(name[2], "]")
 			mult=1
 			try 
-				mult = inputs["RESOURCES"].cap_size
+				mult = inputs["RESOURCES"].cap_size[i]
 			catch
 				mult = 1
 			end
