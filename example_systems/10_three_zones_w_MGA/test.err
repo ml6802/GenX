@@ -1,0 +1,16 @@
+WARNING: replacing module GenX.
+WARNING: using GenX.load_inputs in module GenX conflicts with an existing identifier.
+WARNING: using GenX.load_dataframe in module GenX conflicts with an existing identifier.
+WARNING: using GenX.run_genx_case! in module GenX conflicts with an existing identifier.
+WARNING: using GenX.generate_model in module GenX conflicts with an existing identifier.
+WARNING: using GenX.choose_output_dir in module GenX conflicts with an existing identifier.
+WARNING: using GenX.configure_settings in module GenX conflicts with an existing identifier.
+WARNING: using GenX.solve_model in module GenX conflicts with an existing identifier.
+WARNING: using GenX.operation_model! in module GenX conflicts with an existing identifier.
+WARNING: using GenX.write_outputs in module GenX conflicts with an existing identifier.
+WARNING: using GenX.configure_solver in module GenX conflicts with an existing identifier.
+WARNING: using GenX.mga in module GenX conflicts with an existing identifier.
+[ Info: Thermal.csv Successfully Read.
+[ Info: Vre.csv Successfully Read.
+[ Info: Storage.csv Successfully Read.
+[ Info: Resource_minimum_capacity_requirement.csv Successfully Read.

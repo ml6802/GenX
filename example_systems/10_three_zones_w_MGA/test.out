@@ -1,0 +1,366 @@
+Set parameter LicenseID to value 197246
+Set parameter GURO_PAR_SPECIAL
+Set parameter TokenServer to value "license.rc.princeton.edu"
+Set parameter LicenseID to value 197246
+Set parameter GURO_PAR_SPECIAL
+Set parameter TokenServer to value "license.rc.princeton.edu"
+Set parameter Method to value 2
+Set parameter Crossover to value 0
+Set parameter MIPGap to value 0.0001
+Set parameter BarConvTol to value 1e-08
+      From worker 3:	Set parameter LicenseID to value 197246
+      From worker 3:	Set parameter GURO_PAR_SPECIAL
+      From worker 3:	Set parameter TokenServer to value "license.rc.princeton.edu"
+      From worker 2:	Set parameter LicenseID to value 197246
+      From worker 2:	Set parameter GURO_PAR_SPECIAL
+      From worker 2:	Set parameter TokenServer to value "license.rc.princeton.edu"
+      From worker 5:	Set parameter LicenseID to value 197246
+      From worker 5:	Set parameter GURO_PAR_SPECIAL
+      From worker 5:	Set parameter TokenServer to value "license.rc.princeton.edu"
+      From worker 4:	Set parameter LicenseID to value 197246
+      From worker 4:	Set parameter GURO_PAR_SPECIAL
+      From worker 4:	Set parameter TokenServer to value "license.rc.princeton.edu"
+      From worker 3:	WARNING: using GenX.choose_output_dir in module GenX conflicts with an existing identifier.
+      From worker 3:	WARNING: using GenX.mga in module GenX conflicts with an existing identifier.
+      From worker 3:	WARNING: using GenX.generate_model in module GenX conflicts with an existing identifier.
+      From worker 3:	WARNING: using GenX.run_genx_case! in module GenX conflicts with an existing identifier.
+      From worker 3:	WARNING: using GenX.load_dataframe in module GenX conflicts with an existing identifier.
+      From worker 3:	WARNING: using GenX.load_inputs in module GenX conflicts with an existing identifier.
+      From worker 3:	WARNING: using GenX.operation_model! in module GenX conflicts with an existing identifier.
+      From worker 3:	WARNING: using GenX.solve_model in module GenX conflicts with an existing identifier.
+      From worker 3:	WARNING: using GenX.configure_settings in module GenX conflicts with an existing identifier.
+      From worker 3:	WARNING: using GenX.configure_solver in module GenX conflicts with an existing identifier.
+      From worker 3:	WARNING: using GenX.write_outputs in module GenX conflicts with an existing identifier.
+      From worker 2:	WARNING: using GenX.choose_output_dir in module GenX conflicts with an existing identifier.
+      From worker 2:	WARNING: using GenX.load_inputs in module GenX conflicts with an existing identifier.
+      From worker 2:	WARNING: using GenX.load_dataframe in module GenX conflicts with an existing identifier.
+      From worker 2:	WARNING: using GenX.run_genx_case! in module GenX conflicts with an existing identifier.
+      From worker 2:	WARNING: using GenX.write_outputs in module GenX conflicts with an existing identifier.
+      From worker 2:	WARNING: using GenX.solve_model in module GenX conflicts with an existing identifier.
+      From worker 2:	WARNING: using GenX.generate_model in module GenX conflicts with an existing identifier.
+      From worker 2:	WARNING: using GenX.configure_settings in module GenX conflicts with an existing identifier.
+      From worker 2:	WARNING: using GenX.configure_solver in module GenX conflicts with an existing identifier.
+      From worker 2:	WARNING: using GenX.operation_model! in module GenX conflicts with an existing identifier.
+      From worker 2:	WARNING: using GenX.mga in module GenX conflicts with an existing identifier.
+      From worker 4:	WARNING: using GenX.mga in module GenX conflicts with an existing identifier.
+      From worker 4:	WARNING: using GenX.solve_model in module GenX conflicts with an existing identifier.
+      From worker 4:	WARNING: using GenX.load_inputs in module GenX conflicts with an existing identifier.
+      From worker 4:	WARNING: using GenX.run_genx_case! in module GenX conflicts with an existing identifier.
+      From worker 4:	WARNING: using GenX.load_dataframe in module GenX conflicts with an existing identifier.
+      From worker 4:	WARNING: using GenX.write_outputs in module GenX conflicts with an existing identifier.
+      From worker 4:	WARNING: using GenX.configure_settings in module GenX conflicts with an existing identifier.
+      From worker 4:	WARNING: using GenX.generate_model in module GenX conflicts with an existing identifier.
+      From worker 4:	WARNING: using GenX.operation_model! in module GenX conflicts with an existing identifier.
+      From worker 4:	WARNING: using GenX.configure_solver in module GenX conflicts with an existing identifier.
+      From worker 4:	WARNING: using GenX.choose_output_dir in module GenX conflicts with an existing identifier.
+      From worker 5:	WARNING: using GenX.load_inputs in module GenX conflicts with an existing identifier.
+      From worker 5:	WARNING: using GenX.configure_solver in module GenX conflicts with an existing identifier.
+      From worker 5:	WARNING: using GenX.configure_settings in module GenX conflicts with an existing identifier.
+      From worker 5:	WARNING: using GenX.solve_model in module GenX conflicts with an existing identifier.
+      From worker 5:	WARNING: using GenX.mga in module GenX conflicts with an existing identifier.
+      From worker 5:	WARNING: using GenX.run_genx_case! in module GenX conflicts with an existing identifier.
+      From worker 5:	WARNING: using GenX.generate_model in module GenX conflicts with an existing identifier.
+      From worker 5:	WARNING: using GenX.load_dataframe in module GenX conflicts with an existing identifier.
+      From worker 5:	WARNING: using GenX.write_outputs in module GenX conflicts with an existing identifier.
+      From worker 5:	WARNING: using GenX.choose_output_dir in module GenX conflicts with an existing identifier.
+      From worker 5:	WARNING: using GenX.operation_model! in module GenX conflicts with an existing identifier.
+      From worker 3:	Set parameter LicenseID to value 197246
+      From worker 3:	Set parameter GURO_PAR_SPECIAL
+      From worker 3:	Set parameter TokenServer to value "license.rc.princeton.edu"
+      From worker 2:	Set parameter LicenseID to value 197246
+      From worker 2:	Set parameter GURO_PAR_SPECIAL
+      From worker 2:	Set parameter TokenServer to value "license.rc.princeton.edu"
+      From worker 4:	Set parameter LicenseID to value 197246
+      From worker 4:	Set parameter GURO_PAR_SPECIAL
+      From worker 4:	Set parameter TokenServer to value "license.rc.princeton.edu"
+      From worker 5:	Set parameter LicenseID to value 197246
+      From worker 5:	Set parameter GURO_PAR_SPECIAL
+      From worker 5:	Set parameter TokenServer to value "license.rc.princeton.edu"
+Configuring Settings
+Configuring Benders Settings
+Time Series Data Already Clustered.
+Reading Input CSV Files
+Network.csv Successfully Read!
+Demand (load) data Successfully Read!
+Fuels_data.csv Successfully Read!
+
+Summary of resources loaded into the model:
+-------------------------------------------------------
+	Resource type 		Number of resources
+=======================================================
+	Thermal        		3
+	VRE            		4
+	Storage        		3
+=======================================================
+Total number of resources: 10
+-------------------------------------------------------
+Generators_variability.csv Successfully Read!
+Validating time basis
+CSV Files Successfully Read In From /home/ml6802/GenX-Bend-0.4/GenX/example_systems/10_three_zones_w_MGA
+Planning Gurobi attributes:
+Dict{String, Any} with 4 entries:
+  "Method" => 2
+  "Crossover" => 0
+  "MIPGap" => 0.0001
+  "BarConvTol" => 1.0e-8
+Investment Discharge Module
+Investment Transmission Module
+Investment Storage Resources Module
+Storage Investment Module
+      From worker 5:	Subproblem Gurobi attributes:
+      From worker 3:	Subproblem Gurobi attributes:
+      From worker 4:	Subproblem Gurobi attributes:
+      From worker 2:	Subproblem Gurobi attributes:
+      From worker 5:	Dict{String, Any} with 5 entries:
+      From worker 5:	  "Method" => 2
+      From worker 5:	  "Crossover" => 1
+      From worker 3:	Dict{String, Any} with 5 entries:
+      From worker 3:	  "Method" => 2
+      From worker 3:	  "Crossover" => 1
+      From worker 5:	  "MIPGap" => 0.001
+      From worker 5:	  "Threads" => 1
+      From worker 5:	  "BarConvTol" => 1.0e-8
+      From worker 3:	  "MIPGap" => 0.001
+      From worker 3:	  "Threads" => 1
+      From worker 3:	  "BarConvTol" => 1.0e-8
+      From worker 5:	Set parameter Method to value 2
+      From worker 5:	Set parameter Crossover to value 1
+      From worker 3:	Set parameter Method to value 2
+      From worker 3:	Set parameter Crossover to value 1
+      From worker 5:	Set parameter MIPGap to value 0.001
+      From worker 5:	Set parameter Threads to value 1
+      From worker 5:	Set parameter BarConvTol to value 1e-08
+      From worker 3:	Set parameter MIPGap to value 0.001
+      From worker 3:	Set parameter Threads to value 1
+      From worker 3:	Set parameter BarConvTol to value 1e-08
+      From worker 5:	Investment Discharge Module
+      From worker 3:	Investment Discharge Module
+      From worker 4:	Dict{String, Any} with 5 entries:
+      From worker 4:	  "Method" => 2
+      From worker 4:	  "Crossover" => 1
+      From worker 4:	  "MIPGap" => 0.001
+      From worker 4:	  "Threads" => 1
+      From worker 4:	  "BarConvTol" => 1.0e-8
+      From worker 4:	Set parameter Method to value 2
+      From worker 4:	Set parameter Crossover to value 1
+      From worker 4:	Set parameter MIPGap to value 0.001
+      From worker 4:	Set parameter Threads to value 1
+      From worker 4:	Set parameter BarConvTol to value 1e-08
+      From worker 4:	Investment Discharge Module
+      From worker 2:	Dict{String, Any} with 5 entries:
+      From worker 2:	  "Method" => 2
+      From worker 2:	  "Crossover" => 1
+      From worker 2:	  "MIPGap" => 0.001
+      From worker 2:	  "Threads" => 1
+      From worker 2:	  "BarConvTol" => 1.0e-8
+      From worker 2:	Set parameter Method to value 2
+      From worker 2:	Set parameter Crossover to value 1
+      From worker 2:	Set parameter MIPGap to value 0.001
+      From worker 2:	Set parameter Threads to value 1
+      From worker 2:	Set parameter BarConvTol to value 1e-08
+      From worker 2:	Investment Discharge Module
+      From worker 5:	Discharge Module
+      From worker 3:	Discharge Module
+      From worker 4:	Discharge Module
+      From worker 5:	Non-served Energy Module
+      From worker 2:	Discharge Module
+      From worker 3:	Non-served Energy Module
+      From worker 4:	Non-served Energy Module
+      From worker 2:	Non-served Energy Module
+      From worker 5:	Unit Commitment Module
+      From worker 3:	Unit Commitment Module
+      From worker 4:	Unit Commitment Module
+      From worker 5:	Fuel Module
+      From worker 3:	Fuel Module
+      From worker 2:	Unit Commitment Module
+      From worker 4:	Fuel Module
+      From worker 2:	Fuel Module
+      From worker 3:	CO2 Module
+      From worker 5:	CO2 Module
+      From worker 4:	CO2 Module
+      From worker 3:	Transmission Module
+      From worker 5:	Transmission Module
+      From worker 4:	Transmission Module
+      From worker 2:	CO2 Module
+      From worker 2:	Transmission Module
+      From worker 5:	Dispatchable Resources Module
+      From worker 3:	Dispatchable Resources Module
+      From worker 4:	Dispatchable Resources Module
+      From worker 3:	Storage Core Resources Module
+      From worker 5:	Storage Core Resources Module
+      From worker 2:	Dispatchable Resources Module
+      From worker 4:	Storage Core Resources Module
+      From worker 2:	Storage Core Resources Module
+      From worker 5:	Storage Resources with Symmetric Charge/Discharge Capacity Module
+      From worker 3:	Storage Resources with Symmetric Charge/Discharge Capacity Module
+      From worker 3:	Thermal (Unit Commitment) Resources Module
+      From worker 5:	Thermal (Unit Commitment) Resources Module
+      From worker 4:	Storage Resources with Symmetric Charge/Discharge Capacity Module
+      From worker 4:	Thermal (Unit Commitment) Resources Module
+      From worker 2:	Storage Resources with Symmetric Charge/Discharge Capacity Module
+      From worker 2:	Thermal (Unit Commitment) Resources Module
+Distributed operational subproblems generation took 38.729270935058594 seconds
+Solving the subproblems required 3.706662893295288 seconds
+Updating the planning problem....done (it took 0.4592909812927246 s).
+Solving the planning problem required 0.001094818115234375 seconds
+k = 0      LB = 828.9265779416941     UB = 5.484585398707689e6       Gap = 6615.491188310612       CPU Time = 6.0347630977630615
+Solving the interior level set problem with γ = 0.5
+Solving the interior level set problem required 0.3845789432525635 seconds
+Solving the subproblems required 0.41670703887939453 seconds
+Updating the planning problem....done (it took 0.00018596649169921875 s).
+Solving the planning problem required 0.0007870197296142578 seconds
+k = 1      LB = 878.4596030715666     UB = 102369.01448223784       Gap = 115.53240982772661       CPU Time = 6.8955299854278564
+Solving the interior level set problem with γ = 0.5
+Solving the interior level set problem required 0.0014472007751464844 seconds
+Solving the subproblems required 0.3593168258666992 seconds
+Updating the planning problem....done (it took 0.000186920166015625 s).
+Solving the planning problem required 0.0014500617980957031 seconds
+k = 2      LB = 1203.236630517245     UB = 33563.19355141907       Gap = 26.894092234368724       CPU Time = 7.258035898208618
+Solving the interior level set problem with γ = 0.5
+Solving the interior level set problem required 0.0009069442749023438 seconds
+Solving the subproblems required 0.31857991218566895 seconds
+Updating the planning problem....done (it took 0.00018095970153808594 s).
+Solving the planning problem required 0.001165151596069336 seconds
+k = 3      LB = 3176.263012684022     UB = 11926.10696440633       Gap = 2.754760521021359       CPU Time = 7.578980922698975
+Solving the interior level set problem with γ = 0.5
+Solving the interior level set problem required 0.0009241104125976562 seconds
+Solving the subproblems required 0.36568593978881836 seconds
+Updating the planning problem....done (it took 0.00019097328186035156 s).
+Solving the planning problem required 0.0014538764953613281 seconds
+k = 4      LB = 3502.590726078829     UB = 11313.123868516243       Gap = 2.2299302868255326       CPU Time = 7.947329044342041
+Solving the interior level set problem with γ = 0.5
+Solving the interior level set problem required 0.0010051727294921875 seconds
+Solving the subproblems required 0.34548401832580566 seconds
+Updating the planning problem....done (it took 0.0001881122589111328 s).
+Solving the planning problem required 0.0011310577392578125 seconds
+k = 5      LB = 3556.6170124559094     UB = 6333.369212375375       Gap = 0.7807284816427472       CPU Time = 8.2952299118042
+Solving the interior level set problem with γ = 0.5
+Solving the interior level set problem required 0.0010509490966796875 seconds
+Solving the subproblems required 0.357619047164917 seconds
+Updating the planning problem....done (it took 0.00017690658569335938 s).
+Solving the planning problem required 0.0016438961029052734 seconds
+k = 6      LB = 3558.150041625443     UB = 4938.869241554563       Gap = 0.3880441194937289       CPU Time = 8.655811071395874
+Solving the interior level set problem with γ = 0.5
+Solving the interior level set problem required 0.0011429786682128906 seconds
+Solving the subproblems required 0.3132498264312744 seconds
+Updating the planning problem....done (it took 0.00017786026000976562 s).
+Solving the planning problem required 0.0014138221740722656 seconds
+k = 7      LB = 3730.22026479429     UB = 4938.869241554563       Gap = 0.32401544438741775       CPU Time = 8.971872091293335
+Solving the interior level set problem with γ = 0.5
+Solving the interior level set problem required 0.0012061595916748047 seconds
+Solving the subproblems required 0.34897685050964355 seconds
+Updating the planning problem....done (it took 0.00018215179443359375 s).
+Solving the planning problem required 0.00481104850769043 seconds
+k = 8      LB = 3820.0183265836354     UB = 4232.530019747859       Gap = 0.10798683616084799       CPU Time = 9.32714295387268
+Solving the interior level set problem with γ = 0.5
+Solving the interior level set problem required 0.00436091423034668 seconds
+Solving the subproblems required 0.33908796310424805 seconds
+Updating the planning problem....done (it took 0.00019407272338867188 s).
+Solving the planning problem required 0.004025936126708984 seconds
+k = 9      LB = 3851.0169125353796     UB = 3985.9615551295756       Gap = 0.03504130094961152       CPU Time = 9.674910068511963
+Solving the interior level set problem with γ = 0.5
+Solving the interior level set problem required 0.002682924270629883 seconds
+Solving the subproblems required 0.36855387687683105 seconds
+Updating the planning problem....done (it took 0.0001780986785888672 s).
+Solving the planning problem required 0.005089998245239258 seconds
+k = 10      LB = 3863.4931249362785     UB = 3922.138823962013       Gap = 0.015179449562680808       CPU Time = 10.05151104927063
+Solving the interior level set problem with γ = 0.5
+Solving the interior level set problem required 0.003905057907104492 seconds
+Solving the subproblems required 0.34650301933288574 seconds
+Updating the planning problem....done (it took 0.00017404556274414062 s).
+Solving the planning problem required 0.005372047424316406 seconds
+k = 11      LB = 3877.695576285093     UB = 3893.972839366069       Gap = 0.004197663989025624       CPU Time = 10.407562971115112
+Solving the interior level set problem with γ = 0.5
+Solving the interior level set problem required 0.004076957702636719 seconds
+Solving the subproblems required 0.3425929546356201 seconds
+Updating the planning problem....done (it took 0.00017905235290527344 s).
+Solving the planning problem required 0.0061948299407958984 seconds
+k = 12      LB = 3879.0177103541373     UB = 3889.792718020094       Gap = 0.002777767071595312       CPU Time = 10.760705947875977
+Solving the interior level set problem with γ = 0.5
+Solving the interior level set problem required 0.0045130252838134766 seconds
+Solving the subproblems required 0.34706711769104004 seconds
+Updating the planning problem....done (it took 0.00017690658569335938 s).
+Solving the planning problem required 0.005821943283081055 seconds
+k = 13      LB = 3879.5664083845095     UB = 3889.792718020094       Gap = 0.002635941380841815       CPU Time = 11.118372917175293
+Solving the interior level set problem with γ = 0.5
+Solving the interior level set problem required 0.0046291351318359375 seconds
+Solving the subproblems required 0.374377965927124 seconds
+Updating the planning problem....done (it took 0.0001780986785888672 s).
+Solving the planning problem required 0.0059719085693359375 seconds
+k = 14      LB = 3879.5664083845095     UB = 3886.3875609537736       Gap = 0.001758225495128071       CPU Time = 11.503628015518188
+Solving the interior level set problem with γ = 0.5
+Solving the interior level set problem required 0.004714012145996094 seconds
+Solving the subproblems required 0.34717512130737305 seconds
+Updating the planning problem....done (it took 0.0001819133758544922 s).
+Solving the planning problem required 0.006233930587768555 seconds
+k = 15      LB = 3879.5935283894833     UB = 3882.8615637300954       Gap = 0.0008423653964514242       CPU Time = 11.862029075622559
+Benders decomposition took 11.862029075622559 seconds to run
+Writing Output
+Running with crossover on
+Time elapsed for writing capacity is
+1.047171398
+Time elapsed for writing network expansion is
+0.223302227
+Running Modelling to Generate Alternatives with Cutting-Plane Algorithm
+(4, 3, 1)
+(4, 3, 2)
+2
+(4, 3, 2)
+[-1.0 1.0; 1.0 -1.0]
+Cut Setting 2
+In mga master problem solve
+Solving the master problem required 0.22395992279052734 seconds
+Solving the subproblems required 0.36869192123413086 seconds
+k = 1      ApproxSystemCost = 4271.147720103106     TrueSystemCost = 5321.310571004655     TrueSystemCost_new = 5321.310571004655       MGABudget Violation = 0.24587369009943727       CPU Time = 0.6422469615936279
+Updating the master problem....done (it took 0.15958499908447266 s).
+In mga master problem solve
+Solving the master problem required 0.007000923156738281 seconds
+Solving the subproblems required 0.23508906364440918 seconds
+k = 2      ApproxSystemCost = 4271.147720103106     TrueSystemCost = 4630.300132859203     TrueSystemCost_new = 4630.300132859203       MGABudget Violation = 0.08408803354322454       CPU Time = 1.0601880550384521
+Updating the master problem....done (it took 0.00019812583923339844 s).
+In mga master problem solve
+Solving the master problem required 0.007459878921508789 seconds
+Solving the subproblems required 0.3266890048980713 seconds
+k = 3      ApproxSystemCost = 4271.147720103106     TrueSystemCost = 4611.408365839732     TrueSystemCost_new = 4611.408365839732       MGABudget Violation = 0.07966492100826064       CPU Time = 1.3946189880371094
+Updating the master problem....done (it took 0.00019884109497070312 s).
+In mga master problem solve
+Solving the master problem required 0.007607936859130859 seconds
+Solving the subproblems required 0.24585199356079102 seconds
+k = 4      ApproxSystemCost = 4271.147720103106     TrueSystemCost = 4479.105822453066     TrueSystemCost_new = 4479.105822453066       MGABudget Violation = 0.04868904472003144       CPU Time = 1.6483581066131592
+Rerunning with crossover on
+In mga master problem solve
+Solving the master problem required 0.008054971694946289 seconds
+Solving the subproblems required 0.23472309112548828 seconds
+k = 5      ApproxSystemCost = 4271.147720103106     TrueSystemCost = 4479.1058228136135     TrueSystemCost_new = 4479.1058228136135       MGABudget Violation = 0.048689044804446066       CPU Time = 1.896245002746582
+MGA iteration finished
+Average Master Time = 0.13280089696248373
+Average Subop Time = 0.2822090148925781
+Master/Subop Ratio = 0.470576381172777
+  2.091350 seconds (629.26 k allocations: 45.140 MiB, 1.16% gc time, 32.05% compilation time)
+JuMP.AffExpr[0.25 vCAP[1], 0.25 vCAP[2], 0.25 vCAP[3], vCAP[4] + 0.5, vCAP[5], vCAP[6], vCAP[7], vCAP[8], vCAP[9], vCAP[10]]
+In mga master problem solve
+Solving the master problem required 0.0026140213012695312 seconds
+Solving the subproblems required 0.1088709831237793 seconds
+k = 1      ApproxSystemCost = 4271.147720103106     TrueSystemCost = 6622.923085929948     TrueSystemCost_new = 6622.923085929948       MGABudget Violation = 0.5506190653996088       CPU Time = 0.11155200004577637
+Updating the master problem....done (it took 0.0001938343048095703 s).
+In mga master problem solve
+Solving the master problem required 0.0023550987243652344 seconds
+Solving the subproblems required 0.22437691688537598 seconds
+k = 2      ApproxSystemCost = 4271.147720103106     TrueSystemCost = 4677.684603359145     TrueSystemCost_new = 4677.684603359145       MGABudget Violation = 0.09518211728959472       CPU Time = 0.33855700492858887
+Updating the master problem....done (it took 0.00019288063049316406 s).
+In mga master problem solve
+Solving the master problem required 0.002550840377807617 seconds
+Solving the subproblems required 0.19650602340698242 seconds
+k = 3      ApproxSystemCost = 4271.147720103106     TrueSystemCost = 4379.457347627111     TrueSystemCost_new = 4379.457347627111       MGABudget Violation = 0.025358436331813505       CPU Time = 0.5378849506378174
+Rerunning with crossover on
+In mga master problem solve
+Solving the master problem required 0.0029649734497070312 seconds
+Solving the subproblems required 0.1688520908355713 seconds
+k = 4      ApproxSystemCost = 4271.147720103106     TrueSystemCost = 4379.457347847219     TrueSystemCost_new = 4379.457347847219       MGABudget Violation = 0.02535843638334734       CPU Time = 0.7097809314727783
+MGA iteration finished
+Average Master Time = 0.00267791748046875
+Average Subop Time = 0.17465150356292725
+Master/Subop Ratio = 0.01533291970489044
+  0.709886 seconds (19.82 k allocations: 3.564 MiB)
+JuMP.AffExpr[0.25 vCAP[1], 0.25 vCAP[2], 0.25 vCAP[3], vCAP[4] + 0.5, vCAP[5], vCAP[6], vCAP[7], vCAP[8], vCAP[9], vCAP[10]]
+Sun May 11 04:43:19 PM EDT 2025

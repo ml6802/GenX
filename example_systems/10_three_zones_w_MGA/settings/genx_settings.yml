@@ -16,7 +16,7 @@ ModelingToGenerateAlternatives: 1
 ModelingToGenerateAlternativeSlack: 0.1
 ModelingToGenerateAlternativeRetainBendersCuts: 2
 MGAAnnualGeneration: 0
-ModelingToGenerateAlternativeIterations: 5
+ModelingToGenerateAlternativeIterations: 1
 MultiStage: 0
 MGAMethod: 2
 ClusterMGAVecs: 0
