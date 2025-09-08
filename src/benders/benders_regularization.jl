@@ -8,7 +8,7 @@ function solve_int_level_set_problem(EP::Model,planning_variables::Vector{String
     optimize!(EP)
 
 	if has_values(EP)
-		zone_inv_cost = make_benders_zonal_invcost(inputs, EP)
+		zone_inv_cost = 0#make_benders_zonal_invcost(inputs, EP)
 		planning_sol = (;planning_sol..., inv_cost=value(EP[:eObj]),zone_inv_cost = zone_inv_cost, values=Dict([s=>value(variable_by_name(EP,s)) for s in planning_variables]), theta = value.(EP[:vTHETA]))
 
 	else
@@ -16,7 +16,7 @@ function solve_int_level_set_problem(EP::Model,planning_variables::Vector{String
 		if !has_values(EP)
 			@warn  "the interior level set problem solution failed"
 		else
-			zone_inv_cost = make_benders_zonal_invcost(inputs, EP)
+			zone_inv_cost = 0#make_benders_zonal_invcost(inputs, EP)
 			planning_sol = (;planning_sol..., inv_cost=value(EP[:eObj]), zone_inv_cost = zone_inv_cost,values=Dict([s=>value(variable_by_name(EP,s)) for s in planning_variables]), theta = value.(EP[:vTHETA]))
 		end
 	end

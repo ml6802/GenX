@@ -164,21 +164,21 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
 	
 	if has_values(EP)
 		op_cost = objective_value(EP);
-        zone_cost = make_benders_zonal_opcost(inputs,EP)
+        zone_cost = 0#make_benders_zonal_opcost(inputs,EP)
 		emissions = value.(EP[:eEmissionsByZone])
         lambda=[]
         for y in planning_variables_sub
             vy = variable_by_name(EP,y)
 		    if is_parameter(vy)
                 push!(lambda, dual(ParameterRef(vy)))
-                if dual(ParameterRef(vy)) > 0.1
-                    println("Dual value for parameter "*string(vy)*" is "*string(dual(ParameterRef(vy))))
-                end
+                # if dual(ParameterRef(vy)) > 0.1
+                #     println("Dual value for parameter "*string(vy)*" is "*string(dual(ParameterRef(vy))))
+                # end
             else
                 push!(lambda, dual(FixRef(vy)))
-                if dual(FixRef(vy)) > 0.1
-                    println("Dual value for variable "*string(vy)*" is "*string(dual(FixRef(vy))))
-                end
+                # if dual(FixRef(vy)) > 0.1
+                #     println("Dual value for variable "*string(vy)*" is "*string(dual(FixRef(vy))))
+                # end
             end
         end
 		theta_coeff = 1;

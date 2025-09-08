@@ -38,6 +38,9 @@ for i in 1:length(buses)
 end
 
 
+benders_settings_path = GenX.get_settings_path(case, "benders_settings.yml")
+mysetup_benders = GenX.configure_benders(benders_settings_path) 
+
 genx_settings = GenX.get_settings_path(case, "genx_settings.yml") # Settings YAML file path
 writeoutput_settings = GenX.get_settings_path(case, "output_settings.yml") # Write-output settings YAML file path
 mysetup = GenX.configure_settings(genx_settings, writeoutput_settings) # mysetup dictionary stores settings and GenX-specific parameters
@@ -45,23 +48,14 @@ mysetup = GenX.configure_settings(genx_settings, writeoutput_settings) # mysetup
 mysetup["DC_OPF"] = 1
 myinputs = GenX.load_inputs(mysetup, case, p)
 mysetup["ptdf"] = 0
-mysetup["bilinear"] = 0
+mysetup["bilinear"] = 1
 mysetup["disaggregate"] = 0
 mysetup["unfix_slacks"] = 0
 mysetup["SOS1"] = 0
+mysetup = merge(mysetup,mysetup_benders);
 
-#using JLD2
-
-#JLD2.save((@__DIR__)*"/inputs_and_settings.jld2", "inputs", myinputs, "setup", mysetup)
-
-
-
-# rs = myinputs["RESOURCES"]
-# for (i, r) in enumerate(rs)
-#     println(i, "   ", GenX.cap_size(r))
-# end
-
-# add candidate data
+settings_path = GenX.get_settings_path(case)    
+mysetup["settings_path"] = settings_path;
 
 myinputs["pTrans_Max"] .*= 0.3
 L_cand = myinputs["L"]
@@ -100,6 +94,39 @@ for i in 1:length(lines)
     myinputs["pC_Line_Reinforcement"][i] = distance * size_mw * 2#000
 end
 
+n_times = 168
+myinputs["T"] = n_times
+myinputs["hours_per_subperiod"] = n_times
+myinputs["INTERIOR_SUBPERIODS"] = [i for i in 2:myinputs["hours_per_subperiod"]]
+
+mysetup["NetworkExpansion"] = 1
+mysetup["Benders"] = 1
+
+myinputs_decomp = GenX.separate_inputs_subperiods(myinputs);
+benders_inputs = GenX.generate_benders_inputs(mysetup,myinputs,myinputs_decomp)
+
+planning_problem, planning_sol, operational_sol, LB_hist,UB_hist, cpu_time,feasibility_hist, build_decisions  = GenX.benders(benders_inputs,mysetup,myinputs);
+
+
+
+#=
+num_builds = 0
+for i in 1:39
+    key = "vNEW_TRANS_CAP_DECISION_INT[$i]"
+    num_builds += planning_sol.values[key]
+end
+
+overproduction = 0
+# for t in 1:168
+#     for z in 1:73
+
+#     end
+# end
+
+
+
+
+
 
 mysetup["zonal"] = "waterflow" # set for waterflow or dcopf
 mysetup["nodal"] = "dcopf" # set for waterflow or dcopf
@@ -128,7 +155,7 @@ myinputs["hours_per_subperiod"] = n_times
 myinputs["INTERIOR_SUBPERIODS"] = [i for i in 2:myinputs["hours_per_subperiod"]]
 z_inputs = build_zonal_inputs(myinputs, zone_map, 3)
 
-solver = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 120, "MIPGap" => 1e-2)
+solver = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 2400, "MIPGap" => 1e-2)
 ###### ZONAL ######
 zonal_setup = deepcopy(mysetup)
 zonal_setup["unfix_slacks"] = 1
@@ -263,41 +290,9 @@ vP_by_zone_nodal[2] = sum(value.(m2[:vP]))
 vP_by_zone_nodal[3] = sum(value.(m3[:vP]))
 
 
-# solver_monolithic = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 600, "MIPGap" => 2e-2)
+# solver_monolithic = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 10800, "MIPGap" => 2e-2)
 
 # m = GenX.generate_model(nodal_setup, myinputs, solver_monolithic)
 
 # optimize!(m)
-
-# get set of new trans cap variables; 
-
-#nodal_setup, n_inputs[3], optimizer
-
-# benders_settings_path = GenX.get_settings_path(case, "benders_settings.yml")
-# mysetup_benders = GenX.configure_benders(benders_settings_path) 
-
-# genx_settings = GenX.get_settings_path(case, "genx_settings.yml") # Settings YAML file path
-# writeoutput_settings = GenX.get_settings_path(case, "output_settings.yml") # Write-output settings YAML file path
-# mysetup = GenX.configure_settings(genx_settings, writeoutput_settings) # mysetup dictionary stores settings and GenX-specific parameters
-
-# mysetup["DC_OPF"] = 1
-# myinputs = GenX.load_inputs(mysetup, case, p)
-# mysetup["ptdf"] = 0
-# mysetup["bilinear"] = 1
-# mysetup["disaggregate"] = 0
-# mysetup["unfix_slacks"] = 0
-# mysetup["SOS1"] = 0
-# mysetup = merge(mysetup,mysetup_benders);
-
-# settings_path = GenX.get_settings_path(case)    
-# mysetup["settings_path"] = settings_path;
-# mysetup["Benders"] = 1
-
-# myinputs_decomp = GenX.separate_inputs_subperiods(n_inputs[3]);
-# # nodal_setup_Benders = deepcopy(nodal_setup)
-# # nodal_setup_Benders["Benders"] = 1
-# benders_inputs = GenX.generate_benders_inputs(mysetup,n_inputs[3],myinputs_decomp)
-
-# planning_problem, planning_sol, operational_sol, LB_hist,UB_hist, cpu_time,feasibility_hist, build_decisions  = GenX.benders(benders_inputs,mysetup,n_inputs[3]);
-
-
+=#

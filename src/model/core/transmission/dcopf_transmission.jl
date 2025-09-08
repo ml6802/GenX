@@ -38,6 +38,9 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
     quant_val = inputs["Line_Reinforcement_Cap_Size"]
     num_steps = BigM_vec ./ quant_val
     num_cols = maximum(num_steps)
+    if !(haskey(setup, "tight_bigM"))
+        setup["tight_bigM"] = false
+    end
     if setup["tight_bigM"]
         BigM = quant_val#.1 .*inputs["pMax_Line_Reinforcement"]
     else

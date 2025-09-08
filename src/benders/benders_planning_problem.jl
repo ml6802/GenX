@@ -74,7 +74,7 @@ function solve_planning_problem(EP::Model,planning_variables::Vector{String},inp
 		println("The planning model is a MILP")
 		optimize!(EP)
 			if has_values(EP) #
-				zone_inv_cost = make_benders_zonal_invcost(inputs, EP)
+				zone_inv_cost = 0#make_benders_zonal_invcost(inputs, EP)
 				planning_sol =  (LB = objective_value(EP), inv_cost =value(EP[:eObj]), zone_inv_cost = zone_inv_cost,values =Dict([s=>value.(variable_by_name(EP,s)) for s in planning_variables]), theta = value.(EP[:vTHETA])) 
 			else
 				compute_conflict!(EP)
@@ -102,7 +102,7 @@ function solve_planning_problem(EP::Model,planning_variables::Vector{String},inp
 				#set_attribute(EP, "BarHomogeneous", 1)
 				optimize!(EP)
 				if has_values(EP)
-					zone_inv_cost = make_benders_zonal_invcost(inputs, EP)
+					zone_inv_cost = 0#make_benders_zonal_invcost(inputs, EP)
 					planning_sol =  (LB = objective_value(EP), inv_cost =value(EP[:eObj]), zone_inv_cost = zone_inv_cost,values =Dict([s=>value.(variable_by_name(EP,s)) for s in planning_variables]), theta = value.(EP[:vTHETA])) 
 					set_attribute(EP, "Crossover", 0)
 					#set_attribute(EP, "BarHomogeneous", -1)
@@ -111,7 +111,7 @@ function solve_planning_problem(EP::Model,planning_variables::Vector{String},inp
 					set_attribute(EP, "BarHomogeneous", 1)
 					optimize!(EP)
 					if has_values(EP)
-						zone_inv_cost = make_benders_zonal_invcost(inputs, EP)
+						zone_inv_cost = 0#make_benders_zonal_invcost(inputs, EP)
 						planning_sol =  (LB = objective_value(EP), inv_cost =value(EP[:eObj]), zone_inv_cost = zone_inv_cost,values =Dict([s=>value.(variable_by_name(EP,s)) for s in planning_variables]), theta = value.(EP[:vTHETA])) 
 						set_attribute(EP, "BarHomogeneous", -1)
 					else
@@ -119,7 +119,7 @@ function solve_planning_problem(EP::Model,planning_variables::Vector{String},inp
 					end
 				end
 			else
-				zone_inv_cost = make_benders_zonal_invcost(inputs, EP)
+				zone_inv_cost = 0#make_benders_zonal_invcost(inputs, EP)
 				planning_sol =  (LB = objective_value(EP), inv_cost =value(EP[:eObj]), zone_inv_cost = zone_inv_cost,values =Dict([s=>value.(variable_by_name(EP,s)) for s in planning_variables]), theta = value.(EP[:vTHETA])) 
 			end
 		else
@@ -127,7 +127,7 @@ function solve_planning_problem(EP::Model,planning_variables::Vector{String},inp
 			set_attribute(EP, "BarHomogeneous", 1)
 			optimize!(EP)
 			if has_values(EP)
-				zone_inv_cost = make_benders_zonal_invcost(inputs, EP)
+				zone_inv_cost = 0#make_benders_zonal_invcost(inputs, EP)
 				planning_sol =  (LB = objective_value(EP), inv_cost =value(EP[:eObj]), zone_inv_cost = zone_inv_cost,values =Dict([s=>value.(variable_by_name(EP,s)) for s in planning_variables]), theta = value.(EP[:vTHETA])) 
 				set_attribute(EP, "BarHomogeneous", -1)
 			else
