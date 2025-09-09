@@ -1,0 +1,443 @@
+Set parameter LicenseID to value 197246
+Set parameter GURO_PAR_SPECIAL
+Set parameter TokenServer to value "license.rc.princeton.edu"
+Set parameter Method to value 2
+Set parameter Crossover to value 0
+Set parameter MIPGap to value 0.0001
+Set parameter BarConvTol to value 1e-08
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+Set parameter LicenseID to value 197246
+Set parameter GURO_PAR_SPECIAL
+Set parameter TokenServer to value "license.rc.princeton.edu"
+Set parameter TimeLimit to value 3600
+Set parameter MIPGap to value 0.02
+Set parameter MIPGap to value 0.02
+Set parameter TimeLimit to value 3600
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Red Hat Enterprise Linux 9.6 (Plow)")
+
+CPU model: AMD EPYC 9654 96-Core Processor, instruction set [SSE2|AVX|AVX2|AVX512]
+Thread count: 192 physical cores, 192 logical processors, using up to 32 threads
+
+Non-default parameters:
+TimeLimit  3600
+MIPGap  0.02
+
+Optimize a model with 377340 rows, 249463 columns and 1009200 nonzeros
+Model fingerprint: 0x45ddf38a
+Variable types: 249343 continuous, 120 integer (120 binary)
+Coefficient statistics:
+  Matrix range     [1e-03, 2e+01]
+  Objective range  [8e-03, 7e+06]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e-03, 1e+08]
+Presolve removed 285807 rows and 170808 columns
+Presolve time: 0.97s
+Presolved: 91533 rows, 78655 columns, 393916 nonzeros
+Variable types: 78655 continuous, 0 integer (0 binary)
+Deterministic concurrent LP optimizer: primal and dual simplex
+Showing primal log only...
+
+
+Root simplex log...
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+   46293   -1.8312247e+15   3.485741e+08   3.665224e+04      6s
+   58183   -1.8312247e+15   3.485741e+08   1.832612e+04     15s
+   64128   -1.8312247e+15   3.485741e+08   2.140173e+06     21s
+  105867   -5.4570215e+08   6.677560e+11   0.000000e+00     25s
+  121203   -1.3063175e+08   1.284450e+08   0.000000e+00     30s
+  130077   -1.1461558e+08   1.446545e+05   0.000000e+00     35s
+  136233   -6.0167795e+07   2.430750e+07   0.000000e+00     40s
+  141730   -1.8106612e+06   1.189453e+07   0.000000e+00     45s
+  145884    1.2327504e+02   5.177435e+06   0.000000e+00     50s
+  148909    2.8588480e+02   2.083375e+07   0.000000e+00     55s
+  151762    3.8359532e+02   2.988624e+04   0.000000e+00     60s
+  154636    4.3977345e+02   1.424892e+04   0.000000e+00     65s
+  157438    4.7643490e+02   2.092272e+05   0.000000e+00     70s
+  159959    5.0739285e+02   2.652222e+05   0.000000e+00     75s
+  162650    5.3730630e+02   2.586393e+06   0.000000e+00     80s
+  165110    5.5126597e+02   5.356777e+05   0.000000e+00     85s
+  167456    5.6123079e+02   8.906914e+05   0.000000e+00     90s
+  169775    5.7189560e+02   1.061127e+06   0.000000e+00     95s
+  171942    5.8117744e+02   8.409950e+05   0.000000e+00    100s
+  174483    5.9079843e+02   1.021639e+07   0.000000e+00    105s
+  176780    5.9882055e+02   5.893084e+04   0.000000e+00    110s
+  178885    6.0727258e+02   1.962941e+05   0.000000e+00    115s
+  181211    6.1416286e+02   8.351516e+05   0.000000e+00    120s
+  183369    6.1955379e+02   3.025889e+05   0.000000e+00    125s
+  185922    6.2637460e+02   2.171379e+05   0.000000e+00    130s
+  188476    6.3296180e+02   5.232491e+04   0.000000e+00    135s
+  190856    6.3744433e+02   7.131363e+05   0.000000e+00    140s
+  193034    6.4187377e+02   2.100589e+05   0.000000e+00    145s
+  195599    1.2478355e+06   2.504956e+05   0.000000e+00    150s
+  197980    1.2478399e+06   8.015458e+04   0.000000e+00    155s
+  200544    1.2478435e+06   3.902911e+05   0.000000e+00    160s
+  203279    1.3160693e+06   6.544040e+04   0.000000e+00    165s
+  205671    1.3184091e+06   2.385556e+04   0.000000e+00    170s
+  208236    1.3184114e+06   7.504825e+04   0.000000e+00    175s
+  210801    1.3184139e+06   9.805342e+03   0.000000e+00    180s
+  213536    1.3184160e+06   1.555351e+05   0.000000e+00    185s
+  216272    1.3184179e+06   6.538747e+03   0.000000e+00    190s
+  218837    1.3184197e+06   4.891516e+04   0.000000e+00    195s
+  221744    1.3184218e+06   5.807087e+03   0.000000e+00    200s
+Concurrent spin time: 0.00s
+
+Solved with dual simplex
+
+Root simplex log...
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+  162593    1.3889908e+06   0.000000e+00   0.000000e+00    203s
+
+Root relaxation: objective 1.388991e+06, 162593 iterations, 202.05 seconds (225.01 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+*    0     0               0    1388990.8485 1388990.85  0.00%     -  203s
+
+Explored 1 nodes (162593 simplex iterations) in 203.18 seconds (226.76 work units)
+Thread count was 32 (of 192 available processors)
+
+Solution count 1: 1.38899e+06 
+
+Optimal solution found (tolerance 2.00e-02)
+Best objective 1.388990848476e+06, best bound 1.388990848476e+06, gap 0.0000%
+
+User-callback calls 80146, time in user-callback 0.07 sec
+Loading RTS data from database: /home/ml6802/GenX/example_systems/RTS_Case_Latest/sys_DA.sqlite
+Parameters:
+  - Discount rate: 0.05
+  - Inflation rate: 0.07
+  - Interest rate: 0.07
+  - Base year: 2025
+  - Aggregation: ACBus
+
+🔄 Starting portfolio creation...
+🔄 Opening database connection...
+✅ Database loaded successfully
+✅ Nodes created (with validation warnings)
+✅ Technologies processed (some types skipped as expected)
+✅ Power system data processed
+✅ Time series deserialization completed
+
+✅ Successfully created portfolio structs!
+Portfolio object type: Portfolio
+
+Portfolio summary:
+  - Aggregation type: ACBus
+  - Discount rate: 0.05
+  - Inflation rate: 0.07
+  - Interest rate: 0.07
+  - Base year: 2025
+
+Portfolio loading complete.
+Configuring Benders Settings
+
+Configuring Settings
+Loading inputs from portfolio
+=== DEBUGGING PORTFOLIO CONTENTS ===
+SupplyTechnology count: 164
+SupplyTechnology types: DataType[SupplyTechnology{RenewableNonDispatch}, SupplyTechnology{ThermalStandard}, SupplyTechnology{RenewableDispatch}]
+StorageTechnology count: 4
+StorageTechnology types: DataType[StorageTechnology{EnergyReservoirStorage}]
+AggregateTransportTechnology count: 0
+TransmissionTechnology count: 120
+TransmissionTechnology types: DataType[NodalACTransportTechnology{ACBranch}]
+Portfolio summary:
+  - Error checking supply technologies: UndefVarError(:has_technologies)
+  - Error checking storage technologies: UndefVarError(:has_technologies)
+  - Error checking aggregate transport technologies: UndefVarError(:has_technologies)
+  - Error checking transmission technologies: UndefVarError(:has_technologies)
+====================================
+Using TransmissionTechnology
+Number of zones: 73
+Number of regions: 73
+Number of lines: 120
+ENTERING DCOPF
+Reading DC-OPF values...
+Network Data Successfully Read!
+┌──────────────────┬────────┬─────────────────────┬──────────────────────┬────────┬─────────────────────┐
+│ time_series_type │   name │   initial_timestamp │           resolution │ length │            features │
+│           String │ String │            DateTime │          Millisecond │  Int64 │   Dict{String, Any} │
+├──────────────────┼────────┼─────────────────────┼──────────────────────┼────────┼─────────────────────┤
+│ SingleTimeSeries │ demand │ 2021-01-01T00:00:00 │ 3600000 milliseconds │   8784 │ Dict{String, Any}() │
+└──────────────────┴────────┴─────────────────────┴──────────────────────┴────────┴─────────────────────┘
+max_demand is 0.0
+max_demand is 180.0
+max_demand is 317.0
+max_demand is 175.0
+max_demand is 128.0
+max_demand is 0.0
+max_demand is 128.0
+max_demand is 100.0
+max_demand is 0.0
+max_demand is 0.0
+max_demand is 97.0
+max_demand is 333.0
+max_demand is 317.0
+max_demand is 0.0
+max_demand is 74.0
+max_demand is 0.0
+max_demand is 0.0
+max_demand is 0.0
+max_demand is 0.0
+max_demand is 175.0
+max_demand is 71.0
+max_demand is 0.0
+max_demand is 108.0
+max_demand is 0.0
+max_demand is 100.0
+max_demand is 128.0
+max_demand is 0.0
+max_demand is 100.0
+max_demand is 175.0
+max_demand is 195.0
+max_demand is 97.0
+max_demand is 136.0
+max_demand is 125.0
+max_demand is 74.0
+max_demand is 125.0
+max_demand is 171.0
+max_demand is 195.0
+max_demand is 108.0
+max_demand is 0.0
+max_demand is 0.0
+max_demand is 171.0
+max_demand is 194.0
+max_demand is 171.0
+max_demand is 180.0
+max_demand is 0.0
+max_demand is 0.0
+max_demand is 265.0
+max_demand is 317.0
+max_demand is 194.0
+max_demand is 125.0
+max_demand is 136.0
+max_demand is 333.0
+max_demand is 181.0
+max_demand is 0.0
+max_demand is 71.0
+max_demand is 333.0
+max_demand is 181.0
+max_demand is 97.0
+max_demand is 0.0
+max_demand is 265.0
+max_demand is 0.0
+max_demand is 0.0
+max_demand is 108.0
+max_demand is 0.0
+max_demand is 181.0
+max_demand is 74.0
+max_demand is 195.0
+max_demand is 194.0
+max_demand is 180.0
+max_demand is 0.0
+max_demand is 265.0
+max_demand is 71.0
+max_demand is 136.0
+Zone 6 (Region ID: 30) demand values loaded.
+Demand values: 0.0Zone 72 (Region ID: 96) demand values loaded.
+Demand values: 769808.575476442Zone 53 (Region ID: 77) demand values loaded.
+Demand values: 1.353564472168888e6Zone 45 (Region ID: 69) demand values loaded.
+Demand values: 748425.0039354298Zone 55 (Region ID: 79) demand values loaded.
+Demand values: 547419.4314499144Zone 73 (Region ID: 97) demand values loaded.
+Demand values: 0.0Zone 57 (Region ID: 81) demand values loaded.
+Demand values: 546549.6922322323Zone 29 (Region ID: 53) demand values loaded.
+Demand values: 426991.94705643156Zone 62 (Region ID: 86) demand values loaded.
+Demand values: 0.0Zone 2 (Region ID: 26) demand values loaded.
+Demand values: 0.0Zone 64 (Region ID: 88) demand values loaded.
+Demand values: 452594.9421067886Zone 36 (Region ID: 60) demand values loaded.
+Demand values: 1.421883183697917e6Zone 23 (Region ID: 47) demand values loaded.
+Demand values: 1.479098934513938e6Zone 3 (Region ID: 27) demand values loaded.
+Demand values: 0.0Zone 40 (Region ID: 64) demand values loaded.
+Demand values: 345278.61562785937Zone 7 (Region ID: 31) demand values loaded.
+Demand values: 0.0Zone 18 (Region ID: 42) demand values loaded.
+Demand values: 0.0Zone 24 (Region ID: 48) demand values loaded.
+Demand values: 0.0Zone 30 (Region ID: 54) demand values loaded.
+Demand values: 0.0Zone 60 (Region ID: 84) demand values loaded.
+Demand values: 816537.2666875054Zone 37 (Region ID: 61) demand values loaded.
+Demand values: 303164.28241006646Zone 70 (Region ID: 94) demand values loaded.
+Demand values: 0.0Zone 58 (Region ID: 82) demand values loaded.
+Demand values: 461151.30282094615Zone 48 (Region ID: 72) demand values loaded.
+Demand values: 0.0Zone 32 (Region ID: 56) demand values loaded.
+Demand values: 466592.7238214316Zone 61 (Region ID: 85) demand values loaded.
+Demand values: 597238.6864914324Zone 28 (Region ID: 52) demand values loaded.
+Demand values: 0.0Zone 44 (Region ID: 68) demand values loaded.
+Demand values: 427671.43082024565Zone 26 (Region ID: 50) demand values loaded.
+Demand values: 747235.9073487553Zone 15 (Region ID: 39) demand values loaded.
+Demand values: 832634.2967600415Zone 4 (Region ID: 28) demand values loaded.
+Demand values: 414182.18864473864Zone 49 (Region ID: 73) demand values loaded.
+Demand values: 580709.0479967468Zone 13 (Region ID: 37) demand values loaded.
+Demand values: 533739.9338205395Zone 35 (Region ID: 59) demand values loaded.
+Demand values: 315974.0408217594Zone 21 (Region ID: 45) demand values loaded.
+Demand values: 583240.9047767895Zone 25 (Region ID: 49) demand values loaded.
+Demand values: 797873.557734648Zone 27 (Region ID: 51) demand values loaded.
+Demand values: 909855.8114517916Zone 19 (Region ID: 43) demand values loaded.
+Demand values: 461885.14528586523Zone 31 (Region ID: 55) demand values loaded.
+Demand values: 0.0Zone 9 (Region ID: 33) demand values loaded.
+Demand values: 0.0Zone 33 (Region ID: 57) demand values loaded.
+Demand values: 730156.229466498Zone 69 (Region ID: 93) demand values loaded.
+Demand values: 829682.5757912765Zone 59 (Region ID: 83) demand values loaded.
+Demand values: 731318.14670262Zone 10 (Region ID: 34) demand values loaded.
+Demand values: 768585.5047015769Zone 34 (Region ID: 58) demand values loaded.
+Demand values: 0.0Zone 52 (Region ID: 76) demand values loaded.
+Demand values: 0.0Zone 39 (Region ID: 63) demand values loaded.
+Demand values: 1.133329291673651e6Zone 17 (Region ID: 41) demand values loaded.
+Demand values: 1.3557184357001786e6Zone 67 (Region ID: 91) demand values loaded.
+Demand values: 828364.3772894773Zone 68 (Region ID: 92) demand values loaded.
+Demand values: 534589.288525307Zone 46 (Region ID: 70) demand values loaded.
+Demand values: 634566.104397147Zone 65 (Region ID: 89) demand values loaded.
+Demand values: 1.424145864631418e6Zone 38 (Region ID: 62) demand values loaded.
+Demand values: 844532.8301167912Zone 43 (Region ID: 67) demand values loaded.
+Demand values: 0.0Zone 63 (Region ID: 87) demand values loaded.
+Demand values: 331280.8339132165Zone 50 (Region ID: 74) demand values loaded.
+Demand values: 1.553753770325367e6Zone 66 (Region ID: 90) demand values loaded.
+Demand values: 774085.2897846445Zone 1 (Region ID: 25) demand values loaded.
+Demand values: 414841.28789563826Zone 14 (Region ID: 38) demand values loaded.
+Demand values: 0.0Zone 54 (Region ID: 78) demand values loaded.
+Demand values: 1.2364707181267936e6Zone 16 (Region ID: 40) demand values loaded.
+Demand values: 0.0Zone 56 (Region ID: 80) demand values loaded.
+Demand values: 0.0Zone 11 (Region ID: 35) demand values loaded.
+Demand values: 503920.1417271461Zone 5 (Region ID: 29) demand values loaded.
+Demand values: 0.0Zone 51 (Region ID: 75) demand values loaded.
+Demand values: 772855.4241721411Zone 12 (Region ID: 36) demand values loaded.
+Demand values: 316476.8588069817Zone 42 (Region ID: 66) demand values loaded.
+Demand values: 833959.2900994789Zone 47 (Region ID: 71) demand values loaded.
+Demand values: 905189.8842135773Zone 20 (Region ID: 44) demand values loaded.
+Demand values: 839866.9028785769Zone 41 (Region ID: 65) demand values loaded.
+Demand values: 0.0Zone 71 (Region ID: 95) demand values loaded.
+Demand values: 1.1315286596995438e6Zone 22 (Region ID: 46) demand values loaded.
+Demand values: 303646.7158823744Zone 8 (Region ID: 32) demand values loaded.
+Demand values: 581633.1459155341LinearCurve[LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0)]
+Demand (load) data Successfully Read!
+Fuels data Successfully Read!
+
+Summary of resources loaded into the model:
+-------------------------------------------------------
+	Resource type 		Number of resources
+=======================================================
+	Thermal        		91
+	VRE            		42
+	Storage        		4
+	Must_run       		31
+=======================================================
+Total number of resources: 168
+-------------------------------------------------------
+Resource data from portfolio read!Variable Generation Data Successfully Read!
+Minimum Requirements Successfully Read!
+Portfolio successfully read
+Planning Gurobi attributes:
+Dict{String, Any} with 4 entries:
+  "Method" => 2
+  "Crossover" => 0
+  "MIPGap" => 0.0001
+  "BarConvTol" => 1.0e-8
+Investment Discharge Module
+Investment Transmission Module
+Investment Storage Resources Module
+Storage Investment Module
+Charge Investment Module
+Minimum Capacity Requirement Module
+Subproblem Gurobi attributes:
+Dict{String, Any} with 5 entries:
+  "Method" => 2
+  "Crossover" => 1
+  "MIPGap" => 0.001
+  "BarConvTol" => 1.0e-8
+  "QCPDual" => 1
+Investment Discharge Module
+Discharge Module
+Non-served Energy Module
+Unit Commitment Module
+Fuel Module
+CO2 Module
+Dispatchable Resources Module
+Must-Run Resources Module
+Storage Core Resources Module
+Storage Resources with Asmymetric Charge/Discharge Capacity Module
+Thermal (Unit Commitment) Resources Module
+DC-OPF Transmission Flows Module
+Distributed operational subproblems generation took 30.025788068771362 seconds
+The planning model is a MILP
+Updating the planning problem....done (it took 0.17694401741027832 s).
+The planning model is a MILP
+Solving the planning problem required 0.0047528743743896484 seconds
+k = 0      LB = 16.508464218284743     UB = 2.2612206327661097e7       Gap = 1.369733096925616e6       CPU Time = 28.089432954788208
+Updating the planning problem....done (it took 0.0002880096435546875 s).
+The planning model is a MILP
+Solving the planning problem required 0.0028591156005859375 seconds
+k = 1      LB = 33.984342302525015     UB = 1.5605282803441858e7       Gap = 459189.3725699701       CPU Time = 55.72951912879944
+Updating the planning problem....done (it took 0.0002651214599609375 s).
+The planning model is a MILP
+Solving the planning problem required 0.06339097023010254 seconds
+k = 2      LB = 50.49280652080976     UB = 8.970440064768892e6       Gap = 177656.78301651496       CPU Time = 81.45327806472778
+Updating the planning problem....done (it took 0.0003001689910888672 s).
+The planning model is a MILP
+Solving the planning problem required 0.09495282173156738 seconds
+k = 3      LB = 60.83469928938202     UB = 6.703446616181233e6       Gap = 110190.16876527802       CPU Time = 108.29578495025635
+Updating the planning problem....done (it took 0.00031185150146484375 s).
+The planning model is a MILP
+Solving the planning problem required 0.005697011947631836 seconds
+k = 4      LB = 68.81178932705829     UB = 6.703446616181233e6       Gap = 97416.12403844281       CPU Time = 136.33318305015564
+Updating the planning problem....done (it took 0.0003139972686767578 s).
+The planning model is a MILP
+Solving the planning problem required 0.09182286262512207 seconds
+k = 5      LB = 104.08902304062758     UB = 6.579953032330149e6       Gap = 63213.66798436459       CPU Time = 164.1434531211853
+Updating the planning problem....done (it took 0.000308990478515625 s).
+The planning model is a MILP
+Solving the planning problem required 0.007823944091796875 seconds
+k = 6      LB = 130.16320162524974     UB = 6.579953032330149e6       Gap = 50550.56104160959       CPU Time = 190.89187717437744
+Updating the planning problem....done (it took 0.00033283233642578125 s).
+The planning model is a MILP
+Solving the planning problem required 0.1625370979309082 seconds
+k = 7      LB = 130.52829372284262     UB = 2.6321001213571206e6       Gap = 20163.97761738917       CPU Time = 216.99443006515503
+Updating the planning problem....done (it took 0.00036907196044921875 s).
+The planning model is a MILP
+Solving the planning problem required 0.13376688957214355 seconds
+k = 8      LB = 144.24088491485156     UB = 2.6321001213571206e6       Gap = 18246.9476807904       CPU Time = 246.93650603294373
+Updating the planning problem....done (it took 0.0002930164337158203 s).
+The planning model is a MILP
+Solving the planning problem required 0.009505033493041992 seconds
+k = 9      LB = 1.1584631728727235e6     UB = 1.9100237710752722e6       Gap = 0.6487565731924394       CPU Time = 271.6973659992218
+Updating the planning problem....done (it took 0.0003261566162109375 s).
+The planning model is a MILP
+Solving the planning problem required 0.010148048400878906 seconds
+k = 10      LB = 1.1584987653231665e6     UB = 1.9100237710752722e6       Gap = 0.6487059185966985       CPU Time = 299.16747307777405
+Updating the planning problem....done (it took 0.0003058910369873047 s).
+The planning model is a MILP
+Solving the planning problem required 0.011013984680175781 seconds
+k = 11      LB = 1.1584987653231665e6     UB = 1.4965398594587636e6       Gap = 0.29179236461361235       CPU Time = 324.7747850418091
+Updating the planning problem....done (it took 0.00030803680419921875 s).
+The planning model is a MILP
+Solving the planning problem required 0.00906515121459961 seconds
+k = 12      LB = 1.3889378459153825e6     UB = 1.4513673614319337e6       Gap = 0.04494766680895422       CPU Time = 347.4370460510254
+Updating the planning problem....done (it took 0.0002751350402832031 s).
+The planning model is a MILP
+Solving the planning problem required 0.010239839553833008 seconds
+k = 13      LB = 1.3889665067396557e6     UB = 1.389143599422994e6       Gap = 0.0001274996067068744       CPU Time = 368.1377580165863
+Objective function: 3.1487853e6 vCAP[37] + 1.2131335e6 vCAP[40] + 1.3090928082862599e6 vCAP[47] + 3.1487853e6 vCAP[52] + 1.2131335e6 vCAP[53] + 5750175 vCAP[56] + 1.2131335e6 vCAP[65] + 5750175 vCAP[74] + 1.3090928082862599e6 vCAP[81] + 1.3090928082862599e6 vCAP[82] + 1.3090928082862599e6 vCAP[88] + 1.2131335e6 vCAP[91] + 1.3090928082862599e6 vCAP[97] + 5750175 vCAP[107] + 3.1487853e6 vCAP[109] + 1.3090928082862599e6 vCAP[110] + 1.2131335e6 vCAP[122] + 1.2131335e6 vCAP[125] + 7.152607958e6 vCAP[130] + 7.152607958e6 vCAP[135] + 1.38033787e6 vCAP[137] + 7.152607958e6 vCAP[139] + 1.38033787e6 vCAP[140] + 7.152607958e6 vCAP[143] + 7.152607958e6 vCAP[146] + 7.152607958e6 vCAP[150] + 7.152607958e6 vCAP[152] + 1.38033787e6 vCAP[155] + 7.152607958e6 vCAP[161] + 7.152607958e6 vCAP[162] + [[...91 terms omitted...]] + 11.573942011871884 vNEW_TRANS_CAP_DECISION_INT[92] + 244.3300012058309 vNEW_TRANS_CAP_DECISION_INT[93] + 183.69729733895747 vNEW_TRANS_CAP_DECISION_INT[94] + 27.11627166378119 vNEW_TRANS_CAP_DECISION_INT[95] + 31.25718863321205 vNEW_TRANS_CAP_DECISION_INT[96] + 111.25402814249155 vNEW_TRANS_CAP_DECISION_INT[97] + 32.39402752293574 vNEW_TRANS_CAP_DECISION_INT[98] + 27.579702797670578 vNEW_TRANS_CAP_DECISION_INT[99] + 32.469871308404265 vNEW_TRANS_CAP_DECISION_INT[100] + 45.104285507702386 vNEW_TRANS_CAP_DECISION_INT[101] + 194.32458698593996 vNEW_TRANS_CAP_DECISION_INT[102] + 8.378369180062293 vNEW_TRANS_CAP_DECISION_INT[103] + 9.449590407273563 vNEW_TRANS_CAP_DECISION_INT[104] + 98.0768218556946 vNEW_TRANS_CAP_DECISION_INT[105] + 169.41556547233012 vNEW_TRANS_CAP_DECISION_INT[106] + 235.06874074829688 vNEW_TRANS_CAP_DECISION_INT[107] + 268.46573122976366 vNEW_TRANS_CAP_DECISION_INT[108] + 25.70340079383481 vNEW_TRANS_CAP_DECISION_INT[109] + 12.002423683533406 vNEW_TRANS_CAP_DECISION_INT[110] + 2.466841310610818 vNEW_TRANS_CAP_DECISION_INT[111] + 169.27311609892723 vNEW_TRANS_CAP_DECISION_INT[112] + 19.90665901292318 vNEW_TRANS_CAP_DECISION_INT[113] + 14.561104743762618 vNEW_TRANS_CAP_DECISION_INT[114] + 180.721422933459 vNEW_TRANS_CAP_DECISION_INT[115] + 32.640813132296415 vNEW_TRANS_CAP_DECISION_INT[116] + 38.03096522124879 vNEW_TRANS_CAP_DECISION_INT[117] + 108.00008274642238 vNEW_TRANS_CAP_DECISION_INT[118] + 55.636050230846614 vNEW_TRANS_CAP_DECISION_INT[119] + 52.879618179688784 vNEW_TRANS_CAP_DECISION_INT[120] + vTHETA[1]
+
+Configuring Settings
+Investment Discharge Module
+Investment Transmission Module
+Investment Storage Resources Module
+Storage Investment Module
+Charge Investment Module
+Minimum Capacity Requirement Module
+Discharge Module
+Non-served Energy Module
+Unit Commitment Module
+Fuel Module
+CO2 Module
+Dispatchable Resources Module
+Must-Run Resources Module
+Storage Core Resources Module
+Storage Resources with Asmymetric Charge/Discharge Capacity Module
+Thermal (Unit Commitment) Resources Module
+DC-OPF Transmission Flows Module
+Tue Sep  9 05:01:14 PM EDT 2025
