@@ -107,10 +107,8 @@ benders_inputs = GenX.generate_benders_inputs(mysetup,myinputs,myinputs_decomp)
 
 planning_problem1, planning_sol1, operational_sol1, LB_hist1,UB_hist1, cpu_time1,feasibility_hist1, build_decisions1  = GenX.benders(benders_inputs,mysetup,myinputs);
 
-
-
-
-
+println("Objective function: ", objective_function(planning_problem1))
+objective_value1 = planning_sol1.inv_cost + sum(operational_sol1[w].op_cost for w in keys(operational_sol1));
 
 
 monolithic_setup = GenX.configure_settings(genx_settings, writeoutput_settings) # mysetup dictionary stores settings and GenX-specific parameters
@@ -134,13 +132,16 @@ m = GenX.generate_model(monolithic_setup, myinputs, solver_monolithic)
 num_builds = 0
 for i in 1:120
     key = "vNEW_TRANS_CAP_DECISION_INT[$i]"
-    num_builds += planning_sol1.values[key]
+    global num_builds += planning_sol1.values[key]
     fix(m[:vNEW_TRANS_CAP_DECISION_INT][i, 1], planning_sol1.values[key], force =true)
 end
 
 optimize!(m)
 
 
+@info "Monolithic/Benders DCOPF validation:"
+@info "Objective value monolithic: " objective_value(m)
+@info "Objective value Benders: " objective_value1
 
 #=
 num_builds = 0

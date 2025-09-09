@@ -187,7 +187,6 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
 		else
 			feasibility_slack = 0.0;
 		end
-		println(lambda)
 	else
 		op_cost = 0;
         #zone_cost = make_benders_zonal_opcost(inputs,EP)
@@ -225,7 +224,7 @@ function fix_planning_variables!(EP::Model,planning_sol::NamedTuple,planning_var
             if planning_sol.values[y] > 0.1
                 #println("Fixed variable "*string(vy)*" to value "*string(planning_sol.values[y]))
             end
-            fix(vy,round(planning_sol.values[y]);force=true)
+            fix(vy,planning_sol.values[y];force=true)
         end
 		if is_integer(vy)
 			unset_integer(vy)

@@ -56,7 +56,7 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 	feasibility_hist = Float64[];
 
 	planning_sol_best = deepcopy(planning_sol);
-	build_decisions = zeros(76, 0)
+	build_decisions = zeros(length(planning_problem[:vNEW_TRANS_CAP_DECISION_INT]))
 
     #### Run Benders iterations
     for k = 0:MaxIter
@@ -66,9 +66,9 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
         subop_sol = solve_dist_subproblems(subproblems,planning_sol,inputs);
         
 		cpu_subop_sol = time()-start_subop_sol;
-		println("Solving the subproblems required $cpu_subop_sol seconds")
-		println(planning_sol.inv_cost)
-		println(sum(subop_sol[w].op_cost for w in keys(subop_sol)))
+		@info "Solving the subproblems required $cpu_subop_sol seconds"
+		@info "Investment Cost: " planning_sol.inv_cost
+		@info "Operational Cost: " sum(subop_sol[w].op_cost for w in keys(subop_sol))
 
 		UBnew = sum((subop_sol[w].theta_coeff==0 ? Inf : subop_sol[w].op_cost) for w in keys(subop_sol))+planning_sol.inv_cost;
 		if UBnew < UB
@@ -86,30 +86,12 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 		
 		avs = all_variables(planning_problem)
 		start_planning_sol = time()
-		#if k ==10
-		#	trans_cap_decisions = [0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0]
-		#	trans_cap_vars = avs[2:77]
-		#	for (idx, var) in enumerate(trans_cap_vars)
-		#		fix(var, trans_cap_decisions[idx], force = true)
-		#	end
-		#	unst_planning_sol = solve_planning_problem(planning_problem,planning_variables,inputs);
-		#	unfix.(trans_cap_vars)
-		#	for var in trans_cap_vars
-		#		if !(is_binary(var))
-		#			set_binary(var)
-		#		end
-		#	end
-		#else
+
 		unst_planning_sol = solve_planning_problem(planning_problem,planning_variables,inputs);
-		#end
+
 		cpu_planning_sol = time()-start_planning_sol;
 		println("Solving the planning problem required $cpu_planning_sol seconds")
 
-
-
-
-		# optimize!(planning_problem)
-		# unst_planning_sol_LB = objective_value(planning_problem)
 		LB = max(LB,unst_planning_sol.LB);
 		
 		append!(LB_hist,LB)
@@ -123,6 +105,24 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 			println("k = ", k,"      LB = ", LB,"     UB = ", UB,"       Gap = ", (UB-LB)/abs(LB),"       CPU Time = ",cpu_time[end])
 		end
 
+		#println(unst_planning_sol)
+		
+		for i in 1:length(planning_problem[:vNEW_TRANS_CAP_DECISION_INT])
+			key = "vNEW_TRANS_CAP_DECISION_INT[$i]"
+			val = unst_planning_sol.values[key]
+			build_decisions[i] = val
+		end
+		build_indices = findall(x -> x > 0.5, build_decisions)
+		@debug "Lines built at iteration $k: " build_indices
+		@debug "Number of lines built at iteration $k: " length(build_indices)
+
+		@debug "Theta" Vector(value.(planning_problem[:vTHETA]))
+
+		cap_builds = findall(x -> x > 0.1, Vector(value.(planning_problem[:vCAP])))
+		@debug "vCAP Builds" cap_builds
+
+
+		
         if (UB-LB)/abs(LB) <= ConvTol
 			if integer_routine_flag
 				println("*** Switching on integer constraints *** ")
