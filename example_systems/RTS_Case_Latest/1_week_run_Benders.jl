@@ -105,7 +105,40 @@ mysetup["Benders"] = 1
 myinputs_decomp = GenX.separate_inputs_subperiods(myinputs);
 benders_inputs = GenX.generate_benders_inputs(mysetup,myinputs,myinputs_decomp)
 
-planning_problem, planning_sol, operational_sol, LB_hist,UB_hist, cpu_time,feasibility_hist, build_decisions  = GenX.benders(benders_inputs,mysetup,myinputs);
+planning_problem1, planning_sol1, operational_sol1, LB_hist1,UB_hist1, cpu_time1,feasibility_hist1, build_decisions1  = GenX.benders(benders_inputs,mysetup,myinputs);
+
+
+
+
+
+
+
+monolithic_setup = GenX.configure_settings(genx_settings, writeoutput_settings) # mysetup dictionary stores settings and GenX-specific parameters
+
+monolithic_setup["DC_OPF"] = 1
+monolithic_setup["ptdf"] = 0
+monolithic_setup["bilinear"] = 0
+monolithic_setup["disaggregate"] = 0
+monolithic_setup["unfix_slacks"] = 0
+monolithic_setup["SOS1"] = 0
+
+settings_path = GenX.get_settings_path(case)    
+monolithic_setup["settings_path"] = settings_path;
+
+monolithic_setup["NetworkExpansion"] = 1
+
+solver_monolithic = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 3600, "MIPGap" => 2e-2)
+
+m = GenX.generate_model(monolithic_setup, myinputs, solver_monolithic)
+
+num_builds = 0
+for i in 1:120
+    key = "vNEW_TRANS_CAP_DECISION_INT[$i]"
+    num_builds += planning_sol1.values[key]
+    fix(m[:vNEW_TRANS_CAP_DECISION_INT][i, 1], planning_sol1.values[key], force =true)
+end
+
+optimize!(m)
 
 
 
