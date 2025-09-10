@@ -980,7 +980,7 @@ function extract_genx_results_to_psip_format(EP, myinputs, p)
             
             # Get built capacity (total - initial)
             total_cap = value(cap_var[idx])
-            initial_cap = PSIP.get_initial_capacity(tech)
+            initial_cap = PSIP.get_initial_capacity(tech)built_*_cap
             built_cap = max(0.0, total_cap - initial_cap)
             
             results_dict[(tech_type, tech_name)] = built_cap
