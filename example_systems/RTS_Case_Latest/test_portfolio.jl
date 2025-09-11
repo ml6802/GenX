@@ -879,6 +879,20 @@ genx_settings = GenX.get_settings_path(case, "genx_settings.yml") # Settings YAM
 writeoutput_settings = GenX.get_settings_path(case, "output_settings.yml") # Write-output settings YAML file path
 mysetup = GenX.configure_settings(genx_settings, writeoutput_settings) # mysetup dictionary stores settings and GenX-specific parameters
 
+# Time Domain Reduction for Portfolio-based inputs
+if mysetup["TimeDomainReduction"] == 1
+    settings_path = GenX.get_settings_path(case)
+    TDRpath = joinpath(case, mysetup["TimeDomainReductionFolder"])
+    system_path = joinpath(case, mysetup["SystemFolder"])
+    
+    if !GenX.time_domain_reduced_files_exist(TDRpath)
+        println("Clustering Time Series Data from Portfolio (Grouped)...")
+        GenX.cluster_inputs_portfolio(case, settings_path, mysetup, p)
+    else
+        println("Time Series Data Already Clustered.")
+    end
+end
+
 mysetup["DC_OPF"] = 1
 myinputs = GenX.load_inputs(mysetup, case, p)
 mysetup["DC_OPF"] = 0
