@@ -84,7 +84,8 @@ mysetup = merge(mysetup,mysetup_benders);
 settings_path = GenX.get_settings_path(case)    
 mysetup["settings_path"] = settings_path;
 
-myinputs["pTrans_Max"] .*= 0.3
+#myinputs["pTrans_Max"] .*= 0.3
+myinputs["pD"] .*= 3
 L_cand = myinputs["L"]
 myinputs["L_cand"] = L_cand
 myinputs["Z_cand"] = myinputs["Z"]
@@ -138,4 +139,3 @@ myinputs_decomp = GenX.separate_inputs_subperiods(myinputs);
 benders_inputs = GenX.generate_benders_inputs(mysetup,myinputs,myinputs_decomp)
 
 planning_problem1, planning_sol1, operational_sol1, LB_hist1,UB_hist1, cpu_time1,feasibility_hist1, build_decisions1  = GenX.benders(benders_inputs,mysetup,myinputs);
-
