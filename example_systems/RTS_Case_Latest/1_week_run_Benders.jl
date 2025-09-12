@@ -91,7 +91,8 @@ Random.seed!(1)
 for i in 1:length(lines)
     distance = 60 * rand()
     size_mw = myinputs["Line_Reinforcement_Cap_Size"][i]
-    myinputs["pC_Line_Reinforcement"][i] = distance * size_mw * 2#000
+    myinputs["pC_Line_Reinforcement"][i] = distance * size_mw * 20000/52
+    # myinputs["pC_Line_Reinforcement"][i] = distance * size_mw * 2#000
 end
 
 n_times = 168
@@ -131,25 +132,24 @@ solver_monolithic = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 3
 
 m = GenX.generate_model(monolithic_setup, myinputs, solver_monolithic)
 
-num_builds = 0
+num_builds = [0.]
 for i in 1:120
     key = "vNEW_TRANS_CAP_DECISION_INT[$i]"
-    num_builds += planning_sol1.values[key]
-    fix(m[:vNEW_TRANS_CAP_DECISION_INT][i, 1], planning_sol1.values[key], force =true)
+    num_builds[1] += planning_sol1.values[key]
+    fix(m[:vNEW_TRANS_CAP_DECISION_INT][i,1], planning_sol1.values[key], force =true)
 end
 
 optimize!(m)
 
 
 
-#=
-num_builds = 0
-for i in 1:39
-    key = "vNEW_TRANS_CAP_DECISION_INT[$i]"
-    num_builds += planning_sol.values[key]
-end
+# num_builds = 0
+# for i in 1:39
+#     key = "vNEW_TRANS_CAP_DECISION_INT[$i]"
+#     num_builds += planning_sol.values[key]
+# end
 
-overproduction = 0
+# overproduction = 0
 # for t in 1:168
 #     for z in 1:73
 
@@ -188,7 +188,7 @@ myinputs["hours_per_subperiod"] = n_times
 myinputs["INTERIOR_SUBPERIODS"] = [i for i in 2:myinputs["hours_per_subperiod"]]
 z_inputs = build_zonal_inputs(myinputs, zone_map, 3)
 
-solver = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 2400, "MIPGap" => 1e-2)
+solver = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 60, "MIPGap" => 1e-2)
 ###### ZONAL ######
 zonal_setup = deepcopy(mysetup)
 zonal_setup["unfix_slacks"] = 1
@@ -248,7 +248,6 @@ println("new transmission in zone 3: ", sum(value.(m3[:vNEW_TRANS_CAP_DECISION_I
 
 
 
-
 # plot results
 using PlasmoData, PlasmoDataPlots
 fadjlist = z_inputs["adj_list"]
@@ -289,23 +288,30 @@ for k in keys(l2z_map)
 end
 
 
-models = [m1, m2, m3]
-for i in 1:num_zones
-    n_input = n_inputs[i]
-    l2l_map = n_input["l2l_map_cand"]
-    model = models[i]
-    for k in keys(l2l_map)
-        old_line = k
-        new_line = l2l_map[k]
-        if value(models[i][:vNEW_TRANS_CAP_DECISION_INT][new_line, 1]) == 1
-            add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], "red", "new_build")
-            add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], 5, "linewidth")
-        end
+# models = [m1, m2, m3]
+# for i in 1:num_zones
+#     n_input = n_inputs[i]
+#     l2l_map = n_input["l2l_map_cand"]
+#     model = models[i]
+#     for k in keys(l2l_map)
+#         old_line = k
+#         new_line = l2l_map[k]
+#         if value(models[i][:vNEW_TRANS_CAP_DECISION_INT][new_line, 1]) == 1
+#             add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], "red", "new_build")
+#             add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], 5, "linewidth")
+#         end
+#     end
+# end
+
+for i in 1:120
+    if value(m[:vNEW_TRANS_CAP_DECISION_INT][i, 1]) == 1
+        add_edge_data!(dg, fadjlist[i][1], fadjlist[i][2], "red", "new_build")
+        add_edge_data!(dg, fadjlist[i][1], fadjlist[i][2], 5, "linewidth")
     end
 end
 
 
-plot_graph(dg, nodecolor = get_node_data(dg, "color"), nodesize = 6, xdim = 500, ydim = 500, linewidth = get_edge_data(dg, "linewidth"), linecolor = get_edge_data(dg, "new_build"), save_fig = false, fig_name = (@__DIR__)*"/zonal_nodal_builds_nodcopf.png")
+plot_graph(dg, nodecolor = get_node_data(dg, "color"), nodesize = 6, xdim = 500, ydim = 500, linewidth = get_edge_data(dg, "linewidth"), linecolor = get_edge_data(dg, "new_build"), save_fig = true, fig_name = (@__DIR__)*"/monolithic_build_1week_updated_cost.png")
 
 vP_by_zone_zonal = zeros(3)
 vP_by_zone_nodal = zeros(3)
@@ -328,4 +334,3 @@ vP_by_zone_nodal[3] = sum(value.(m3[:vP]))
 # m = GenX.generate_model(nodal_setup, myinputs, solver_monolithic)
 
 # optimize!(m)
-=#
