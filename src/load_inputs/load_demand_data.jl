@@ -179,7 +179,42 @@ function load_demand_data!(setup::Dict, p::Portfolio, inputs::Dict, path::Abstra
     # SEG = length(segments[1].segments) # Upcoming feature in DemandRequirement
     SEG = 1  # Default to 1 for now
     inputs["SEG"] = SEG
-    inputs["omega"] = fill(1.0, T)
+    inputs["omega"] = zeros(Float64, T) # weights associated with operational sub-period in the model - sum of weight = 8760
+    # Weights for each period - assumed same weights for each sub-period within a period
+    if !haskey(p.internal.ext, "Rep_Periods")
+        @warn "No `Rep_Periods` defined in portfolio; using 1"
+        inputs["REP_PERIOD"] = 1
+    else
+        inputs["REP_PERIOD"] = p.internal.ext["Rep_Periods"]
+    end
+
+    if !haskey(p.internal.ext, "Timesteps_per_Rep_Period")
+        @warn "No `Timesteps_per_Rep_Period` defined in portfolio; using 8760"
+        inputs["H"] = 8760
+    else
+        inputs["H"] = p.internal.ext["Timesteps_per_Rep_Period"]
+    end
+
+    if !haskey(p.internal.ext, "sub_weights")
+        @warn "No `sub_weights` are defined in the portfolio; assuming $(inputs["Rep_PERIOD"])"
+        inputs["Weights"] = [8760 / inputs["REP_PERIOD"] for i in 1:inputs["REP_PERIOD"]]
+    else
+        inputs["Weights"] = p.internal.ext["sub_weights"]
+    end
+
+    if !haskey(p.internal.ext, "hours_per_subperiod")
+        inputs["hours_per_subperiod"] = div.(T, inputs["REP_PERIOD"]) # total number of hours per subperiod
+    else
+        inputs["hours_per_subperiod"] = p.internal.ext["hours_per_subperiod"]
+    end
+
+    # Creating sub-period weights from weekly weights
+    for w in 1:inputs["REP_PERIOD"]
+        for h in 1:inputs["H"]
+            t = inputs["H"] * (w - 1) + h
+            inputs["omega"][t] = inputs["Weights"][w] / inputs["H"]
+        end
+    end
 ###Uncomment these lines if using TDR
     #=inputs["omega"] = zeros(Float64, T) # weights associated with operational sub-period in the model - sum of weight = 8760
     # Weights for each period - assumed same weights for each sub-period within a period

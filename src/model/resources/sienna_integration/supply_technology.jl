@@ -38,7 +38,7 @@ region(t::SupplyTechnology) = get_region(t)
 """Get [`SupplyTechnology`](@ref) `ramp_up_percentage`."""
 ramp_up_fraction(t::SupplyTechnology) = get_ramp_limits(t).up
 """Get [`SupplyTechnology`](@ref) `unit_size`."""
-cap_size(t::SupplyTechnology) = 1#get_capacity_limits(t)[:max]#get_unit_size(t)
+cap_size(t::SupplyTechnology) = get_unit_size(t)
 """Get [`SupplyTechnology`](@ref) `min_generation_percentage`."""
 min_power(t::SupplyTechnology) = get_min_generation_fraction(t)
 """Get [`SupplyTechnology`](@ref) `start_cost_per_mw`."""

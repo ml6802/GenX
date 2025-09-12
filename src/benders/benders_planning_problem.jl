@@ -74,6 +74,7 @@ function solve_planning_problem(EP::Model,planning_variables::Vector{String},inp
 		println("The planning model is a MILP")
 		optimize!(EP)
 			if has_values(EP) #
+				println("OBJECTIVE OF MASTER IS :", objective_value(EP) - sum(value.(EP[:vTHETA])))
 				zone_inv_cost = 0#make_benders_zonal_invcost(inputs, EP)
 				planning_sol =  (LB = objective_value(EP), inv_cost =value(EP[:eObj]), zone_inv_cost = zone_inv_cost,values =Dict([s=>value.(variable_by_name(EP,s)) for s in planning_variables]), theta = value.(EP[:vTHETA])) 
 			else

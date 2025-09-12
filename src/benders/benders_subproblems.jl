@@ -163,6 +163,8 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
 	optimize!(EP)
 	
 	if has_values(EP)
+        println("OBJECTIVE OF SUBPROBLEM IS : ", objective_value(EP))
+        println(sum(value.(EP[:vOverProduction])))
 		op_cost = objective_value(EP);
         zone_cost = 0#make_benders_zonal_opcost(inputs,EP)
 		emissions = value.(EP[:eEmissionsByZone])
@@ -220,12 +222,24 @@ function fix_planning_variables!(EP::Model,planning_sol::NamedTuple,planning_var
             if planning_sol.values[y] > 0.1
                 #println("Set parameter "*string(vy)*" to value "*string(planning_sol.values[y]))
             end
-            set_parameter_value(vy,Int(round(planning_sol.values[y])))
+            if occursin("CAP", name(vy))
+                set_parameter_value(vy, planning_sol.values[y])
+            else
+                set_parameter_value(vy,Int(round(planning_sol.values[y])))
+            end
+            # println(y, "  before: ", planning_sol.values[y], ", after: ", Int(round(planning_sol.values[y])))
+            # set_parameter_value(vy,planning_sol.values[y]; force=true)
         else
             if planning_sol.values[y] > 0.1
                 #println("Fixed variable "*string(vy)*" to value "*string(planning_sol.values[y]))
             end
-            fix(vy,round(planning_sol.values[y]);force=true)
+            if occursin("CAP", name(vy))
+                fix(vy, planning_sol.values[y]; force = true)
+            else
+                fix(vy,round(planning_sol.values[y]);force=true)
+            end
+            # println(y, "   before: ", planning_sol.values[y], ", after: ", round(planning_sol.values[y]))
+            #fix(vy,planning_sol.values[y];force=true)
         end
 		if is_integer(vy)
 			unset_integer(vy)

@@ -61,7 +61,7 @@ const PNM = PowerNetworkMatrices
 # To translate MW to GW, divide by ModelScalingFactor
 # To translate $ to $M, multiply by ModelScalingFactor^2
 # To translate $/MWh to $M/GWh, multiply by ModelScalingFactor
-const ModelScalingFactor = 1e+2
+const ModelScalingFactor = 1e+3
 
 const GRB_ENV = Ref{Gurobi.Env}()
 function __init__()
