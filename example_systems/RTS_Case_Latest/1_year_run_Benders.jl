@@ -1,8 +1,13 @@
 ENV["GENX_PRECOMPILE"] = "false"
 
+import Pkg
+
+Pkg.activate("/home/ml6802/GenX")
+include("/home/ml6802/GenX/src/GenX.jl")
+
 using Revise
 using JuMP
-using GenX
+#using GenX
 using PowerSystemsInvestmentsPortfolios
 using Gurobi
 using TimeSeries
@@ -15,11 +20,7 @@ const PSIP = PowerSystemsInvestmentsPortfolios
 const IS = InfrastructureSystems
 const PSY = PowerSystems
 using Plots
-import Pkg
 using Distributed, ClusterManagers
-
-Pkg.activate("/home/ml6802/GenX")
-include("/home/ml6802/GenX/src/GenX.jl")
 
 include((@__DIR__)*"/load_portfolio.jl")
 include((@__DIR__)*"/../convert_input_dict.jl")

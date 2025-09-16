@@ -1,4 +1,3 @@
-
 function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 	
     #### Algorithm from:
@@ -175,6 +174,15 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 		end
 
     end
+    
+    build_indices = findall(x -> x > 0.5, build_decisions)
+	@info "Lines built: " build_indices
+	@info "Number of lines built: " length(build_indices)
+
+	@info "Theta: " Vector(value.(planning_problem[:vTHETA]))
+
+	cap_builds = findall(x -> x > 0.1, Vector(value.(planning_problem[:vCAP])))
+	@info "vCAP Builds: " cap_builds
 
 	return (planning_problem=planning_problem,planning_sol = planning_sol_best,operational_sol = subop_sol,LB_hist = LB_hist,UB_hist = UB_hist,cpu_time = cpu_time,feasibility_hist = feasibility_hist, build_decisions = build_decisions)
 end

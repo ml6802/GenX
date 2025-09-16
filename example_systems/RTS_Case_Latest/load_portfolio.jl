@@ -27,9 +27,10 @@ code/
 │                       └── test_portfolio.jl  # ← This file
 └── NREL_Sienna/
     └── PowerSystemsInvestmentsPortfolios.jl/=#
+    #=
 using Revise
 using JuMP
-using GenX
+#using GenX
 using PowerSystemsInvestmentsPortfolios
 using Gurobi
 using TimeSeries
@@ -38,6 +39,7 @@ using DataFrames
 using Dates
 using InfrastructureSystems
 using PowerSystems
+=#
 const PSIP = PowerSystemsInvestmentsPortfolios
 const IS = InfrastructureSystems
 const PSY = PowerSystems

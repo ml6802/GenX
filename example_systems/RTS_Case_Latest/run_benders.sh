@@ -13,6 +13,6 @@
 module add julia/1.10.5
 module add gurobi/11.0.3
 
-julia 1_week_run_Benders.jl
+julia 1_year_run_Benders.jl
 
 date

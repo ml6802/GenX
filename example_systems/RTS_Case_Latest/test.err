@@ -1,45 +1,39 @@
 
 libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
-
-libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+WARNING: Method definition as_vector_cand(Symbol) in module GenX at /home/ml6802/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /home/ml6802/GenX/src/load_inputs/load_network_data.jl:59.
+WARNING: Method definition to_floats_cand(Symbol) in module GenX at /home/ml6802/GenX/src/load_inputs/load_network_data.jl:38 overwritten at /home/ml6802/GenX/src/load_inputs/load_network_data.jl:60.
 
 libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
 WARNING: Method definition as_vector_cand(Symbol) in module GenX at /home/ml6802/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /home/ml6802/GenX/src/load_inputs/load_network_data.jl:59.
 ERROR: Method overwriting is not permitted during Module precompilation. Use `__precompile__(false)` to opt-out of precompilation.
 WARNING: Method definition as_vector_cand(Symbol) in module GenX at /home/ml6802/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /home/ml6802/GenX/src/load_inputs/load_network_data.jl:59.
 WARNING: Method definition to_floats_cand(Symbol) in module GenX at /home/ml6802/GenX/src/load_inputs/load_network_data.jl:38 overwritten at /home/ml6802/GenX/src/load_inputs/load_network_data.jl:60.
-
-libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
-
-libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
-
-libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
-
-libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
-
-libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
-
-libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
-
-libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
-
-libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
-
-libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
-
-libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
-
-libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
-
-libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
-
-libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
-
-libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
-
-libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
-
-libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+WARNING: using GenX.configure_settings in module GenX conflicts with an existing identifier.
+WARNING: using GenX.configure_solver in module GenX conflicts with an existing identifier.
+WARNING: using GenX.load_inputs in module GenX conflicts with an existing identifier.
+WARNING: using GenX.load_dataframe in module GenX conflicts with an existing identifier.
+WARNING: using GenX.generate_model in module GenX conflicts with an existing identifier.
+WARNING: using GenX.solve_model in module GenX conflicts with an existing identifier.
+WARNING: using GenX.write_outputs in module GenX conflicts with an existing identifier.
+WARNING: using GenX.mga in module GenX conflicts with an existing identifier.
+WARNING: using GenX.choose_output_dir in module GenX conflicts with an existing identifier.
+WARNING: using GenX.operation_model! in module GenX conflicts with an existing identifier.
+WARNING: using GenX.run_genx_case! in module GenX conflicts with an existing identifier.
+WARNING: replacing module GenX.
+WARNING: Method definition as_vector_cand(Symbol) in module GenX at /home/ml6802/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /home/ml6802/GenX/src/load_inputs/load_network_data.jl:59.
+WARNING: Method definition to_floats_cand(Symbol) in module GenX at /home/ml6802/GenX/src/load_inputs/load_network_data.jl:38 overwritten at /home/ml6802/GenX/src/load_inputs/load_network_data.jl:60.
+WARNING: using GenX.configure_settings in module GenX conflicts with an existing identifier.
+WARNING: using GenX.configure_solver in module GenX conflicts with an existing identifier.
+WARNING: using GenX.load_inputs in module GenX conflicts with an existing identifier.
+WARNING: using GenX.load_dataframe in module GenX conflicts with an existing identifier.
+WARNING: using GenX.generate_model in module GenX conflicts with an existing identifier.
+WARNING: using GenX.solve_model in module GenX conflicts with an existing identifier.
+WARNING: using GenX.write_outputs in module GenX conflicts with an existing identifier.
+WARNING: using GenX.mga in module GenX conflicts with an existing identifier.
+WARNING: using GenX.choose_output_dir in module GenX conflicts with an existing identifier.
+WARNING: using GenX.operation_model! in module GenX conflicts with an existing identifier.
+WARNING: using GenX.run_genx_case! in module GenX conflicts with an existing identifier.
+  Activating project at `~/GenX`
 ┌ Warning: struct Node does not exist in validation configuration file, validation skipped
 └ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
 ┌ Warning: struct Node does not exist in validation configuration file, validation skipped
@@ -304,11 +298,12 @@ libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
 └ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
 ┌ Warning: Data for branch Line: A34 rating is 6.223381904101945e15 times larger than the base MVA for the system
 └ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+  Activating project at `~/GenX`
 [ Info: Loading inputs from portfolio
 ┌ Warning: Because the DC_OPF flag is active, GenX will not allow any transmission capacity expansion. Set the DC_OPF flag to 0 if you want to optimize tranmission capacity expansion.
-└ @ GenX ~/GenX/src/load_inputs/load_network_data.jl:372
+└ @ Main.GenX ~/GenX/src/load_inputs/load_network_data.jl:372
 ┌ Warning: DAY_AHEAD_regional_Load.csv not found at /home/ml6802/GenX/example_systems/DAY_AHEAD_regional_Load.csv. Skipping demand validation.
-└ @ GenX ~/GenX/src/load_inputs/load_demand_data.jl:324
+└ @ Main.GenX ~/GenX/src/load_inputs/load_demand_data.jl:359
 [ Info: STORAGE3 Successfully Read.
 [ Info: STORAGE2 Successfully Read.
 [ Info: STORAGE1 Successfully Read.
@@ -746,78 +741,37 @@ libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
 [ Info: No technology type match found for resource 102_STEAM_4. Keeping default availability of 1.0.
 [ Info: No technology type match found for resource 107_CC_1. Keeping default availability of 1.0.
 [ Info: No technology type match found for resource 313_STORAGE_1. Keeping default availability of 1.0.
-[ Info: Solving the subproblems required 26.66747498512268 seconds
+[ Info: Solving the subproblems required 287.1320810317993 seconds
 ┌ Info: Investment Cost: 
 └   planning_sol.inv_cost = 0.0
 ┌ Info: Operational Cost: 
-└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 2.2612206327661097e7
-[ Info: Solving the subproblems required 27.443623065948486 seconds
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 9.959809779617996e8
+[ Info: Solving the subproblems required 287.91108989715576 seconds
 ┌ Info: Investment Cost: 
-└   planning_sol.inv_cost = 16.508464218284743
+└   planning_sol.inv_cost = 2.6860396462882006e8
 ┌ Info: Operational Cost: 
-└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.5605266294977639e7
-[ Info: Solving the subproblems required 25.65955400466919 seconds
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 9.931631588450608e8
+[ Info: Solving the subproblems required 270.5743019580841 seconds
 ┌ Info: Investment Cost: 
-└   planning_sol.inv_cost = 33.984342302525015
+└   planning_sol.inv_cost = 630965.4835989719
 ┌ Info: Operational Cost: 
-└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 8.970406080426589e6
-[ Info: Solving the subproblems required 26.746668100357056 seconds
-┌ Info: Investment Cost: 
-└   planning_sol.inv_cost = 50.49280652080976
-┌ Info: Operational Cost: 
-└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 6.703396123374712e6
-[ Info: Solving the subproblems required 28.030892848968506 seconds
-┌ Info: Investment Cost: 
-└   planning_sol.inv_cost = 60.83469928938202
-┌ Info: Operational Cost: 
-└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 9.059779341910383e6
-[ Info: Solving the subproblems required 27.71750497817993 seconds
-┌ Info: Investment Cost: 
-└   planning_sol.inv_cost = 68.81178932705829
-┌ Info: Operational Cost: 
-└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 6.579884220540822e6
-[ Info: Solving the subproblems required 26.7397780418396 seconds
-┌ Info: Investment Cost: 
-└   planning_sol.inv_cost = 104.08902304062758
-┌ Info: Operational Cost: 
-└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.0686598080354502e7
-[ Info: Solving the subproblems required 25.939115047454834 seconds
-┌ Info: Investment Cost: 
-└   planning_sol.inv_cost = 130.16320162524974
-┌ Info: Operational Cost: 
-└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 2.631969958155495e6
-[ Info: Solving the subproblems required 29.807388067245483 seconds
-┌ Info: Investment Cost: 
-└   planning_sol.inv_cost = 130.52829372284262
-┌ Info: Operational Cost: 
-└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 6.35172132090736e6
-[ Info: Solving the subproblems required 24.750455856323242 seconds
-┌ Info: Investment Cost: 
-└   planning_sol.inv_cost = 144.24088491485156
-┌ Info: Operational Cost: 
-└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.9098795301903575e6
-[ Info: Solving the subproblems required 27.45916509628296 seconds
-┌ Info: Investment Cost: 
-└   planning_sol.inv_cost = 1.1584631728727238e6
-┌ Info: Operational Cost: 
-└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 3.0082006217687204e6
-[ Info: Solving the subproblems required 25.595404863357544 seconds
-┌ Info: Investment Cost: 
-└   planning_sol.inv_cost = 1.1584987653231665e6
-┌ Info: Operational Cost: 
-└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 338041.094135597
-[ Info: Solving the subproblems required 22.65230894088745 seconds
-┌ Info: Investment Cost: 
-└   planning_sol.inv_cost = 1.1584965384603036e6
-┌ Info: Operational Cost: 
-└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 292870.82297163014
-[ Info: Solving the subproblems required 20.68964195251465 seconds
-┌ Info: Investment Cost: 
-└   planning_sol.inv_cost = 803239.3653834091
-┌ Info: Operational Cost: 
-└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 585904.2340395851
-[ Info: Monolithic/Benders DCOPF validation:
-┌ Info: Objective value monolithic: 
-└   objective_value(m) = 1.3889908484759359e6
-┌ Info: Objective value Benders: 
-└   objective_value1 = 1.389143599422994e6
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 9.938061240406016e8
+┌ Info: Lines built: 
+└   build_indices = Int64[]
+┌ Info: Number of lines built: 
+└   length(build_indices) = 0
+┌ Info: Theta: 
+│   Vector(value.(planning_problem[:vTHETA])) =
+│    52-element Vector{Float64}:
+│     1.5349835686353317e7
+│     1.4222711181675164e7
+│     1.5682634578071244e7
+│     1.744260649089616e7
+│     ⋮
+│     1.3096069325334229e7
+│     1.528435655144204e7
+└     1.5146852686361661e7
+┌ Info: vCAP Builds: 
+│   cap_builds =
+│    1-element Vector{Int64}:
+└     2
