@@ -557,7 +557,7 @@ function create_resource_array(inputs::Dict,
             continue
         end
         resource = translate_resource_dict(p, t)
-        # scale_resources_data!(resource, scale_factor)
+        scale_resources_data!(resource, scale_factor)
         genx_type = get_genx_type(t)
         new_resource = genx_type(resource)
         old_zone = parent(new_resource)[:zone]

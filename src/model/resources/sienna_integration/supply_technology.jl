@@ -3,7 +3,8 @@ IS.get_proportional_term(c::IS.PiecewiseIncrementalCurve) = first(c.initial_inpu
 """Get [`SupplyTechnology`](@ref) `heat_rate_mmbtu_per_mwh`."""
 heat_rate_mmbtu_per_mwh(t::SupplyTechnology) = IS.get_proportional_term(IS.get_value_curve(PSY.get_variable(get_operation_costs(t))))
 """Get [`SupplyTechnology`](@ref) `capital_costs`."""
-inv_cost_per_mwyr(t::SupplyTechnology) = IS.get_proportional_term(get_capital_costs(t))
+#inv_cost_per_mwyr(t::SupplyTechnology) = IS.get_proportional_term(get_capital_costs(t))
+inv_cost_per_mwyr(t::SupplyTechnology) = IS.get_proportional_term(get_capital_costs(t)) * 0.044 / (1 - (1 + 0.044)^(-30))
 """Get [`SupplyTechnology`](@ref) `dn_time`."""
 down_time(t::SupplyTechnology) = get_time_limits(t).down
 """Get [`SupplyTechnology`](@ref) `lifetime`."""

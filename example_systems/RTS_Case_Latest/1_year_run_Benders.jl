@@ -122,16 +122,9 @@ using Random
 Random.seed!(1)
 for i in 1:length(lines)
     distance = 60 * rand()
-    size_mw = myinputs["Line_Reinforcement_Cap_Size"][i] * scale_factor
-    myinputs["pC_Line_Reinforcement"][i] = distance * size_mw * 2e6
-    # myinputs["pC_Line_Reinforcement"][i] = distance * size_mw * 2#000
+    cap_val = distance * 1200
+    myinputs["pC_Line_Reinforcement"][i] = cap_val * (0.044) / (1 - (1 + 0.044)^(-60))
 end
-
-# n_times = 168
-# myinputs["T"] = n_times
-# myinputs["hours_per_subperiod"] = n_times
-# myinputs["INTERIOR_SUBPERIODS"] = [i for i in 2:myinputs["hours_per_subperiod"]]
-# myinputs["REP_PERIOD"] = 52
 
 mysetup["NetworkExpansion"] = 1
 mysetup["Benders"] = 1

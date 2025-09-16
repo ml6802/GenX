@@ -196,7 +196,7 @@ function load_demand_data!(setup::Dict, p::Portfolio, inputs::Dict, path::Abstra
     end
 
     if !haskey(p.internal.ext, "sub_weights")
-        @warn "No `sub_weights` are defined in the portfolio; assuming $(inputs["Rep_PERIOD"])"
+        @warn "No `sub_weights` are defined in the portfolio; assuming $(inputs["REP_PERIOD"])"
         inputs["Weights"] = [8760 / inputs["REP_PERIOD"] for i in 1:inputs["REP_PERIOD"]]
     else
         inputs["Weights"] = p.internal.ext["sub_weights"]
@@ -241,7 +241,7 @@ function load_demand_data!(setup::Dict, p::Portfolio, inputs::Dict, path::Abstra
 ###Uncomment these lines if using TDR
     # Demand in MW for each zone
     # Max value of non-served energy
-    inputs["Voll"] = [get_value_of_lost_load(d) / scale_factor for d in demand_in] # convert from $/MWh $ million/GWh (assuming objective is divided by 1000)
+    inputs["Voll"] = [get_value_of_lost_load(d) / scale_factor / inputs["T"] for d in demand_in] # convert from $/MWh $ million/GWh (assuming objective is divided by 1000)
     # Getting the demand in MW for each zone and for each rep period
     println([get_unserved_demand_curve(d) for d in demand_in])
 
@@ -351,7 +351,7 @@ end
 Validate that the sum of demand values across all nodes matches the regional totals 
 from DAY_AHEAD_regional_Load.csv file.
 """
-function validate_demand_totals(setup::Dict, inputs::Dict, all_demand_data::Vector, scale_factor::Float64, path::AbstractString)
+function validate_demand_totals(setup::Dict, inputs::Dict, all_demand_data::Vector, scale_factor::Number, path::AbstractString)
     try
         # Try to load the DAY_AHEAD_regional_Load.csv file
         csv_path = joinpath(dirname(path), "DAY_AHEAD_regional_Load.csv")
