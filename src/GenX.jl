@@ -45,6 +45,7 @@ using ClusterManagers
 using Gurobi
 using PowerNetworkMatrices
 using SparseArrays
+using Ipopt
 using Logging
 import PowerSystems
 import InfrastructureSystems

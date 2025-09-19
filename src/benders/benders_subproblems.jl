@@ -1,4 +1,3 @@
-
 function generate_operation_subproblem(setup::Dict, inputs::Dict, OPTIMIZER::MOI.OptimizerWithAttributes)
 
     ## Start pre-solve timer
@@ -71,7 +70,7 @@ function init_dist_subproblems(setup::Dict,inputs_decomp::Dict,planning_variable
         @async @spawnat p begin
             W_local = localindices(subproblems_all)[1];
             inputs_local = [inputs_decomp[k] for k in W_local];
-			SUBPROB_OPTIMIZER =  configure_benders_subprob_solver(setup["settings_path"]);
+			SUBPROB_OPTIMIZER =  configure_benders_subprob_solver(setup["settings_path"], setup["Solver"]);
             init_local_subproblems!(setup,inputs_local,localpart(subproblems_all),planning_variables,SUBPROB_OPTIMIZER);
         end
     end
@@ -95,8 +94,9 @@ function init_dist_subproblems(setup::Dict,inputs_decomp::Dict,planning_variable
 
 end
 
-function configure_benders_subprob_solver(solver_settings_path::String)
+function configure_benders_subprob_solver(solver_settings_path::String, solver::String)
 
+    
 	gurobi_settings_path = joinpath(solver_settings_path, "gurobi_benders_subprob_settings.yml")
 
 	mysettings = convert(Dict{String, Any}, YAML.load(open(gurobi_settings_path)))
@@ -109,6 +109,25 @@ function configure_benders_subprob_solver(solver_settings_path::String)
 	display(attributes)
 
     OPTIMIZER = optimizer_with_attributes(()->Gurobi.Optimizer(GRB_ENV[]),attributes...)
+    
+    if solver == "Ipopt"
+    
+
+    	Ipopt_settings_path = joinpath(solver_settings_path, "ipopt_benders_subprob_settings.yml")
+    
+    	mysettings = convert(Dict{String, Any}, YAML.load(open(Ipopt_settings_path)))
+    
+    	settings = Dict("tol"=>1e-3, "print_level"=>0);
+    
+    	attributes = merge(settings, mysettings)
+    
+    	println("Subproblem Ipopt attributes:")
+    	display(attributes)
+    	
+    	OPTIMIZER = optimizer_with_attributes(()->Ipopt.Optimizer(),attributes...)
+    end
+
+   
 
 	return OPTIMIZER
 end
@@ -163,8 +182,8 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
 	optimize!(EP)
 	
 	if has_values(EP)
-        println("OBJECTIVE OF SUBPROBLEM IS : ", objective_value(EP))
-        println(sum(value.(EP[:vOverProduction])))
+        #println("OBJECTIVE OF SUBPROBLEM IS : ", objective_value(EP))
+       # println(sum(value.(EP[:vOverProduction])))
 		op_cost = objective_value(EP);
         zone_cost = 0#make_benders_zonal_opcost(inputs,EP)
 		emissions = value.(EP[:eEmissionsByZone])

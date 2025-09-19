@@ -741,37 +741,80 @@ WARNING: using GenX.run_genx_case! in module GenX conflicts with an existing ide
 [ Info: No technology type match found for resource 102_STEAM_4. Keeping default availability of 1.0.
 [ Info: No technology type match found for resource 107_CC_1. Keeping default availability of 1.0.
 [ Info: No technology type match found for resource 313_STORAGE_1. Keeping default availability of 1.0.
-[ Info: Solving the subproblems required 287.1320810317993 seconds
+[ Info: Solving the subproblems required 154.1120250225067 seconds
 ┌ Info: Investment Cost: 
 └   planning_sol.inv_cost = 0.0
 ┌ Info: Operational Cost: 
-└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 9.959809779617996e8
-[ Info: Solving the subproblems required 287.91108989715576 seconds
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.275694142980341e12
+[ Info: Solving the subproblems required 163.24922895431519 seconds
 ┌ Info: Investment Cost: 
-└   planning_sol.inv_cost = 2.6860396462882006e8
+└   planning_sol.inv_cost = 1.3169092926345024e9
 ┌ Info: Operational Cost: 
-└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 9.931631588450608e8
-[ Info: Solving the subproblems required 270.5743019580841 seconds
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.0657627182488312e12
+[ Info: Solving the subproblems required 242.2809760570526 seconds
 ┌ Info: Investment Cost: 
-└   planning_sol.inv_cost = 630965.4835989719
+└   planning_sol.inv_cost = 1.3169092932641807e9
 ┌ Info: Operational Cost: 
-└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 9.938061240406016e8
-┌ Info: Lines built: 
-└   build_indices = Int64[]
-┌ Info: Number of lines built: 
-└   length(build_indices) = 0
-┌ Info: Theta: 
-│   Vector(value.(planning_problem[:vTHETA])) =
-│    52-element Vector{Float64}:
-│     1.5349835686353317e7
-│     1.4222711181675164e7
-│     1.5682634578071244e7
-│     1.744260649089616e7
-│     ⋮
-│     1.3096069325334229e7
-│     1.528435655144204e7
-└     1.5146852686361661e7
-┌ Info: vCAP Builds: 
-│   cap_builds =
-│    1-element Vector{Int64}:
-└     2
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.0016879218540581e12
+ERROR: LoadError: TaskFailedException
+
+    nested task error: On worker 47:
+    Gurobi Error 10005: Unable to retrieve attribute 'RC'
+    Stacktrace:
+      [1] _check_ret
+        @ ~/.julia/packages/Gurobi/qCzRR/src/MOI_wrapper/MOI_wrapper.jl:417 [inlined]
+      [2] get
+        @ ~/.julia/packages/Gurobi/qCzRR/src/MOI_wrapper/MOI_wrapper.jl:3253
+      [3] get
+        @ ~/.julia/packages/MathOptInterface/JdLrc/src/Bridges/bridge_optimizer.jl:1570
+      [4] _get_fallback
+        @ ~/.julia/packages/MathOptInterface/JdLrc/src/Utilities/cachingoptimizer.jl:1004
+      [5] get
+        @ ~/.julia/packages/MathOptInterface/JdLrc/src/Utilities/cachingoptimizer.jl:949
+      [6] _moi_get_result
+        @ ~/.julia/packages/JuMP/RGIK3/src/optimizer_interface.jl:1137
+      [7] get
+        @ ~/.julia/packages/JuMP/RGIK3/src/optimizer_interface.jl:1197
+      [8] _constraint_dual
+        @ ~/.julia/packages/JuMP/RGIK3/src/constraints.jl:1412
+      [9] #dual#24
+        @ ~/.julia/packages/JuMP/RGIK3/src/constraints.jl:1401 [inlined]
+     [10] dual
+        @ ~/.julia/packages/JuMP/RGIK3/src/constraints.jl:1397 [inlined]
+     [11] solve_subproblem
+        @ ~/GenX/src/benders/benders_subproblems.jl:199
+     [12] solve_local_subproblem
+        @ ~/GenX/src/benders/benders_subproblems.jl:172
+     [13] #3114
+        @ /usr/licensed/julia/1.10.5/share/julia/stdlib/v1.10/Distributed/src/macros.jl:145
+     [14] #invokelatest#2
+        @ ./essentials.jl:892 [inlined]
+     [15] invokelatest
+        @ ./essentials.jl:889
+     [16] #110
+        @ /usr/licensed/julia/1.10.5/share/julia/stdlib/v1.10/Distributed/src/process_messages.jl:287
+     [17] run_work_thunk
+        @ /usr/licensed/julia/1.10.5/share/julia/stdlib/v1.10/Distributed/src/process_messages.jl:70
+     [18] #109
+        @ /usr/licensed/julia/1.10.5/share/julia/stdlib/v1.10/Distributed/src/process_messages.jl:287
+    Stacktrace:
+     [1] remotecall_fetch(::Function, ::Distributed.Worker; kwargs::@Kwargs{})
+       @ Distributed /usr/licensed/julia/1.10.5/share/julia/stdlib/v1.10/Distributed/src/remotecall.jl:465
+     [2] remotecall_fetch(::Function, ::Distributed.Worker)
+       @ Distributed /usr/licensed/julia/1.10.5/share/julia/stdlib/v1.10/Distributed/src/remotecall.jl:454
+     [3] remotecall_fetch
+       @ /usr/licensed/julia/1.10.5/share/julia/stdlib/v1.10/Distributed/src/remotecall.jl:492 [inlined]
+     [4] (::Main.GenX.var"#3113#3116"{DistributedArrays.DArray{Dict{Any, Any}, 1, Vector{Dict{Any, Any}}}, @NamedTuple{LB::Float64, inv_cost::Float64, zone_inv_cost::Int64, values::Dict{String, Float64}, theta::Vector{Float64}}, Dict{Any, Any}, Vector{Int64}, Int64})()
+       @ Main.GenX ~/GenX/src/benders/benders_subproblems.jl:157
+Stacktrace:
+ [1] sync_end(c::Channel{Any})
+   @ Base ./task.jl:455
+ [2] macro expansion
+   @ ./task.jl:487 [inlined]
+ [3] solve_dist_subproblems(EP_subproblems::DistributedArrays.DArray{Dict{Any, Any}, 1, Vector{Dict{Any, Any}}}, planning_sol::@NamedTuple{LB::Float64, inv_cost::Float64, zone_inv_cost::Int64, values::Dict{String, Float64}, theta::Vector{Float64}}, inputs::Dict{Any, Any})
+   @ Main.GenX ~/GenX/src/benders/benders_subproblems.jl:156
+ [4] benders(benders_inputs::Dict{Any, Any}, setup::Dict{Any, Any}, inputs::Dict{Any, Any})
+   @ Main.GenX ~/GenX/src/benders/benders_algorithm.jl:65
+ [5] top-level scope
+   @ ~/GenX/example_systems/RTS_Case_Latest/1_year_run_Benders.jl:133
+in expression starting at /home/ml6802/GenX/example_systems/RTS_Case_Latest/1_year_run_Benders.jl:133

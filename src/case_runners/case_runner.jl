@@ -261,7 +261,6 @@ function run_genx_case_benders!(case::AbstractString, mysetup::Dict)
     myinputs_decomp = separate_inputs_subperiods(myinputs);
     
     benders_inputs = generate_benders_inputs(mysetup,myinputs,myinputs_decomp)
-    println(mysetup)
 
     planning_problem, planning_sol,operational_sol, LB_hist,UB_hist,cpu_time,feasibility_hist, build_decisions  = benders(benders_inputs,mysetup,myinputs);
     opt_stats = (cpu_time=cpu_time, UB_hist = UB_hist)
