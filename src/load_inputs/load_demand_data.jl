@@ -351,7 +351,7 @@ end
 Validate that the sum of demand values across all nodes matches the regional totals 
 from DAY_AHEAD_regional_Load.csv file.
 """
-function validate_demand_totals(setup::Dict, inputs::Dict, all_demand_data::Vector, scale_factor::Float64, path::AbstractString)
+function validate_demand_totals(setup::Dict, inputs::Dict, all_demand_data::Vector, scale_factor::Number, path::AbstractString)
     try
         # Try to load the DAY_AHEAD_regional_Load.csv file
         csv_path = joinpath(dirname(path), "DAY_AHEAD_regional_Load.csv")

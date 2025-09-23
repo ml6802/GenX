@@ -1,8 +1,13 @@
 ENV["GENX_PRECOMPILE"] = "false"
 
+import Pkg
+
+# Pkg.activate("/home/ml6802/GenX")
+# include("/home/ml6802/GenX/src/GenX.jl")
+
 using Revise
 using JuMP
-using GenX
+#using GenX
 using PowerSystemsInvestmentsPortfolios
 using Gurobi
 using TimeSeries
@@ -15,11 +20,7 @@ const PSIP = PowerSystemsInvestmentsPortfolios
 const IS = InfrastructureSystems
 const PSY = PowerSystems
 using Plots
-import Pkg
 using Distributed, ClusterManagers
-
-Pkg.activate("/home/ml6802/GenX")
-include("/home/ml6802/GenX/src/GenX.jl")
 
 include((@__DIR__)*"/load_portfolio.jl")
 include((@__DIR__)*"/../convert_input_dict.jl")
@@ -48,21 +49,21 @@ for i in 1:length(buses)
 end
 
 
-cpus_per_task = parse(Int, ENV["SLURM_CPUS_PER_TASK"]);
-addprocs(cpus_per_task)
-println("Adding processors")
-@everywhere begin
-    import Pkg
-    Pkg.activate("/home/ml6802/GenX")
-end
+# cpus_per_task = parse(Int, ENV["SLURM_CPUS_PER_TASK"]);
+# addprocs(cpus_per_task)
+# println("Adding processors")
+# @everywhere begin
+#     import Pkg
+#     Pkg.activate("/home/ml6802/GenX")
+# end
 
-println("Number of procs: ", nprocs())
-println("Number of workers: ", nworkers())
-for i in workers()
-    id, pid, host = fetch(@spawnat i (myid(), getpid(), gethostname()))
-    println(id, " " , pid, " ", host)
-end
-@everywhere include("/home/ml6802/GenX/src/GenX.jl")
+# println("Number of procs: ", nprocs())
+# println("Number of workers: ", nworkers())
+# for i in workers()
+#     id, pid, host = fetch(@spawnat i (myid(), getpid(), gethostname()))
+#     println(id, " " , pid, " ", host)
+# end
+# @everywhere include("/home/ml6802/GenX/src/GenX.jl")
 
 
 benders_settings_path = GenX.get_settings_path(case, "benders_settings.yml")
@@ -121,16 +122,9 @@ using Random
 Random.seed!(1)
 for i in 1:length(lines)
     distance = 60 * rand()
-    size_mw = myinputs["Line_Reinforcement_Cap_Size"][i] * scale_factor
-    myinputs["pC_Line_Reinforcement"][i] = distance * size_mw * 2e6
-    # myinputs["pC_Line_Reinforcement"][i] = distance * size_mw * 2#000
+    cap_val = distance * 1200
+    myinputs["pC_Line_Reinforcement"][i] = cap_val * (0.044) / (1 - (1 + 0.044)^(-60))
 end
-
-# n_times = 168
-# myinputs["T"] = n_times
-# myinputs["hours_per_subperiod"] = n_times
-# myinputs["INTERIOR_SUBPERIODS"] = [i for i in 2:myinputs["hours_per_subperiod"]]
-# myinputs["REP_PERIOD"] = 52
 
 mysetup["NetworkExpansion"] = 1
 mysetup["Benders"] = 1

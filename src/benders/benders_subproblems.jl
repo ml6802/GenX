@@ -1,4 +1,3 @@
-
 function generate_operation_subproblem(setup::Dict, inputs::Dict, OPTIMIZER::MOI.OptimizerWithAttributes)
 
     ## Start pre-solve timer
@@ -29,7 +28,7 @@ end
 function init_subproblem(setup::Dict, inputs::Dict, OPTIMIZER::MOI.OptimizerWithAttributes,planning_variables::Vector{String})
 
     EP = generate_operation_subproblem(setup, inputs, OPTIMIZER)
-
+    EP.ext[:solver] = OPTIMIZER
     set_silent(EP)
 
     planning_variables_sub = intersect(name.(all_variables(EP)),planning_variables);
@@ -157,8 +156,10 @@ end
 
 function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_sub::Vector{String},inputs)
 
-	
 	fix_planning_variables!(EP,planning_sol,planning_variables_sub)
+
+    new_optimizer = EP.ext[:solver]
+    set_optimizer(EP, new_optimizer)
 
 	optimize!(EP)
 	
@@ -168,7 +169,36 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
 		op_cost = objective_value(EP);
         zone_cost = 0#make_benders_zonal_opcost(inputs,EP)
 		emissions = value.(EP[:eEmissionsByZone])
+        original_obj_scale = get_attribute(EP, "ObjScale")
         lambda=[]
+        if dual_status(EP) == MOI.NO_SOLUTION
+            sols = value.(all_variables(EP))
+            original_obj_scale = get_attribute(EP, "ObjScale")
+            @warn "Dual Status not computed; trying to increase ObjScale"
+            set_optimizer_attribute(EP, "ObjScale", original_obj_scale * 100)
+            optimize!(EP)
+            if dual_status(EP) == MOI.NO_SOLUTION
+                @warn "Dual Status not computed; trying to increase ObjScale again"
+                set_optimizer_attribute(EP, "ObjScale", original_obj_scale * 10000)
+                optimize!(EP)
+                if has_values(EP) && dual_status(EP) == MOI.NO_SOLUTION
+                    @warn "No solution with Gurobi; trying Ipopt"
+                    set_optimizer(EP, Ipopt.Optimizer)
+                    #set_attribute(EP, "hsllib", HSL_jll.libhsl_path)
+                    #set_attribute(EP, "linear_solver", "ma57")
+                    set_attribute(EP, "max_cpu_time", 7200.)
+                    vars = all_variables(EP)
+                    for (i, v) in enumerate(vars)
+                        if !(is_parameter(v))
+                            set_start_value(vars[i], sols[i])
+                        end
+                    end
+                    optimize!(EP)
+                elseif !has_values(EP)
+                    error("NO SOLUTIONS COMPUTED!")
+                end
+            end
+        end
         for y in planning_variables_sub
             vy = variable_by_name(EP,y)
 		    if is_parameter(vy)
@@ -189,6 +219,10 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
 		else
 			feasibility_slack = 0.0;
 		end
+        summation_sol_map = Dict{String, Float64}()
+        summation_sol_map["vNSE"] = sum(value.(EP[:vNSE]))
+        summation_sol_map["vP"] = sum(value.(EP[:vP]))
+        summation_sol_map["OverProduction"] = sum(value.(EP[:vOverProduction]))
 	else
 		op_cost = 0;
         #zone_cost = make_benders_zonal_opcost(inputs,EP)
@@ -196,7 +230,7 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
 		#lambda = zeros(length(planning_variables_sub));
 		#theta_coeff = 0;
 		#feasibility_slack = 0;
-
+        summation_sol_map = Dict()
         compute_conflict!(EP)
 				list_of_conflicting_constraints = ConstraintRef[];
 				for (F, S) in list_of_constraint_types(EP)
@@ -209,8 +243,15 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
                 display(list_of_conflicting_constraints)
 		@warn "The subproblem solution failed. This should not happen, double check the input files"
 	end
+
+    avs = all_variables(EP)
+    vals = value.(avs)
+    sol_map = Dict{String, Float64}()
+    for (i, var) in enumerate(avs)
+        sol_map[name(var)] = vals[i]
+    end
     
-	return (op_cost=op_cost,zone_cost = zone_cost, emissions = emissions,lambda = lambda,theta_coeff=theta_coeff,feasibility_slack=feasibility_slack)
+	return (op_cost=op_cost,zone_cost = zone_cost, emissions = emissions,lambda = lambda,theta_coeff=theta_coeff,feasibility_slack=feasibility_slack, solution_map=sol_map, summation_map=summation_sol_map)
 
 end
 
