@@ -165,6 +165,7 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
         @expression(EP,
             eNet_Export_Cand_Flows[z = 1:Z, t = 1:T],
             sum(inputs["pNet_Map_cand"][l, z] * EP[:vCANDFLOW][l, t] for l in EXPANSION_LINES))
+
     elseif setup["ptdf"] == 1 #PTDF constraints
             ### DC-OPF variables ###
         # Note, these are definable without overwriting the existing variables in the model because transmission.jl is not called when this file is called.
@@ -181,6 +182,9 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
         @constraint(EP, cBUS_INJECTION[z = 1:Z, t = 1:T], p_bus[z, t] == EP[:eGenerationByZone][z, t] + sum(EP[:vNSE][:, t, z]) - inputs["pD"][t, z])
 #
         @constraint(EP, SYSTEM_BALANCE[t = 1:T], sum(p_bus[z, t] for z in 1:Z) == 0)
+        
+        
+        
         #TODO: currently, there is no support for candidate lines in corridors where there is not an existing line
 
         line_map = inputs["Line_Map"]
@@ -189,7 +193,7 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
 
         # The following constraints assume EXPANSION_LINES == existing lines
         @expression(EP, 
-            eFLOW_LINES[l in EXPANSION_LINES, t in 1:T],
+            eFLOW_LINES[l in 1:L, t in 1:T],
             sum(get_ptdf_vector(ptdf_by_line, l, 0, line_map)[z] * p_bus[z, t] for z in 1:Z) + 
             sum(
                 (get_ptdf_line_diff(ptdf_by_line, l, 0, ll, line_map)) * p_virtual[ll, i, t] 
@@ -198,7 +202,7 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
         )
         F_existing = inputs["pTrans_Max"]
         @constraint(EP, 
-            cEXISTING_LINE_FLOWS[l in EXPANSION_LINES, t in 1:T],
+            cEXISTING_LINE_FLOWS[l in l in 1:L, t in 1:T],
             -F_existing[l] <= eFLOW_LINES[l, t] <= F_existing[l]
         ) # 18 for existing lines in paper https://ietresearch.onlinelibrary.wiley.com/doi/epdf/10.1049/iet-gtd.2015.1573
 
@@ -232,7 +236,7 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
         ) # 20 for existing lines in paper https://ietresearch.onlinelibrary.wiley.com/doi/epdf/10.1049/iet-gtd.2015.1573
 
 
-        @constraint(EP, [l in EXPANSION_LINES, t in 1:T],
+        @constraint(EP, [l in 1:L, t in 1:T],
             EP[:vFLOW][l, t] == eFLOW_LINES[l, t]
         )
 

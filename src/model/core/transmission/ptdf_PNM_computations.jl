@@ -1,5 +1,3 @@
-
-
 function get_lines(matrix::Matrix)
     line_list = Vector{Tuple}()
     for i in 1:size(matrix)[1]
@@ -36,7 +34,7 @@ function calculate_ptdf_matrices(inputs::Dict, slack_bus::Int=1; tol = eps())
     B_net = inputs["pDC_OPF_coeff"]
     B_net_cand = inputs["pDC_OPF_coeff_cand"]
     B_num_lines = inputs["Max_Trans_Cap"]
-    B_total = Dict()
+    B_total = Dict() # total susceptance on a given corridor
 
     num_buses = size(net_map)[2]
     buses = 1:num_buses
@@ -92,7 +90,6 @@ function calculate_ptdf_matrices(inputs::Dict, slack_bus::Int=1; tol = eps())
             BA_V[idx1] += B_val
             BA_V[idx2] -= B_val
         else
-
             push!(BA_I, from_bus)
             push!(BA_J, line_map[line])
             push!(BA_V, B_val)
@@ -118,12 +115,12 @@ function calculate_ptdf_matrices(inputs::Dict, slack_bus::Int=1; tol = eps())
     ptdf_data = PTDF(PNM.sparsify(ptdf_mat, tol), (buses, all_lines), (bus_map, line_map), subnetworks, ref_bus_position, Base.RefValue(tol), RadialNetworkReduction())
 
     # need to build ptdf for each line; 
-        # Need to build a 3 entry tuple I think with the third dim being cand line num
-        # Existing lines can be indexed by 0 maybe? 
-        # Need to compute the susceptance for this single line
-        # Need to build a new PTDF matrix for lines
+    # Need to build a 3 entry tuple I think with the third dim being cand line num
+    # Existing lines can be indexed by 0 maybe? 
+    # Need to compute the susceptance for this single line
+    # Need to build a new PTDF matrix for lines
 
-    total_lines = length(B_net) + sum(B_num_lines)
+    total_lines = length(B_net) + sum(B_num_lines) # number of existing lines + total number of possible new lines
 
     ptdf_by_line = zeros(num_buses, total_lines)
     ind_line_map = Dict()
