@@ -192,7 +192,7 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
                 end
             end
         end
-        display(list_of_conflicting_constraints)
+        @info display(list_of_conflicting_constraints)
 		@warn "The subproblem solution failed. This should not happen, double check the input files"
 	end
     
