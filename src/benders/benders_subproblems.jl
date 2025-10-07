@@ -184,15 +184,15 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
 		theta_coeff = 0;
 		feasibility_slack = 0;
         compute_conflict!(EP)
-				list_of_conflicting_constraints = ConstraintRef[];
-				for (F, S) in list_of_constraint_types(EP)
-					for con in all_constraints(EP, F, S)
-						if get_attribute(con, MOI.ConstraintConflictStatus()) == MOI.IN_CONFLICT
-							push!(list_of_conflicting_constraints, con)
-						end
-					end
-				end
-                display(list_of_conflicting_constraints)
+        list_of_conflicting_constraints = ConstraintRef[];
+        for (F, S) in list_of_constraint_types(EP)
+            for con in all_constraints(EP, F, S)
+                if get_attribute(con, MOI.ConstraintConflictStatus()) == MOI.IN_CONFLICT
+                    push!(list_of_conflicting_constraints, con)
+                end
+            end
+        end
+        display(list_of_conflicting_constraints)
 		@warn "The subproblem solution failed. This should not happen, double check the input files"
 	end
     
