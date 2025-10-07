@@ -80,6 +80,30 @@ function gather_emissions(inputs_decomp::Dict,subop_sol::Dict)
 	return total_ems, zonal_ems
 end
 
+function make_power_df(inputs::Dict, inputs_decomp::Dict,subop_sol::Dict, setup::Dict)
+	power = Array{Float64,2}(undef,(0,inputs["G"]))
+	gen = inputs["RESOURCES"]
+    zones = zone_id.(gen)
+	for k in eachindex(subop_sol)
+		temp_power = subop_sol[k].power' .* inputs_decomp[k]["omega"];
+		power = vcat(power,temp_power)
+	end
+	
+	
+	G = inputs["G"]     # Number of resources (generators, storage, DR, and DERs)
+
+	ModelScalingFactor = 10^3
+
+	if setup["ParameterScale"] == 1
+		power *= ModelScalingFactor
+	end
+
+	AnnualSum = sum(power[i,:] for i in 1:size(power,1))
+	dfPower = DataFrame(AnnualSum', inputs["RESOURCE_NAMES"])
+
+	return dfPower
+end
+
 function add_types(inputs::Dict, cap_mat)
 	resource_type = inputs["RESOURCES"].resource_type
 	type_vec=Vector{String}(undef,length(resource_type))
@@ -198,14 +222,17 @@ function make_benders_results_df(master_sol::NamedTuple, subop_sol::Dict, path::
 	return dfResults
 end
 
-function write_benders_mga_results!(Results_df::DataFrame, results::AbstractArray, path::AbstractString, setup::Dict, inputs::Dict, inputs_decomp::Dict, sumtime_df::DataFrame)
+function write_benders_mga_results!(Results_df::DataFrame, power_df::DataFrame, results::AbstractArray, path::AbstractString, setup::Dict, inputs::Dict, inputs_decomp::Dict, sumtime_df::DataFrame)
 	num_its = 2*setup["ModelingToGenerateAlternativeIterations"]
 	for i in 1:num_its
 		temp_df = make_benders_results_df(results[i,1],results[i,2],path,setup,inputs,inputs_decomp)
+		temp_power_df = make_power_df(inputs,inputs_decomp,results[i,2], setup)
 		append!(Results_df,temp_df)
+		append!(power_df,temp_power_df)
 	end
 	iterations = collect(0:num_its)
 	Results_df[!,:MGAIteration] .= iterations
+	power_df[!,:MGAIteration] .= iterations
 	outpath = joinpath(path,"Outputs")
 	if setup["OverwriteResults"] == 1
 		# Overwrite existing results if dir exists
@@ -220,6 +247,7 @@ function write_benders_mga_results!(Results_df::DataFrame, results::AbstractArra
 	end
     CSV.write(joinpath(outpath, "SummaryMGA.csv"),Results_df)
     CSV.write(joinpath(outpath, "SummaryMGATimes.csv"),sumtime_df)
+	CSV.write(joinpath(outpath, "AnnualPowerByGen.csv"),power_df)
 end
 
 function splitfun(x)
