@@ -177,12 +177,6 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
 		
 	else
 		op_cost = 0;
-        zone_cost = make_benders_zonal_opcost(inputs,EP)
-		emissions = value.(EP[:eEmissionsByZone])
-        power = value.(EP[:vP])
-		lambda = zeros(length(planning_variables_sub));
-		theta_coeff = 0;
-		feasibility_slack = 0;
         compute_conflict!(EP)
         list_of_conflicting_constraints = ConstraintRef[];
         for (F, S) in list_of_constraint_types(EP)
@@ -193,6 +187,12 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
             end
         end
         @info display(list_of_conflicting_constraints)
+        zone_cost = make_benders_zonal_opcost(inputs,EP)
+		emissions = value.(EP[:eEmissionsByZone])
+        power = value.(EP[:vP])
+		lambda = zeros(length(planning_variables_sub));
+		theta_coeff = 0;
+		feasibility_slack = 0;
 		@warn "The subproblem solution failed. This should not happen, double check the input files"
 	end
     
