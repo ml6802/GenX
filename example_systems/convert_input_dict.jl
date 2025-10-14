@@ -94,7 +94,7 @@ function build_zonal_inputs(inputs::Dict, node_to_zone_map::Dict, num_zones::Int
     zonal_inputs["adj_list"] = adj_list
     zonal_inputs["internal_zone_map"] = internal_zone_map
     
-    line_keys = [ "pPercent_Loss", "pTrans_Loss_Coeff", "pTrans_Max_Possible", "pTrans_Max", "pTrans_Max_Possible", "pDC_OPF_coeff", "Line_Angle_Limit"]
+    line_keys = [ "pPercent_Loss", "pTrans_Loss_Coeff", "pTrans_Max", "pDC_OPF_coeff", "Line_Angle_Limit"]
 
     for key in line_keys
         if haskey(inputs, key)
@@ -121,13 +121,14 @@ function build_zonal_inputs(inputs::Dict, node_to_zone_map::Dict, num_zones::Int
 
         zonal_inputs["L_cand"] = length(new_adj_list_cand)
         zonal_inputs["Z_cand"] = num_zones
+        z2l_map = zonal_inputs["z2l_map_cand"]
 
-        line_keys = ["pDC_OPF_coeff_cand", "Line_Angle_Limit_cand", "pMax_Line_Reinforcement", "Line_Reinforcement_Cap_Size", "pC_Line_Reinforcement"]
+        line_keys = ["pDC_OPF_coeff_cand", "Line_Angle_Limit_cand", "pMax_Line_Reinforcement", "Line_Reinforcement_Cap_Size", "pC_Line_Reinforcement", "pTrans_Max_Possible", "Max_Trans_Cap"]
 
         for key in line_keys
             if haskey(inputs, key)
                 new_data = Float64[]
-                for i in 1:length(new_adj_list)
+                for i in 1:length(new_adj_list_cand)
                     original_line_idx = z2l_map[i]
                     push!(new_data, inputs[key][original_line_idx])
                 end
@@ -300,11 +301,11 @@ function build_single_nodal_input(inputs::Dict, node_to_zone_map::Dict, zone::In
     nodal_inputs["l2l_map"] = l2l_map
     nodal_inputs["L"] = length(new_adj_list)
     
-    line_keys = [ "pPercent_Loss", "pTrans_Loss_Coeff", "pTrans_Max_Possible", "pTrans_Max", "pTrans_Max_Possible", "pDC_OPF_coeff", "Line_Angle_Limit"]
+    line_keys = [ "pPercent_Loss", "pTrans_Loss_Coeff", "pTrans_Max", "pDC_OPF_coeff", "Line_Angle_Limit"]
 
     for key in line_keys
         if haskey(inputs, key)
-            new_data = Float64[]
+            new_data = Real[]
             for i in line_list
                 push!(new_data, inputs[key][i])
             end
@@ -322,7 +323,7 @@ function build_single_nodal_input(inputs::Dict, node_to_zone_map::Dict, zone::In
         nodal_inputs["L_cand"] = length(new_adj_list_cand)
         nodal_inputs["Z_cand"] = num_nodes
 
-        line_keys = ["pDC_OPF_coeff_cand", "Line_Angle_Limit_cand", "pMax_Line_Reinforcement", "Line_Reinforcement_Cap_Size", "pC_Line_Reinforcement"]
+        line_keys = ["pDC_OPF_coeff_cand", "Line_Angle_Limit_cand", "pMax_Line_Reinforcement", "Line_Reinforcement_Cap_Size", "pTrans_Max_Possible","pC_Line_Reinforcement"]
 
         for key in line_keys
             if haskey(inputs, key)
@@ -346,6 +347,7 @@ function build_single_nodal_input(inputs::Dict, node_to_zone_map::Dict, zone::In
                 end
             end
         end
+        GenX.build_expansion_information!(nodal_inputs)
     end
 
     nodal_inputs["pD"] = inputs["pD"][:, nodes_in_zone]
@@ -386,39 +388,72 @@ end
 function get_interzonal_node_time_series(z_inputs::Dict, m::Model)
     z2l_map = z_inputs["z2l_map"]
     adj_list = z_inputs["adj_list"]
+    new_adj_list = z_inputs["new_adj_list"]
     interzonal_lines = sort(collect(keys(z2l_map)))
     nodal_time_series = Dict{Int, Vector{Float64}}()
     T = z_inputs["T"]
+    corridor_list = Vector{Tuple}()
+    line_to_corridor_map = Dict() # maps line to corridor tuple
+    corridor_to_line_map = Dict()
+    total_susceptance = Dict() # maps corridor to susceptance value
+    total_flow = Dict() # maps corridor to time series vector
+    line_to_idx = Dict() # maps the line reference in the corridor to line maps to the actual line index
+    line_to_susceptance = Dict()
+    line_to_src_node = Dict()
+    line_to_dst_node = Dict()
+    line_to_multiplier = Dict()
+
     for (i, line) in enumerate(interzonal_lines)
         original_line = z2l_map[line]
-        edge = adj_list[original_line]
-        src_node = edge[1]
-        dst_node = edge[2]
+        edge = new_adj_list[line]
+        src_zone = edge[1]
+        dst_zone = edge[2]
+
         
         flow_solution = value.(m[:vFLOW][line, :])
 
-        if haskey(nodal_time_series, src_node)
-            nodal_time_series[src_node] .+= flow_solution[:]
+        if (src_zone, dst_zone) in corridor_list
+            line_tuple = (src_zone, dst_zone)
+            multiplier = 1.
+        elseif (dst_zone, src_zone) in corridor_list
+            line_tuple = (dst_zone, src_zone)
+            multiplier = -1.
         else
-            nodal_time_series[src_node] = flow_solution[:]
+            line_tuple = (src_zone, dst_zone)
+            total_susceptance[line_tuple] = 0.
+            total_flow[line_tuple] = zeros(length(flow_solution))
+            push!(corridor_list, line_tuple)
+            multiplier = 1.
         end
-        if haskey(nodal_time_series, dst_node)
-            nodal_time_series[dst_node] .-= flow_solution[:]
+        if haskey(corridor_to_line_map, line_tuple)
+            push!(corridor_to_line_map[line_tuple], line)
         else
-            nodal_time_series[dst_node] = -1 .* flow_solution[:]
+            corridor_to_line_map[line_tuple] = Any[]
+            push!(corridor_to_line_map[line_tuple], line)
         end
+        line_to_corridor_map[line] = line_tuple
+        total_susceptance[line_tuple] += myinputs["pDC_OPF_coeff"][line]
+        abc = copy(total_flow[line_tuple])
+        total_flow[line_tuple] .+= flow_solution[:] .* multiplier
+        xyz = copy(total_flow[line_tuple])
+        line_to_idx[line] = line
+        line_to_susceptance[line] = myinputs["pDC_OPF_coeff"][line]
+        line_to_src_node[line] = adj_list[original_line][1]
+        line_to_dst_node[line] = adj_list[original_line][2]
+        line_to_multiplier[line] = multiplier
     end
 
     if haskey(m, :vCANDFLOW)
         z2l_map_cand = z_inputs["z2l_map_cand"]
         adj_list_cand = z_inputs["adj_list_cand"]
+        new_adj_list_cand = z_inputs["new_adj_list_cand"]
         interzonal_lines_cand = sort(collect(keys(z2l_map_cand)))
 
         for (i, line) in enumerate(interzonal_lines_cand)
             original_line = z2l_map_cand[line]
-            edge = adj_list_cand[original_line]
-            src_node = edge[1]
-            dst_node = edge[2]
+            edge = new_adj_list_cand[line]
+            src_zone = edge[1]
+            dst_zone = edge[2]
 
             candflow_vars = m[:vCANDFLOW]
             if isa(candflow_vars, Array)
@@ -426,6 +461,49 @@ function get_interzonal_node_time_series(z_inputs::Dict, m::Model)
             else
                 flow_solution = [sum(value.(m[:vCANDFLOW][line, t, :])) for t in 1:T]
             end
+
+            if (src_zone, dst_zone) in corridor_list
+                line_tuple = (src_zone, dst_zone)
+                multiplier = 1.
+            elseif (dst_zone, src_zone) in corridor_list
+                line_tuple = (dst_zone, src_zone)
+                multiplier = -1.
+            else
+                line_tuple = (src_zone, dst_zone)
+                total_susceptance[line_tuple] = 0.
+                total_flow[line_tuple] = zeros(length(flow_solution))
+                push!(corridor_list, line_tuple)
+                multiplier = 1.
+            end
+            if haskey(corridor_to_line_map, line_tuple)
+                push!(corridor_to_line_map[line_tuple], "$(line)_cand")
+            else
+                corridor_to_line_map[line_tuple] = Any[]
+                push!(corridor_to_line_map[line_tuple], "$(line)_cand")
+            end
+            line_to_corridor_map["$(line)_cand"] = line_tuple
+            total_susceptance[line_tuple] += myinputs["pDC_OPF_coeff_cand"][line]
+            total_flow[line_tuple] .+= flow_solution[:] .* multiplier
+            line_to_idx["$(line)_cand"] = line
+            line_to_susceptance["$(line)_cand"] = myinputs["pDC_OPF_coeff_cand"][line]
+            line_to_src_node["$(line)_cand"] = adj_list_cand[original_line][1]
+            line_to_dst_node["$(line)_cand"] = adj_list_cand[original_line][2]
+            line_to_multiplier["$(line)_cand"] = multiplier
+        end
+    end
+
+    for line_tuple in keys(total_flow)
+        for line in corridor_to_line_map[line_tuple]
+            src_node = line_to_src_node[line]
+            dst_node = line_to_dst_node[line]
+
+            flow_solution_total = total_flow[line_tuple]
+            frac = line_to_susceptance[line] / total_susceptance[line_tuple]
+            if frac > 1
+                @warn "frac is $frac"
+            end
+            multiplier = line_to_multiplier[line]
+            flow_solution = flow_solution_total[:] .* frac .* multiplier
 
             if haskey(nodal_time_series, src_node)
                 nodal_time_series[src_node] .+= flow_solution[:]
@@ -442,23 +520,100 @@ function get_interzonal_node_time_series(z_inputs::Dict, m::Model)
     return nodal_time_series
 end
 
+# function get_interzonal_node_time_series(z_inputs::Dict, m::Model)
+#     z2l_map = z_inputs["z2l_map"]
+#     adj_list = z_inputs["adj_list"]
+#     interzonal_lines = sort(collect(keys(z2l_map)))
+#     nodal_time_series = Dict{Int, Vector{Float64}}()
+#     T = z_inputs["T"]
+#     for (i, line) in enumerate(interzonal_lines)
+#         original_line = z2l_map[line]
+#         edge = adj_list[original_line]
+#         src_node = edge[1]
+#         dst_node = edge[2]
+        
+#         flow_solution = value.(m[:vFLOW][line, :])
+
+#         if haskey(nodal_time_series, src_node)
+#             nodal_time_series[src_node] .+= flow_solution[:]
+#         else
+#             nodal_time_series[src_node] = flow_solution[:]
+#         end
+#         if haskey(nodal_time_series, dst_node)
+#             nodal_time_series[dst_node] .-= flow_solution[:]
+#         else
+#             nodal_time_series[dst_node] = -1 .* flow_solution[:]
+#         end
+#     end
+
+#     if haskey(m, :vCANDFLOW)
+#         z2l_map_cand = z_inputs["z2l_map_cand"]
+#         adj_list_cand = z_inputs["adj_list_cand"]
+#         interzonal_lines_cand = sort(collect(keys(z2l_map_cand)))
+
+#         for (i, line) in enumerate(interzonal_lines_cand)
+#             original_line = z2l_map_cand[line]
+#             edge = adj_list_cand[original_line]
+#             src_node = edge[1]
+#             dst_node = edge[2]
+
+#             candflow_vars = m[:vCANDFLOW]
+#             if isa(candflow_vars, Array)
+#                 flow_solution = [value(m[:vCANDFLOW][line, t]) for t in 1:T]
+#             else
+#                 flow_solution = [sum(value.(m[:vCANDFLOW][line, t, :])) for t in 1:T]
+#             end
+
+#             if haskey(nodal_time_series, src_node)
+#                 nodal_time_series[src_node] .+= flow_solution[:]
+#             else
+#                 nodal_time_series[src_node] = flow_solution[:]
+#             end
+#             if haskey(nodal_time_series, dst_node)
+#                 nodal_time_series[dst_node] .-= flow_solution[:]
+#             else
+#                 nodal_time_series[dst_node] = -1 .* flow_solution[:]
+#             end
+#         end
+#     end
+#     return nodal_time_series
+# end
+
+function get_capacity_solutions(z_inputs::Dict, mz::JuMP.Model)
+    g2z_map = z_inputs["g2z_map"]
+    n_zones = z_inputs["Z"]
+    total_cap = zeros(n_zones)
+    cap_resources = mz[:vCAP].axes[1]
+    for i in cap_resources
+        total_cap[g2z_map[i]] += value(mz[:vCAP][i])
+    end
+    return total_cap
+end
+
 function run_zonal_model!(z_inputs::Dict, setup::Dict, optimizer)
     mz = GenX.generate_model(setup, z_inputs, optimizer)
     optimize!(mz)
     nts = get_interzonal_node_time_series(z_inputs, mz)
+    cap_decisions = get_capacity_solutions(z_inputs, mz)
     z_inputs["interzonal_node_flows"] = nts
+    z_inputs["capacity_decisions"] = cap_decisions
     return mz
 end
 
 function add_interzonal_data!(z_inputs::Dict, n_inputs::Dict)
     zone_list = sort(collect(keys(n_inputs)))
     interzonal_node_flows = z_inputs["interzonal_node_flows"]
+    zonal_cap_decisions = z_inputs["capacity_decisions"]
     for i in zone_list
         n_input = n_inputs[i]
+
+        # save capacity value
+        n_input["zonal_capacity_decision"] = z_inputs["capacity_decisions"][i]        
+
+        # Add interzonal flows
         node_to_timeseries = Dict{Int, Vector{Float64}}()
         n2n_map = n_input["n2n_map"] # maps old index to new index
         nodes_in_zone = n_input["nodes_in_zone"]
-        println(nodes_in_zone)
         for (j, node) in enumerate(nodes_in_zone)
             if haskey(interzonal_node_flows, node)
                 node_to_timeseries[n2n_map[node]] = interzonal_node_flows[node]
@@ -476,6 +631,15 @@ function add_interzonal_data!(z_inputs::Dict, n_inputs::Dict)
             # save the time series data to the n_inputs
             # add a new THERMAL resource object
     return nothing
+end
+
+function build_nodal_resolution_model(setup::Dict, n_inputs::Dict, optimizer)
+    m = GenX.generate_model(setup, n_inputs, optimizer)
+    vcap_vars = m[:vCAP]
+    if haskey(n_inputs, "zonal_capacity_decision")
+        @constraint(m, sum(vcap_vars) == n_inputs["zonal_capacity_decision"])
+    end
+    return m
 end
 
 # n2z_map = Dict(1 => 1, 2 => 1, 3 => 2, 4 => 2)

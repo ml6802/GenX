@@ -1,0 +1,1453 @@
+
+libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+
+libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/Line_Retirements/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/Line_Retirements/GenX/src/load_inputs/load_network_data.jl:59.
+ERROR: Method overwriting is not permitted during Module precompilation. Use `__precompile__(false)` to opt-out of precompilation.
+WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/Line_Retirements/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/Line_Retirements/GenX/src/load_inputs/load_network_data.jl:59.
+WARNING: Method definition to_floats_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/Line_Retirements/GenX/src/load_inputs/load_network_data.jl:38 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/Line_Retirements/GenX/src/load_inputs/load_network_data.jl:60.
+Set parameter LicenseID to value 197246
+Set parameter GURO_PAR_SPECIAL
+Set parameter TokenServer to value "license.rc.princeton.edu"
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: Technologies of type ROR are not currently supported in portfolios. Skipping serialization.
+└ @ PowerSystemsInvestmentsPortfolios /scratch/gpfs/dc0173/git/forked/Mike/Benders-PSIP-GenX/PSIP-GenX/PowerSystemsInvestmentsPortfolios.jl/src/db_parser.jl:543
+┌ Warning: Technologies of type ROR are not currently supported in portfolios. Skipping serialization.
+└ @ PowerSystemsInvestmentsPortfolios /scratch/gpfs/dc0173/git/forked/Mike/Benders-PSIP-GenX/PSIP-GenX/PowerSystemsInvestmentsPortfolios.jl/src/db_parser.jl:543
+┌ Warning: Technologies of type ROR are not currently supported in portfolios. Skipping serialization.
+└ @ PowerSystemsInvestmentsPortfolios /scratch/gpfs/dc0173/git/forked/Mike/Benders-PSIP-GenX/PSIP-GenX/PowerSystemsInvestmentsPortfolios.jl/src/db_parser.jl:543
+┌ Warning: Technologies of type HYDRO are not currently supported in portfolios. Skipping serialization.
+└ @ PowerSystemsInvestmentsPortfolios /scratch/gpfs/dc0173/git/forked/Mike/Benders-PSIP-GenX/PSIP-GenX/PowerSystemsInvestmentsPortfolios.jl/src/db_parser.jl:543
+┌ Warning: Technologies of type HYDRO are not currently supported in portfolios. Skipping serialization.
+└ @ PowerSystemsInvestmentsPortfolios /scratch/gpfs/dc0173/git/forked/Mike/Benders-PSIP-GenX/PSIP-GenX/PowerSystemsInvestmentsPortfolios.jl/src/db_parser.jl:543
+┌ Warning: Technologies of type HYDRO are not currently supported in portfolios. Skipping serialization.
+└ @ PowerSystemsInvestmentsPortfolios /scratch/gpfs/dc0173/git/forked/Mike/Benders-PSIP-GenX/PSIP-GenX/PowerSystemsInvestmentsPortfolios.jl/src/db_parser.jl:543
+┌ Warning: Technologies of type SYNC_COND are not currently supported in portfolios. Skipping serialization.
+└ @ PowerSystemsInvestmentsPortfolios /scratch/gpfs/dc0173/git/forked/Mike/Benders-PSIP-GenX/PSIP-GenX/PowerSystemsInvestmentsPortfolios.jl/src/db_parser.jl:543
+┌ Warning: Technologies of type SYNC_COND are not currently supported in portfolios. Skipping serialization.
+└ @ PowerSystemsInvestmentsPortfolios /scratch/gpfs/dc0173/git/forked/Mike/Benders-PSIP-GenX/PSIP-GenX/PowerSystemsInvestmentsPortfolios.jl/src/db_parser.jl:543
+┌ Warning: Technologies of type SYNC_COND are not currently supported in portfolios. Skipping serialization.
+└ @ PowerSystemsInvestmentsPortfolios /scratch/gpfs/dc0173/git/forked/Mike/Benders-PSIP-GenX/PSIP-GenX/PowerSystemsInvestmentsPortfolios.jl/src/db_parser.jl:543
+┌ Warning: Data for branch Line: C31-2 rating is 2.374607988997963e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: B8 rating is 3.412020657109672e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: B26 rating is 4.760469034455994e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: A32-2 rating is 3.657407250406044e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: CA-1 rating is 8.867813027719716e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: A5 rating is 6.300344465579037e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: B34 rating is 6.223381904101945e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: B19 rating is 3.837530225455093e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: B31-2 rating is 2.374607988997963e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C30 rating is 9.61086374062237e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: B27 rating is 2.374607988997963e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: A21 rating is 8.867813027719716e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: A32-1 rating is 3.657407250406044e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: B29 rating is 1.2831033435361165e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: A18 rating is 4.388888700487253e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C5 rating is 6.300344465579037e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C13-2 rating is 5.414608693800843e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C24 rating is 1.5530321595619228e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C28 rating is 2.104445953599351e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: A29 rating is 1.2831033435361165e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: A3 rating is 2.7881344079821245e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: AB1 rating is 5.283685352123944e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: AB2 rating is 6.864902671873121e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C27 rating is 2.374607988997963e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C35 rating is 1.1791154813007058e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: A25-1 rating is 4.4789313242679405e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: B5 rating is 6.300344465579037e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: B2 rating is 6.924233044189996e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: B31-1 rating is 2.374607988997963e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C20 rating is 4.388888700487253e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: B23 rating is 5.372205222633732e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: A28 rating is 2.104445953599351e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: A19 rating is 3.837530225455093e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C9 rating is 2.8883259047372405e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C1 rating is 4.546650943344775e14 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C2 rating is 6.924233044189996e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: B25-1 rating is 4.4789313242679405e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: A9 rating is 2.8883259047372405e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C11 rating is 2.0025920082033372e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C19 rating is 3.837530225455093e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C23 rating is 5.372205222633732e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C25-1 rating is 4.4789313242679405e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C32-2 rating is 3.657407250406044e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: B20 rating is 4.388888700487253e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: B9 rating is 2.8883259047372405e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C25-2 rating is 4.4789313242679405e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C12-1 rating is 5.414608693800843e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: A27 rating is 2.374607988997963e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C21 rating is 8.867813027719716e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: A34 rating is 6.223381904101945e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+[ Info: Loading inputs from portfolio
+┌ Warning: Because the DC_OPF flag is active, GenX will not allow any transmission capacity expansion. Set the DC_OPF flag to 0 if you want to optimize tranmission capacity expansion.
+└ @ GenX /scratch/gpfs/dc0173/git/forked/Mike/Line_Retirements/GenX/src/load_inputs/load_network_data.jl:385
+┌ Warning: DAY_AHEAD_regional_Load.csv not found at /scratch/gpfs/dc0173/git/forked/Mike/Line_Retirements/GenX/example_systems/DAY_AHEAD_regional_Load.csv. Skipping demand validation.
+└ @ GenX /scratch/gpfs/dc0173/git/forked/Mike/Line_Retirements/GenX/src/load_inputs/load_demand_data.jl:359
+[ Info: 122_WIND_1 Successfully Read.
+[ Info: 324_PV_3 Successfully Read.
+[ Info: 312_PV_1 Successfully Read.
+[ Info: CSP14 Successfully Read.
+[ Info: 102_PV_1 Successfully Read.
+[ Info: 101_PV_1 Successfully Read.
+[ Info: 324_PV_2 Successfully Read.
+[ Info: 313_PV_2 Successfully Read.
+[ Info: RTPV20 Successfully Read.
+[ Info: 104_PV_1 Successfully Read.
+[ Info: WIND16 Successfully Read.
+[ Info: 101_PV_2 Successfully Read.
+[ Info: CSP15 Successfully Read.
+[ Info: WIND18 Successfully Read.
+[ Info: 309_WIND_1 Successfully Read.
+[ Info: 310_PV_2 Successfully Read.
+[ Info: PV12 Successfully Read.
+[ Info: 113_PV_1 Successfully Read.
+[ Info: 317_WIND_1 Successfully Read.
+[ Info: PV11 Successfully Read.
+[ Info: 314_PV_1 Successfully Read.
+[ Info: 324_PV_1 Successfully Read.
+[ Info: 103_PV_1 Successfully Read.
+[ Info: RTPV21 Successfully Read.
+[ Info: 212_CSP_1 Successfully Read.
+[ Info: RTPV19 Successfully Read.
+[ Info: 303_WIND_1 Successfully Read.
+[ Info: 314_PV_2 Successfully Read.
+[ Info: WIND17 Successfully Read.
+[ Info: 102_PV_2 Successfully Read.
+[ Info: 314_PV_3 Successfully Read.
+[ Info: 320_PV_1 Successfully Read.
+[ Info: 101_PV_3 Successfully Read.
+[ Info: 319_PV_1 Successfully Read.
+[ Info: PV10 Successfully Read.
+[ Info: CSP13 Successfully Read.
+[ Info: 314_PV_4 Successfully Read.
+[ Info: 310_PV_1 Successfully Read.
+[ Info: 215_PV_1 Successfully Read.
+[ Info: 313_PV_1 Successfully Read.
+[ Info: 101_PV_4 Successfully Read.
+[ Info: 119_PV_1 Successfully Read.
+[ Info: STORAGE3 Successfully Read.
+[ Info: STORAGE2 Successfully Read.
+[ Info: STORAGE1 Successfully Read.
+[ Info: 313_STORAGE_1 Successfully Read.
+[ Info: 313_RTPV_1 Successfully Read.
+[ Info: 320_RTPV_2 Successfully Read.
+[ Info: 213_RTPV_1 Successfully Read.
+[ Info: 313_RTPV_9 Successfully Read.
+[ Info: 313_RTPV_2 Successfully Read.
+[ Info: 313_RTPV_7 Successfully Read.
+[ Info: 320_RTPV_3 Successfully Read.
+[ Info: 308_RTPV_1 Successfully Read.
+[ Info: 313_RTPV_4 Successfully Read.
+[ Info: 313_RTPV_5 Successfully Read.
+[ Info: 313_RTPV_6 Successfully Read.
+[ Info: 320_RTPV_1 Successfully Read.
+[ Info: 320_RTPV_6 Successfully Read.
+[ Info: 320_RTPV_5 Successfully Read.
+[ Info: 118_RTPV_2 Successfully Read.
+[ Info: 320_RTPV_4 Successfully Read.
+[ Info: 313_RTPV_11 Successfully Read.
+[ Info: 118_RTPV_7 Successfully Read.
+[ Info: 118_RTPV_3 Successfully Read.
+[ Info: 313_RTPV_13 Successfully Read.
+[ Info: 313_RTPV_12 Successfully Read.
+[ Info: 118_RTPV_8 Successfully Read.
+[ Info: 313_RTPV_3 Successfully Read.
+[ Info: 118_RTPV_10 Successfully Read.
+[ Info: 313_RTPV_10 Successfully Read.
+[ Info: 118_RTPV_5 Successfully Read.
+[ Info: 118_RTPV_1 Successfully Read.
+[ Info: 118_RTPV_9 Successfully Read.
+[ Info: 118_RTPV_6 Successfully Read.
+[ Info: 313_RTPV_8 Successfully Read.
+[ Info: 118_RTPV_4 Successfully Read.
+[ Info: 322_CT_6 Successfully Read.
+[ Info: STEAM30 Successfully Read.
+[ Info: 321_CC_1 Successfully Read.
+[ Info: 202_STEAM_3 Successfully Read.
+[ Info: CT36 Successfully Read.
+[ Info: 315_STEAM_1 Successfully Read.
+[ Info: 223_CT_4 Successfully Read.
+[ Info: 123_STEAM_2 Successfully Read.
+[ Info: 213_CT_1 Successfully Read.
+[ Info: 223_CT_6 Successfully Read.
+[ Info: 313_CC_1 Successfully Read.
+[ Info: CT26 Successfully Read.
+[ Info: 202_CT_2 Successfully Read.
+[ Info: 101_STEAM_3 Successfully Read.
+[ Info: 302_CT_1 Successfully Read.
+[ Info: 123_CT_1 Successfully Read.
+[ Info: STEAM29 Successfully Read.
+[ Info: CT35 Successfully Read.
+[ Info: 113_CT_3 Successfully Read.
+[ Info: 302_CT_3 Successfully Read.
+[ Info: NUCLEAR42 Successfully Read.
+[ Info: 215_CT_4 Successfully Read.
+[ Info: 102_STEAM_3 Successfully Read.
+[ Info: 301_CT_4 Successfully Read.
+[ Info: 202_CT_1 Successfully Read.
+[ Info: 113_CT_2 Successfully Read.
+[ Info: 221_CC_1 Successfully Read.
+[ Info: 223_CT_5 Successfully Read.
+[ Info: 315_CT_7 Successfully Read.
+[ Info: CC33 Successfully Read.
+[ Info: 215_CT_5 Successfully Read.
+[ Info: 323_CC_1 Successfully Read.
+[ Info: 101_STEAM_4 Successfully Read.
+[ Info: 113_CT_1 Successfully Read.
+[ Info: 223_STEAM_3 Successfully Read.
+[ Info: 318_CC_1 Successfully Read.
+[ Info: 307_CT_2 Successfully Read.
+[ Info: 213_CT_2 Successfully Read.
+[ Info: NUCLEAR41 Successfully Read.
+[ Info: 113_CT_4 Successfully Read.
+[ Info: 315_STEAM_3 Successfully Read.
+[ Info: 118_CC_1 Successfully Read.
+[ Info: 315_CT_8 Successfully Read.
+[ Info: 302_CT_2 Successfully Read.
+[ Info: 218_CC_1 Successfully Read.
+[ Info: STEAM38 Successfully Read.
+[ Info: CT27 Successfully Read.
+[ Info: 213_CC_3 Successfully Read.
+[ Info: 115_STEAM_3 Successfully Read.
+[ Info: 323_CC_2 Successfully Read.
+[ Info: 101_CT_1 Successfully Read.
+[ Info: 115_STEAM_2 Successfully Read.
+[ Info: STEAM37 Successfully Read.
+[ Info: 101_CT_2 Successfully Read.
+[ Info: 322_CT_5 Successfully Read.
+[ Info: CC32 Successfully Read.
+[ Info: 315_STEAM_5 Successfully Read.
+[ Info: 207_CT_2 Successfully Read.
+[ Info: 123_STEAM_3 Successfully Read.
+[ Info: 223_STEAM_1 Successfully Read.
+[ Info: 123_CT_5 Successfully Read.
+[ Info: STEAM39 Successfully Read.
+[ Info: 301_CT_1 Successfully Read.
+[ Info: 223_STEAM_2 Successfully Read.
+[ Info: 202_STEAM_4 Successfully Read.
+[ Info: 116_STEAM_1 Successfully Read.
+[ Info: 315_STEAM_4 Successfully Read.
+[ Info: 115_STEAM_1 Successfully Read.
+[ Info: 315_STEAM_2 Successfully Read.
+[ Info: 121_NUCLEAR_1 Successfully Read.
+[ Info: 102_CT_2 Successfully Read.
+[ Info: NUCLEAR40 Successfully Read.
+Set parameter LicenseID to value 197246
+Set parameter GURO_PAR_SPECIAL
+Set parameter TokenServer to value "license.rc.princeton.edu"
+Set parameter TimeLimit to value 72000
+Set parameter MIPGap to value 0.001
+Set parameter MIPGap to value 0.001
+Set parameter TimeLimit to value 72000
+Gurobi Optimizer version 12.0.3 build v12.0.3rc0 (linux64 - "Red Hat Enterprise Linux 9.6 (Plow)")
+
+CPU model: Intel(R) Xeon(R) Gold 6242 CPU @ 2.80GHz, instruction set [SSE2|AVX|AVX2|AVX512]
+Thread count: 32 physical cores, 32 logical processors, using up to 32 threads
+
+Non-default parameters:
+TimeLimit  72000
+MIPGap  0.001
+
+Optimize a model with 13056240 rows, 5853367 columns and 36830304 nonzeros
+Model fingerprint: 0xe274f559
+Variable types: 5853151 continuous, 216 integer (216 binary)
+Coefficient statistics:
+  Matrix range     [1e-04, 7e+03]
+  Objective range  [8e-01, 3e+06]
+  Bounds range     [0e+00, 0e+00]
+  RHS range        [1e-03, 1e+08]
+Found heuristic solution: objective 1.997225e+11
+Presolve removed 1192614 rows and 1581217 columns (presolve time = 6s)...
+Presolve removed 4207482 rows and 1720993 columns (presolve time = 10s)...
+Presolve removed 4207482 rows and 1962711 columns (presolve time = 16s)...
+Presolve removed 4207482 rows and 1962711 columns (presolve time = 21s)...
+Presolve removed 4207482 rows and 1962711 columns (presolve time = 25s)...
+Presolve removed 4207482 rows and 1962711 columns (presolve time = 34s)...
+Presolve removed 4207482 rows and 1962711 columns (presolve time = 35s)...
+Presolve removed 4207482 rows and 1985539 columns (presolve time = 42s)...
+Presolve removed 4207482 rows and 1985539 columns (presolve time = 45s)...
+Presolve removed 4210758 rows and 1988815 columns (presolve time = 52s)...
+Presolve removed 4210758 rows and 1988815 columns (presolve time = 55s)...
+Presolve removed 4212942 rows and 1988815 columns (presolve time = 60s)...
+Presolve removed 4212942 rows and 1988815 columns (presolve time = 65s)...
+Presolve removed 4212942 rows and 1988815 columns (presolve time = 70s)...
+Presolve removed 4293750 rows and 1990880 columns (presolve time = 75s)...
+Presolve removed 4293750 rows and 1990880 columns (presolve time = 83s)...
+Presolve removed 4293750 rows and 1990880 columns (presolve time = 85s)...
+Presolve removed 4293750 rows and 1990880 columns (presolve time = 91s)...
+Presolve removed 4293750 rows and 1990880 columns (presolve time = 97s)...
+Presolve removed 4294841 rows and 1991971 columns (presolve time = 101s)...
+Presolve removed 4294841 rows and 1991971 columns (presolve time = 105s)...
+Presolve removed 4294841 rows and 1991971 columns (presolve time = 110s)...
+Presolve removed 4294842 rows and 1996340 columns (presolve time = 118s)...
+Presolve removed 4294842 rows and 1996340 columns (presolve time = 122s)...
+Presolve removed 4294842 rows and 1996340 columns (presolve time = 127s)...
+Presolve removed 4294842 rows and 1996340 columns (presolve time = 130s)...
+Presolve removed 4294842 rows and 1996340 columns (presolve time = 135s)...
+Presolve removed 4294842 rows and 1996340 columns (presolve time = 140s)...
+Presolve removed 5139705 rows and 2439356 columns (presolve time = 147s)...
+Presolve removed 5139705 rows and 2439356 columns (presolve time = 151s)...
+Presolve removed 5139705 rows and 2439356 columns (presolve time = 155s)...
+Presolve removed 5139705 rows and 2439356 columns (presolve time = 160s)...
+Presolve removed 5139705 rows and 2439356 columns (presolve time = 165s)...
+Presolve removed 5139705 rows and 2439356 columns (presolve time = 171s)...
+Presolve removed 5139705 rows and 2439356 columns (presolve time = 176s)...
+Presolve removed 5139705 rows and 2439356 columns (presolve time = 182s)...
+Presolve removed 5139705 rows and 2439356 columns (presolve time = 186s)...
+Presolve removed 5139705 rows and 2439356 columns (presolve time = 191s)...
+Presolve removed 5139705 rows and 2439356 columns (presolve time = 195s)...
+Presolve removed 5139705 rows and 2439356 columns (presolve time = 201s)...
+Presolve removed 5139705 rows and 2439356 columns (presolve time = 208s)...
+Presolve removed 5139705 rows and 2439356 columns (presolve time = 210s)...
+Presolve removed 5139705 rows and 2439356 columns (presolve time = 215s)...
+Presolve removed 5139705 rows and 2439356 columns (presolve time = 221s)...
+Presolve removed 5139705 rows and 2439356 columns (presolve time = 226s)...
+Presolve removed 5139705 rows and 2439356 columns (presolve time = 233s)...
+Presolve removed 5139705 rows and 2439356 columns (presolve time = 236s)...
+Presolve removed 5139705 rows and 2439356 columns (presolve time = 242s)...
+Presolve removed 5139705 rows and 2439356 columns (presolve time = 246s)...
+Presolve removed 5139705 rows and 2439356 columns (presolve time = 251s)...
+Presolve removed 5139705 rows and 2439356 columns (presolve time = 255s)...
+Presolve removed 5139705 rows and 2439356 columns (presolve time = 260s)...
+Presolve removed 5139705 rows and 2439356 columns (presolve time = 265s)...
+Presolve removed 5139705 rows and 2439356 columns (presolve time = 271s)...
+Presolve removed 5139705 rows and 2439356 columns (presolve time = 276s)...
+Presolve removed 5139705 rows and 2439356 columns (presolve time = 281s)...
+Presolve removed 5139705 rows and 2439356 columns (presolve time = 285s)...
+Presolve removed 5139705 rows and 2439356 columns (presolve time = 294s)...
+Presolve removed 5139705 rows and 2439356 columns (presolve time = 298s)...
+Presolve removed 5139705 rows and 2439356 columns
+Presolve time: 297.76s
+Presolved: 7916535 rows, 3414011 columns, 28406540 nonzeros
+Variable types: 3413795 continuous, 216 integer (216 binary)
+
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Elapsed ordering time = 10s
+Elapsed ordering time = 10s
+Elapsed ordering time = 30s
+Elapsed ordering time = 35s
+Ordering time: 109.18s
+
+Barrier statistics:
+ Dense cols : 237
+ AA' NZ     : 8.698e+07
+ Factor NZ  : 6.589e+08 (roughly 10.0 GB of memory)
+ Factor Ops : 7.193e+11 (roughly 2 seconds per iteration)
+ Threads    : 30
+
+                  Objective                Residual
+Iter       Primal          Dual         Primal    Dual     Compl     Time
+   0   1.41295688e+17 -9.73363199e+17  1.14e+08 1.12e+04  2.20e+12   500s
+   1   8.05764483e+16 -3.60578487e+17  5.91e+07 1.40e+06  1.08e+12   508s
+   2   6.86133791e+16 -1.76144402e+17  4.91e+07 1.74e+06  9.02e+11   521s
+   3   3.23416494e+16 -6.36277485e+16  1.98e+07 2.05e+06  3.81e+11   537s
+   4   2.63007159e+15 -1.69340325e+16  2.02e+05 2.71e+06  5.17e+09   553s
+   5   5.71022972e+14 -2.74156710e+15  9.66e+03 4.04e+05  4.11e+08   573s
+   6   2.02189116e+14 -9.15035255e+14  2.43e+03 1.10e+05  1.18e+08   596s
+   7   8.32247462e+13 -3.86799408e+14  5.83e+02 4.06e+04  4.03e+07   620s
+   8   6.85451153e+13 -1.82039237e+14  4.52e+02 1.61e+04  2.19e+07   653s
+   9   4.59770194e+13 -4.57280642e+13  3.06e+02 3.04e+03  8.51e+06   677s
+  10   3.50946475e+13 -1.36461299e+13  2.34e+02 4.76e+02  4.69e+06   698s
+  11   1.91066893e+13 -6.97154129e+12  1.28e+02 1.83e+02  2.46e+06   719s
+  12   7.58474494e+12 -2.95616989e+12  5.08e+01 3.79e+01  9.63e+05   744s
+  13   3.58706307e+12 -1.41517820e+12  2.44e+01 1.14e+01  4.44e+05   765s
+  14   6.78129975e+11 -7.18310674e+11  4.90e+00 9.86e+00  1.14e+05   787s
+  15   2.43987266e+11 -4.79291818e+11  2.04e+00 7.67e+00  5.59e+04   804s
+  16   9.73925946e+10 -1.79044471e+11  7.07e-01 2.37e+00  2.04e+04   823s
+  17   4.04871946e+10 -6.37750656e+10  2.75e-01 1.32e+00  7.50e+03   844s
+  18   3.16705735e+10 -3.03657775e+10  2.12e-01 6.22e-01  4.43e+03   854s
+  19   2.77834685e+10 -2.48390947e+10  1.84e-01 5.11e-01  3.75e+03   862s
+  20   2.50267298e+10 -2.30054066e+10  1.65e-01 4.74e-01  3.42e+03   871s
+  21   2.08564036e+10 -1.89707173e+10  1.35e-01 3.93e-01  2.83e+03   879s
+  22   1.70093094e+10 -1.70285887e+10  1.10e-01 3.55e-01  2.41e+03   889s
+  23   1.35938584e+10 -1.21803113e+10  8.90e-02 2.60e-01  1.82e+03   902s
+  24   9.54319905e+09 -9.49242898e+09  6.25e-02 2.06e-01  1.34e+03   918s
+  25   7.60349786e+09 -6.31175887e+09  4.96e-02 1.43e-01  9.81e+02   932s
+  26   5.78999097e+09 -4.83197742e+09  3.76e-02 1.13e-01  7.48e+02   947s
+  27   4.50218972e+09 -3.62683726e+09  2.92e-02 8.77e-02  5.72e+02   964s
+  28   3.50940037e+09 -2.69920953e+09  2.22e-02 6.83e-02  4.36e+02   980s
+  29   2.59626460e+09 -1.83934988e+09  1.51e-02 5.09e-02  3.12e+02   995s
+  30   1.97627544e+09 -1.36390662e+09  1.02e-02 4.13e-02  2.35e+02  1012s
+  31   1.79985029e+09 -9.60988084e+08  8.81e-03 3.34e-02  1.94e+02  1028s
+  32   1.58799830e+09 -8.09001329e+08  7.21e-03 3.04e-02  1.68e+02  1045s
+  33   1.46094678e+09 -4.94231109e+08  6.19e-03 2.43e-02  1.37e+02  1059s
+  34   1.33374689e+09 -3.37418475e+08  5.12e-03 2.12e-02  1.17e+02  1073s
+  35   1.26513345e+09 -5.19675942e+07  4.49e-03 1.57e-02  9.24e+01  1087s
+  36   1.17246923e+09  6.49171046e+07  3.62e-03 1.35e-02  7.77e+01  1102s
+  37   1.10261300e+09  1.58108145e+08  3.00e-03 1.17e-02  6.62e+01  1118s
+  38   1.03351388e+09  2.76540378e+08  2.38e-03 9.47e-03  5.31e+01  1133s
+  39   9.94420008e+08  3.56595525e+08  2.02e-03 7.93e-03  4.47e+01  1145s
+  40   9.51064895e+08  4.19481694e+08  1.66e-03 6.73e-03  3.73e+01  1159s
+  41   9.19730809e+08  4.98722458e+08  1.38e-03 5.19e-03  2.95e+01  1171s
+  42   9.02839920e+08  5.41795062e+08  1.23e-03 4.33e-03  2.53e+01  1187s
+  43   8.69298445e+08  5.94897886e+08  9.48e-04 3.27e-03  1.92e+01  1201s
+  44   8.52054253e+08  6.23430809e+08  8.02e-04 2.69e-03  1.60e+01  1217s
+  45   8.41950572e+08  6.46332359e+08  7.18e-04 2.23e-03  1.37e+01  1231s
+  46   8.28776066e+08  6.69141998e+08  6.10e-04 1.76e-03  1.12e+01  1246s
+  47   8.18243911e+08  6.90763901e+08  5.23e-04 1.33e-03  8.94e+00  1260s
+  48   8.10159793e+08  7.00613936e+08  4.55e-04 1.12e-03  7.68e+00  1274s
+  49   7.99837207e+08  7.12940343e+08  1.25e-03 8.65e-04  6.09e+00  1288s
+  50   7.93171171e+08  7.19646424e+08  1.25e-03 7.25e-04  5.15e+00  1312s
+  51   7.87474871e+08  7.30448907e+08  1.46e-03 5.06e-04  4.00e+00  1335s
+  52   7.83263133e+08  7.36383046e+08  1.56e-03 3.84e-04  3.29e+00  1358s
+  53   7.80173987e+08  7.39706027e+08  1.50e-03 3.10e-04  2.84e+00  1377s
+  54   7.76977508e+08  7.43969778e+08  1.46e-03 2.22e-04  2.31e+00  1398s
+  55   7.73196594e+08  7.47205344e+08  1.43e-03 1.52e-04  1.82e+00  1416s
+  56   7.70249972e+08  7.49283826e+08  1.30e-03 1.08e-04  1.47e+00  1437s
+  57   7.68866126e+08  7.50459886e+08  1.25e-03 8.04e-05  1.29e+00  1465s
+  58   7.66649275e+08  7.51389142e+08  9.62e-04 5.88e-05  1.07e+00  1494s
+  59   7.66335040e+08  7.51592360e+08  9.22e-04 5.46e-05  1.03e+00  1517s
+  60   7.64897913e+08  7.52011520e+08  7.43e-04 4.49e-05  9.03e-01  1542s
+  61   7.63558719e+08  7.52452686e+08  5.38e-04 3.46e-05  7.78e-01  1564s
+  62   7.62590749e+08  7.52748273e+08  4.27e-04 2.78e-05  6.90e-01  1579s
+  63   7.61660996e+08  7.53030775e+08  3.89e-04 2.14e-05  6.05e-01  1599s
+  64   7.60551065e+08  7.53276657e+08  3.51e-04 1.59e-05  5.10e-01  1618s
+  65   7.59925651e+08  7.53324107e+08  3.64e-04 1.48e-05  4.63e-01  1648s
+  66   7.59337415e+08  7.53476799e+08  3.60e-04 1.19e-05  4.11e-01  1675s
+  67   7.58538408e+08  7.53553848e+08  3.52e-04 1.02e-05  3.49e-01  1692s
+  68   7.58071996e+08  7.53627476e+08  3.39e-04 8.66e-06  3.11e-01  1722s
+  69   7.57507945e+08  7.53678771e+08  5.27e-04 7.61e-06  2.68e-01  1777s
+  70   7.56976252e+08  7.53754897e+08  3.11e-04 5.99e-06  2.26e-01  1836s
+  71   7.56896644e+08  7.53827058e+08  3.03e-04 4.47e-06  2.15e-01  1865s
+  72   7.55973508e+08  7.53917450e+08  2.97e-04 2.61e-06  1.44e-01  1920s
+  73   7.55769019e+08  7.53952154e+08  2.66e-04 1.96e-06  1.27e-01  1939s
+  74   7.55540280e+08  7.53974771e+08  2.33e-04 1.54e-06  1.10e-01  1972s
+  75   7.55222689e+08  7.54013964e+08  1.82e-04 6.77e-07  8.47e-02  1997s
+  76   7.55019431e+08  7.54026298e+08  1.49e-04 5.27e-07  6.96e-02  2039s
+  77   7.54617719e+08  7.54038009e+08  1.02e-04 4.22e-07  4.06e-02  2069s
+  78   7.54539024e+08  7.54050945e+08  9.86e-05 3.08e-07  3.42e-02  2110s
+  79   7.54368756e+08  7.54055988e+08  8.82e-05 2.58e-07  2.19e-02  2142s
+  80   7.54297480e+08  7.54057899e+08  7.77e-05 2.24e-07  1.68e-02  2174s
+  81   7.54287350e+08  7.54061454e+08  7.60e-05 1.96e-07  1.58e-02  2223s
+  82   7.54200857e+08  7.54066791e+08  5.21e-05 1.55e-07  9.39e-03  2260s
+  83   7.54148519e+08  7.54077565e+08  3.07e-05 5.72e-08  4.97e-03  2304s
+  84   7.54119807e+08  7.54082773e+08  1.62e-05 1.72e-08  2.59e-03  2337s
+  85   7.54090079e+08  7.54084769e+08  3.11e-05 1.30e-08  3.72e-04  2381s
+  86   7.54085977e+08  7.54085948e+08  3.88e-06 6.05e-09  2.22e-06  2416s
+  87   7.54085969e+08  7.54085969e+08  8.67e-08 9.34e-08  2.65e-09  2426s
+
+Barrier solved model in 87 iterations and 2425.89 seconds (1414.49 work units)
+Optimal objective 7.54085969e+08
+
+
+Root crossover log...
+
+ 5608079 variables added to crossover basis                     2430s
+
+ 1648862 DPushes remaining with DInf 1.1870882e-06              2433s
+  532089 DPushes remaining with DInf 0.0000000e+00              2442s
+  412464 DPushes remaining with DInf 0.0000000e+00              2451s
+  374090 DPushes remaining with DInf 0.0000000e+00              2461s
+  360937 DPushes remaining with DInf 0.0000000e+00              2472s
+  357048 DPushes remaining with DInf 0.0000000e+00              2482s
+  355265 DPushes remaining with DInf 0.0000000e+00              2492s
+  354776 DPushes remaining with DInf 0.0000000e+00              2553s
+  354286 DPushes remaining with DInf 0.0000000e+00              2613s
+  353796 DPushes remaining with DInf 0.0000000e+00              2674s
+  353306 DPushes remaining with DInf 0.0000000e+00              2734s
+  352816 DPushes remaining with DInf 0.0000000e+00              2795s
+  352326 DPushes remaining with DInf 0.0000000e+00              2857s
+  351836 DPushes remaining with DInf 0.0000000e+00              2918s
+  351346 DPushes remaining with DInf 0.0000000e+00              2979s
+  350196 DPushes remaining with DInf 0.0000000e+00              3043s
+  348924 DPushes remaining with DInf 0.0000000e+00              3064s
+  347652 DPushes remaining with DInf 0.0000000e+00              3086s
+  346380 DPushes remaining with DInf 0.0000000e+00              3105s
+  340672 DPushes remaining with DInf 0.0000000e+00              3120s
+  339400 DPushes remaining with DInf 0.0000000e+00              3129s
+  338128 DPushes remaining with DInf 0.0000000e+00              3139s
+  336856 DPushes remaining with DInf 0.0000000e+00              3149s
+  335584 DPushes remaining with DInf 0.0000000e+00              3159s
+  334312 DPushes remaining with DInf 0.0000000e+00              3169s
+  333040 DPushes remaining with DInf 0.0000000e+00              3179s
+  331768 DPushes remaining with DInf 0.0000000e+00              3188s
+  330496 DPushes remaining with DInf 0.0000000e+00              3197s
+  329224 DPushes remaining with DInf 0.0000000e+00              3205s
+  327952 DPushes remaining with DInf 0.0000000e+00              3215s
+  326680 DPushes remaining with DInf 0.0000000e+00              3223s
+  325408 DPushes remaining with DInf 0.0000000e+00              3233s
+  324778 DPushes remaining with DInf 0.0000000e+00              3295s
+  324298 DPushes remaining with DInf 0.0000000e+00              3373s
+  323818 DPushes remaining with DInf 0.0000000e+00              3436s
+  323338 DPushes remaining with DInf 0.0000000e+00              3501s
+  322858 DPushes remaining with DInf 0.0000000e+00              3564s
+  322378 DPushes remaining with DInf 0.0000000e+00              3629s
+  321898 DPushes remaining with DInf 0.0000000e+00              3691s
+  321418 DPushes remaining with DInf 0.0000000e+00              3768s
+  320928 DPushes remaining with DInf 0.0000000e+00              3840s
+  319656 DPushes remaining with DInf 0.0000000e+00              3922s
+  318384 DPushes remaining with DInf 0.0000000e+00              4001s
+  317112 DPushes remaining with DInf 0.0000000e+00              4087s
+  315840 DPushes remaining with DInf 0.0000000e+00              4149s
+  314568 DPushes remaining with DInf 0.0000000e+00              4172s
+  313296 DPushes remaining with DInf 0.0000000e+00              4194s
+  312024 DPushes remaining with DInf 0.0000000e+00              4216s
+  310752 DPushes remaining with DInf 0.0000000e+00              4220s
+  309480 DPushes remaining with DInf 0.0000000e+00              4226s
+  308208 DPushes remaining with DInf 0.0000000e+00              4231s
+  306936 DPushes remaining with DInf 0.0000000e+00              4293s
+  305664 DPushes remaining with DInf 0.0000000e+00              4381s
+  304864 DPushes remaining with DInf 0.0000000e+00              4455s
+  304084 DPushes remaining with DInf 0.0000000e+00              4526s
+  303334 DPushes remaining with DInf 0.0000000e+00              4597s
+  302314 DPushes remaining with DInf 0.0000000e+00              4680s
+  301504 DPushes remaining with DInf 0.0000000e+00              4754s
+  301004 DPushes remaining with DInf 0.0000000e+00              4813s
+  300524 DPushes remaining with DInf 0.0000000e+00              4872s
+  300044 DPushes remaining with DInf 0.0000000e+00              4931s
+  299564 DPushes remaining with DInf 0.0000000e+00              4991s
+  298292 DPushes remaining with DInf 0.0000000e+00              5052s
+  297020 DPushes remaining with DInf 0.0000000e+00              5066s
+  295747 DPushes remaining with DInf 0.0000000e+00              5079s
+  294472 DPushes remaining with DInf 0.0000000e+00              5133s
+  293982 DPushes remaining with DInf 0.0000000e+00              5193s
+  293492 DPushes remaining with DInf 0.0000000e+00              5254s
+  293002 DPushes remaining with DInf 0.0000000e+00              5327s
+  292512 DPushes remaining with DInf 0.0000000e+00              5403s
+  292022 DPushes remaining with DInf 0.0000000e+00              5480s
+  291532 DPushes remaining with DInf 0.0000000e+00              5558s
+  291042 DPushes remaining with DInf 0.0000000e+00              5633s
+  290552 DPushes remaining with DInf 0.0000000e+00              5710s
+  290062 DPushes remaining with DInf 0.0000000e+00              5786s
+  289572 DPushes remaining with DInf 0.0000000e+00              5864s
+  289082 DPushes remaining with DInf 0.0000000e+00              5941s
+  288592 DPushes remaining with DInf 0.0000000e+00              6019s
+  288102 DPushes remaining with DInf 0.0000000e+00              6096s
+  287612 DPushes remaining with DInf 0.0000000e+00              6173s
+  287122 DPushes remaining with DInf 0.0000000e+00              6250s
+  286632 DPushes remaining with DInf 0.0000000e+00              6326s
+  286142 DPushes remaining with DInf 0.0000000e+00              6390s
+  285641 DPushes remaining with DInf 0.0000000e+00              6455s
+  285151 DPushes remaining with DInf 0.0000000e+00              6520s
+  284661 DPushes remaining with DInf 0.0000000e+00              6584s
+  284171 DPushes remaining with DInf 0.0000000e+00              6649s
+  283681 DPushes remaining with DInf 0.0000000e+00              6714s
+  283191 DPushes remaining with DInf 0.0000000e+00              6778s
+  282701 DPushes remaining with DInf 0.0000000e+00              6843s
+  282211 DPushes remaining with DInf 0.0000000e+00              6907s
+  281691 DPushes remaining with DInf 0.0000000e+00              6972s
+  280419 DPushes remaining with DInf 0.0000000e+00              7053s
+  279147 DPushes remaining with DInf 0.0000000e+00              7141s
+  277875 DPushes remaining with DInf 0.0000000e+00              7221s
+  276603 DPushes remaining with DInf 0.0000000e+00              7276s
+  275331 DPushes remaining with DInf 0.0000000e+00              7304s
+  274059 DPushes remaining with DInf 0.0000000e+00              7332s
+  272787 DPushes remaining with DInf 0.0000000e+00              7381s
+  272297 DPushes remaining with DInf 0.0000000e+00              7446s
+  271807 DPushes remaining with DInf 0.0000000e+00              7509s
+  271317 DPushes remaining with DInf 0.0000000e+00              7573s
+  270827 DPushes remaining with DInf 0.0000000e+00              7635s
+  270337 DPushes remaining with DInf 0.0000000e+00              7699s
+  269847 DPushes remaining with DInf 0.0000000e+00              7760s
+  269357 DPushes remaining with DInf 0.0000000e+00              7824s
+  268867 DPushes remaining with DInf 0.0000000e+00              7887s
+  268257 DPushes remaining with DInf 0.0000000e+00              7939s
+  267547 DPushes remaining with DInf 0.0000000e+00              7982s
+  266837 DPushes remaining with DInf 0.0000000e+00              8023s
+  266127 DPushes remaining with DInf 0.0000000e+00              8064s
+  265417 DPushes remaining with DInf 0.0000000e+00              8107s
+  264707 DPushes remaining with DInf 0.0000000e+00              8148s
+  263435 DPushes remaining with DInf 0.0000000e+00              8224s
+  262163 DPushes remaining with DInf 0.0000000e+00              8296s
+  260891 DPushes remaining with DInf 0.0000000e+00              8374s
+  259671 DPushes remaining with DInf 0.0000000e+00              8458s
+  259181 DPushes remaining with DInf 0.0000000e+00              8517s
+  258691 DPushes remaining with DInf 0.0000000e+00              8574s
+  258201 DPushes remaining with DInf 0.0000000e+00              8633s
+  257711 DPushes remaining with DInf 0.0000000e+00              8690s
+  257221 DPushes remaining with DInf 0.0000000e+00              8749s
+  256741 DPushes remaining with DInf 0.0000000e+00              8805s
+  256261 DPushes remaining with DInf 0.0000000e+00              8863s
+  255781 DPushes remaining with DInf 0.0000000e+00              8918s
+  255301 DPushes remaining with DInf 0.0000000e+00              8975s
+  254821 DPushes remaining with DInf 0.0000000e+00              9031s
+  254341 DPushes remaining with DInf 0.0000000e+00              9088s
+  253861 DPushes remaining with DInf 0.0000000e+00              9143s
+  253381 DPushes remaining with DInf 0.0000000e+00              9200s
+  252901 DPushes remaining with DInf 0.0000000e+00              9256s
+  251629 DPushes remaining with DInf 0.0000000e+00              9297s
+  250357 DPushes remaining with DInf 0.0000000e+00              9304s
+  249085 DPushes remaining with DInf 0.0000000e+00              9311s
+  247813 DPushes remaining with DInf 0.0000000e+00              9346s
+  246541 DPushes remaining with DInf 0.0000000e+00              9420s
+  245269 DPushes remaining with DInf 0.0000000e+00              9488s
+  243997 DPushes remaining with DInf 0.0000000e+00              9561s
+  243127 DPushes remaining with DInf 0.0000000e+00              9629s
+  242027 DPushes remaining with DInf 0.0000000e+00              9709s
+  240755 DPushes remaining with DInf 0.0000000e+00              9776s
+  239483 DPushes remaining with DInf 0.0000000e+00              9849s
+  238211 DPushes remaining with DInf 0.0000000e+00              9926s
+  236939 DPushes remaining with DInf 0.0000000e+00              9998s
+  235667 DPushes remaining with DInf 0.0000000e+00             10065s
+  234395 DPushes remaining with DInf 0.0000000e+00             10137s
+  233123 DPushes remaining with DInf 0.0000000e+00             10187s
+  231851 DPushes remaining with DInf 0.0000000e+00             10217s
+  230579 DPushes remaining with DInf 0.0000000e+00             10249s
+  229307 DPushes remaining with DInf 0.0000000e+00             10276s
+  228035 DPushes remaining with DInf 0.0000000e+00             10292s
+  226763 DPushes remaining with DInf 0.0000000e+00             10306s
+  225491 DPushes remaining with DInf 0.0000000e+00             10321s
+  224661 DPushes remaining with DInf 0.0000000e+00             10379s
+  224131 DPushes remaining with DInf 0.0000000e+00             10434s
+  223601 DPushes remaining with DInf 0.0000000e+00             10489s
+  223071 DPushes remaining with DInf 0.0000000e+00             10542s
+  222551 DPushes remaining with DInf 0.0000000e+00             10596s
+  222021 DPushes remaining with DInf 0.0000000e+00             10650s
+  221501 DPushes remaining with DInf 0.0000000e+00             10704s
+  220971 DPushes remaining with DInf 0.0000000e+00             10758s
+  220421 DPushes remaining with DInf 0.0000000e+00             10813s
+  219551 DPushes remaining with DInf 0.0000000e+00             10876s
+  219041 DPushes remaining with DInf 0.0000000e+00             10929s
+  218531 DPushes remaining with DInf 0.0000000e+00             10982s
+  218021 DPushes remaining with DInf 0.0000000e+00             11036s
+  217521 DPushes remaining with DInf 0.0000000e+00             11087s
+  217021 DPushes remaining with DInf 0.0000000e+00             11140s
+  216511 DPushes remaining with DInf 0.0000000e+00             11193s
+  215991 DPushes remaining with DInf 0.0000000e+00             11247s
+  215481 DPushes remaining with DInf 0.0000000e+00             11300s
+  214761 DPushes remaining with DInf 0.0000000e+00             11359s
+  213489 DPushes remaining with DInf 0.0000000e+00             11431s
+  212217 DPushes remaining with DInf 0.0000000e+00             11504s
+  211617 DPushes remaining with DInf 0.0000000e+00             11558s
+  211137 DPushes remaining with DInf 0.0000000e+00             11610s
+  210657 DPushes remaining with DInf 0.0000000e+00             11660s
+  210177 DPushes remaining with DInf 0.0000000e+00             11712s
+  209697 DPushes remaining with DInf 0.0000000e+00             11763s
+  209217 DPushes remaining with DInf 0.0000000e+00             11815s
+  208737 DPushes remaining with DInf 0.0000000e+00             11866s
+  208257 DPushes remaining with DInf 0.0000000e+00             11918s
+  207777 DPushes remaining with DInf 0.0000000e+00             11969s
+  206505 DPushes remaining with DInf 0.0000000e+00             12032s
+  205233 DPushes remaining with DInf 0.0000000e+00             12062s
+  203961 DPushes remaining with DInf 0.0000000e+00             12104s
+  202689 DPushes remaining with DInf 0.0000000e+00             12144s
+  201417 DPushes remaining with DInf 0.0000000e+00             12176s
+  200145 DPushes remaining with DInf 0.0000000e+00             12202s
+  198873 DPushes remaining with DInf 0.0000000e+00             12246s
+  197601 DPushes remaining with DInf 0.0000000e+00             12306s
+  196329 DPushes remaining with DInf 0.0000000e+00             12368s
+  195057 DPushes remaining with DInf 0.0000000e+00             12429s
+  194397 DPushes remaining with DInf 0.0000000e+00             12486s
+  193897 DPushes remaining with DInf 0.0000000e+00             12537s
+  193417 DPushes remaining with DInf 0.0000000e+00             12590s
+  192937 DPushes remaining with DInf 0.0000000e+00             12641s
+  192457 DPushes remaining with DInf 0.0000000e+00             12694s
+  191977 DPushes remaining with DInf 0.0000000e+00             12745s
+  191497 DPushes remaining with DInf 0.0000000e+00             12798s
+  191007 DPushes remaining with DInf 0.0000000e+00             12849s
+  190507 DPushes remaining with DInf 0.0000000e+00             12902s
+  189977 DPushes remaining with DInf 0.0000000e+00             12955s
+  189477 DPushes remaining with DInf 0.0000000e+00             13008s
+  188977 DPushes remaining with DInf 0.0000000e+00             13061s
+  188477 DPushes remaining with DInf 0.0000000e+00             13115s
+  187977 DPushes remaining with DInf 0.0000000e+00             13168s
+  187477 DPushes remaining with DInf 0.0000000e+00             13222s
+  186977 DPushes remaining with DInf 0.0000000e+00             13276s
+  186477 DPushes remaining with DInf 0.0000000e+00             13330s
+  185977 DPushes remaining with DInf 0.0000000e+00             13382s
+  185467 DPushes remaining with DInf 0.0000000e+00             13436s
+  184947 DPushes remaining with DInf 0.0000000e+00             13490s
+  184337 DPushes remaining with DInf 0.0000000e+00             13544s
+  183667 DPushes remaining with DInf 0.0000000e+00             13599s
+  182937 DPushes remaining with DInf 0.0000000e+00             13656s
+  182187 DPushes remaining with DInf 0.0000000e+00             13711s
+Concurrent spin time: 3321.72s (can be avoided by choosing Method=3)
+
+Solved with dual simplex
+
+Root relaxation: objective 7.540860e+08, 7812603 iterations, 13375.90 seconds (4571.34 work units)
+Total elapsed time = 13779.64s (DegenMoves)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 7.5409e+08    0   35 1.9972e+11 7.5409e+08   100%     - 13799s
+     0     0 7.5624e+08    0   49 1.9972e+11 7.5624e+08   100%     - 21539s
+     0     0 7.5626e+08    0   48 1.9972e+11 7.5626e+08   100%     - 26094s
+     0     0 7.5629e+08    0   48 1.9972e+11 7.5629e+08   100%     - 27209s
+     0     0 7.5630e+08    0   48 1.9972e+11 7.5630e+08   100%     - 27509s
+     0     0 7.5631e+08    0   54 1.9972e+11 7.5631e+08   100%     - 29373s
+     0     0 7.5631e+08    0   54 1.9972e+11 7.5631e+08   100%     - 29473s
+     0     0 7.5849e+08    0   62 1.9972e+11 7.5849e+08   100%     - 33500s
+     0     0 7.5849e+08    0   62 1.9972e+11 7.5849e+08   100%     - 38544s
+H    0     0                    3.106884e+09 7.5849e+08  75.6%     - 41982s
+     0     0 7.5854e+08    0   59 3.1069e+09 7.5854e+08  75.6%     - 42566s
+     0     0 7.5854e+08    0   59 3.1069e+09 7.5854e+08  75.6%     - 42604s
+     0     0 7.5855e+08    0   59 3.1069e+09 7.5855e+08  75.6%     - 42810s
+     0     0 7.5855e+08    0   59 3.1069e+09 7.5855e+08  75.6%     - 42929s
+     0     0 7.5855e+08    0   59 3.1069e+09 7.5855e+08  75.6%     - 42996s
+     0     0 7.5917e+08    0   59 3.1069e+09 7.5917e+08  75.6%     - 44870s
+     0     0 7.5919e+08    0   53 3.1069e+09 7.5919e+08  75.6%     - 45547s
+     0     0 7.5920e+08    0   55 3.1069e+09 7.5920e+08  75.6%     - 45820s
+     0     0 7.5920e+08    0   55 3.1069e+09 7.5920e+08  75.6%     - 45945s
+     0     0 7.5944e+08    0   63 3.1069e+09 7.5944e+08  75.6%     - 48362s
+     0     0 7.5946e+08    0   57 3.1069e+09 7.5946e+08  75.6%     - 48787s
+     0     0 7.5946e+08    0   57 3.1069e+09 7.5946e+08  75.6%     - 48902s
+     0     0 7.5946e+08    0   56 3.1069e+09 7.5946e+08  75.6%     - 48983s
+     0     0 7.5947e+08    0   54 3.1069e+09 7.5947e+08  75.6%     - 49485s
+     0     0 7.5947e+08    0   54 3.1069e+09 7.5947e+08  75.6%     - 49506s
+     0     0 7.5951e+08    0   55 3.1069e+09 7.5951e+08  75.6%     - 50058s
+     0     0 7.5952e+08    0   57 3.1069e+09 7.5952e+08  75.6%     - 50308s
+     0     0 7.5952e+08    0   57 3.1069e+09 7.5952e+08  75.6%     - 50336s
+     0     0 7.5952e+08    0   59 3.1069e+09 7.5952e+08  75.6%     - 50462s
+     0     0 7.5952e+08    0   57 3.1069e+09 7.5952e+08  75.6%     - 50607s
+     0     0 7.5952e+08    0   57 3.1069e+09 7.5952e+08  75.6%     - 50637s
+     0     0 7.5960e+08    0   59 3.1069e+09 7.5960e+08  75.6%     - 52413s
+H    0     0                    1.479702e+09 7.5960e+08  48.7%     - 54786s
+     0     0 7.5961e+08    0   63 1.4797e+09 7.5961e+08  48.7%     - 55042s
+     0     0 7.5962e+08    0   60 1.4797e+09 7.5962e+08  48.7%     - 55243s
+     0     0 7.5962e+08    0   60 1.4797e+09 7.5962e+08  48.7%     - 55351s
+     0     0 7.5963e+08    0   64 1.4797e+09 7.5963e+08  48.7%     - 56065s
+     0     0 7.5963e+08    0   60 1.4797e+09 7.5963e+08  48.7%     - 56180s
+     0     0 7.5963e+08    0   60 1.4797e+09 7.5963e+08  48.7%     - 56811s
+     0     0 7.5963e+08    0   62 1.4797e+09 7.5963e+08  48.7%     - 57054s
+     0     0 7.5963e+08    0   64 1.4797e+09 7.5963e+08  48.7%     - 57185s
+     0     0 7.5963e+08    0   60 1.4797e+09 7.5963e+08  48.7%     - 57417s
+     0     0 7.5963e+08    0   60 1.4797e+09 7.5963e+08  48.7%     - 57539s
+     0     0 7.5964e+08    0   59 1.4797e+09 7.5964e+08  48.7%     - 58178s
+     0     0 7.5964e+08    0   59 1.4797e+09 7.5964e+08  48.7%     - 58482s
+
+Cutting planes:
+  Learned: 2
+  Gomory: 3
+  Implied bound: 2021
+  MIR: 202078
+  RLT: 1
+  Relax-and-lift: 5630
+
+Explored 1 nodes (19299734 simplex iterations) in 72002.40 seconds (46424.08 work units)
+Thread count was 32 (of 32 available processors)
+
+Solution count 3: 1.4797e+09 3.10688e+09 1.99722e+11 
+
+Time limit reached
+Best objective 1.479702409742e+09, best bound 7.596442559460e+08, gap 48.6624%
+
+User-callback calls 3119311, time in user-callback 10.35 sec
+[ Info: 123_CT_4 Successfully Read.
+[ Info: STEAM28 Successfully Read.
+[ Info: CT25 Successfully Read.
+[ Info: 207_CT_1 Successfully Read.
+[ Info: 301_CT_3 Successfully Read.
+[ Info: 316_STEAM_1 Successfully Read.
+[ Info: 102_CT_1 Successfully Read.
+[ Info: 216_STEAM_1 Successfully Read.
+[ Info: 315_CT_6 Successfully Read.
+[ Info: 201_CT_2 Successfully Read.
+[ Info: 201_STEAM_3 Successfully Read.
+[ Info: 201_CT_1 Successfully Read.
+[ Info: 301_CT_2 Successfully Read.
+[ Info: 302_CT_4 Successfully Read.
+[ Info: CT34 Successfully Read.
+[ Info: 307_CT_1 Successfully Read.
+[ Info: 102_STEAM_4 Successfully Read.
+[ Info: CC31 Successfully Read.
+[ Info: 107_CC_1 Successfully Read.
+[ Info: No time series keys found in portfolio for resource STORAGE1. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource STORAGE2. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource STORAGE3. Will try CSV fallback.
+[ Info: Portfolio capacity factor data loaded for resource PV10 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource PV11 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource PV12 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource CSP13 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource CSP14 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource CSP15 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource WIND16 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource WIND17 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource WIND18 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource RTPV19 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource RTPV20 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource RTPV21 (used first 8784 of 8784 values)
+[ Info: No capacity_factor time series found in portfolio for resource CT25. Will try CSV fallback.
+[ Info: No capacity_factor time series found in portfolio for resource CT26. Will try CSV fallback.
+[ Info: No capacity_factor time series found in portfolio for resource CT27. Will try CSV fallback.
+[ Info: No capacity_factor time series found in portfolio for resource STEAM28. Will try CSV fallback.
+[ Info: No capacity_factor time series found in portfolio for resource STEAM29. Will try CSV fallback.
+[ Info: No capacity_factor time series found in portfolio for resource STEAM30. Will try CSV fallback.
+[ Info: No capacity_factor time series found in portfolio for resource CC31. Will try CSV fallback.
+[ Info: No capacity_factor time series found in portfolio for resource CC32. Will try CSV fallback.
+[ Info: No capacity_factor time series found in portfolio for resource CC33. Will try CSV fallback.
+[ Info: No capacity_factor time series found in portfolio for resource CT34. Will try CSV fallback.
+[ Info: No capacity_factor time series found in portfolio for resource CT35. Will try CSV fallback.
+[ Info: No capacity_factor time series found in portfolio for resource CT36. Will try CSV fallback.
+[ Info: No capacity_factor time series found in portfolio for resource STEAM37. Will try CSV fallback.
+[ Info: No capacity_factor time series found in portfolio for resource STEAM38. Will try CSV fallback.
+[ Info: No capacity_factor time series found in portfolio for resource STEAM39. Will try CSV fallback.
+[ Info: No capacity_factor time series found in portfolio for resource NUCLEAR40. Will try CSV fallback.
+[ Info: No capacity_factor time series found in portfolio for resource NUCLEAR41. Will try CSV fallback.
+[ Info: No capacity_factor time series found in portfolio for resource NUCLEAR42. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 322_CT_6. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 321_CC_1. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 202_STEAM_3. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 315_STEAM_1. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 223_CT_4. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 123_STEAM_2. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 213_CT_1. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 223_CT_6. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 313_CC_1. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 202_CT_2. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 101_STEAM_3. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 302_CT_1. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 123_CT_1. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 113_CT_3. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 302_CT_3. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 215_CT_4. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 102_STEAM_3. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 301_CT_4. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 202_CT_1. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 113_CT_2. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 221_CC_1. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 223_CT_5. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 315_CT_7. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 215_CT_5. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 323_CC_1. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 101_STEAM_4. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 113_CT_1. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 223_STEAM_3. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 318_CC_1. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 307_CT_2. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 213_CT_2. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 113_CT_4. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 315_STEAM_3. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 118_CC_1. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 315_CT_8. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 302_CT_2. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 218_CC_1. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 213_CC_3. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 115_STEAM_3. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 323_CC_2. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 101_CT_1. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 115_STEAM_2. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 101_CT_2. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 322_CT_5. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 315_STEAM_5. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 207_CT_2. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 123_STEAM_3. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 223_STEAM_1. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 123_CT_5. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 301_CT_1. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 223_STEAM_2. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 202_STEAM_4. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 116_STEAM_1. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 315_STEAM_4. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 115_STEAM_1. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 315_STEAM_2. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 121_NUCLEAR_1. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 102_CT_2. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 123_CT_4. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 207_CT_1. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 301_CT_3. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 316_STEAM_1. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 102_CT_1. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 216_STEAM_1. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 315_CT_6. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 201_CT_2. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 201_STEAM_3. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 201_CT_1. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 301_CT_2. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 302_CT_4. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 307_CT_1. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 102_STEAM_4. Will try CSV fallback.
+[ Info: No time series keys found in portfolio for resource 107_CC_1. Will try CSV fallback.
+[ Info: Portfolio capacity factor data loaded for resource 122_WIND_1 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 324_PV_3 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 312_PV_1 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 102_PV_1 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 101_PV_1 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 324_PV_2 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 313_PV_2 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 104_PV_1 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 101_PV_2 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 309_WIND_1 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 310_PV_2 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 113_PV_1 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 317_WIND_1 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 314_PV_1 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 324_PV_1 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 103_PV_1 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 212_CSP_1 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 303_WIND_1 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 314_PV_2 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 102_PV_2 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 314_PV_3 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 320_PV_1 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 101_PV_3 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 319_PV_1 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 314_PV_4 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 310_PV_1 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 215_PV_1 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 313_PV_1 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 101_PV_4 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 119_PV_1 (used first 8784 of 8784 values)
+[ Info: No time series keys found in portfolio for resource 313_STORAGE_1. Will try CSV fallback.
+[ Info: Portfolio capacity factor data loaded for resource 313_RTPV_1 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 320_RTPV_2 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 213_RTPV_1 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 313_RTPV_9 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 313_RTPV_2 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 313_RTPV_7 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 320_RTPV_3 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 308_RTPV_1 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 313_RTPV_4 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 313_RTPV_5 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 313_RTPV_6 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 320_RTPV_1 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 320_RTPV_6 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 320_RTPV_5 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 118_RTPV_2 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 320_RTPV_4 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 313_RTPV_11 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 118_RTPV_7 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 118_RTPV_3 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 313_RTPV_13 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 313_RTPV_12 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 118_RTPV_8 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 313_RTPV_3 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 118_RTPV_10 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 313_RTPV_10 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 118_RTPV_5 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 118_RTPV_1 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 118_RTPV_9 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 118_RTPV_6 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 313_RTPV_8 (used first 8784 of 8784 values)
+[ Info: Portfolio capacity factor data loaded for resource 118_RTPV_4 (used first 8784 of 8784 values)
+[ Info: Loading CSV fallback data for 95 resources
+[ Info: Loaded CSV data for wind from WIND/DAY_AHEAD_wind.csv: (8784, 4) matrix
+[ Info: Loaded CSV data for pv from PV/DAY_AHEAD_pv.csv: (8784, 25) matrix
+[ Info: Loaded CSV data for rtpv from RTPV/DAY_AHEAD_rtpv.csv: (8784, 31) matrix
+[ Info: Loaded CSV data for csp from CSP/DAY_AHEAD_Natural_Inflow.csv: (8784, 1) matrix
+[ Info: Loaded CSV data for hydro from Hydro/DAY_AHEAD_hydro.csv: (8784, 20) matrix
+[ Info: No technology type match found for resource STORAGE1. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource STORAGE2. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource STORAGE3. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource CT25. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource CT26. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource CT27. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource STEAM28. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource STEAM29. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource STEAM30. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource CC31. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource CC32. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource CC33. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource CT34. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource CT35. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource CT36. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource STEAM37. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource STEAM38. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource STEAM39. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource NUCLEAR40. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource NUCLEAR41. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource NUCLEAR42. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 322_CT_6. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 321_CC_1. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 202_STEAM_3. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 315_STEAM_1. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 223_CT_4. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 123_STEAM_2. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 213_CT_1. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 223_CT_6. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 313_CC_1. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 202_CT_2. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 101_STEAM_3. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 302_CT_1. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 123_CT_1. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 113_CT_3. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 302_CT_3. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 215_CT_4. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 102_STEAM_3. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 301_CT_4. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 202_CT_1. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 113_CT_2. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 221_CC_1. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 223_CT_5. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 315_CT_7. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 215_CT_5. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 323_CC_1. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 101_STEAM_4. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 113_CT_1. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 223_STEAM_3. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 318_CC_1. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 307_CT_2. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 213_CT_2. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 113_CT_4. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 315_STEAM_3. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 118_CC_1. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 315_CT_8. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 302_CT_2. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 218_CC_1. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 213_CC_3. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 115_STEAM_3. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 323_CC_2. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 101_CT_1. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 115_STEAM_2. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 101_CT_2. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 322_CT_5. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 315_STEAM_5. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 207_CT_2. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 123_STEAM_3. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 223_STEAM_1. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 123_CT_5. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 301_CT_1. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 223_STEAM_2. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 202_STEAM_4. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 116_STEAM_1. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 315_STEAM_4. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 115_STEAM_1. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 315_STEAM_2. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 121_NUCLEAR_1. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 102_CT_2. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 123_CT_4. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 207_CT_1. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 301_CT_3. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 316_STEAM_1. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 102_CT_1. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 216_STEAM_1. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 315_CT_6. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 201_CT_2. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 201_STEAM_3. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 201_CT_1. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 301_CT_2. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 302_CT_4. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 307_CT_1. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 102_STEAM_4. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 107_CC_1. Keeping default availability of 1.0.
+[ Info: No technology type match found for resource 313_STORAGE_1. Keeping default availability of 1.0.
+Loading RTS data from database: /scratch/gpfs/dc0173/git/forked/Mike/Line_Retirements/GenX/example_systems/RTS_Case_Latest/sys_DA.sqlite
+Parameters:
+  - Discount rate: 0.05
+  - Inflation rate: 0.07
+  - Interest rate: 0.07
+  - Base year: 2025
+  - Aggregation: ACBus
+
+🔄 Starting portfolio creation...
+🔄 Opening database connection...
+✅ Database loaded successfully
+✅ Nodes created (with validation warnings)
+✅ Technologies processed (some types skipped as expected)
+✅ Power system data processed
+✅ Time series deserialization completed
+
+✅ Successfully created portfolio structs!
+Portfolio object type: Portfolio
+
+Portfolio summary:
+  - Aggregation type: ACBus
+  - Discount rate: 0.05
+  - Inflation rate: 0.07
+  - Interest rate: 0.07
+  - Base year: 2025
+
+Portfolio loading complete.
+Configuring Benders Settings
+
+Configuring Settings
+Loading inputs from portfolio
+=== DEBUGGING PORTFOLIO CONTENTS ===
+SupplyTechnology count: 164
+SupplyTechnology types: DataType[SupplyTechnology{RenewableDispatch}, SupplyTechnology{RenewableNonDispatch}, SupplyTechnology{ThermalStandard}]
+StorageTechnology count: 4
+StorageTechnology types: DataType[StorageTechnology{EnergyReservoirStorage}]
+AggregateTransportTechnology count: 0
+TransmissionTechnology count: 120
+TransmissionTechnology types: DataType[NodalACTransportTechnology{ACBranch}]
+Portfolio summary:
+  - Error checking supply technologies: UndefVarError(:has_technologies)
+  - Error checking storage technologies: UndefVarError(:has_technologies)
+  - Error checking aggregate transport technologies: UndefVarError(:has_technologies)
+  - Error checking transmission technologies: UndefVarError(:has_technologies)
+====================================
+Using TransmissionTechnology
+Number of zones: 73
+Number of regions: 73
+Number of lines: 120
+ENTERING DCOPF
+Reading DC-OPF values...
+Network Data Successfully Read!
+┌──────────────────┬────────┬─────────────────────┬──────────────────────┬────────┬─────────────────────┐
+│ time_series_type │   name │   initial_timestamp │           resolution │ length │            features │
+│           String │ String │            DateTime │          Millisecond │  Int64 │   Dict{String, Any} │
+├──────────────────┼────────┼─────────────────────┼──────────────────────┼────────┼─────────────────────┤
+│ SingleTimeSeries │ demand │ 2021-01-01T00:00:00 │ 3600000 milliseconds │   8784 │ Dict{String, Any}() │
+└──────────────────┴────────┴─────────────────────┴──────────────────────┴────────┴─────────────────────┘
+max_demand is 0.0
+max_demand is 180.0
+max_demand is 317.0
+max_demand is 175.0
+max_demand is 128.0
+max_demand is 0.0
+max_demand is 128.0
+max_demand is 100.0
+max_demand is 0.0
+max_demand is 0.0
+max_demand is 97.0
+max_demand is 333.0
+max_demand is 317.0
+max_demand is 0.0
+max_demand is 74.0
+max_demand is 0.0
+max_demand is 0.0
+max_demand is 0.0
+max_demand is 0.0
+max_demand is 175.0
+max_demand is 71.0
+max_demand is 0.0
+max_demand is 108.0
+max_demand is 0.0
+max_demand is 100.0
+max_demand is 128.0
+max_demand is 0.0
+max_demand is 100.0
+max_demand is 175.0
+max_demand is 195.0
+max_demand is 97.0
+max_demand is 136.0
+max_demand is 125.0
+max_demand is 74.0
+max_demand is 125.0
+max_demand is 171.0
+max_demand is 195.0
+max_demand is 108.0
+max_demand is 0.0
+max_demand is 0.0
+max_demand is 171.0
+max_demand is 194.0
+max_demand is 171.0
+max_demand is 180.0
+max_demand is 0.0
+max_demand is 0.0
+max_demand is 265.0
+max_demand is 317.0
+max_demand is 194.0
+max_demand is 125.0
+max_demand is 136.0
+max_demand is 333.0
+max_demand is 181.0
+max_demand is 0.0
+max_demand is 71.0
+max_demand is 333.0
+max_demand is 181.0
+max_demand is 97.0
+max_demand is 0.0
+max_demand is 265.0
+max_demand is 0.0
+max_demand is 0.0
+max_demand is 108.0
+max_demand is 0.0
+max_demand is 181.0
+max_demand is 74.0
+max_demand is 195.0
+max_demand is 194.0
+max_demand is 180.0
+max_demand is 0.0
+max_demand is 265.0
+max_demand is 71.0
+max_demand is 136.0
+Zone 6 (Region ID: 30) demand values loaded.
+Demand values: 0.0Zone 72 (Region ID: 96) demand values loaded.
+Demand values: 769808.575476442Zone 53 (Region ID: 77) demand values loaded.
+Demand values: 1.353564472168888e6Zone 45 (Region ID: 69) demand values loaded.
+Demand values: 748425.0039354298Zone 55 (Region ID: 79) demand values loaded.
+Demand values: 547419.4314499144Zone 73 (Region ID: 97) demand values loaded.
+Demand values: 0.0Zone 57 (Region ID: 81) demand values loaded.
+Demand values: 546549.6922322323Zone 29 (Region ID: 53) demand values loaded.
+Demand values: 426991.94705643156Zone 62 (Region ID: 86) demand values loaded.
+Demand values: 0.0Zone 2 (Region ID: 26) demand values loaded.
+Demand values: 0.0Zone 64 (Region ID: 88) demand values loaded.
+Demand values: 452594.9421067886Zone 36 (Region ID: 60) demand values loaded.
+Demand values: 1.421883183697917e6Zone 23 (Region ID: 47) demand values loaded.
+Demand values: 1.479098934513938e6Zone 3 (Region ID: 27) demand values loaded.
+Demand values: 0.0Zone 40 (Region ID: 64) demand values loaded.
+Demand values: 345278.61562785937Zone 7 (Region ID: 31) demand values loaded.
+Demand values: 0.0Zone 18 (Region ID: 42) demand values loaded.
+Demand values: 0.0Zone 24 (Region ID: 48) demand values loaded.
+Demand values: 0.0Zone 30 (Region ID: 54) demand values loaded.
+Demand values: 0.0Zone 60 (Region ID: 84) demand values loaded.
+Demand values: 816537.2666875054Zone 37 (Region ID: 61) demand values loaded.
+Demand values: 303164.28241006646Zone 70 (Region ID: 94) demand values loaded.
+Demand values: 0.0Zone 58 (Region ID: 82) demand values loaded.
+Demand values: 461151.30282094615Zone 48 (Region ID: 72) demand values loaded.
+Demand values: 0.0Zone 32 (Region ID: 56) demand values loaded.
+Demand values: 466592.7238214316Zone 61 (Region ID: 85) demand values loaded.
+Demand values: 597238.6864914324Zone 28 (Region ID: 52) demand values loaded.
+Demand values: 0.0Zone 44 (Region ID: 68) demand values loaded.
+Demand values: 427671.43082024565Zone 26 (Region ID: 50) demand values loaded.
+Demand values: 747235.9073487553Zone 15 (Region ID: 39) demand values loaded.
+Demand values: 832634.2967600415Zone 4 (Region ID: 28) demand values loaded.
+Demand values: 414182.18864473864Zone 49 (Region ID: 73) demand values loaded.
+Demand values: 580709.0479967468Zone 13 (Region ID: 37) demand values loaded.
+Demand values: 533739.9338205395Zone 35 (Region ID: 59) demand values loaded.
+Demand values: 315974.0408217594Zone 21 (Region ID: 45) demand values loaded.
+Demand values: 583240.9047767895Zone 25 (Region ID: 49) demand values loaded.
+Demand values: 797873.557734648Zone 27 (Region ID: 51) demand values loaded.
+Demand values: 909855.8114517916Zone 19 (Region ID: 43) demand values loaded.
+Demand values: 461885.14528586523Zone 31 (Region ID: 55) demand values loaded.
+Demand values: 0.0Zone 9 (Region ID: 33) demand values loaded.
+Demand values: 0.0Zone 33 (Region ID: 57) demand values loaded.
+Demand values: 730156.229466498Zone 69 (Region ID: 93) demand values loaded.
+Demand values: 829682.5757912765Zone 59 (Region ID: 83) demand values loaded.
+Demand values: 731318.14670262Zone 10 (Region ID: 34) demand values loaded.
+Demand values: 768585.5047015769Zone 34 (Region ID: 58) demand values loaded.
+Demand values: 0.0Zone 52 (Region ID: 76) demand values loaded.
+Demand values: 0.0Zone 39 (Region ID: 63) demand values loaded.
+Demand values: 1.133329291673651e6Zone 17 (Region ID: 41) demand values loaded.
+Demand values: 1.3557184357001786e6Zone 67 (Region ID: 91) demand values loaded.
+Demand values: 828364.3772894773Zone 68 (Region ID: 92) demand values loaded.
+Demand values: 534589.288525307Zone 46 (Region ID: 70) demand values loaded.
+Demand values: 634566.104397147Zone 65 (Region ID: 89) demand values loaded.
+Demand values: 1.424145864631418e6Zone 38 (Region ID: 62) demand values loaded.
+Demand values: 844532.8301167912Zone 43 (Region ID: 67) demand values loaded.
+Demand values: 0.0Zone 63 (Region ID: 87) demand values loaded.
+Demand values: 331280.8339132165Zone 50 (Region ID: 74) demand values loaded.
+Demand values: 1.553753770325367e6Zone 66 (Region ID: 90) demand values loaded.
+Demand values: 774085.2897846445Zone 1 (Region ID: 25) demand values loaded.
+Demand values: 414841.28789563826Zone 14 (Region ID: 38) demand values loaded.
+Demand values: 0.0Zone 54 (Region ID: 78) demand values loaded.
+Demand values: 1.2364707181267936e6Zone 16 (Region ID: 40) demand values loaded.
+Demand values: 0.0Zone 56 (Region ID: 80) demand values loaded.
+Demand values: 0.0Zone 11 (Region ID: 35) demand values loaded.
+Demand values: 503920.1417271461Zone 5 (Region ID: 29) demand values loaded.
+Demand values: 0.0Zone 51 (Region ID: 75) demand values loaded.
+Demand values: 772855.4241721411Zone 12 (Region ID: 36) demand values loaded.
+Demand values: 316476.8588069817Zone 42 (Region ID: 66) demand values loaded.
+Demand values: 833959.2900994789Zone 47 (Region ID: 71) demand values loaded.
+Demand values: 905189.8842135773Zone 20 (Region ID: 44) demand values loaded.
+Demand values: 839866.9028785769Zone 41 (Region ID: 65) demand values loaded.
+Demand values: 0.0Zone 71 (Region ID: 95) demand values loaded.
+Demand values: 1.1315286596995438e6Zone 22 (Region ID: 46) demand values loaded.
+Demand values: 303646.7158823744Zone 8 (Region ID: 32) demand values loaded.
+Demand values: 581633.1459155341LinearCurve[LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0), LinearCurve(0.0, 0.0)]
+Demand (load) data Successfully Read!
+Fuels data Successfully Read!
+
+Summary of resources loaded into the model:
+-------------------------------------------------------
+	Resource type 		Number of resources
+=======================================================
+	Thermal        		91
+	VRE            		42
+	Storage        		4
+	Must_run       		31
+=======================================================
+Total number of resources: 168
+-------------------------------------------------------
+Resource data from portfolio read!Variable Generation Data Successfully Read!
+Minimum Requirements Successfully Read!
+Portfolio successfully read
+Investment Discharge Module
+Investment Transmission Module
+Investment Storage Resources Module
+Storage Investment Module
+Charge Investment Module
+Minimum Capacity Requirement Module
+Discharge Module
+Non-served Energy Module
+Unit Commitment Module
+Fuel Module
+CO2 Module
+Dispatchable Resources Module
+Must-Run Resources Module
+Storage Core Resources Module
+Storage Resources with Asmymetric Charge/Discharge Capacity Module
+Thermal (Unit Commitment) Resources Module
+DC-OPF Transmission Flows Module
+number of variables = 5853367

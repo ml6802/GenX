@@ -149,6 +149,13 @@ function load_network_data!(setup::Dict, path::AbstractString, inputs_nw::Dict, 
                                                                                         scale_factor # convert to GW
             inputs_nw["Max_Trans_Cap"] = calculate_integer_quotients(candidate_network_var)
         end
+
+        old_max_trans_cap = copy(inputs_nw["Max_Trans_Cap"])
+        new_max_trans_cap = Dict()
+        for (i, l) in enumerate((L + 1):(L_cand + L))
+            new_max_trans_cap[l] = old_max_trans_cap[i]
+        end
+        inputs_nw["Max_Trans_Cap"] = new_max_trans_cap
         
         println("DC-OPF values successfully read!")
         println("DC-OPF Coefficients: ", inputs_nw["Max_Trans_Cap"])
@@ -218,6 +225,12 @@ function load_network_data!(setup::Dict, path::AbstractString, inputs_nw::Dict, 
         # Network lines and zones that are expandable have non-negative maximum reinforcement inputs
         inputs_nw["EXPANSION_LINES"] = findall(inputs_nw["pMax_Line_Reinforcement"] .> 0)
         inputs_nw["NO_EXPANSION_LINES"] = findall(inputs_nw["pMax_Line_Reinforcement"] .<= 0)
+    end
+
+    if candidate_flag
+        build_expansion_information!(inputs_nw)
+    else
+        inputs_nw["EXISTING_LINES"] = [i for i in 1:L]
     end
 
     println(filename * " Successfully Read!")
@@ -445,6 +458,12 @@ function load_network_data!(setup::Dict, p::Portfolio, inputs::Dict)
         @warn("No transmission lines found in portfolio. Network functionality will be limited.")
         inputs["pNet_Map"] = zeros(0, Z)
         inputs["pTrans_Max"] = Float64[]
+    end
+
+    if haskey(inputs, "pNet_Map_cand")
+        build_expansion_information!(inputs)
+    else
+        inputs["EXISTING_LINES"] = [i for i in 1:L]
     end
 
 end
@@ -688,4 +707,74 @@ function create_extended_max_flow_vector(network_df::DataFrame, candidate_df::Da
     append!(max_flow_values, zeros(Float64, additional_rows))
 
     return max_flow_values
+end
+
+function _get_adjacency_list(pNet_Map, pNet_Map_cand)
+    line_list = Vector{Tuple}()
+    line_list_cand = Vector{Tuple}()
+    L = size(pNet_Map)[1]
+    L_cand = size(pNet_Map_cand)[1]
+
+    for i in 1:size(pNet_Map)[1]
+        from_bus = findfirst(x -> x == 1, pNet_Map[i, :])
+        to_bus = findfirst(x -> x == -1, pNet_Map[i, :])
+        push!(line_list, (from_bus, to_bus))
+    end
+    for i in 1:size(pNet_Map_cand)[1]
+        from_bus = findfirst(x -> x == 1, pNet_Map_cand[i, :])
+        to_bus = findfirst(x -> x == -1, pNet_Map_cand[i, :])
+        push!(line_list_cand, (from_bus, to_bus))
+    end
+
+    # candidate lines (for now) can only have one option per corridor; there can be more than one existing lines on corridors, but not candidates
+    if length(line_list_cand) != length(unique(line_list_cand))
+        error("Multiple candidate lines exist on the same corridor; this is not currently supported")
+    end
+    existing_to_cand_map = Dict()
+    cand_to_existing_map = Dict()
+    CAN_RETIRE_LINES = Int[]
+    CANNOT_RETIRE_LINES = Int[]
+    for (i, edge) in enumerate(line_list)
+        from_bus, to_bus = edge
+        if (from_bus, to_bus) in line_list_cand
+            cand_idx = findfirst(x -> x == edge, line_list_cand) + L
+            existing_to_cand_map[i] = cand_idx
+            if haskey(cand_to_existing_map, cand_idx)
+                push!(cand_to_existing_map[cand_idx], i)
+            else
+                cand_to_existing_map[cand_idx] = [i]
+            end
+            push!(CAN_RETIRE_LINES, i)
+        elseif (to_bus, from_bus) in line_list_cand
+            error("Candidate Lines are in opposite directon of existing lines; this should not happen; update your data") #TODO: Make this more robust and support these other types of data
+        else
+            push!(CANNOT_RETIRE_LINES, i)
+        end
+    end
+
+    return line_list, line_list_cand, existing_to_cand_map, cand_to_existing_map, CAN_RETIRE_LINES, CANNOT_RETIRE_LINES
+end
+
+function build_expansion_information!(myinputs::Dict) # call this inside an "if candidate_flag" statement
+    L = myinputs["L"]
+    L_cand = myinputs["L_cand"]
+    pNet_Map = myinputs["pNet_Map"]
+    pNet_Map_cand = myinputs["pNet_Map_cand"]
+
+    LINES = [i for i in 1:(L + L_cand)]
+    EXISTING_LINES = [i for i in 1:L]
+    CANDIDATE_LINES = [i for i in (L + 1):(L + L_cand)]
+
+    adj_list, adj_list_cand, existing_to_cand_map, cand_to_existing_map, CAN_RETIRE_LINES, CANNOT_RETIRE_LINES = _get_adjacency_list(pNet_Map, pNet_Map_cand)
+    pNet_Map_all = vcat(pNet_Map, pNet_Map_cand)
+
+    myinputs["adj_list"] = adj_list
+    myinputs["adj_list_cand"] = adj_list_cand
+    myinputs["existing_to_cand_map"] = existing_to_cand_map
+    myinputs["cand_to_existing_map"] = cand_to_existing_map
+    myinputs["LINES"] = LINES
+    myinputs["EXISTING_LINES"] = EXISTING_LINES
+    myinputs["CANDIDATE_LINES"] = CANDIDATE_LINES
+    myinputs["CAN_RETIRE_LINES"] = CAN_RETIRE_LINES
+    myinputs["CANNOT_RETIRE_LINES"] = CANNOT_RETIRE_LINES
 end

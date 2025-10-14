@@ -6,8 +6,25 @@ times = [103.669598329, 104.721661517, 102.681647987, 108.191158476, 111.0734326
 
 ubs_true = [minimum(ubs[1:i]) for i in 1:length(ubs)]
 
-plot(1:25, ubs_true, color = "black", label = "Upper Bound", yaxis = :log10, legend = :bottomright, linewidth = 2)
-plot!(1:25, lbs, color="black", linestyle = :dash, label = "Lower Bound", linewidth = 2)
+plot(1:101, UB_hist, color = "black", label = "Upper Bound", yaxis = :log10, legend = :topright, linewidth = 2)
+plot!(1:101, LB_hist, color="black", linestyle = :dash, label = "Lower Bound", linewidth = 2)
+plot!([1,101], [5e5, 5e5], color="red", label ="Monolithic Solution (Timed Out)", linewidth = 2)
 xlabel!("Iteration")
 ylabel!("Objective Value")
-title!("Generalized Benders")
+title!("Generalized Benders, Nodal Area 3")
+savefig((@__DIR__)*"/GBD_area3.png")
+
+
+
+UB_hist = df[!, :UBs]
+LB_hist = df[!, :LBs]
+opt_sol = UB_hist[end]
+iters = length(UB_hist)
+
+plot(1:iters, UB_hist, color = "black", label = "Upper Bound", yaxis = :log10, legend = :topright, linewidth = 2)
+plot!(1:iters, LB_hist, color="black", linestyle = :dash, label = "Lower Bound", linewidth = 2)
+plot!([1,iters], [opt_sol, opt_sol], color="red", label ="Optimal", linewidth = 2)
+xlabel!("Iteration")
+ylabel!("Objective Value")
+title!("Generalized Benders Results, 1 representative week")
+# savefig((@__DIR__)*"/GBD_full_solve_1rep_week.png")

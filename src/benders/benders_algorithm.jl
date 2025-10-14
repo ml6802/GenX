@@ -22,18 +22,26 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 	γ = setup["BD_StabParam"];
 	stab_method = setup["BD_Stab_Method"];
     integer_investment = setup["IntegerInvestments"]
+	if !haskey(setup, "BD_integer_routine")
+		setup["BD_integer_routine"] = 0
+		integer_routine_flag = false
+	elseif setup["BD_integer_routine"] == 1
+		integer_routine_flag = true
+	else
+		integer_routine_flag = false
+	end
 
-	integer_routine_flag = false
-	# if integer_investment == 1 && stab_method != "off"
-	# 	all_planning_variables = all_variables(planning_problem);
-	# 	integer_variables = all_planning_variables[is_integer.(all_planning_variables)];
-	# 	binary_variables = all_planning_variables[is_binary.(all_planning_variables)];
-	# 	unset_integer.(integer_variables)
-	# 	unset_binary.(binary_variables)
-	# 	set_upper_bound.(binary_variables, 1)
-	# 	set_lower_bound.(binary_variables, 0)
-	# 	integer_routine_flag = true;
-	# end
+	#integer_routine_flag = false
+	if integer_routine_flag# && stab_method != "off"
+		all_planning_variables = all_variables(planning_problem);
+		integer_variables = all_planning_variables[is_integer.(all_planning_variables)];
+		binary_variables = all_planning_variables[is_binary.(all_planning_variables)];
+		unset_integer.(integer_variables)
+		unset_binary.(binary_variables)
+		set_upper_bound.(binary_variables, 1)
+		set_lower_bound.(binary_variables, 0)
+		integer_routine_flag = true;
+	end
 
 	# all_planning_variables = all_variables(planning_problem);
 		# integer_variables = all_planning_variables[is_integer.(all_planning_variables)];
@@ -78,7 +86,15 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 		print("Updating the planning problem....")
 		time_start_update = time()
 
-		update_planning_problem_multi_cuts!(planning_problem,subop_sol,planning_sol,planning_variables_sub)
+		if haskey(setup, "multicuts")
+			if setup["multicuts"] == 1
+				update_planning_problem_multi_cuts!(planning_problem,subop_sol,planning_sol,planning_variables_sub)
+			else
+				update_planning_problem_aggregated_cuts!(planning_problem,subop_sol,planning_sol,planning_variables_sub)
+			end
+		else
+			update_planning_problem_multi_cuts!(planning_problem,subop_sol,planning_sol,planning_variables_sub)
+		end
 		
 		time_planning_update = time()-time_start_update
 		println("done (it took $time_planning_update s).")
@@ -106,19 +122,19 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 
 		#println(unst_planning_sol)
 		
-		for i in 1:length(planning_problem[:vNEW_TRANS_CAP_DECISION_INT])
-			key = "vNEW_TRANS_CAP_DECISION_INT[$i]"
-			val = unst_planning_sol.values[key]
-			build_decisions[i] = val
-		end
-		build_indices = findall(x -> x > 0.5, build_decisions)
-		@debug "Lines built at iteration $k: " build_indices
-		@debug "Number of lines built at iteration $k: " length(build_indices)
+		# for i in 1:length(planning_problem[:vNEW_TRANS_CAP_DECISION_INT])
+		# 	key = "vNEW_TRANS_CAP_DECISION_INT[$i]"
+		# 	val = unst_planning_sol.values[key]
+		# 	build_decisions[i] = val
+		# end
+		# build_indices = findall(x -> x > 0.5, build_decisions)
+		# @debug "Lines built at iteration $k: " build_indices
+		# @debug "Number of lines built at iteration $k: " length(build_indices)
 
-		@debug "Theta" Vector(value.(planning_problem[:vTHETA]))
+		#@debug "Theta" Vector(value.(planning_problem[:vTHETA]))
 
-		cap_builds = findall(x -> x > 0.1, Vector(value.(planning_problem[:vCAP])))
-		@debug "vCAP Builds" cap_builds
+		#cap_builds = findall(x -> x > 0.1, Vector(value.(planning_problem[:vCAP])))
+		#@debug "vCAP Builds" cap_builds
 
 
 		
@@ -179,10 +195,10 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 	@info "Lines built: " build_indices
 	@info "Number of lines built: " length(build_indices)
 
-	@info "Theta: " Vector(value.(planning_problem[:vTHETA]))
+	#@info "Theta: " Vector(value.(planning_problem[:vTHETA]))
 
-	cap_builds = findall(x -> x > 0.1, Vector(value.(planning_problem[:vCAP])))
-	@info "vCAP Builds: " cap_builds
+	#cap_builds = findall(x -> x > 0.1, Vector(value.(planning_problem[:vCAP])))
+	#@info "vCAP Builds: " cap_builds
 
 	return (planning_problem=planning_problem,planning_sol = planning_sol_best,operational_sol = subop_sol,LB_hist = LB_hist,UB_hist = UB_hist,cpu_time = cpu_time,feasibility_hist = feasibility_hist, build_decisions = build_decisions)
 end
@@ -192,6 +208,11 @@ function update_planning_problem_multi_cuts!(EP::Model,subop_sol::Dict,planning_
 	W = keys(subop_sol);
 
     @constraint(EP,[w in W],subop_sol[w].theta_coeff*EP[:vTHETA][w] >= subop_sol[w].op_cost + sum(subop_sol[w].lambda[i]*(variable_by_name(EP,planning_variables_sub[w][i]) - planning_sol.values[planning_variables_sub[w][i]]) for i in 1:length(planning_variables_sub[w])));
+end
 
+function update_planning_problem_aggregated_cuts!(EP::Model,subop_sol::Dict,planning_sol::NamedTuple,planning_variables_sub::Dict)
+    
+	W = keys(subop_sol);
 
+    @constraint(EP,subop_sol[1].theta_coeff*EP[:vTHETA][1] >= sum(subop_sol[w].op_cost + sum(subop_sol[w].lambda[i]*(variable_by_name(EP,planning_variables_sub[w][i]) - planning_sol.values[planning_variables_sub[w][i]]) for i in 1:length(planning_variables_sub[w])) for w in W));
 end

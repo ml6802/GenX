@@ -134,7 +134,7 @@ function operation_model!(EP::Model,setup::Dict, inputs::Dict)
             for t in 1:T
                 add_to_expression!(EP[:ePowerBalance][t, k], node_to_timeseries[k][t])
                 add_to_expression!(EP[:ePowerBalance][t, k], vINTERZONAL_SLACK_UP[i, t] - vINTERZONAL_SLACK_DOWN[i,t])
-                add_to_expression!(EP[:eObj], voll * (vINTERZONAL_SLACK_UP[i, t] + vINTERZONAL_SLACK_DOWN[i,t]))
+                add_to_expression!(EP[:eObj], voll * 1e2 * (vINTERZONAL_SLACK_UP[i, t] + vINTERZONAL_SLACK_DOWN[i,t]))
             end
         end
     end

@@ -63,7 +63,8 @@ mysetup["SOS1"] = 0
 
 # add candidate data
 
-myinputs["pTrans_Max"] .*= 0.3
+# myinputs["pTrans_Max"] .*= 0.1
+myinputs["pD"] .*= 3
 L_cand = myinputs["L"]
 myinputs["L_cand"] = L_cand
 myinputs["Z_cand"] = myinputs["Z"]
@@ -92,14 +93,18 @@ myinputs["EXPANSION_LEVELS"] = EXPANSION_LEVELS
 
 lines = collect(get_technologies(TransmissionTechnology, p));
 myinputs["pC_Line_Reinforcement"] = zeros(length(lines))
+
+scale_factor = mysetup["ParameterScale"] == 1 ? GenX.ModelScalingFactor : 1
+
 using Random
 Random.seed!(1)
 for i in 1:length(lines)
     distance = 60 * rand()
-    size_mw = myinputs["Line_Reinforcement_Cap_Size"][i]
-    myinputs["pC_Line_Reinforcement"][i] = distance * size_mw * 2#000
+    size_mw = 1
+    cap_val = distance * size_mw * 1200
+    myinputs["pC_Line_Reinforcement"][i] = cap_val * (0.044) / (1 - (1 + 0.044)^(-60))
+    # myinputs["pC_Line_Reinforcement"][i] = distance * size_mw * 2#000
 end
-
 
 mysetup["zonal"] = "waterflow" # set for waterflow or dcopf
 mysetup["nodal"] = "dcopf" # set for waterflow or dcopf
@@ -128,7 +133,7 @@ myinputs["hours_per_subperiod"] = n_times
 myinputs["INTERIOR_SUBPERIODS"] = [i for i in 2:myinputs["hours_per_subperiod"]]
 z_inputs = build_zonal_inputs(myinputs, zone_map, 3)
 
-solver = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 120, "MIPGap" => 1e-2)
+solver = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 240, "MIPGap" => 1e-2)
 ###### ZONAL ######
 zonal_setup = deepcopy(mysetup)
 zonal_setup["unfix_slacks"] = 1
@@ -215,6 +220,11 @@ for (src, dst) in fadjlist
     add_edge_data!(dg, src, dst, "black", "zonal_line")
 end
 
+
+
+plot_graph(dg, nodecolor = get_node_data(dg, "color"), nodesize = 6, xdim = 500, ydim = 500, save_fig = false, linewidth=2, linecolor = "black", fig_name = (@__DIR__)*"/zonal_system.png")
+add_node_data!(dg, 13, -0.52, "x_positions")
+add_node_data!(dg, 13, 0.16, "y_positions")
 plot_graph(dg, nodecolor = get_node_data(dg, "color"), nodesize = 6, xdim = 500, ydim = 500, save_fig = false, linewidth=2, linecolor = "black", fig_name = (@__DIR__)*"/zonal_system.png")
 
 
@@ -247,25 +257,172 @@ end
 
 plot_graph(dg, nodecolor = get_node_data(dg, "color"), nodesize = 6, xdim = 500, ydim = 500, linewidth = get_edge_data(dg, "linewidth"), linecolor = get_edge_data(dg, "new_build"), save_fig = false, fig_name = (@__DIR__)*"/zonal_nodal_builds_nodcopf.png")
 
-vP_by_zone_zonal = zeros(3)
-vP_by_zone_nodal = zeros(3)
-vP_by_zone_monolithic = zeros(3)
 
-g2z_map = z_inputs["g2z_map"]
+#get set of new trans cap variables; 
 
-for k in keys(g2z_map)
-    vP_by_zone_zonal[g2z_map[k]] += sum(value.(mz[:vP][k, :]))
-    #vP_by_zone_monolithic[g2z_map[k]] += sum(value.(m[:vP][k, :]))
+#nodal_setup, n_inputs[3], optimizer
+
+benders_settings_path = GenX.get_settings_path(case, "benders_settings.yml")
+mysetup_benders = GenX.configure_benders(benders_settings_path) 
+
+genx_settings = GenX.get_settings_path(case, "genx_settings.yml") # Settings YAML file path
+writeoutput_settings = GenX.get_settings_path(case, "output_settings.yml") # Write-output settings YAML file path
+mysetup = GenX.configure_settings(genx_settings, writeoutput_settings) # mysetup dictionary stores settings and GenX-specific parameters
+
+mysetup["DC_OPF"] = 1
+mysetup["ptdf"] = 0
+mysetup["bilinear"] = 1
+mysetup["disaggregate"] = 0
+mysetup["unfix_slacks"] = 0
+mysetup["SOS1"] = 0
+mysetup = merge(mysetup,mysetup_benders);
+
+settings_path = GenX.get_settings_path(case)    
+mysetup["settings_path"] = settings_path;
+mysetup["NetworkExpansion"] = 1
+mysetup["Benders"] = 1
+
+myinputs_decomp = GenX.separate_inputs_subperiods(n_inputs[3]);
+# nodal_setup_Benders = deepcopy(nodal_setup)
+# nodal_setup_Benders["Benders"] = 1
+benders_inputs = GenX.generate_benders_inputs(mysetup,n_inputs[3],myinputs_decomp)
+
+planning_problem, planning_sol, operational_sol, LB_hist,UB_hist, cpu_time,feasibility_hist, build_decisions  = GenX.benders(benders_inputs,mysetup,n_inputs[3]);
+
+
+
+# plot results
+using PlasmoData, PlasmoDataPlots
+fadjlist = z_inputs["adj_list"]
+dg = DataGraph{Int, Any, Any, Any, Matrix{Any}, Matrix{Any}}()
+for i in 1:73
+    add_node!(dg, i)
+    if zone_map[i] == 1
+        add_node_data!(dg, i, 1, "partition")
+        add_node_data!(dg, i, "red", "color")
+    elseif zone_map[i] == 2
+        add_node_data!(dg, i, 2, "partition")
+        add_node_data!(dg, i, "orange", "color")
+    else
+        add_node_data!(dg, i, 3, "partition")
+        add_node_data!(dg, i, "blue", "color")
+    end
+end
+for (src, dst) in fadjlist
+    add_edge!(dg, src, dst)
+    add_edge_data!(dg, src, dst, "black", "new_build")
+    add_edge_data!(dg, src, dst, 2, "linewidth")
+    add_edge_data!(dg, src, dst, "black", "new_build_monolithic")
+    add_edge_data!(dg, src, dst, 2, "linewidth_monolithic")
+    add_edge_data!(dg, src, dst, "black", "zonal_line")
 end
 
-vP_by_zone_nodal[1] = sum(value.(m1[:vP]))
-vP_by_zone_nodal[2] = sum(value.(m2[:vP]))
-vP_by_zone_nodal[3] = sum(value.(m3[:vP]))
+plot_graph(dg, nodecolor = get_node_data(dg, "color"), nodesize = 6, xdim = 500, ydim = 500, save_fig = false, linewidth=2, linecolor = "black", fig_name = (@__DIR__)*"/zonal_system.png")
 
 
-# solver_monolithic = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 600, "MIPGap" => 2e-2)
+l2z_map = z_inputs["l2z_map_cand"]
+for k in keys(l2z_map)
+    new_line = l2z_map[k]
+    add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], "white", "zonal_line")
+    if value(mz[:vNEW_TRANS_CAP_DECISION_INT][new_line, 1]) == 1
+        add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], "red", "new_build")
+        add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], 5, "linewidth")
+    end
+end
+
+
+models = [m1, m2]
+for i in 1:2
+    n_input = n_inputs[i]
+    l2l_map = n_input["l2l_map_cand"]
+    model = models[i]
+    for k in keys(l2l_map)
+        old_line = k
+        new_line = l2l_map[k]
+        if value(models[i][:vNEW_TRANS_CAP_DECISION_INT][new_line, 1]) == 1
+            add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], "red", "new_build")
+            add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], 5, "linewidth")
+        end
+    end
+end
+
+l2l_map3 = n_inputs[3]["l2l_map_cand"]
+for k in keys(l2l_map3)
+    old_line = k
+    new_line = l2l_map3[k]
+    val = planning_sol.values["vNEW_TRANS_CAP_DECISION_INT[$new_line]"]
+    if val == 1
+        add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], "red", "new_build")
+        add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], 5, "linewidth")
+    end
+end
+
+plot_graph(dg, nodecolor = get_node_data(dg, "color"), nodesize = 6, xdim = 500, ydim = 500, linewidth = get_edge_data(dg, "linewidth"), linecolor = get_edge_data(dg, "new_build"), save_fig = true, fig_name = (@__DIR__)*"/zonal_to_nodal_build_1week.png")
+
+
+
+
+
+
+
+
+
+
+# vP_by_zone_zonal = zeros(3)
+# vP_by_zone_nodal = zeros(3)
+# vP_by_zone_monolithic = zeros(3)
+
+# g2z_map = z_inputs["g2z_map"]
+
+# for k in keys(g2z_map)
+#     vP_by_zone_zonal[g2z_map[k]] += sum(value.(mz[:vP][k, :]))
+#     #vP_by_zone_monolithic[g2z_map[k]] += sum(value.(m[:vP][k, :]))
+# end
+
+# vP_by_zone_nodal[1] = sum(value.(m1[:vP]))
+# vP_by_zone_nodal[2] = sum(value.(m2[:vP]))
+# vP_by_zone_nodal[3] = sum(value.(m3[:vP]))
+
+
+# solver_monolithic = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 3600, "MIPGap" => 2e-2)
 
 # m = GenX.generate_model(nodal_setup, myinputs, solver_monolithic)
+
+# for i in 1:length(n_inputs[1]["line_list"])
+#     line_list = n_inputs[1]["line_list"]
+#     line_idx = line_list[i]
+#     fix(m[:vNEW_TRANS_CAP_DECISION_INT][line_idx, 1], value(m1[:vNEW_TRANS_CAP_DECISION_INT][i, 1]), force = true)
+# end
+
+# for i in 1:length(n_inputs[2]["line_list"])
+#     line_list = n_inputs[2]["line_list"]
+#     line_idx = line_list[i]
+#     fix(m[:vNEW_TRANS_CAP_DECISION_INT][line_idx, 1], value(m2[:vNEW_TRANS_CAP_DECISION_INT][i, 1]), force = true)
+# end
+
+
+# for i in 1:length(n_inputs[3]["line_list"])
+#     line_list = n_inputs[3]["line_list"]
+#     line_idx = line_list[i]
+#     val = planning_sol.values["vNEW_TRANS_CAP_DECISION_INT[$i]"]
+#     fix(m[:vNEW_TRANS_CAP_DECISION_INT][line_idx, 1], val, force = true)
+# end
+
+# for i in 1:length(z_inputs["z2l_map"])
+#     line_idx = z_inputs["z2l_map"][i]
+#     val = value(mz[:vNEW_TRANS_CAP_DECISION_INT][i, 1])
+#     fix(m[:vNEW_TRANS_CAP_DECISION_INT][line_idx, 1], val, force = true)
+# end
+
+
+# for i in 1:120
+#     println(is_fixed(m[:vNEW_TRANS_CAP_DECISION_INT][i, 1]))
+# end
+
+# optimize!(m)
+
+
+
 
 # optimize!(m)
 

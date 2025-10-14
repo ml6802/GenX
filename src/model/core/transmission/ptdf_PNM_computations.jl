@@ -1,5 +1,3 @@
-
-
 function get_lines(matrix::Matrix)
     line_list = Vector{Tuple}()
     for i in 1:size(matrix)[1]
@@ -20,57 +18,104 @@ function find_matching_index(a::Vector, b::Vector, x, y)
 end
 
 function calculate_ptdf_matrices(inputs::Dict, slack_bus::Int=1; tol = eps())
+    # A is adjacency matrix of size num_bus x num_bus
+    # adjacency matrix is based on corridors, not individual lines
     A_I = Int[]
     A_J = Int[]
     A_V = Int8[]
 
+    # BA is adjacency matrix times susceptance values of size num_bus x num_bus
     BA_I = Int[]
     BA_J = Int[]
     BA_V = Float64[]
 
+    # net_map is a list of 1 and -1 values
     net_map = inputs["pNet_Map"]
     net_map_cand = inputs["pNet_Map_cand"]
+    
+    # line lists are adjacency lists
     net_line_list = get_lines(net_map)
     net_line_list_cand = get_lines(net_map_cand)
 
     B_net = inputs["pDC_OPF_coeff"]
     B_net_cand = inputs["pDC_OPF_coeff_cand"]
     B_num_lines = inputs["Max_Trans_Cap"]
-    B_total = Dict()
+    B_total = Dict() # total susceptance on a given corridor
 
     num_buses = size(net_map)[2]
     buses = 1:num_buses
     bus_map = Dict(i => i for i in buses)
 
-    if length(unique(net_line_list)) != length(net_line_list)
-        error("Duplicate lines exist in the existing network map")
-    elseif length(unique(net_line_list_cand)) != length(net_line_list_cand)
-        error("Duplicate lines exist in the candidate network map")
-    end
+    # if length(unique(net_line_list)) != length(net_line_list)
+    #     error("Duplicate lines exist in the existing network map")
+    # elseif length(unique(net_line_list_cand)) != length(net_line_list_cand)
+    #     error("Duplicate lines exist in the candidate network map")
+    # end
 
     all_lines = union(net_line_list, net_line_list_cand)
-    line_map = Dict(line => i for (i, line) in enumerate(all_lines))
+    # line_to_idx_map = Dict(line => i for (i, line) in enumerate(all_lines))
+    line_to_idx_map = Dict()
+    idx_to_line_map = Dict()
+    idx_to_line_map_cand = Dict()
+    # check if from - to pair is there (in either direction). 
+    # if it is, then skip in the first loop
+        # in the second loop make sure the sign on B_net is correct
+    # Add comments to all this code; it's confusing :(
+    # probably need a mapping to make sure `line_to_idx_map` correctly gives the entry; need to make sure that the sign on B_val is right
+    # need to update new_line_names
+    # then fix these things in the DCOPF transmission file
 
-    for (i, line) in enumerate(all_lines)
+    added_lines = []
+
+    for (i, line) in enumerate(net_line_list) #need to check if from_bus, to bus is in list already; 
         from_bus, to_bus = line
-        push!(A_I, line_map[line])
-        push!(A_J, from_bus)
-        push!(A_V, 1)
+        if haskey(line_to_idx_map, (from_bus, to_bus))
+            idx_to_line_map[i] = (1., (from_bus, to_bus))
+        elseif haskey(line_to_idx_map, (to_bus, from_bus))
+            idx_to_line_map[i] = (-1., (to_bus, from_bus))
+        else
+            line_to_idx_map[line] = length(line_to_idx_map) + 1
+            idx_to_line_map[i] = (1, (from_bus, to_bus))
+            push!(A_I, line_to_idx_map[line])
+            push!(A_J, from_bus)
+            push!(A_V, 1)
 
-        push!(A_I, line_map[line])
-        push!(A_J, to_bus)
-        push!(A_V, -1)
+            push!(A_I, line_to_idx_map[line])
+            push!(A_J, to_bus)
+            push!(A_V, -1)
+        end
+    end
+
+    for (i, line) in enumerate(net_line_list_cand) #need to check if from_bus, to bus is in list already; 
+        from_bus, to_bus = line
+        if haskey(line_to_idx_map, (from_bus, to_bus))
+            idx_to_line_map_cand[i] = (1., (from_bus, to_bus))
+        elseif haskey(line_to_idx_map, (to_bus, from_bus))
+            idx_to_line_map_cand[i] = (-1., (to_bus, from_bus))
+        else
+            line_to_idx_map[line] = length(line_to_idx_map) + 1
+            idx_to_line_map[i] = (1, (from_bus, to_bus))
+            push!(A_I, line_to_idx_map[line])
+            push!(A_J, from_bus)
+            push!(A_V, 1)
+
+            push!(A_I, line_to_idx_map[line])
+            push!(A_J, to_bus)
+            push!(A_V, -1)
+        end
     end
 
     for (i, line) in enumerate(net_line_list)
         from_bus, to_bus = line
 
+        # check if line is in added list
+
         push!(BA_I, from_bus)
-        push!(BA_J, line_map[line])
+        push!(BA_J, line_to_idx_map[line])
         push!(BA_V, B_net[i])
 
         push!(BA_I, to_bus)
-        push!(BA_J, line_map[line])
+        push!(BA_J, line_to_idx_map[line])
         push!(BA_V, -B_net[i])
         if haskey(B_total, line)
             B_total[line] += B_net[i]
@@ -82,7 +127,7 @@ function calculate_ptdf_matrices(inputs::Dict, slack_bus::Int=1; tol = eps())
     for (i, line) in enumerate(net_line_list_cand)
         B_val = B_net_cand[i] * B_num_lines[i]
         from_bus, to_bus = line
-        line_idx = line_map[line]
+        line_idx = line_to_idx_map[line]
         if line in net_line_list
             idx1 = find_matching_index(BA_I, BA_J, from_bus, line_idx)
             idx2 = find_matching_index(BA_I, BA_J, to_bus, line_idx)
@@ -92,13 +137,12 @@ function calculate_ptdf_matrices(inputs::Dict, slack_bus::Int=1; tol = eps())
             BA_V[idx1] += B_val
             BA_V[idx2] -= B_val
         else
-
             push!(BA_I, from_bus)
-            push!(BA_J, line_map[line])
+            push!(BA_J, line_to_idx_map[line])
             push!(BA_V, B_val)
             
             push!(BA_I, to_bus)
-            push!(BA_J, line_map[line])
+            push!(BA_J, line_to_idx_map[line])
             push!(BA_V, -B_val)
         end
         if haskey(B_total, line)
@@ -115,27 +159,21 @@ function calculate_ptdf_matrices(inputs::Dict, slack_bus::Int=1; tol = eps())
 
     ptdf_mat = PowerNetworkMatrices._calculate_PTDF_matrix_KLU(A, BA, Set([slack_bus]), Float64[])# [1.0 for i in 1:num_buses])
 
-    ptdf_data = PTDF(PNM.sparsify(ptdf_mat, tol), (buses, all_lines), (bus_map, line_map), subnetworks, ref_bus_position, Base.RefValue(tol), RadialNetworkReduction())
+    ptdf_data = PTDF(PNM.sparsify(ptdf_mat, tol), (buses, all_lines), (bus_map, line_to_idx_map), subnetworks, ref_bus_position, Base.RefValue(tol), RadialNetworkReduction())
 
-    # need to build ptdf for each line; 
-        # Need to build a 3 entry tuple I think with the third dim being cand line num
-        # Existing lines can be indexed by 0 maybe? 
-        # Need to compute the susceptance for this single line
-        # Need to build a new PTDF matrix for lines
-
-    total_lines = length(B_net) + sum(B_num_lines)
+    total_lines = length(B_net) + sum(B_num_lines) # number of existing lines + total number of possible new lines
 
     ptdf_by_line = zeros(num_buses, total_lines)
-    ind_line_map = Dict()
+    ind_line_to_idx_map = Dict()
     all_ind_lines = Tuple[]
 
     for (i, line) in enumerate(net_line_list)
         B_total_val = B_total[line]
-        new_line_name = (line[1], line[2], 0)
-        ind_line_map[new_line_name] = i
+        new_line_name = (line[1], line[2], 0) # I think the new name should maybe have a fourth index of the line index; so the form will be (to, from, line_idx, candidate number)
+        ind_line_to_idx_map[new_line_name] = i
         B_val = B_net[i]
         push!(all_ind_lines, new_line_name)
-        ptdf_by_line[:, i] = ptdf_data.data[:, line_map[line]] * B_val / B_total_val
+        ptdf_by_line[:, i] = ptdf_data.data[:, line_to_idx_map[line]] * B_val / B_total_val #TODO: Update this line so that it finds the line that i corresponds to 
     end
 
     for (i, line) in enumerate(net_line_list_cand)
@@ -145,27 +183,27 @@ function calculate_ptdf_matrices(inputs::Dict, slack_bus::Int=1; tol = eps())
         for j in 1:num_lines
             new_line_name = (line[1], line[2], j)
             push!(all_ind_lines, new_line_name)
-            ind_line_map[new_line_name] = length(ind_line_map) + 1
-            ptdf_by_line[:, length(ind_line_map)] = ptdf_data.data[:, line_map[line]] * B_val / B_total_val
+            ind_line_to_idx_map[new_line_name] = length(ind_line_to_idx_map) + 1
+            ptdf_by_line[:, length(ind_line_to_idx_map)] = ptdf_data.data[:, line_to_idx_map[line]] * B_val / B_total_val
         end
     end
 
-    ptdf_data_by_line = PTDF(PNM.sparsify(ptdf_by_line, tol), (buses, all_ind_lines), (bus_map, ind_line_map), Dict{Int, Set{Int}}(), ref_bus_position, Base.RefValue(tol), RadialNetworkReduction())
+    ptdf_data_by_line = PTDF(PNM.sparsify(ptdf_by_line, tol), (buses, all_ind_lines), (bus_map, ind_line_to_idx_map), Dict{Int, Set{Int}}(), ref_bus_position, Base.RefValue(tol), RadialNetworkReduction())
 
     return ptdf_data, ptdf_data_by_line
 end
 
-function get_ptdf_vector(ptdf_mat, line_idx, cand_num, line_map)
-    line_tuple = line_map[line_idx]
+function get_ptdf_vector(ptdf_mat, line_idx, cand_num, line_to_idx_map)
+    line_tuple = line_to_idx_map[line_idx]
     line_key = (line_tuple[1], line_tuple[2], cand_num)
     line_lookup = ptdf_mat.lookup[2]
     return ptdf_mat.data[:, line_lookup[line_key]]
     # pass the matrix, line index, cand number; return vector for buses
 end
 
-function get_ptdf_line_diff(ptdf_mat, line_idx, cand_num, line_virtual_idx, line_map)
-    line_tuple = line_map[line_idx]
-    line_virtual_tuple = line_map[line_virtual_idx]
+function get_ptdf_line_diff(ptdf_mat, line_idx, cand_num, line_virtual_idx, line_to_idx_map)
+    line_tuple = line_to_idx_map[line_idx]
+    line_virtual_tuple = line_to_idx_map[line_virtual_idx]
     line_key = (line_tuple[1], line_tuple[2], cand_num)
     line_lookup = ptdf_mat.lookup[2]
     bus_vector = ptdf_mat.data[:, line_lookup[line_key]]

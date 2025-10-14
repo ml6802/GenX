@@ -187,15 +187,15 @@ function transmission_capacity_decisions!(EP, inputs::Dict, setup::Dict)
                 end
                 inputs["EXPANSION_LEVELS"] = EXPANSION_LEVELS
                 @variable(EP, vZ_BUILD[l in EXPANSION_LINES, i in 1:(inputs["Max_Trans_Cap"][l])] in Parameter(0)) #PTDF variable
-            elseif setup["bilinear"] == 1
-                    REINFORCEMENT_CAP_SIZE = inputs["Line_Reinforcement_Cap_Size"]
-                MAX_TRAN_EXPANSION_LIMIT=inputs["Max_Trans_Cap"]
-                EXPANSION_LEVELS=Dict{Int,Vector{Float64}}()
-                for l in EXPANSION_LINES
-                    EXPANSION_LEVELS[l] = (0:1:MAX_TRAN_EXPANSION_LIMIT[l]) #-Might not need multiplication of this part -->* REINFORCEMENT_CAP_SIZE[l]
-                end
-                inputs["EXPANSION_LEVELS"] = EXPANSION_LEVELS
-                @variable(EP, vNEW_TRANS_CAP_DECISION_INT[l in EXPANSION_LINES] in Parameter(0))
+            # elseif setup["bilinear"] == 1
+            #         REINFORCEMENT_CAP_SIZE = inputs["Line_Reinforcement_Cap_Size"]
+            #     MAX_TRAN_EXPANSION_LIMIT=inputs["Max_Trans_Cap"]
+            #     EXPANSION_LEVELS=Dict{Int,Vector{Float64}}()
+            #     for l in EXPANSION_LINES
+            #         EXPANSION_LEVELS[l] = (0:1:MAX_TRAN_EXPANSION_LIMIT[l]) #-Might not need multiplication of this part -->* REINFORCEMENT_CAP_SIZE[l]
+            #     end
+            #     inputs["EXPANSION_LEVELS"] = EXPANSION_LEVELS
+            #     @variable(EP, vNEW_TRANS_CAP_DECISION_INT[l in EXPANSION_LINES, i in ] in Parameter(0))
             else
                 @variable(EP, vNEW_TRANS_CAP_DECISION_INT[l in EXPANSION_LINES, i in 1:inputs["Max_Trans_Cap"][l]] in Parameter(0))
                 REINFORCEMENT_CAP_SIZE = inputs["Line_Reinforcement_Cap_Size"]
@@ -242,13 +242,13 @@ function transmission_capacity_decisions!(EP, inputs::Dict, setup::Dict)
                         eTransMax[l]
                     end
                 )
-            elseif setup["bilinear"] == 1
-                @expression(EP, eAvail_Trans_Cap[l = 1:L],
-                if l in EXPANSION_LINES
-                    eTransMax[l] + vNEW_TRANS_CAP_DECISION_INT[l]*inputs["Line_Reinforcement_Cap_Size"][l]
-                else
-                    eTransMax[l]
-                end)    
+            # elseif setup["bilinear"] == 1
+            #     @expression(EP, eAvail_Trans_Cap[l = 1:L],
+            #     if l in EXPANSION_LINES
+            #         eTransMax[l] + vNEW_TRANS_CAP_DECISION_INT[l]*inputs["Line_Reinforcement_Cap_Size"][l]
+            #     else
+            #         eTransMax[l]
+            #     end)    
             else
                 @expression(EP, eAvail_Trans_Cap[l = 1:L],
                 if l in EXPANSION_LINES
