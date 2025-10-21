@@ -31,6 +31,15 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 		integer_routine_flag = false
 	end
 
+if !haskey(setup, "BD_warmstart_bilinear")
+	setup["BD_warmstart_bilinear"] = 0
+	warmstart_bilinear_routine = false
+elseif setup["BD_warmstart_bilinear"] == 1
+	warmstart_bilinear_routine = true
+else
+	warmstart_bilinear_routine = false
+end
+
 	#integer_routine_flag = false
 	if integer_routine_flag# && stab_method != "off"
 		all_planning_variables = all_variables(planning_problem);
@@ -140,7 +149,17 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 		
         if (UB-LB)/abs(LB) <= ConvTol
 			if integer_routine_flag
+				println()
+				println()
+				println()
+				println()
+				println()
 				println("*** Switching on integer constraints *** ")
+				println()
+				println()
+				println()
+				println()
+				println()
 				UB = Inf;
 				set_integer.(integer_variables)
 				set_binary.(binary_variables)
@@ -148,6 +167,30 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 				LB = planning_sol.LB;
 				planning_sol_best = deepcopy(planning_sol);
 				integer_routine_flag = false;
+			elseif warmstart_bilinear_routine
+				println()
+				println()
+				println()
+				println()
+				println()
+				println("RUNNING BILINEAR WARMSTART ROUTINE")
+				println()
+				println()
+				println()
+				println()
+				println()
+				# go through the bilinear problem and 
+				p_id = workers();
+    			np_id = length(p_id);
+				t = @elapsed begin
+    			@sync for k in 1:np_id
+    			    @async @fetchfrom p_id[k] reset_subproblem_vector_to_bilinear(localpart(subproblems), inputs) #solve_local_subproblem(localpart(EP_subproblems),planning_sol,inputs); ### This is equivalent to fetch(@spawnat p .....)
+    			end
+				end
+				println("TIME TO RESET SUBPROBLEMS WAS ", t / 60, " MINUTES")
+				solver_start_time = solver_start_time + t
+				UB = Inf
+				warmstart_bilinear_routine = false
 			else
 				break
 			end

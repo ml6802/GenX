@@ -343,13 +343,13 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
         
         @variable(EP, vANGLE[z = 1:Z, t = 1:T])
 
-        @constraint(EP,
+        @constraint(EP, #ADD
             cPOWER_FLOW_OPF_NONRETIRE[l in CANNOT_RETIRE_LINES, t = 1:T],
             EP[:vFLOW][l,
                 t]==inputs["pDC_OPF_coeff"][l] *
                     sum(inputs["pNet_Map"][l, z] * vANGLE[z, t] for z in 1:Z))
 
-        @constraint(EP,
+        @constraint(EP, #ADD
             cPOWER_FLOW_OPF_RETIRE[l in CAN_RETIRE_LINES, t = 1:T],
             EP[:vFLOW][l,
                 t]==inputs["pDC_OPF_coeff"][l] *
@@ -362,7 +362,7 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
         end
         )
 
-        @constraint(EP,
+        @constraint(EP,#ADD
             cCANDFLOW[l in EXPANSION_LINES, t = 1:T, i in 1:inputs["Max_Trans_Cap"][l]],
             vCANDFLOW[l, t, i] == inputs["pDC_OPF_coeff_cand"][l] *
                         sum(inputs["pNet_Map_cand"][l, z] * vANGLE[z, t] for z in 1:Z) * EP[:vNEW_TRANS_CAP_DECISION_INT][l, i]
@@ -482,7 +482,32 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
         # Voltage angle variables of each zone "z" at hour "t" 
         @variable(EP, vANGLE[z = 1:Z, t = 1:T])
 
-        #@variable(EP, vPROX_ANGLE[l in EXPANSION_LINES, t = 1:T, i in 1:(1+inputs["Max_Trans_Cap"][l])])
+        @variable(EP, slack_vFLOW[l in CANNOT_RETIRE_LINES, t = 1:T])
+        @variable(EP, slackup_vFLOW[l in CAN_RETIRE_LINES, t = 1:T])
+        @variable(EP, slackdown_vFLOW[l in CAN_RETIRE_LINES, t = 1:T])
+        @variable(EP, slackup_vCANDFLOW[l = 1:L_cand, t = 1:T, i in 1:inputs["Max_Trans_Cap"][l]])
+        @variable(EP, slackdown_vCANDFLOW[l = 1:L_cand, t = 1:T, i in 1:inputs["Max_Trans_Cap"][l]])
+
+        if haskey(setup, "unfix_slacks")
+            if setup["unfix_slacks"] == 0
+                for var in EP[:slack_vFLOW]
+                    fix(var, 0, force = true)
+                end
+                for var in EP[:slackup_vFLOW]
+                    fix(var, 0, force = true)
+                end
+                for var in EP[:slackdown_vFLOW]
+                    fix(var, 0, force = true)
+                end
+                for var in EP[:slackup_vCANDFLOW]
+                    fix(var, 0, force = true)
+                end
+                for var in EP[:slackdown_vCANDFLOW]
+                    fix(var, 0, force = true)
+                end
+            end
+        end
+
 
         ### DC-OPF constraints ###
 
@@ -491,28 +516,28 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
             cPOWER_FLOW_OPF_NONRETIRE[l in CANNOT_RETIRE_LINES, t = 1:T],
             EP[:vFLOW][l,
                 t]==inputs["pDC_OPF_coeff"][l] *
-                    sum(inputs["pNet_Map"][l, z] * vANGLE[z, t] for z in 1:Z))
+                    sum(inputs["pNet_Map"][l, z] * vANGLE[z, t] for z in 1:Z) + slack_vFLOW[l, t])
 
         @constraint(EP,
             cPOWER_FLOW_OPF_RETIRE_FORWARD[l in CAN_RETIRE_LINES, t = 1:T],
             EP[:vFLOW][l,
-                t] - inputs["pDC_OPF_coeff"][l] * sum(inputs["pNet_Map"][l, z] * vANGLE[z, t] for z in 1:Z) <= BigM[l] * (EP[:vNEW_TRANS_CAP_DECISION_INT][existing_to_cand_map[l]-L,1]))
+                t] - inputs["pDC_OPF_coeff"][l] * sum(inputs["pNet_Map"][l, z] * vANGLE[z, t] for z in 1:Z) + slackup_vFLOW[l,t] <= BigM[l] * (EP[:vNEW_TRANS_CAP_DECISION_INT][existing_to_cand_map[l]-L,1]))
 
         @constraint(EP,
             cPOWER_FLOW_OPF_RETIRE_REVERSE[l in CAN_RETIRE_LINES, t = 1:T],
             EP[:vFLOW][l,
-                t] - inputs["pDC_OPF_coeff"][l] * sum(inputs["pNet_Map"][l, z] * vANGLE[z, t] for z in 1:Z) >= -BigM[l] * (EP[:vNEW_TRANS_CAP_DECISION_INT][existing_to_cand_map[l]-L,1]))
+                t] - inputs["pDC_OPF_coeff"][l] * sum(inputs["pNet_Map"][l, z] * vANGLE[z, t] for z in 1:Z) + slackdown_vFLOW[l,t] >= -BigM[l] * (EP[:vNEW_TRANS_CAP_DECISION_INT][existing_to_cand_map[l]-L,1]))
         # constrain by bigM, subject to binary decision
 
         #Power Flow in the candidate expansion lines
         @constraint(EP,
             cPOWER_FLOW_OPF_EXPANSION_FORWARD[l in EXPANSION_LINES, t = 1:T, i in 1:inputs["Max_Trans_Cap"][l]],
                 EP[:vCANDFLOW][l,t,i]-inputs["pDC_OPF_coeff_cand"][l] *
-                        sum(inputs["pNet_Map_cand"][l, z] * vANGLE[z, t] for z in 1:Z) <= BigM[l]*(1-EP[:vNEW_TRANS_CAP_DECISION_INT][l,i]))
+                        sum(inputs["pNet_Map_cand"][l, z] * vANGLE[z, t] for z in 1:Z) + slackup_vCANDFLOW[l,t,i] <= BigM[l]*(1-EP[:vNEW_TRANS_CAP_DECISION_INT][l,i]))
         @constraint(EP,
             cPOWER_FLOW_OPF_EXPANSION_REVERSE[l in EXPANSION_LINES, t = 1:T, i in 1:inputs["Max_Trans_Cap"][l]],
                 EP[:vCANDFLOW][l,t,i]-inputs["pDC_OPF_coeff_cand"][l] *
-                        sum(inputs["pNet_Map_cand"][l, z] * vANGLE[z, t] for z in 1:Z) >= -BigM[l]*(1-EP[:vNEW_TRANS_CAP_DECISION_INT][l,i]))
+                        sum(inputs["pNet_Map_cand"][l, z] * vANGLE[z, t] for z in 1:Z) + slackdown_vCANDFLOW[l,t,i] >= -BigM[l]*(1-EP[:vNEW_TRANS_CAP_DECISION_INT][l,i]))
 
         @constraints(EP,
         begin

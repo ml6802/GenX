@@ -81,8 +81,9 @@ include((@__DIR__)*"/parse_gurobi.jl")
 
 # Parse the data
 println("Parsing iteration data from test_output_parsing.txt...")
-data = parse_iteration_data((@__DIR__)*"/6_month_multicut_results.txt")
-data2 = parse_iteration_data((@__DIR__)*"/6_month_multicut_fixedmustruns.txt")
+data = parse_iteration_data((@__DIR__)*"/6_month_multicut_results_warmstart.txt")
+data2 = parse_iteration_data((@__DIR__)*"/6_month_multicut_results.txt")
+#data2 = parse_iteration_data((@__DIR__)*"/6_month_multicut_fixedmustruns.txt")
 data3 = parse_gurobi_data((@__DIR__)*"/6_month_monolithic.txt")
 # Display the results
 println("\nParsed Data:")
@@ -107,8 +108,8 @@ cputimes = data.cpu_time ./ 3600
 cputimes2 = data2.cpu_time ./ 3600
 cputimes3 = data3.time ./ 3600
 
-plot([],[], yaxis = :log, color = "black", label="Benders Multicut", linewidth = 2)
-plot!([],[], yaxis = :log, color = "red", label="Benders Multicut, Min Mustrun Vals", linewidth = 2)
+plot([],[], yaxis = :log, color = "black", label="Benders Multicut, warmstart", linewidth = 2)
+plot!([],[], yaxis = :log, color = "red", label="Benders Multicut", linewidth = 2)
 plot!([],[], yaxis = :log, color = "blue", label="Monolithic (Gurobi)", linewidth = 2)
 plot!([],[], yaxis = :log, color = "grey", label="Upper Bound", linewidth = 2)
 plot!([],[], yaxis = :log, color = "grey", label="Lower Bound", linewidth = 2, linestyle = :dash)
@@ -118,9 +119,19 @@ plot!(cputimes2, data2.UB, yaxis = :log, color = "red", label = :none, linewidth
 plot!(cputimes2, data2.LB, color = "red", label = :none, linewidth = 2, linestyle = :dash)
 plot!(cputimes3, data3.UB, yaxis = :log, color = "blue", label = :none, linewidth = 2)
 plot!(cputimes3, data3.LB, color = "blue", label = :none, linewidth = 2, linestyle = :dash)
-xlabel!("Time (hrs")
+xlabel!("Time (hrs)")
 ylabel!("Objective Value (USD)")
 #savefig((@__DIR__)*"/6_month_monolithic_Benders.png")
+
+plot(data.k, data.cpu_time ./ 3600, label = :none, color = "black", linewidth = 2)
+xlabel!("Iteration")
+ylabel!("Total Solution Time (hr)")
+
+tperiter = [data.cpu_time[i+1] - data.cpu_time[i] for i in 1:length(data.k)-1]
+
+plot(1:length(data.k)-1, tperiter ./ 60, label = :none, color = "black", linewidth = 2)
+xlabel!("Iteration")
+ylabel!("Solution Time of Iteration (min)")
 
 # Also save to a CSV file for easy access
 println("\nSaving data to iterations_data.csv...")

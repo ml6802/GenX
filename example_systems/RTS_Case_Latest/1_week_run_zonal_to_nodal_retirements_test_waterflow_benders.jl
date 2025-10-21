@@ -188,7 +188,7 @@ settings_path = GenX.get_settings_path(case)
 mysetup["settings_path"] = settings_path;
 
 # myinputs["pTrans_Max"] .*= 2
-#myinputs["pTrans_Max"][[5,23,24,70,75]] .*= 1/50
+myinputs["pTrans_Max"][[5,23,24,70,75]] .*= 1/50
 #myinputs["pD"] .*= 1
 # myinputs["Voll"] .*= 10
 
@@ -358,89 +358,6 @@ println("vCAP = ", sum(value.(mz[:vCAP])))
 println("voverproduction = ", sum(value.(mz[:vOverProduction])))
 
 
-
-#=
-
-# check build decisions + total
-#println(sum(value.(m[:vNEW_TRANS_CAP_DECISION_INT])))
-#build_idx = []
-#existing_to_cand_map = myinputs["existing_to_cand_map"]
-#for i in 1:L
-#    cand_idx = existing_to_cand_map[i] - L
-#    if value(m[:vNEW_TRANS_CAP_DECISION_INT][cand_idx, 1]) > 0 
-#        println("LINE BUILT; vflow is ", sum(value.(m[:vFLOW]).data[i, :]), "  and vcandflow is ", sum(value.(m[:vCANDFLOW][cand_idx, j, k] for j in 1:24 for k in 1:2)))
-#        push!(build_idx, i)
-#    else
-#        # println("LINE NOT BUILT; vflow is ", sum(value.(m[:vFLOW]).data[i, :]), "  and vcandflow is ", sum(value.(m[:vCANDFLOW][cand_idx, j, k] for j in 1:168 for k in 1:2)))
-#        #push!(build_idx, i)
-#    end
-#end
-# check that vFLOW on those decisions are zero
-# check that vCANDFLOW also make sense
-# check max values make sense
-
-
-
-# plot results
-using PlasmoData, PlasmoDataPlots
-fadjlist = myinputs["adj_list_cand"]
-dg = DataGraph{Int, Any, Any, Any, Matrix{Any}, Matrix{Any}}()
-for i in 1:73
-    add_node!(dg, i)
-    if zone_map[i] == 1
-        add_node_data!(dg, i, 1, "partition")
-        add_node_data!(dg, i, "red", "color")
-    elseif zone_map[i] == 2
-        add_node_data!(dg, i, 2, "partition")
-        add_node_data!(dg, i, "orange", "color")
-    else
-        add_node_data!(dg, i, 3, "partition")
-        add_node_data!(dg, i, "blue", "color")
-    end
-    add_node_data!(dg, i, 6, "nodesize")
-end
-for (src, dst) in fadjlist
-    add_edge!(dg, src, dst)
-    add_edge_data!(dg, src, dst, "black", "new_build")
-    add_edge_data!(dg, src, dst, 2, "linewidth")
-    add_edge_data!(dg, src, dst, "black", "new_build_monolithic")
-    add_edge_data!(dg, src, dst, 2, "linewidth_monolithic")
-    add_edge_data!(dg, src, dst, "black", "zonal_line")
-end
-
-
-
-plot_graph(dg, nodecolor = get_node_data(dg, "color"), nodesize = 6, xdim = 500, ydim = 500, save_fig = false, linewidth=2, linecolor = "black", fig_name = (@__DIR__)*"/zonal_system.png")
-add_node_data!(dg, 13, -0.52, "x_positions")
-add_node_data!(dg, 13, 0.16, "y_positions")
-plot_graph(dg, nodecolor = get_node_data(dg, "color"), nodesize = 6, xdim = 500, ydim = 500, save_fig = false, linewidth=2, linecolor = "black", fig_name = (@__DIR__)*"/zonal_system.png")
-
-
-for k in 1:108
-    if value(m[:vNEW_TRANS_CAP_DECISION_INT][k, 1]) == 1
-        add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], "red", "new_build")
-        add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], 5, "linewidth")
-    end
-end
-
-vcap_nodes = m[:vCAP].axes[1]
-for j in vcap_nodes
-    if value(m[:vCAP][j]) > 0
-        resource = myinputs["RESOURCES"][j]
-        genx_zone = parent(resource)[:zone]
-        node = genx_zone
-        println(node)
-        add_node_data!(dg, node, "black", "color")
-        add_node_data!(dg, node, 10, "nodesize")
-        #println(node)
-    end
-end
-
-
-
-plot_graph(dg, nodecolor = get_node_data(dg, "color"), nodesize = get_node_data(dg, "nodesize"), xdim = 500, ydim = 500, linewidth = get_edge_data(dg, "linewidth"), linecolor = get_edge_data(dg, "new_build"), save_fig = false, fig_name = (@__DIR__)*"/zonal_nodal_builds_RTS_repweek_benders.png")
-=#
-
 optimizer = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 180, "MIPGap" => 5e-3)
 
 n2z_map = zone_map
@@ -460,55 +377,58 @@ add_interzonal_data!(z_inputs, n_inputs)
 
 println("RUNNING MODEL 1")
 nodal_setup["bilinear"] = 0
+nodal_setup["unfix_slacks"] = 0
 # solve nodal models
 m1 = GenX.generate_model(nodal_setup, n_inputs[1], optimizer)
 
-optimize!(m1)
-
-# obj_func_a = objective_function(m1)
-# obj_func_b = objective_function(m1b)
-# for i in 1:length(n_inputs[1]["l2l_map_cand"])
-#     vara = m1[:vNEW_TRANS_CAP_DECISION_INT][i,1]
-#     varb = m1b[:vNEW_TRANS_CAP_DECISION_INT][i, 1]
-#     value_a = value(m1[:vNEW_TRANS_CAP_DECISION_INT][i, 1])
-#     value_b = value(m1b[:vNEW_TRANS_CAP_DECISION_INT][i, 1])
-    
-
-#     if value_a == value_b
-#         vcand_flow_a = [value(m1[:vCANDFLOW][i, k, 1]) for k in 1:myinputs["T"]]
-#         vcand_flow_b = [value(m1b[:vCANDFLOW][i, k, 1]) for k in 1:myinputs["T"]]
-#         println("max a = ", maximum(vcand_flow_a), "  max b = ", maximum(vcand_flow_b))
-#     end
-# end
-
-
-println("vcap in zone 1: ", sum(value.(m1[:vCAP])))
-println("new transmission in zone 1: ", sum(value.(m1[:vNEW_TRANS_CAP_DECISION_INT])))
-
-println("RUNNING MODEL 2")
-
-m2 = GenX.generate_model(nodal_setup, n_inputs[2], optimizer)
-
-optimize!(m2)
-
-println("vcap in zone 2: ", sum(value.(m2[:vCAP])))
-println("new transmission in zone 2: ", sum(value.(m2[:vNEW_TRANS_CAP_DECISION_INT])))
-
-println("RUNNING MODEL 3")
-
-m3 = GenX.generate_model(nodal_setup, n_inputs[3], optimizer)
-
-optimize!(m3)
-
-println("vcap in zone 3: ", sum(value.(m3[:vCAP])))
-println("new transmission in zone 3: ", sum(value.(m3[:vNEW_TRANS_CAP_DECISION_INT])))
-
-println("Zonal objective is : ", objective_value(mz))
-println("Nodal objective is : ", objective_value(m1) + objective_value(m2) + objective_value(m3))
+# optimize!(m1)
 
 
 
 
+
+
+
+benders_settings_path = GenX.get_settings_path(case, "benders_settings.yml")
+mysetup_benders = GenX.configure_benders(benders_settings_path) 
+
+genx_settings = GenX.get_settings_path(case, "genx_settings.yml") # Settings YAML file path
+writeoutput_settings = GenX.get_settings_path(case, "output_settings.yml") # Write-output settings YAML file path
+mysetup = GenX.configure_settings(genx_settings, writeoutput_settings) # mysetup dictionary stores settings and GenX-specific parameters
+
+mysetup["DC_OPF"] = 1
+mysetup["ptdf"] = 0
+mysetup["bilinear"] = 1
+mysetup["disaggregate"] = 0
+mysetup["unfix_slacks"] = 0
+mysetup["SOS1"] = 0
+mysetup = merge(mysetup,mysetup_benders);
+
+settings_path = GenX.get_settings_path(case)    
+mysetup["settings_path"] = settings_path;
+mysetup["NetworkExpansion"] = 1
+mysetup["Benders"] = 1
+#mysetup["BD_integer_routine"] = 1
+#mysetup["BD_warmstart_bilinear"] = 1
+
+# mysetup["BD_Stab_Method"] = "int_level_set"
+
+
+myinputs_decomp = GenX.separate_inputs_subperiods(n_inputs[1]);
+# nodal_setup_Benders = deepcopy(nodal_setup)
+# nodal_setup_Benders["Benders"] = 1
+benders_inputs = GenX.generate_benders_inputs(mysetup,n_inputs[1],myinputs_decomp)
+planning_problem1, planning_sol1, operational_sol1, LB_hist1,UB_hist1, cpu_time,feasibility_hist1, build_decisions1  = GenX.benders(benders_inputs,mysetup,n_inputs[1]);
+
+#CSV.write((@__DIR__)*"/1week_zone1_with_retirements_bilinear_only.csv", df)
+
+
+df = DataFrame()
+df[!, "UB"] = UB_hist1
+df[!, "LB"] = LB_hist1
+df[!, "TIME"] = cpu_time
+
+#CSV.write((@__DIR__)*"/1week_zone1_with_retirements_bilinear_doublewarmstart.csv", df)
 
 
 
@@ -539,7 +459,7 @@ myinputs_decomp = GenX.separate_inputs_subperiods(n_inputs[1]);
 # nodal_setup_Benders = deepcopy(nodal_setup)
 # nodal_setup_Benders["Benders"] = 1
 benders_inputs = GenX.generate_benders_inputs(mysetup,n_inputs[1],myinputs_decomp)
-planning_problem1, planning_sol1, operational_sol1, LB_hist1,UB_hist1, cpu_time,feasibility_hist1, build_decisions1  = GenX.benders(benders_inputs,mysetup,n_inputs[1]);
+planning_problem1, planning_sol1, operational_sol1, LB_hist,UB_hist1, cpu_time,feasibility_hist1, build_decisions1  = GenX.benders(benders_inputs,mysetup,n_inputs[1]);
 
 vals = [0.]
 for k in keys(planning_sol1.values)
@@ -548,19 +468,12 @@ for k in keys(planning_sol1.values)
     end
 end
 
-df = DataFrame()
-df[!, "UB"] = UB_hist2
-df[!, "LB"] = LB_hist
-df[!, "TIME"] = cpu_time
-
-#CSV.write((@__DIR__)*"/1week_zone2_with_retirements_bilinear_only.csv", df)
-
 
 myinputs_decomp = GenX.separate_inputs_subperiods(n_inputs[2]);
 # nodal_setup_Benders = deepcopy(nodal_setup)
 # nodal_setup_Benders["Benders"] = 1
 benders_inputs = GenX.generate_benders_inputs(mysetup,n_inputs[2],myinputs_decomp)
-planning_problem2, planning_sol2, operational_sol2, LB_hist2,UB_hist2, cpu_time,feasibility_hist2, build_decisions2  = GenX.benders(benders_inputs,mysetup,n_inputs[2]);
+planning_problem2, planning_sol2, operational_sol2, LB_hist,UB_hist2, cpu_time,feasibility_hist2, build_decisions2  = GenX.benders(benders_inputs,mysetup,n_inputs[2]);
 
 myinputs_decomp = GenX.separate_inputs_subperiods(n_inputs[3]);
 # nodal_setup_Benders = deepcopy(nodal_setup)

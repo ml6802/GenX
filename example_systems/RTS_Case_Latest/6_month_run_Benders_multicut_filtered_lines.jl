@@ -222,11 +222,42 @@ GenX.build_expansion_information!(myinputs)
 
 mysetup["NetworkExpansion"] = 1
 mysetup["Benders"] = 1
-mysetup["BD_integer_routine"] = 1
-mysetup["BD_warmstart_bilinear"] = 1
+#mysetup["BD_integer_routine"] = 1
+#mysetup["BD_warmstart_bilinear"] = 1
 
 myinputs_decomp = GenX.separate_inputs_subperiods(myinputs);
 benders_inputs = GenX.generate_benders_inputs(mysetup,myinputs,myinputs_decomp)
+
+lines_to_keep = [1,2,6,10,19,21,24,29,30,45,60,61,63,68,71,81,90,99,100,104]
+
+new_lines = myinputs["EXPANSION_LINES"]
+
+function fix_lines_to_zero!(EP::Model, lines_to_keep, new_lines)
+    for i in new_lines
+        if !(i in lines_to_keep)
+            @constraint(EP, EP[:vNEW_TRANS_CAP_DECISION_INT][i, 1] == 0)
+            @constraint(EP, EP[:vNEW_TRANS_CAP_DECISION_INT][i, 2] == 0)
+        end
+    end
+end
+
+function fix_lines_to_zero_vector!(subproblems::Vector{Dict{Any,Any}}, lines_to_keep, new_lines)
+    for m in subproblems
+        EP = m["Model"]
+        fix_lines_to_zero!(EP, lines_to_keep, new_lines)
+    end
+end
+p_id = workers();
+np_id = length(p_id);
+subproblems = benders_inputs["subproblems"];
+planning_problem = benders_inputs["planning_problem"];
+fix_lines_to_zero!(planning_problem, lines_to_keep, new_lines)
+
+@sync for k in 1:np_id
+    @async @fetchfrom p_id[k] fix_lines_to_zero_vector!(localpart(subproblems), lines_to_keep, new_lines) 
+end
+
+
 
 planning_problem1, planning_sol1, operational_sol1, LB_hist1,UB_hist1, cpu_time1,feasibility_hist1, build_decisions1  = GenX.benders(benders_inputs,mysetup,myinputs);
 

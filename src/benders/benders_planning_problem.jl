@@ -93,7 +93,6 @@ function solve_planning_problem(EP::Model,planning_variables::Vector{String},inp
 	else 
 		### The planning model is an LP
 		optimize!(EP)
-		println(termination_status(EP))
 		if has_values(EP)
 			neg_cap_bool = check_negative_capacities(EP);
 			
@@ -122,12 +121,30 @@ function solve_planning_problem(EP::Model,planning_variables::Vector{String},inp
 			else
 				zone_inv_cost = 0#make_benders_zonal_invcost(inputs, EP)
 				planning_sol =  (LB = objective_value(EP), inv_cost =value(EP[:eObj]), zone_inv_cost = zone_inv_cost,values =Dict([s=>value.(variable_by_name(EP,s)) for s in planning_variables]), theta = value.(EP[:vTHETA])) 
+
+				total_builds = [0.]
+				for var in EP[:vNEW_TRANS_CAP_DECISION_INT]
+					if value(var) > 0
+						#println(var)
+						total_builds[1] += value(var)
+					end
+				end
+				println("NUMBER OF BUILDS IS ", total_builds[1])
 			end
 		else
 			println("The planning problem solution failed, trying with BarHomogenous=1")
 			set_attribute(EP, "BarHomogeneous", 1)
 			optimize!(EP)
 			if has_values(EP)
+				total_builds = [0.]
+				for var in EP[:vNEW_TRANS_CAP_DECISION_INT]
+					if value(var) > 0
+						#println(var)
+						total_builds[1] += value(var)
+					end
+				end
+				println("NUMBER OF BUILDS IS ", total_builds[1])
+				
 				zone_inv_cost = 0#make_benders_zonal_invcost(inputs, EP)
 				planning_sol =  (LB = objective_value(EP), inv_cost =value(EP[:eObj]), zone_inv_cost = zone_inv_cost,values =Dict([s=>value.(variable_by_name(EP,s)) for s in planning_variables]), theta = value.(EP[:vTHETA])) 
 				set_attribute(EP, "BarHomogeneous", -1)
