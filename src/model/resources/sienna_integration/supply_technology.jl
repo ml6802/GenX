@@ -15,7 +15,7 @@ new_build(t::SupplyTechnology) = Bool(get_available(t) && !(IS.has_supplemental_
 """Get [`SupplyTechnology`](@ref) `co2`."""
 co2_content(t::SupplyTechnology) = get_co2(t)
 """Get [`SupplyTechnology`](@ref) `name`."""
-resource_name(t::SupplyTechnology) = get_name(t)
+resource_name(t::SupplyTechnology) = PSIP.get_name(t)
 """Get [`SupplyTechnology`](@ref) `id`."""
 resource_id(t::SupplyTechnology) = get_id(t)
 # """Get [`SupplyTechnology`](@ref) `initial_capacity`."""

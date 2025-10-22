@@ -1812,11 +1812,17 @@ function extract_generator_variability_from_portfolio(portfolio::Portfolio, setu
                             ref_length = length(ts_data_demand)
                         end
                         gen_var_data[!, :Time_Index] = 1:ref_length
+                        # Add constant values for this technology
+                        gen_var_data[!, Symbol(tech_name)] = fill(1.0, ref_length)
                     end
+                else
+                    # If no demand data available, create a minimal DataFrame
+                    @warn "No demand data found to determine time series length, creating single time step"
+                    gen_var_data[!, :Time_Index] = [1]
+                    gen_var_data[!, Symbol(tech_name)] = [1.0]
                 end
-            end
-            
-            if nrow(gen_var_data) > 0
+            else
+                # DataFrame already exists, add constant values with correct length
                 gen_var_data[!, Symbol(tech_name)] = fill(1.0, nrow(gen_var_data))
             end
         end

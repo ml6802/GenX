@@ -7,7 +7,7 @@ new_build(s::StorageTechnology) = Bool(get_available(s) && (max_cap_mw(s) == 0.0
 """Get [`StorageTechnology`](@ref) `co2`."""
 co2_content(s::StorageTechnology) = get_co2(s)
 """Get [`StorageTechnology`](@ref) `name`."""
-resource_name(s::StorageTechnology) = get_name(s)
+resource_name(s::StorageTechnology) = PSIP.get_name(s)
 """Get [`StorageTechnology`](@ref) `id`."""
 resource_id(s::StorageTechnology) = get_id(s)
 """Get [`StorageTechnology`](@ref) `region`."""

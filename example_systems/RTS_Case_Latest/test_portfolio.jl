@@ -37,9 +37,67 @@ using DataFrames
 using Dates
 using InfrastructureSystems
 using PowerSystems
+using Logging
 const PSIP = PowerSystemsInvestmentsPortfolios
 const IS = InfrastructureSystems
 const PSY = PowerSystems
+const TS = TimeSeries
+
+# Setup logging to file
+const LOG_FILE = joinpath(@__DIR__, "portfolio_execution.log")
+const LOG_IO = open(LOG_FILE, "w")
+
+"""
+    log_both(message)
+
+Prints message to both console and log file with timestamp.
+"""
+function log_both(message::String)
+    timestamp = Dates.format(now(), "yyyy-mm-dd HH:MM:SS")
+    formatted_message = "[$timestamp] $message"
+    
+    # Print to console
+    println(formatted_message)
+    
+    # Write to log file
+    println(LOG_IO, formatted_message)
+    flush(LOG_IO)  # Ensure immediate write to file
+end
+
+"""
+    log_info(message)
+
+Logs an info message to both console and file.
+"""
+log_info(message::String) = log_both("ℹ️  INFO: $message")
+
+"""
+    log_warn(message)
+
+Logs a warning message to both console and file.
+"""
+log_warn(message::String) = log_both("⚠️  WARN: $message")
+
+"""
+    log_error(message)
+
+Logs an error message to both console and file.
+"""
+log_error(message::String) = log_both("❌ ERROR: $message")
+
+"""
+    log_success(message)
+
+Logs a success message to both console and file.
+"""
+log_success(message::String) = log_both("✅ SUCCESS: $message")
+
+# Ensure log file is closed when Julia exits
+atexit(() -> close(LOG_IO))
+
+log_info("Starting portfolio execution script")
+log_info("Log file: $LOG_FILE")
+
 read_from_json = false # Set to true if you want to read from a JSON file
 rts_case = true # Set to true if you want to run the RTS case
 # const PSIP_RESOURCE_TYPES = [SupplyTechnology{ThermalStandard},
@@ -523,6 +581,46 @@ function test_portfolio(case_name::AbstractString)
     fuel_data = DataFrame(CSV.File(joinpath(case_name, "TDR_results/Fuels_data_ts.csv")))
     var = DataFrame(CSV.File(joinpath(
         case_name, "TDR_results/Generators_variability_ts.csv")))
+    
+    # Determine expected time series length (8784 for full year, 1848 for TDR case)
+    expected_length = 8784  # Full year hourly data
+    if nrow(demand_data) < expected_length
+        expected_length = nrow(demand_data)  # Use actual data length if smaller
+    end
+    
+    println("Expected time series length: $expected_length")
+    println("Current variability data dimensions: $(size(var))")
+    
+    # Check and fix time series lengths for all existing columns
+    for col_name in names(var)
+        if col_name in ["reference_year", "reference_day"]  # Skip metadata columns
+            continue
+        end
+        
+        col_data = var[!, col_name]
+        current_length = length(col_data)
+        
+        if current_length < expected_length
+            @warn "Time series for '$col_name' has length $current_length, expected $expected_length. Extending with constant value 1.0"
+            
+            # Get the last value to extend with (or use 1.0 if missing/invalid)
+            extend_value = 1.0
+            if current_length > 0 && !ismissing(col_data[end]) && isfinite(col_data[end])
+                extend_value = col_data[end]
+            end
+            
+            # Extend the column to the expected length
+            extended_data = vcat(col_data, fill(extend_value, expected_length - current_length))
+            var[!, col_name] = extended_data
+            
+            println("  Extended '$col_name' from $current_length to $expected_length with value $extend_value")
+        elseif current_length > expected_length
+            @warn "Time series for '$col_name' has length $current_length, expected $expected_length. Truncating to expected length"
+            var[!, col_name] = col_data[1:expected_length]
+            println("  Truncated '$col_name' from $current_length to $expected_length")
+        end
+    end
+    
     existing_variability = names(var)
     all_resources = vcat(PSIP.get_name.(PSIP.get_technologies(SupplyTechnology, p_3zone)),
         PSIP.get_name.(PSIP.get_technologies(StorageTechnology, p_3zone)))
@@ -530,8 +628,25 @@ function test_portfolio(case_name::AbstractString)
         if r ∉ existing_variability
             @info "assuming availability of 1.0 for resource $r."
             GenX.ensure_column!(var, r, 1.0)
+        else
+            # Check if existing resource has correct length
+            col_data = var[!, r]
+            if length(col_data) != expected_length
+                @warn "Resource '$r' has incorrect time series length $(length(col_data)), expected $expected_length. Fixing..."
+                if length(col_data) < expected_length
+                    # Extend with 1.0 values
+                    extended_data = vcat(col_data, fill(1.0, expected_length - length(col_data)))
+                    var[!, r] = extended_data
+                else
+                    # Truncate to expected length
+                    var[!, r] = col_data[1:expected_length]
+                end
+                println("  Fixed time series length for resource '$r'")
+            end
         end
     end
+    
+    println("Final variability data dimensions: $(size(var))")
 
     resolution = Dates.Hour(1)
     for y in years
@@ -742,13 +857,8 @@ function load_rts(case_name::AbstractString)
     base_year = 2025
     aggregation = PSY.ACBus
 
-    println("Loading RTS data from database: $database_filepath")
-    println("Parameters:")
-    println("  - Discount rate: $discount_rate")
-    println("  - Inflation rate: $inflation_rate")
-    println("  - Interest rate: $interest_rate")
-    println("  - Base year: $base_year")
-    println("  - Aggregation: $aggregation")
+    log_info("Loading RTS data from database: $database_filepath")
+    log_info("Parameters: Discount rate: $discount_rate, Inflation rate: $inflation_rate, Interest rate: $interest_rate, Base year: $base_year, Aggregation: $aggregation")
 
     # Check if the database file exists
     if !isfile(database_filepath)
@@ -756,10 +866,10 @@ function load_rts(case_name::AbstractString)
     end
 
     try
-        println("\n🔄 Starting portfolio creation...")
+        log_info("Starting portfolio creation...")
     
         # Check if the database file exists and can be opened
-        println("🔄 Opening database connection...")
+        log_info("Opening database connection...")
     
         # Call the database_to_portfolio function
         portfolio = database_to_portfolio(
@@ -771,14 +881,14 @@ function load_rts(case_name::AbstractString)
             aggregation=aggregation
         )
 
-        println("✅ Database loaded successfully")
-        println("✅ Nodes created (with validation warnings)")
-        println("✅ Technologies processed (some types skipped as expected)")
-        println("✅ Power system data processed")
-        println("✅ Time series deserialization completed")
+        log_success("Database loaded successfully")
+        log_success("Nodes created (with validation warnings)")
+        log_success("Technologies processed (some types skipped as expected)")
+        log_success("Power system data processed")
+        log_success("Time series deserialization completed")
     
-        println("\n✅ Successfully created portfolio structs!")
-        println("Portfolio object type: $(typeof(portfolio))")
+        log_success("Successfully created portfolio structs!")
+        log_info("Portfolio object type: $(typeof(portfolio))")
     
         # Display some basic information about the portfolio
         println("\nPortfolio summary:")
@@ -841,15 +951,180 @@ function load_rts(case_name::AbstractString)
 
 end
 
+"""
+    validate_and_fix_time_series_lengths(portfolio, expected_length=8784)
+
+Validates that all time series in the portfolio have the expected length.
+For technologies with multiple time series, keeps only the one with expected_length and removes others.
+If no time series with expected_length is found, creates one with all 1.0s.
+"""
+function validate_and_fix_time_series_lengths(portfolio, expected_length=8784)
+    log_info("Validating time series lengths in portfolio...")
+    log_info("Expected length: $expected_length hours")
+    
+    # Get all technologies that might have time series
+    all_techs = vcat(
+        collect(get_technologies(SupplyTechnology, portfolio)),
+        collect(get_technologies(StorageTechnology, portfolio)),
+        collect(get_technologies(DemandRequirement, portfolio))
+    )
+    
+    fixed_count = 0
+    
+    for tech in all_techs
+        tech_name = PSIP.get_name(tech)
+        
+        if IS.has_time_series(tech)
+            ts_keys = IS.get_time_series_keys(tech)
+            
+            # First pass: find all time series and their lengths
+            ts_info = []
+            for ts_key in ts_keys
+                try
+                    ts_data = IS.get_time_series(tech, ts_key)
+                    ts_values = PSIP.get_data(ts_data)
+                    
+                    current_length = if ts_values isa TS.TimeArray
+                        length(values(ts_values))
+                    else
+                        length(ts_values)
+                    end
+                    
+                    push!(ts_info, (key=ts_key, data=ts_data, values=ts_values, length=current_length))
+                    
+                catch e
+                    @warn "Error reading time series '$ts_key' for technology '$tech_name': $e"
+                end
+            end
+            
+            # Find time series with expected length
+            expected_length_ts = filter(info -> info.length == expected_length, ts_info)
+            
+            if !isempty(expected_length_ts)
+                # Found time series with expected length
+                log_info("Technology '$tech_name' has $(length(ts_info)) time series, $(length(expected_length_ts)) with correct length $expected_length")
+                
+                # Keep only the first one with expected length
+                keep_ts = expected_length_ts[1]
+                log_info("Keeping time series '$(keep_ts.key.name)' with length $(keep_ts.length) for technology '$tech_name'")
+                
+                # Remove ALL others (not just when there are multiple)
+                for info in ts_info
+                    if info.key != keep_ts.key
+                        try
+                            # Handle different types of time series keys for removal
+                            if hasfield(typeof(info.key), :initial_timestamp)
+                                IS.remove_time_series!(portfolio.data, tech, info.key.name, info.key.initial_timestamp)
+                            else
+                                # For StaticTimeSeriesKey, use the name only
+                                IS.remove_time_series!(portfolio.data, tech, info.key.name)
+                            end
+                            log_info("Removed time series '$(info.key.name)' with length $(info.length) from technology '$tech_name'")
+                            fixed_count += 1
+                        catch e
+                            log_warn("Error removing time series '$(info.key.name)' for technology '$tech_name': $e")
+                        end
+                    end
+                end
+            else
+                # No time series with expected length found
+                println("  ⚠️  Technology '$tech_name' has no time series with expected length $expected_length")
+                
+                # Remove all existing time series
+                for info in ts_info
+                    try
+                        # Handle different types of time series keys for removal
+                        if hasfield(typeof(info.key), :initial_timestamp)
+                            IS.remove_time_series!(portfolio.data, tech, info.key.name, info.key.initial_timestamp)
+                        else
+                            # For StaticTimeSeriesKey, use the name only
+                            IS.remove_time_series!(portfolio.data, tech, info.key.name)
+                        end
+                        println("  🗑️  Removed time series '$(info.key.name)' with length $(info.length)")
+                    catch e
+                        @warn "Error removing time series '$(info.key.name)' for technology '$tech_name': $e"
+                    end
+                end
+                
+                # Create new time series with all 1.0s
+                # Use the structure from the first existing time series if available
+                if !isempty(ts_info)
+                    ref_key = ts_info[1].key
+                    ref_values = ts_info[1].values
+                    
+                    if ref_values isa TS.TimeArray
+                        # Create timestamps for expected length
+                        ref_timestamps = TS.timestamp(ref_values)
+                        if length(ref_timestamps) > 1
+                            time_step = ref_timestamps[2] - ref_timestamps[1]
+                        else
+                            time_step = Dates.Hour(1)
+                        end
+                        
+                        # Generate new timestamps
+                        start_timestamp = ref_timestamps[1]
+                        new_timestamps = [start_timestamp + (i-1) * time_step for i in 1:expected_length]
+                        new_values = fill(1.0, expected_length)
+                        
+                        # Create new TimeArray and time series
+                        new_ts_data = TS.TimeArray(new_timestamps, new_values)
+                        new_ts = SingleTimeSeries(ref_key.name, new_ts_data)
+                        
+                        # Add the new time series
+                        # Handle different types of time series keys
+                        if hasfield(typeof(ref_key), :model_year) && hasfield(typeof(ref_key), :order_day)
+                            # Key has model_year and order_day (e.g., from portfolio time series)
+                            IS.add_time_series!(portfolio.data, tech, new_ts; 
+                                model_year = ref_key.model_year, 
+                                order_day = ref_key.order_day,
+                                type = get(ref_key, :type, nothing))
+                        else
+                            # Key doesn't have model_year/order_day (e.g., StaticTimeSeriesKey)
+                            # Add as a simple time series without additional metadata
+                            IS.add_time_series!(portfolio.data, tech, new_ts)
+                        end
+                        
+                        println("  ✅ Created new time series '$(ref_key.name)' with length $expected_length (all 1.0s)")
+                        fixed_count += 1
+                    end
+                else
+                    # No existing time series to use as reference - create a basic one
+                    # This case should be handled by ensuring missing resources have time series elsewhere
+                    @warn "Technology '$tech_name' has no time series at all - skipping (should be handled elsewhere)"
+                end
+            end
+        else
+            # Technology has no time series - this should be handled elsewhere in the code
+            println("  ⏭️  Technology '$tech_name' has no time series - skipping")
+        end
+    end
+    
+    if fixed_count > 0
+        log_success("Fixed $fixed_count time series length issues")
+    else
+        log_success("All time series have correct lengths")
+    end
+    
+    return portfolio
+end
+
 if read_from_json == false && rts_case == true
     # Build portfolio from the function above and then run GenX
     case = @__DIR__#joinpath(@__DIR__, "/Users/sc87/code/GenX_PowerGenome/GenX_Benders_DC_OPF/GenX/example_systems/RTS_Case_Latest/")
     p = load_rts(case)
+    
+    # Validate and fix time series lengths after loading
+    p = validate_and_fix_time_series_lengths(p, 8784)
+    
 elseif read_from_json == true && rts_case == true
     # Load portfolio from file
     case = @__DIR__#joinpath(@__DIR__, "/Users/sc87/code/GenX_PowerGenome/PSIP_GenX/GenX/example_systems/portfolio_julia_20250512")
     case_json = joinpath(case, "portfolio_julia.json")
     p = PSIP.Portfolio(case_json)
+    
+    # Validate and fix time series lengths after loading
+    p = validate_and_fix_time_series_lengths(p, 8784)
+    
 elseif read_from_json == false && rts_case == false
     # Build portfolio from the function above and then run GenX
     case = joinpath(@__DIR__, "example_systems/1_three_zones")
@@ -859,6 +1134,9 @@ else
     case = joinpath(@__DIR__, "/Users/sc87/code/GenX_PowerGenome/PSIP_GenX/GenX/example_systems/portfolio_julia_20250512")
     case_json = joinpath(case, "portfolio_julia.json")
     p = PSIP.Portfolio(case_json)
+    
+    # Validate and fix time series lengths after loading
+    p = validate_and_fix_time_series_lengths(p, 8784)
 end
 
 
@@ -886,11 +1164,175 @@ if mysetup["TimeDomainReduction"] == 1
     system_path = joinpath(case, mysetup["SystemFolder"])
     
     if !GenX.time_domain_reduced_files_exist(TDRpath)
-        println("Clustering Time Series Data from Portfolio (Grouped)...")
-        GenX.cluster_inputs_portfolio(case, settings_path, mysetup, p)
+        log_info("Clustering Time Series Data from Portfolio (Grouped)...")
+        
+        # Final cleanup: Ensure only 8784-length time series remain before TDR
+        log_info("Final cleanup: Ensuring only 8784-length time series before TDR...")
+        p = validate_and_fix_time_series_lengths(p, 8784)
+        
+        # Debug: Check time series consistency before clustering
+        log_info("Debugging time series data before clustering...")
+        
+        # Get all technologies with time series
+        all_techs = vcat(
+            collect(get_technologies(SupplyTechnology, p)),
+            collect(get_technologies(StorageTechnology, p)),
+            collect(get_technologies(DemandRequirement, p))
+        )
+        
+        println("Found $(length(all_techs)) technologies total")
+        
+        # Check time series lengths for each technology
+        ts_lengths = Dict()
+        for tech in all_techs
+            tech_name = PSIP.get_name(tech)
+            if IS.has_time_series(tech)
+                keys_ = IS.get_time_series_keys(tech)
+                if !isempty(keys_)
+                    # First pass: find all time series lengths to identify which ones to use
+                    key_lengths = []
+                    for k in keys_
+                        try
+                            ts_data = IS.get_time_series(tech, k)
+                            if ts_data !== nothing
+                                ts_values = PSIP.get_data(ts_data)
+                                if ts_values isa TS.TimeArray
+                                    length_val = length(values(ts_values))
+                                else
+                                    length_val = length(ts_values)
+                                end
+                                push!(key_lengths, (key=k, length=length_val))
+                            end
+                        catch e
+                            # Skip problematic time series in the first pass
+                            continue
+                        end
+                    end
+                    
+                    # Filter for 8784-length time series first, then others
+                    target_keys = filter(kl -> kl.length == 8784, key_lengths)
+                    if isempty(target_keys)
+                        # If no 8784-length series, use the first available
+                        target_keys = key_lengths
+                    end
+                    
+                    if !isempty(target_keys)
+                        # Use the first valid time series (preferably 8784-length)
+                        selected_key = target_keys[1]
+                        ts_lengths[tech_name] = selected_key.length
+                        
+                        # Show all available lengths for this technology
+                        all_lengths = [kl.length for kl in key_lengths]
+                        if length(unique(all_lengths)) > 1
+                            println("  $(tech_name): Multiple time series lengths $all_lengths, using $(selected_key.length)")
+                        else
+                            println("  $(tech_name): $(selected_key.key.name) $(selected_key.length) time steps")
+                        end
+                    else
+                        println("  $(tech_name): No valid time series data found")
+                        ts_lengths[tech_name] = 0
+                    end
+                else
+                    println("  $(tech_name): No time series keys")
+                    ts_lengths[tech_name] = 0
+                end
+            else
+                println("  $(tech_name): No time series")
+                ts_lengths[tech_name] = 0
+            end
+        end
+        
+        # Check for length inconsistencies
+        unique_lengths = unique(values(ts_lengths))
+        println("Unique time series lengths found: $unique_lengths")
+        
+        if length(unique_lengths) > 2  # More than just 0 and one valid length
+            @warn "Inconsistent time series lengths detected!"
+            for (name, length_val) in ts_lengths
+                if length_val > 0
+                    println("  $name: $length_val")
+                end
+            end
+        end
+        
+        # Check if we have the expected time series structure for TDR
+        expected_total_timesteps = 0
+        if haskey(p.internal.ext, "total_timesteps")
+            expected_total_timesteps = p.internal.ext["total_timesteps"]
+            println("Expected total timesteps from portfolio: $expected_total_timesteps")
+        end
+        
+        # Validate that time series are properly structured for multiple years/days
+        demand_techs = collect(get_technologies(DemandRequirement, p))
+        if !isempty(demand_techs)
+            first_demand = demand_techs[1]
+            demand_keys = IS.get_time_series_keys(first_demand)
+            println("Number of time series keys for first demand: $(length(demand_keys))")
+            
+            # Check if we have multiple time series (one for each year/day combination)
+            if length(demand_keys) > 1
+                println("Multiple time series found - this might cause issues with TDR")
+                for (i, key) in enumerate(demand_keys[1:min(5, end)])  # Show first 5
+                    println("  Key $i: $(key)")
+                end
+            end
+        end
+        
+        try
+            GenX.cluster_inputs_portfolio(case, settings_path, mysetup, p)
+            log_success("Time domain reduction completed successfully")
+        catch e
+            log_error("Time domain reduction failed with error: $e")
+            log_error("Stacktrace:")
+            for (exc, bt) in Base.catch_stack()
+                showerror(stdout, exc, bt)
+                println()
+            end
+            
+            # Try to provide more specific debugging
+            if occursin("same length", string(e))
+                println("\n🔧 Length mismatch detected. Attempting to diagnose...")
+                
+                # Check if the issue is with variability data structure
+                supply_techs = collect(get_technologies(SupplyTechnology, p))
+                for tech in supply_techs
+                    tech_name = PSIP.get_name(tech)
+                    if IS.has_time_series(tech)
+                        keys_ = IS.get_time_series_keys(tech)
+                        println("Tech $tech_name has $(length(keys_)) time series keys")
+                        
+                        # Check if all time series have the same length
+                        lengths = []
+                        for key in keys_
+                            try
+                                ts_data = IS.get_time_series(tech, key)
+                                ts_values = PSIP.get_data(ts_data)
+                                if ts_values isa TS.TimeArray
+                                    push!(lengths, length(values(ts_values)))
+                                else
+                                    push!(lengths, length(ts_values))
+                                end
+                            catch
+                                push!(lengths, -1)  # Error indicator
+                            end
+                        end
+                        
+                        if length(unique(lengths)) > 1
+                            println("  ⚠️  Inconsistent lengths in $tech_name: $lengths")
+                        end
+                    end
+                end
+            end
+            
+            # Skip TDR and continue with full time series
+            println("\n⚠️  Skipping time domain reduction due to error. Continuing with full time series...")
+            mysetup["TimeDomainReduction"] = 0
+        end
     else
         println("Time Series Data Already Clustered.")
     end
+else
+    println("Time Domain Reduction disabled.")
 end
 
 mysetup["DC_OPF"] = 1
