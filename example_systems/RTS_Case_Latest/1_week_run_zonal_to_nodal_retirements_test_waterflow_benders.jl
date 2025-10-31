@@ -418,6 +418,11 @@ myinputs_decomp = GenX.separate_inputs_subperiods(n_inputs[1]);
 # nodal_setup_Benders = deepcopy(nodal_setup)
 # nodal_setup_Benders["Benders"] = 1
 benders_inputs = GenX.generate_benders_inputs(mysetup,n_inputs[1],myinputs_decomp)
+
+
+
+
+# 
 planning_problem1, planning_sol1, operational_sol1, LB_hist1,UB_hist1, cpu_time,feasibility_hist1, build_decisions1  = GenX.benders(benders_inputs,mysetup,n_inputs[1]);
 
 #CSV.write((@__DIR__)*"/1week_zone1_with_retirements_bilinear_only.csv", df)

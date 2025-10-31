@@ -775,6 +775,6 @@ function build_expansion_information!(myinputs::Dict) # call this inside an "if 
     myinputs["LINES"] = LINES
     myinputs["EXISTING_LINES"] = EXISTING_LINES
     myinputs["CANDIDATE_LINES"] = CANDIDATE_LINES
-    myinputs["CAN_RETIRE_LINES"] = CAN_RETIRE_LINES
-    myinputs["CANNOT_RETIRE_LINES"] = CANNOT_RETIRE_LINES
+    #myinputs["CAN_RETIRE_LINES"] = CAN_RETIRE_LINES
+    #myinputs["CANNOT_RETIRE_LINES"] = CANNOT_RETIRE_LINES
 end

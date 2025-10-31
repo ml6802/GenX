@@ -228,9 +228,10 @@ mysetup["Benders"] = 1
 myinputs_decomp = GenX.separate_inputs_subperiods(myinputs);
 benders_inputs = GenX.generate_benders_inputs(mysetup,myinputs,myinputs_decomp)
 
+@everywhere begin
 lines_to_keep = [1,2,6,10,19,21,24,29,30,45,60,61,63,68,71,81,90,99,100,104]
 
-new_lines = myinputs["EXPANSION_LINES"]
+new_lines = [i for i in 1:108]
 
 function fix_lines_to_zero!(EP::Model, lines_to_keep, new_lines)
     for i in new_lines
@@ -246,6 +247,7 @@ function fix_lines_to_zero_vector!(subproblems::Vector{Dict{Any,Any}}, lines_to_
         EP = m["Model"]
         fix_lines_to_zero!(EP, lines_to_keep, new_lines)
     end
+end
 end
 p_id = workers();
 np_id = length(p_id);

@@ -35,12 +35,12 @@ function investment_transmission!(EP::Model, inputs::Dict, setup::Dict)
     if NetworkExpansion == 1
         L_cand = inputs["L_cand"]     # Number of candidate transmission lines
         # Network lines and zones that are expandable have non-negative maximum reinforcement inputs
-        EXPANSION_LINES = inputs["EXPANSION_LINES"]
+        CANDIDATE_LINES = inputs["CANDIDATE_LINES"]
         if setup["DC_OPF"] == 1
             REINFORCEMENT_CAP_SIZE = inputs["Line_Reinforcement_Cap_Size"]
             MAX_TRAN_EXPANSION_LIMIT=inputs["Max_Trans_Cap"]
             EXPANSION_LEVELS=Dict{Int,Vector{Float64}}()
-            for l in EXPANSION_LINES
+            for l in CANDIDATE_LINES
                 EXPANSION_LEVELS[l] = (0:1:MAX_TRAN_EXPANSION_LIMIT[l]) #-Might not need multiplication of this part -->* REINFORCEMENT_CAP_SIZE[l]
             end
             inputs["EXPANSION_LEVELS"] = EXPANSION_LEVELS
@@ -76,43 +76,52 @@ function investment_transmission!(EP::Model, inputs::Dict, setup::Dict)
     if NetworkExpansion == 1
         if setup["DC_OPF"] == 1
             if setup["ptdf"] == 1
-                @variable(EP, vZ_BUILD[l in EXPANSION_LINES, i in 1:(inputs["Max_Trans_Cap"][l])], Bin)
+                @variable(EP, vZ_BUILD[l in CANDIDATE_LINES, i in 1:(inputs["Max_Trans_Cap"][l])], Bin)
                 @constraint(EP, 
-                    cBUILD_SEQUENCE[l in EXPANSION_LINES, i in 1:(inputs["Max_Trans_Cap"][l]-1)],
+                    cBUILD_SEQUENCE[l in CANDIDATE_LINES, i in 1:(inputs["Max_Trans_Cap"][l]-1)],
                     EP[:vZ_BUILD][l, i] >= EP[:vZ_BUILD][l, i + 1]
                 )
             elseif setup["SOS1"] == 1
-                @variable(EP, 0<=vZ_SOS1_VAR[l in EXPANSION_LINES, i in 1:(1+inputs["Max_Trans_Cap"][l])]<=1) #SOS1 variable
-	            @variable(EP, vNEW_TRANS_CAP_DECISION_INT[l in EXPANSION_LINES], Int, lower_bound = 0)
+                @variable(EP, 0<=vZ_SOS1_VAR[l in CANDIDATE_LINES, i in 1:(1+inputs["Max_Trans_Cap"][l])]<=1) #SOS1 variable
+	            @variable(EP, vNEW_TRANS_CAP_DECISION_INT[l in CANDIDATE_LINES], Int, lower_bound = 0)
             elseif setup["disaggregate"] == 1
-                @variable(EP, vNEW_TRANS_CAP_DECISION_INT[l in EXPANSION_LINES, i in 1:(inputs["Max_Trans_Cap"][l]+1)], Bin) #binary decisions function as SOS1 vars
-                @constraint(EP, SOS1_CONSTRAINT[l in EXPANSION_LINES], sum(vNEW_TRANS_CAP_DECISION_INT[l, i] for i in 1:(inputs["Max_Trans_Cap"][l]+1)) == 1)
+                @variable(EP, vNEW_TRANS_CAP_DECISION_INT[l in CANDIDATE_LINES, i in 1:(inputs["Max_Trans_Cap"][l]+1)], Bin) #binary decisions function as SOS1 vars
+                @constraint(EP, SOS1_CONSTRAINT[l in CANDIDATE_LINES], sum(vNEW_TRANS_CAP_DECISION_INT[l, i] for i in 1:(inputs["Max_Trans_Cap"][l]+1)) == 1)
                 #@constraint(EP, 
-                #        cBUILD_SEQUENCE[l in EXPANSION_LINES, i in 1:(inputs["Max_Trans_Cap"][l]-1)],
+                #        cBUILD_SEQUENCE[l in CANDIDATE_LINES, i in 1:(inputs["Max_Trans_Cap"][l]-1)],
                 #        EP[:vNEW_TRANS_CAP_DECISION_INT][l, i] >= EP[:vNEW_TRANS_CAP_DECISION_INT][l, i + 1]
                 #)
-            elseif setup["bilinear"] == 1
-	            @variable(EP, vNEW_TRANS_CAP_DECISION_INT[l in EXPANSION_LINES, i in 1:inputs["Max_Trans_Cap"][l]], Bin)
-                @constraint(EP, 
-                        cBUILD_SEQUENCE[l in EXPANSION_LINES, i in 1:(inputs["Max_Trans_Cap"][l]-1)],
-                        EP[:vNEW_TRANS_CAP_DECISION_INT][l, i] >= EP[:vNEW_TRANS_CAP_DECISION_INT][l, i + 1]
-                )
+            # elseif setup["bilinear"] == 1
+	        #     @variable(EP, vNEW_TRANS_CAP_DECISION_INT[l in CANDIDATE_LINES, i in 1:inputs["Max_Trans_Cap"][l]], Bin)
+            #     @constraint(EP, 
+            #             cBUILD_SEQUENCE[l in CANDIDATE_LINES, i in 1:(inputs["Max_Trans_Cap"][l]-1)],
+            #             EP[:vNEW_TRANS_CAP_DECISION_INT][l, i] >= EP[:vNEW_TRANS_CAP_DECISION_INT][l, i + 1]
+            #     )
             else
-                @variable(EP, vNEW_TRANS_CAP_DECISION_INT[l in EXPANSION_LINES, i in 1:inputs["Max_Trans_Cap"][l]], Bin)
+                RECONDUCTOR_LINES = inputs["RECONDUCTOR_LINES"]
+                MAX_TRANS_EXPANSION_LIMIT=inputs["Max_Trans_Cap"]
+                @variable(EP, vRECONDUCTOR_SLACK_LOW[l in RECONDUCTOR_LINES] >= 0)
+                @variable(EP, vRECONDUCTOR_SLACK_HIGH[l in RECONDUCTOR_LINES] >= 0)
+                for l in RECONDUCTOR_LINES
+                    set_upper_bound(vRECONDUCTOR_SLACK_LOW[l], 0.1 * inputs["pTrans_Max"][l])
+                    set_upper_bound(vRECONDUCTOR_SLACK_HIGH[l], 0.15 * inputs["pTrans_Max"][l])
+                end
+
+                @variable(EP, vNEW_TRANS_CAP_DECISION_INT[l in CANDIDATE_LINES, i in 1:inputs["Max_Trans_Cap"][l]], Bin)
                 @constraint(EP, 
-                        cBUILD_SEQUENCE[l in EXPANSION_LINES, i in 1:(inputs["Max_Trans_Cap"][l]-1)],
+                        cBUILD_SEQUENCE[l in CANDIDATE_LINES, i in 1:(inputs["Max_Trans_Cap"][l]-1)],
                         EP[:vNEW_TRANS_CAP_DECISION_INT][l, i] >= EP[:vNEW_TRANS_CAP_DECISION_INT][l, i + 1]
                 )
             end
         elseif setup["IntegerInvestments"] == 1
             # Transmission network capacity reinforcements per line, integer
-            @variable(EP, vNEW_TRANS_LINES[l in EXPANSION_LINES], Int, lower_bound=0)
-            for l in EXPANSION_LINES
+            @variable(EP, vNEW_TRANS_LINES[l in CANDIDATE_LINES], Int, lower_bound=0)
+            for l in CANDIDATE_LINES
                 set_upper_bound(vNEW_TRANS_LINES[l], inputs["Max_Trans_Cap"][l])
             end
         else
             # Transmission network capacity reinforcements per line
-            @variable(EP, vNEW_TRANS_CAP[l in EXPANSION_LINES]>=0)
+            @variable(EP, vNEW_TRANS_CAP[l in CANDIDATE_LINES]>=0)
         end
     end
 
@@ -121,7 +130,7 @@ function investment_transmission!(EP::Model, inputs::Dict, setup::Dict)
     if MultiStage == 1
         @expression(EP, eTransMax[l = 1:L], vTRANSMAX[l])
     else
-        @expression(EP, eTransMax[l = 1:L], inputs["pTrans_Max"][l])
+        @expression(EP, eTransMax[l = 1:L], inputs["pTrans_Max"][l]) #TODO: Add vRECONDUCTOR_SLACK1
     end
 
     ## Transmission power flow and loss related expressions:
@@ -130,7 +139,7 @@ function investment_transmission!(EP::Model, inputs::Dict, setup::Dict)
         if setup["DC_OPF"] == 1
             if setup["ptdf"] == 1
                 @expression(EP, eAvail_Trans_Cap[l = 1:L],
-                    if l in EXPANSION_LINES
+                    if l in CANDIDATE_LINES
                         eTransMax[l] + sum(vZ_BUILD[l, i] for i in 1:(inputs["Max_Trans_Cap"][l])) * inputs["Line_Reinforcement_Cap_Size"][l] #TODO: Make sure this "l" is the correct index
                     else
                         eTransMax[l]
@@ -138,29 +147,37 @@ function investment_transmission!(EP::Model, inputs::Dict, setup::Dict)
                 )
             elseif setup["SOS1"] == 1
                 @expression(EP, eAvail_Trans_Cap[l = 1:L],
-                if l in EXPANSION_LINES
+                if l in CANDIDATE_LINES
                     eTransMax[l] + vNEW_TRANS_CAP_DECISION_INT[l]*inputs["Line_Reinforcement_Cap_Size"][l]
                 else
                     eTransMax[l]
                 end)
             else 
                 @expression(EP, eAvail_Trans_Cap[l = 1:L],
-                if l in EXPANSION_LINES
-                    eTransMax[l] + sum(vNEW_TRANS_CAP_DECISION_INT[l,i] for i in 1:inputs["Max_Trans_Cap"][l])*inputs["Line_Reinforcement_Cap_Size"][l]
+                if l in CANDIDATE_LINES
+                    if l in RECONDUCTOR_LINES
+                        eTransMax[l] + sum(vNEW_TRANS_CAP_DECISION_INT[l,i] for i in 1:inputs["Max_Trans_Cap"][l])*inputs["Line_Reinforcement_Cap_Size"][l] + vRECONDUCTOR_SLACK_LOW[l] + vRECONDUCTOR_SLACK_HIGH[l]
+                    else
+                        eTransMax[l] + sum(vNEW_TRANS_CAP_DECISION_INT[l,i] for i in 1:inputs["Max_Trans_Cap"][l])*inputs["Line_Reinforcement_Cap_Size"][l]
+                    end
                 else
-                    eTransMax[l]
+                    if l in RECONDUCTOR_LINES
+                        eTransMax[l] + vRECONDUCTOR_SLACK_LOW[l] + vRECONDUCTOR_SLACK_HIGH[l]
+                    else
+                        eTransMax[l]
+                    end
                 end)
             end
         elseif setup["IntegerInvestments"] == 1
             @expression(EP, eAvail_Trans_Cap[l = 1:L],
-            if l in EXPANSION_LINES
+            if l in CANDIDATE_LINES
                 eTransMax[l] + vNEW_TRANS_LINES[l]*inputs["Line_Reinforcement_Cap_Size"][l]
             else
                 eTransMax[l]
             end)
         else
             @expression(EP, eAvail_Trans_Cap[l = 1:L],
-            if l in EXPANSION_LINES
+            if l in CANDIDATE_LINES
                 eTransMax[l] + vNEW_TRANS_CAP[l]
             else
                 eTransMax[l]
@@ -180,35 +197,35 @@ function investment_transmission!(EP::Model, inputs::Dict, setup::Dict)
                     sum(
                         sum(vZ_BUILD[l, i] * inputs["pC_Line_Reinforcement"][l] * inputs["Line_Reinforcement_Cap_Size"][l] for i in 1:(inputs["Max_Trans_Cap"][l])
                         )
-                    for l in EXPANSION_LINES)
+                    for l in CANDIDATE_LINES)
                 )
             elseif setup["SOS1"] == 1
                 @expression(EP,
                     eTotalCNetworkExp,
                     sum(vNEW_TRANS_CAP_DECISION_INT[l] * inputs["pC_Line_Reinforcement"][l] * inputs["Line_Reinforcement_Cap_Size"][l]
-                    for l in EXPANSION_LINES)
+                    for l in CANDIDATE_LINES)
                 )
             elseif setup["disaggregate"] == 1
                 @expression(EP,
                 eTotalCNetworkExp,
                 sum(sum(vNEW_TRANS_CAP_DECISION_INT[l,i] * (i - 1) for i in 1:inputs["Max_Trans_Cap"][l]+1) * inputs["Line_Reinforcement_Cap_Size"][l]* inputs["pC_Line_Reinforcement"][l] 
-                for l in EXPANSION_LINES))
+                for l in CANDIDATE_LINES))
             else
                 @expression(EP,
                 eTotalCNetworkExp,
                 sum(sum(vNEW_TRANS_CAP_DECISION_INT[l,i] for i in 1:inputs["Max_Trans_Cap"][l]) * inputs["Line_Reinforcement_Cap_Size"][l]* inputs["pC_Line_Reinforcement"][l] 
-                for l in EXPANSION_LINES))
+                for l in CANDIDATE_LINES) + sum(vRECONDUCTOR_SLACK_LOW[l] * inputs["pC_Line_Reconductor_Low"][l] + vRECONDUCTOR_SLACK_HIGH[l] * inputs["pC_Line_Reconductor_High"][l] for l in RECONDUCTOR_LINES))
             end
         elseif setup["IntegerInvestments"] == 1
             @expression(EP,
                 eTotalCNetworkExp,
                 sum(vNEW_TRANS_LINES[l] * inputs["Line_Reinforcement_Cap_Size"][l] * inputs["pC_Line_Reinforcement"][l]
-                for l in EXPANSION_LINES))
+                for l in CANDIDATE_LINES))
         else
             @expression(EP,
                 eTotalCNetworkExp,
                 sum(vNEW_TRANS_CAP[l] * inputs["pC_Line_Reinforcement"][l]
-                for l in EXPANSION_LINES))
+                for l in CANDIDATE_LINES))
         end
         if MultiStage == 1
             # OPEX multiplier to count multiple years between two model stages
@@ -236,33 +253,33 @@ function investment_transmission!(EP::Model, inputs::Dict, setup::Dict)
         # If network expansion is used:
         if setup["DC_OPF"] == 1
             if setup["ptdf"] == 0 && setup["SOS1"] == 1
-                @constraint(EP, cZ_SOS1_VAR[l in EXPANSION_LINES], vZ_SOS1_VAR[l,:] in SOS1())
-                @constraint(EP, cZ_SOS1_VAR_SUM_COND[l in EXPANSION_LINES], sum(vZ_SOS1_VAR[l,i] for i in 1:(1+inputs["Max_Trans_Cap"][l])) == 1)
-                @constraint(EP, cNEW_TRANS_CAP_DECISION[l in EXPANSION_LINES], vNEW_TRANS_CAP_DECISION_INT[l] == sum(vZ_SOS1_VAR[l,i].*EXPANSION_LEVELS[l][i] for i in 1:(1+inputs["Max_Trans_Cap"][l])))
+                @constraint(EP, cZ_SOS1_VAR[l in CANDIDATE_LINES], vZ_SOS1_VAR[l,:] in SOS1())
+                @constraint(EP, cZ_SOS1_VAR_SUM_COND[l in CANDIDATE_LINES], sum(vZ_SOS1_VAR[l,i] for i in 1:(1+inputs["Max_Trans_Cap"][l])) == 1)
+                @constraint(EP, cNEW_TRANS_CAP_DECISION[l in CANDIDATE_LINES], vNEW_TRANS_CAP_DECISION_INT[l] == sum(vZ_SOS1_VAR[l,i].*EXPANSION_LEVELS[l][i] for i in 1:(1+inputs["Max_Trans_Cap"][l])))
                 # Transmission network related power flow and capacity constraints
             end
         end
         if MultiStage == 1
             # Constrain maximum possible flow for lines eligible for expansion regardless of previous expansions
             @constraint(EP,
-                cMaxFlowPossible[l in EXPANSION_LINES],
+                cMaxFlowPossible[l in CANDIDATE_LINES],
                 eAvail_Trans_Cap[l]<=inputs["pTrans_Max_Possible"][l])
         end
 
         if setup["IntegerInvestments"] == 1 && setup["DC_OPF"] == 0
             # Constrain maximum single-stage line capacity reinforcement for lines eligible for expansion with integers
             @constraint(EP,
-                cMaxLineReinforcement[l in EXPANSION_LINES],
+                cMaxLineReinforcement[l in CANDIDATE_LINES],
                 vNEW_TRANS_LINES[l]<=inputs["Line_Reinforcement_Cap_Size"][l]) 
         elseif setup["DC_OPF"] == 1
             if (setup["ptdf"] == 0 && setup["SOS1"] == 1)
                 @constraint(EP,
-                    cMaxLineReinforcement[l in EXPANSION_LINES],
+                    cMaxLineReinforcement[l in CANDIDATE_LINES],
                     vNEW_TRANS_CAP_DECISION_INT[l]<=inputs["Max_Trans_Cap"][l])
             end
         else        # Constrain maximum single-stage line capacity reinforcement for lines eligible for expansion
             @constraint(EP,
-                cMaxLineReinforcement[l in EXPANSION_LINES],
+                cMaxLineReinforcement[l in CANDIDATE_LINES],
                 vNEW_TRANS_CAP[l]<=inputs["pMax_Line_Reinforcement"][l])
         end
     end
