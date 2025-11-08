@@ -67,6 +67,7 @@ function get_op_cost(subop_sol::Dict)
 	for z in eachindex(zone_op_cost)
 		zone_op_cost[z] = sum(subop_sol[i].zone_cost.COpTot[z] for i in keys(subop_sol))
 	end
+	println("zone_op_cost inside get_op_cost: ", zone_op_cost)
 	return ann_op_cost,zone_op_cost
 end
 
@@ -193,6 +194,7 @@ function write_capacity_benders(inputs::Dict, master_sol::NamedTuple)
 end
 
 function add_zone_costs!(costs::NamedTuple, dfResults::DataFrame)
+	println(costs)
 	for k in eachindex(costs.zone_inv_cost)
 		zone = "Zone"*string(k)*"_TotalCost"
 		dfResults[!,Symbol(zone)] .= costs.zone_inv_cost[k] + costs.zone_op_cost[k]
@@ -264,7 +266,7 @@ function make_benders_zonal_invcost(inputs::Dict,EP::Model)
 	for z in 1:Z
 		tempCFix = 0.0
 
-		Y_ZONE = Resources.id[Resources.zone .== 1]
+		Y_ZONE = Resources.id[Resources.zone .== z]
 		STOR_ALL_ZONE = intersect(inputs["STOR_ALL"], Y_ZONE)
 		STOR_ASYMMETRIC_ZONE = intersect(inputs["STOR_ASYMMETRIC"], Y_ZONE)
 
@@ -287,25 +289,29 @@ function make_benders_zonal_invcost(inputs::Dict,EP::Model)
 end
 
 function make_benders_zonal_opcost(inputs::Dict,EP::Model)
+	println("Running make_benders_zonal_opcost")
 	Resources = inputs["RESOURCES"]
 	SEG = inputs["SEG"]  # Number of lines
 	Z = inputs["Z"]     # Number of zones
 	T = inputs["T"]     # Number of time steps (hours)
+	VRE_STOR = inputs["VRE_STOR"]
 	ModelScalingFactor = 10^3
 	CTotal = zeros(Z)
 	CFix = zeros(Z)
 	CVar = zeros(Z)
 	CStart = zeros(Z)
 	CNSE = zeros(Z)
+	CFuel = zeros(Z)
 	COpTot = zeros(Z)
 	for z in 1:Z
 		tempCTotal = 0.0
 		tempCFix = 0.0
 		tempCVar = 0.0
+		tempCFuel = 0.0
 		tempCStart = 0.0
 		tempCNSE = 0.0
 
-		Y_ZONE = Resources.id[Resources.zone .== 1]
+		Y_ZONE = resources_in_zone_by_rid(Resources, z) #Resources.id[Resources.zone .== z]
 		STOR_ALL_ZONE = intersect(inputs["STOR_ALL"], Y_ZONE)
 		STOR_ASYMMETRIC_ZONE = intersect(inputs["STOR_ASYMMETRIC"], Y_ZONE)
 		FLEX_ZONE = intersect(inputs["FLEX"], Y_ZONE)
@@ -317,6 +323,9 @@ function make_benders_zonal_opcost(inputs::Dict,EP::Model)
 
 		tempCVar = sum(value.(EP[:eCVar_out][Y_ZONE,:]))
 		tempCTotal += tempCVar
+
+		tempCFuel = sum(value.(EP[:ePlantCFuelOut][Y_ZONE, :]))
+        tempCTotal += tempCFuel
 
 		if !isempty(STOR_ALL_ZONE)
 			eCVar_in = sum(value.(EP[:eCVar_in][STOR_ALL_ZONE,:]))
@@ -338,10 +347,38 @@ function make_benders_zonal_opcost(inputs::Dict,EP::Model)
 		end
 
 		#if setup["UCommit"] >= 1
-			eCStart = sum(value.(EP[:eCStart][COMMIT_ZONE,:]))
+			eCStart = sum(value.(EP[:eCStart][COMMIT_ZONE,:])) +
+                      sum(value.(EP[:ePlantCFuelStart][COMMIT_ZONE, :]))
 			tempCStart += eCStart
 			tempCTotal += eCStart
 		#end
+
+		if !isempty(VRE_STOR)
+			gen_VRE_STOR = Resources.VreStorage
+            Y_ZONE_VRE_STOR = resources_in_zone_by_rid(gen_VRE_STOR, z)
+			eCVar_VRE_STOR = 0.0
+            if !isempty(SOLAR_ZONE_VRE_STOR)
+                eCVar_VRE_STOR += sum(value.(EP[:eCVarOutSolar][SOLAR_ZONE_VRE_STOR, :]))
+            end
+            if !isempty(WIND_ZONE_VRE_STOR)
+                eCVar_VRE_STOR += sum(value.(EP[:eCVarOutWind][WIND_ZONE_VRE_STOR, :]))
+            end
+            if !isempty(STOR_ALL_ZONE_VRE_STOR)
+                vom_map = Dict(DC_CHARGE_ALL_ZONE_VRE_STOR => :eCVar_Charge_DC,
+                    DC_DISCHARGE_ALL_ZONE_VRE_STOR => :eCVar_Discharge_DC,
+                    AC_DISCHARGE_ALL_ZONE_VRE_STOR => :eCVar_Discharge_AC,
+                    AC_CHARGE_ALL_ZONE_VRE_STOR => :eCVar_Charge_AC)
+                for (set, symbol) in vom_map
+                    if !isempty(set)
+                        eCVar_VRE_STOR += sum(value.(EP[symbol][set, :]))
+                    end
+                end
+            end
+            tempCVar += eCVar_VRE_STOR
+
+            # Total Added Costs
+            tempCTotal += (eCFix_VRE_STOR + eCVar_VRE_STOR)
+		end
 
 		tempCNSE = sum(value.(EP[:eCNSE][:,:,z]))
 		tempCTotal += tempCNSE
@@ -349,15 +386,17 @@ function make_benders_zonal_opcost(inputs::Dict,EP::Model)
 		tempCTotal *= ModelScalingFactor^2
 		tempCFix *= ModelScalingFactor^2
 		tempCVar *= ModelScalingFactor^2
+		tempCFuel *= ModelScalingFactor^2
 		tempCNSE *= ModelScalingFactor^2
 		tempCStart *= ModelScalingFactor^2
 
 		CTotal[z] = tempCTotal
 		CFix[z] = tempCFix
 		CVar[z] = tempCVar
+		CFuel[z] = tempCFuel
 		CStart[z] = tempCStart
 		CNSE[z] = tempCNSE
-		COpTot[z] = CVar[z] + CStart[z] + CNSE[z]
+		COpTot[z] = CVar[z] + CStart[z] + CNSE[z] + CFuel[z]
 	end
-	return (CTotal = CTotal, CFix = CFix, CVar = CVar, CNSE = CNSE, CStart = CStart, COpTot =COpTot)
+	return (CTotal = CTotal, CFix = CFix, CVar = CVar, CFuel = CFuel, CNSE = CNSE, CStart = CStart, COpTot =COpTot)
 end

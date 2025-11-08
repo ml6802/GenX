@@ -234,6 +234,7 @@ function run_genx_case_benders!(case::AbstractString, mysetup::Dict)
 
     planning_problem, planning_sol,operational_sol, LB_hist,UB_hist,cpu_time,feasibility_hist  = benders(benders_inputs,mysetup,myinputs);
     opt_stats = (cpu_time=cpu_time, UB_hist = UB_hist)
+    println([operational_sol[w].zone_cost for w in keys(operational_sol)])
     println("Benders decomposition took $(cpu_time[end]) seconds to run")
 
     println("Writing Output")
