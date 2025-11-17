@@ -19,7 +19,6 @@ import Pkg
 using Distributed, ClusterManagers
 using Random
 
-
 # Load in portfolio
 include((@__DIR__)*"/load_portfolio.jl")
 # Load in functions for downscaling
@@ -29,8 +28,8 @@ include((@__DIR__)*"/load_candidate_line_functions.jl")
 
 # Set internal portfolio data for use in GenX
 p.internal.ext["Rep_Periods"] = 1
-p.internal.ext["Timesteps_per_Rep_Period"] = 168
-p.internal.ext["hours_per_subperiod"] = 168
+p.internal.ext["Timesteps_per_Rep_Period"] = 48
+p.internal.ext["hours_per_subperiod"] = 48
 p.internal.ext["sub_weights"] = [8784 for i in 1:p.internal.ext["Rep_Periods"]] 
 
 # Build map of buses to zones; used in downscaling
@@ -76,12 +75,12 @@ optimizer = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 300, "MIP
 
 # Add expected candidate line data
 # also scales demands up by 4x
-load_no_candidates(myinputs, 168)
+load_no_candidates(myinputs, 48)
 
 # Set additional inputs so it only solves for one week
-myinputs["hours_per_subperiod"] = 168
+myinputs["hours_per_subperiod"] = 48
 myinputs["INTERIOR_SUBPERIODS"] = [i for i in 2:myinputs["hours_per_subperiod"]]
-myinputs["T"] = 168
+myinputs["T"] = 48
 
 # Portfolio contains no capacity or unit sizes
 # For new capacity, set it to be 100 MW increments
