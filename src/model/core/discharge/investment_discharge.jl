@@ -44,6 +44,7 @@ function investment_discharge!(EP::Model, inputs::Dict, setup::Dict)
     RET_CAP = inputs["RET_CAP"] # Set of all resources eligible for capacity retirements
     COMMIT = inputs["COMMIT"] # Set of all resources eligible for unit commitment
     RETROFIT_CAP = inputs["RETROFIT_CAP"]  # Set of all resources being retrofitted
+    VRE = inputs["VRE"]
 
     ### Variables ###
 
@@ -51,7 +52,16 @@ function investment_discharge!(EP::Model, inputs::Dict, setup::Dict)
     @variable(EP, vRETCAP[y in RET_CAP]>=0)
 
     # New installed capacity of resource "y"
-    @variable(EP, vCAP[y in NEW_CAP]>=0)
+    if haskey(setup, "IntegerInvestments")
+        if setup["IntegerInvestments"] == 1
+            @variable(EP, vCAP[y in NEW_CAP]>=0, Int)
+        else
+            @variable(EP, vCAP[y in NEW_CAP]>=0)
+        end
+    else
+        @variable(EP, vCAP[y in NEW_CAP]>=0)
+    end
+    
 
     if MultiStage == 1
         @variable(EP, vEXISTINGCAP[y = 1:G]>=0)
@@ -70,33 +80,33 @@ function investment_discharge!(EP::Model, inputs::Dict, setup::Dict)
 
     @expression(EP, eTotalCap[y in 1:G],
         if y in intersect(NEW_CAP, RET_CAP, RETROFIT_CAP) # Resources eligible for new capacity, retirements and being retrofitted
-            if y in COMMIT
+            if y in COMMIT || (y in VRE && setup["IntegerInvestments"] == 1)
                 eExistingCap[y] +
                 cap_size(gen[y]) * (EP[:vCAP][y] - EP[:vRETCAP][y] - EP[:vRETROFITCAP][y])
             else
                 eExistingCap[y] + EP[:vCAP][y] - EP[:vRETCAP][y] - EP[:vRETROFITCAP][y]
             end
         elseif y in intersect(setdiff(RET_CAP, NEW_CAP), setdiff(RET_CAP, RETROFIT_CAP)) # Resources eligible for only capacity retirements
-            if y in COMMIT
+            if y in COMMIT || (y in VRE && setup["IntegerInvestments"] == 1)
                 eExistingCap[y] - cap_size(gen[y]) * EP[:vRETCAP][y]
             else
                 eExistingCap[y] - EP[:vRETCAP][y]
             end
         elseif y in setdiff(intersect(RET_CAP, NEW_CAP), RETROFIT_CAP) # Resources eligible for retirement and new capacity
-            if y in COMMIT
+            if y in COMMIT || (y in VRE && setup["IntegerInvestments"] == 1)
                 eExistingCap[y] + cap_size(gen[y]) * (EP[:vCAP][y] - EP[:vRETCAP][y])
             else
                 eExistingCap[y] + EP[:vCAP][y] - EP[:vRETCAP][y]
             end
         elseif y in setdiff(intersect(RET_CAP, RETROFIT_CAP), NEW_CAP) # Resources eligible for retirement and retrofitting
-            if y in COMMIT
+            if y in COMMIT || (y in VRE && setup["IntegerInvestments"] == 1)
                 eExistingCap[y] -
                 cap_size(gen[y]) * (EP[:vRETROFITCAP][y] + EP[:vRETCAP][y])
             else
                 eExistingCap[y] - (EP[:vRETROFITCAP][y] + EP[:vRETCAP][y])
             end
         elseif y in intersect(setdiff(NEW_CAP, RET_CAP), setdiff(NEW_CAP, RETROFIT_CAP))  # Resources eligible for only new capacity
-            if y in COMMIT
+            if y in COMMIT || (y in VRE && setup["IntegerInvestments"] == 1)
                 eExistingCap[y] + cap_size(gen[y]) * EP[:vCAP][y]
             else
                 eExistingCap[y] + EP[:vCAP][y]
@@ -108,7 +118,7 @@ function investment_discharge!(EP::Model, inputs::Dict, setup::Dict)
     ### Need editting ##
     @expression(EP, eCFix[y in 1:G],
         if y in NEW_CAP # Resources eligible for new capacity (Non-Retrofit)
-            if y in COMMIT
+            if y in COMMIT || (y in VRE && setup["IntegerInvestments"] == 1)
                 inv_cost_per_mwyr(gen[y]) * cap_size(gen[y]) * vCAP[y] +
                 fixed_om_cost_per_mwyr(gen[y]) * eTotalCap[y]
             else

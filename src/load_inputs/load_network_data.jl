@@ -373,7 +373,8 @@ function load_network_data!(setup::Dict, p::Portfolio, inputs::Dict)
             inputs["pPercent_Loss"] = [line_loss(l) for l in lines]
         elseif setup["Trans_Loss_Segments"] >= 2
             # Transmission line voltage (in kV)
-            inputs["kV"] = [voltage(l) for l in lines]
+            sys = p.base_system
+            inputs["kV"] = [PSY.get_base_voltage(first(get_components_by_name(Bus, sys, l.start_node.name))) for l in lines]#[voltage(l) for l in lines]
             # Transmission line resistance (in Ohms) - Used when modeling quadratic transmission losses
             inputs["Ohms"] = [resistance(l) for l in lines]
         end
@@ -387,7 +388,8 @@ function load_network_data!(setup::Dict, p::Portfolio, inputs::Dict)
             end
             println("Reading DC-OPF values...")
             # Transmission line voltage (in kV)
-            line_voltage_kV = [voltage(l) for l in lines]
+            sys = p.base_system
+            line_voltage_kV = [PSY.get_base_voltage(first(PSY.get_components_by_name(PSY.Bus, sys, l.start_node.name))) for l in lines]#[voltage(l) for l in lines]
             # Transmission line reactance (in Ohms)
             line_reactance_Ohms = [reactance(l) for l in lines]
 

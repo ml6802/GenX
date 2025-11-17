@@ -17,19 +17,17 @@ const PSY = PowerSystems
 using Plots
 import Pkg
 using Distributed, ClusterManagers
-using Random
 
 # Pkg.activate("/home/ml6802/GenX")
 # include("/home/ml6802/GenX/src/GenX.jl")
 
 include((@__DIR__)*"/load_portfolio.jl")
 include((@__DIR__)*"/../convert_input_dict_reconductoring.jl")
-include((@__DIR__)*"/load_candidate_line_functions.jl")
 
 p.internal.ext["Rep_Periods"] = 1
-p.internal.ext["Timesteps_per_Rep_Period"] = 168
-p.internal.ext["hours_per_subperiod"] = 168
-p.internal.ext["sub_weights"] = [8784 for i in 1:p.internal.ext["Rep_Periods"]] #[8784/52 for i in 1:1]
+p.internal.ext["Timesteps_per_Rep_Period"] = 24
+p.internal.ext["hours_per_subperiod"] = 24
+p.internal.ext["sub_weights"] = [8784/364 for i in 1:1]
 #p.internal.ext["sub_weights"] = [8784/2190 for i in 1:1]
 # p.internal.ext["Timesteps_per_Rep_Period"] = 3528
 # p.internal.ext["hours_per_subperiod"] = 3528
@@ -75,399 +73,117 @@ mysetup = merge(mysetup,mysetup_benders);
 settings_path = GenX.get_settings_path(case)    
 mysetup["settings_path"] = settings_path;
 
+# myinputs["pTrans_Max"] .*= 2
+#myinputs["pD"] .*= 1
+# myinputs["Voll"] .*= 10
+myinputs["pTrans_Max"] .*= 1
+#myinputs["pTrans_Max"][[5,23,24,70,75]] .*= 1/70
+L = myinputs["L"]
+L_exist = L
+L_cand = L
+myinputs["L_cand"] = L_cand
+myinputs["L_exist"] = L_exist
+myinputs["L"] = L * 2
+myinputs["LINES"] = [i for i in 1:myinputs["L"]]
+myinputs["Z_cand"] = myinputs["Z"]
+myinputs["pNet_Map"] = vcat(myinputs["pNet_Map"], myinputs["pNet_Map"])
+myinputs["pDC_OPF_coeff"] = vcat(myinputs["pDC_OPF_coeff"], myinputs["pDC_OPF_coeff"])
+myinputs["Line_Angle_Limit"] = [6.282 for i in 1:myinputs["L"]]
+myinputs["Line_Reinforcement_Cap_Size"] = vcat([0 for i in 1:L_exist], [i for i in myinputs["pTrans_Max"]])
+myinputs["Max_Trans_Cap"] = vcat([0 for i in 1:L_exist], [1 for i in myinputs["pTrans_Max"]])
+myinputs["pTrans_Max"] = vcat([i for i in myinputs["pTrans_Max"]], [0 for i in 1:L_cand])
+
+
+
+EXPANSION_LEVELS = Dict{Int, Vector}()
+for i in (L_exist + 1):(L_exist + L_cand)
+    EXPANSION_LEVELS[i] = (0:1:myinputs["Max_Trans_Cap"][i])
+end
+EXPANSION_LINES = [i for i in (L_exist + 1):(L_exist + L_cand)]
+myinputs["EXPANSION_LINES"] = EXPANSION_LINES
+myinputs["CANDIDATE_LINES"] = copy(EXPANSION_LINES)
+myinputs["EXISTING_LINES"] = [i for i in 1:L_exist]
+myinputs["pPercent_Loss"] = vcat(myinputs["pPercent_Loss"], myinputs["pPercent_Loss"])
+
+lines = collect(get_technologies(TransmissionTechnology, p));
+myinputs["pC_Line_Reinforcement"] = zeros(myinputs["L"])
+myinputs["pC_Line_Reconductor_High"] = zeros(myinputs["L"])
+myinputs["pC_Line_Reconductor_Low"] = zeros(myinputs["L"])
+
+scale_factor = mysetup["ParameterScale"] == 1 ? GenX.ModelScalingFactor : 1
+
+CAN_RETIRE_LINES = Int[]
+CANNOT_RETIRE_LINES = Int[]
+RECONDUCTOR_LINES = Int[]
+existing_to_cand_map = Dict()
+
+using Random
+Random.seed!(1)
+for i in 1:length(lines)
+    #check for reconductoring; 
+
+    distance = 60 * rand()
+    cap_val = distance * 1200
+    cost = cap_val * (0.044) / (1 - (1 + 0.044)^(-60))
+    myinputs["pC_Line_Reinforcement"][i + L_exist] = cost
+
+    if get_existing_capacity_mw(p, lines[i]) > 200
+        push!(CANNOT_RETIRE_LINES, i)
+        push!(RECONDUCTOR_LINES, i)
+        myinputs["pC_Line_Reconductor_Low"][i] = cost .* 0.3
+        myinputs["pC_Line_Reconductor_High"][i] = cost .* 0.7
+        myinputs["Line_Reinforcement_Cap_Size"][L_exist + i] *= 1.5
+        myinputs["pDC_OPF_coeff"][L_exist + i] *= 1.5
+    else
+        push!(CAN_RETIRE_LINES, i)
+        existing_to_cand_map[i] = L_exist + i
+        myinputs["Line_Reinforcement_Cap_Size"][L_exist + i] *= 2.5
+        #myinputs["pDC_OPF_coeff"][L_exist + i] *= 2.5
+    end
+end
+
+#myinputs["pDC_OPF_coeff"] .*= 2000 #2000
+# myinputs["pDC_OPF_coeff"] .*= 100 #2000
+
+myinputs["CAN_RETIRE_LINES"] = CAN_RETIRE_LINES
+myinputs["CANNOT_RETIRE_LINES"] = CANNOT_RETIRE_LINES
+myinputs["RECONDUCTOR_LINES"] = RECONDUCTOR_LINES
+myinputs["existing_to_cand_map"] = existing_to_cand_map
+
+myinputs["hours_per_subperiod"] = 24
+myinputs["INTERIOR_SUBPERIODS"] = [i for i in 2:myinputs["hours_per_subperiod"]]
+myinputs["T"] = 24
+
+
 mysetup["NetworkExpansion"] = 1
 mysetup["Benders"] = 0
 
-mysetup["bilinear"] = 0
-optimizer = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 300, "MIPGap" => 1e-4)
-
-load_no_candidates(myinputs, 168)
-# load in inputs
-# build zonal inputs
-# solve zonal model
-# add new resources to inputs dictionary
-# build nodal inputs
-# fix capacity decisions for nodal problems (sum vcap by name) = solution
-# go through the names of zonal solution keys => call get_resource_ids_by_name
 
 
-mysetup["bilinear"] = 0
-mysetup["zonal"] = "waterflow" # set for waterflow or dcopf
-mysetup["nodal"] = "dcopf" # set for waterflow or dcopf
-## stuff from zonal_to_nodal_solve.jl
-if !(haskey(mysetup, "ptdf"))
-    mysetup["ptdf"] = 0
-end
-if !(haskey(mysetup, "disaggregate"))
-    mysetup["disaggregate"] = 0
-end
-if !(haskey(mysetup, "bilinear"))
-    mysetup["bilinear"] = 0
-end
-if !(haskey(mysetup, "SOS1"))
-    mysetup["SOS1"] = 0
-end
-if !(haskey(mysetup, "unfix_slacks"))
-    mysetup["unfix_slacks"] = 0
-end
-if !(haskey(mysetup, "tight_bigM"))
-    mysetup["tight_bigM"] = false
-end
+#optimize!(m)
 
 
-myinputs["hours_per_subperiod"] = 168
-myinputs["INTERIOR_SUBPERIODS"] = [i for i in 2:myinputs["hours_per_subperiod"]]
-myinputs["T"] = 168
+# myinputs["L_cand"] = 10
+# myinputs["L"] = myinputs["L_exist"]
+# myinputs["pNet_Map"] = myinputs["pNet_Map"][1:130, :]
+# myinputs["CANDIDATE_LINES"] = [i for i in 121:130]
+# myinputs["CAN_RETIRE_LINES"] = [i for i in 1:10]
+# myinputs["CANNOT_RETIRE_LINES"] = [i for i in 11:120]
+# myinputs["RECONDUCTOR_LINES"] = [i for i in 11:120]
 
-if haskey(mysetup, "IntegerInvestments")
-    if mysetup["IntegerInvestments"] == 1
-        for i in myinputs["NEW_CAP"]
-            resource = myinputs["RESOURCES"][i]
-            parent(resource)[:cap_size] = 100
-        end
-    end
-end
-
-
-# myinputs["pD"] = myinputs["pD"][4000:end, :]
-# myinputs["pP_Max"] = myinputs["pP_Max"][:, 4000:end]
-
-z_inputs = build_zonal_inputs(myinputs, zone_map, 3)
-
-solver = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 300, "MIPGap" => 1e-3)
-###### ZONAL ######
-zonal_setup = deepcopy(mysetup)
-
-optimizer = solver
-###### ZONAL ######
-zonal_setup["unfix_slacks"] = 0
-zonal_setup["NetworkExpansion"] = 1
-zonal_setup["IntegerInvestments"] = 1
-zonal_setup["DC_OPF"] = 0
-
-mz = run_zonal_model!(z_inputs, zonal_setup, optimizer)
-new_vre = [0.]
-new_thermal = [0.]
-for i in z_inputs["NEW_CAP"]
-    resource = z_inputs["RESOURCES"][i]
-    # if isa(resource, GenX.Vre)
-    #     println(i)
-    # end
-    val = value(mz[:vCAP][i])
-        if isa(resource, GenX.Thermal)
-            new_thermal[1] += val
-        elseif isa(resource, GenX.Vre)
-            new_vre[1] += val
-        else
-            println("RESOURCES IS OF TYPE $(typeof(resource))")
-        end
-end
-
-println("TOTAL NEW THERMAL = ", new_thermal[1])
-println("TOTAL NEW VRE = ", new_vre[1])
-
-
-investment_solutions = Dict()
-techs = collect(get_technologies(ResourceTechnology, p))
-index_to_technology = z_inputs["index_to_technology"]
-function find_tech_type_by_id(id, techs) 
-    for t in techs
-        if PSIP.get_id(t) == id
-            return typeof(t)
-        end
-    end
-    return nothing
-end
-for i in z_inputs["NEW_CAP"]
-    new_cap_val = value(mz[:vCAP][i])
-    if new_cap_val > 0
-        resource = z_inputs["RESOURCES"][i]
-        name = parent(resource)[:resource]
-        tech_id = index_to_technology[i]
-        tech_type = find_tech_type_by_id(tech_id, techs)
-        tuple_key = (tech_type, name)
-        investment_solutions[tuple_key] = new_cap_val * GenX.cap_size(resource)
-    end
-end
-
-
-
-
-
-
-# for i in 1:168
-#     resource = z_inputs["RESOURCES"][i]
-#     #println(GenX.start_fuel_mmbtu_per_mw(resource))
-#     #prod = sum(value.(mz[:vP][i, :]))
-#     #if isa(resource, GenX.Vre)
-#     #    if prod > 0 
-#     #        println(i)
-#     #    else
-#     #        println("NOTHING IS GENERATED!")
-#     #    end
-#     #end
+# for i in 1:10
+#     myinputs["existing_to_cand_map"][i] = 120 + i
 # end
 
-# total_new_thermal_production = [0.]
-# for i in z_inputs["NEW_CAP"]
-#     resource = z_inputs["RESOURCES"][i]
-#     if isa(resource, GenX.Thermal)
-#         total_new_thermal_production[1] += sum(value.(mz[:vP][i, :]))
-#         println(value(mz[:vCAP][i]))
-#     end
-# end
 
-GenX.expand_new_cap_resources_to_nodal!(myinputs, mysetup, p, "")
-GenX.load_generators_variability!(mysetup, p, myinputs)
-
-
+mysetup["bilinear"] = 0
+mysetup["ptdf"] = 0
+optimizer = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 100, "MIPGap" => 1e-3)
 m = GenX.generate_model(mysetup, myinputs, optimizer)
-
-optimize!(m)
-
-
-
-
-GenX.save_zonal_capacity_results!(mz, myinputs, z_inputs)
-
-
-n2z_map = zone_map
-num_zones = 3
-# build the nodal inputs
-n_inputs = build_nodal_inputs(myinputs, n2z_map, num_zones)
-
-nodal_setup = deepcopy(mysetup)
-nodal_setup["DC_OPF"] = 1
-nodal_setup["bilinear"] = 0
-nodal_setup["unfix_slacks"] = 0
-nodal_setup["NetworkExpansion"] = 1
-nodal_setup["IntegerInvestments"] = 1
-
-# add to the nodal inputs the interzonal transmission time series
-add_interzonal_data!(z_inputs, n_inputs)
-
-println("RUNNING MODEL 1")
-nodal_setup["bilinear"] = 0
-nodal_setup["unfix_slacks"] = 1
-# solve nodal models
-# m1 = GenX.generate_model(nodal_setup, n_inputs[1], optimizer)
-m1 = build_nodal_resolution_model(nodal_setup, n_inputs[1], optimizer)
-
-set_nodal_capacity_builds(n_inputs[1], m1)
-
-optimize!(m1)
-
-m2 = build_nodal_resolution_model(nodal_setup, n_inputs[2], optimizer)
-
-set_nodal_capacity_builds(n_inputs[2], m2)
-
-optimize!(m2)
-
-m3 = build_nodal_resolution_model(nodal_setup, n_inputs[3], optimizer)
-
-set_nodal_capacity_builds(n_inputs[3], m3)
-
-optimize!(m3)
-
-println("ZONAL OBJECTIVE = ", objective_value(mz))
-println("NODAL OBJECTIVE = ", objective_value(m1) + objective_value(m2) + objective_value(m3))
-
-
-
-# plot results
-using PlasmoData, PlasmoDataPlots
-fadjlist = z_inputs["adj_list"]
-dg = DataGraph{Int, Any, Any, Any, Matrix{Any}, Matrix{Any}}()
-for i in 1:73
-    add_node!(dg, i)
-    if zone_map[i] == 1
-        add_node_data!(dg, i, 1, "partition")
-        add_node_data!(dg, i, "red", "color")
-    elseif zone_map[i] == 2
-        add_node_data!(dg, i, 2, "partition")
-        add_node_data!(dg, i, "orange", "color")
-    else
-        add_node_data!(dg, i, 3, "partition")
-        add_node_data!(dg, i, "blue", "color")
-    end
-    #add_node_data!(dg, i, part9[i], "partition_metis")
-    #add_node_data!(dg, i, my_colors[part9[i]], "color")
-    add_node_data!(dg, i, 6, "nodesize")
-end
-for (src, dst) in fadjlist
-    add_edge!(dg, src, dst)
-    add_edge_data!(dg, src, dst, "black", "new_build")
-    add_edge_data!(dg, src, dst, 2, "linewidth_new_build")
-    add_edge_data!(dg, src, dst, "black", "retirement")
-    add_edge_data!(dg, src, dst, 2, "linewidth_retirement")
-    add_edge_data!(dg, src, dst, "black", "reconductored")
-    add_edge_data!(dg, src, dst, 2, "linewidth_reconductor")
-    add_edge_data!(dg, src, dst, "black", "status")
-    add_edge_data!(dg, src, dst, 2, "linewidth_status")
-end
-
-
-
-plot_graph(dg, nodecolor = get_node_data(dg, "color"), nodesize = 6, xdim = 500, ydim = 500, save_fig = false, linewidth=2, linecolor = "black", fig_name = (@__DIR__)*"/zonal_system.png")
-add_node_data!(dg, 13, -0.52, "x_positions")
-add_node_data!(dg, 13, 0.16, "y_positions")
-plot_graph(dg, nodecolor = get_node_data(dg, "color"), nodesize = 6, xdim = 500, ydim = 500, save_fig = false, linewidth=2, linecolor = "black", fig_name = (@__DIR__)*"/zonal_system.png")
-
-plot_graph(dg, nodecolor = "grey", nodesize = 6, xdim = 500, ydim = 500, save_fig = false, linewidth=2, linecolor = "black", fig_name = (@__DIR__)*"/zonal_system_plain.png")
-
-
-
-l2z_map = z_inputs["l2z_map"]
-retire_lines = [z_inputs["existing_to_cand_map"][j] for j in z_inputs["CAN_RETIRE_LINES"]]
-for k in keys(l2z_map)
-    new_line = l2z_map[k]
-    #add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], "white", "zonal_line")
-    #add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], "chartreuse", "new_build")
-    #add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], 8, "linewidth")
-    if new_line in z_inputs["CANDIDATE_LINES"]
-        if value(mz[:vNEW_TRANS_LINES][new_line, 1]) == 1
-            add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], "red", "new_build")
-            add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], 5, "linewidth")
-            if new_line in retire_lines
-                add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], "orange", "status")
-                add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], 5, "linewidth_status")
-            else
-                add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], "red", "status")
-                add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], 5, "linewidth_status")
-            end
-        end
-    end
-end
-
-
-models = [m1, m2, m3]
-
-all_cap_values = vcat([value(i) for i in m1[:vCAP] if value(i) >0], [value(i) for i in m2[:vCAP] if value(i) >0], [value(i) for i in m3[:vCAP] if value(i) >0])
-
-max_cap = maximum(all_cap_values)
-
-for i in 1:num_zones
-    n_input = n_inputs[i]
-    l2l_map = n_input["l2l_map"]
-    model = models[i]
-    retire_lines = [n_input["existing_to_cand_map"][j] for j in n_input["CAN_RETIRE_LINES"]]
-    for k in keys(l2l_map)
-        old_line = k
-        new_line = l2l_map[k]
-        if new_line in n_input["CANDIDATE_LINES"]
-            if value(models[i][:vNEW_TRANS_CAP_DECISION_INT][new_line, 1]) == 1
-                add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], "red", "new_build")
-                add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], 5, "linewidth")
-                if new_line in retire_lines
-                    add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], "orange", "status")
-                    add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], 5, "linewidth_status")
-                else
-                    add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], "red", "status")
-                    add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], 5, "linewidth_status")
-                end
-            end
-        end
-        if new_line in n_input["RECONDUCTOR_LINES"]
-            if value(model[:vRECONDUCTOR_SLACK_LOW][new_line]) > 0
-                if get_edge_data(dg, fadjlist[k][1], fadjlist[k][2], "status") == "red"
-                    add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], "purple", "status")
-                    add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], 5, "linewidth_status")
-                else
-                    add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], "teal", "status")
-                    add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], 5, "linewidth_status")
-                end
-            end
-        end
-    end
-end
-
-new_vre = [0.]
-new_thermal = [0.]
-for i in 1:num_zones
-    n_input = n_inputs[i]
-    n2n_map = n_input["n2n_map"]
-    n2n_map_back = Dict()
-    for j in keys(n2n_map)
-        n2n_map_back[n2n_map[j]] = j
-    end
-    vcap_nodes = models[i][:vCAP].axes[1]
-    for j in vcap_nodes
-        #println(j)
-        if value(models[i][:vCAP][j]) > 50
-
-            val = value(models[i][:vCAP][j])
-            resource = n_input["RESOURCES"][j]
-            #println(parent(resource)[:resource])
-            genx_zone = parent(resource)[:zone]
-            node = n2n_map_back[genx_zone]
-            add_node_data!(dg, node, "black", "color")
-            add_node_data!(dg, node, 1 + 9 * (val / max_cap), "nodesize")
-            if isa(resource, GenX.Thermal)
-                new_thermal[1] += val
-            elseif isa(resource, GenX.Vre)
-                new_vre[1] += val
-            else
-                println("RESOURCES IS OF TYPE $(typeof(resource))")
-            end
-        end
-    end
-end
-
-
-
-plot_graph(dg, nodecolor = get_node_data(dg, "color"), nodesize = get_node_data(dg, "nodesize"), xdim = 500, ydim = 500, linewidth = get_edge_data(dg, "linewidth_status"), linecolor = get_edge_data(dg, "status"), save_fig = false, fig_name = (@__DIR__)*"/zonal_nodal_builds_RTS_repweek_benders.png")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-techs = collect(get_technologies(ResourceTechnology, p))
-counter = [0.]
-for t in techs
-    # if !IS.has_supplemental_attributes(ExistingCapacity, t)
-    #     #gen_names = get_existing_technologies(IS.get_supplemental_attributes(ExistingCapacity, t)[1])
-    #     println(t.name)
-    #     counter[1] += 1
-    # end
-
-    if length(t.region) > 1
-        regions = t.region
-        if length(unique([i.name[1] for i in regions])) != 1
-            println("UHOH")
-        end
-    end
-end
-
-
-
-
-
-a=1
-
-# m = GenX.generate_model(mysetup, myinputs, optimizer)
-
 # for i in 121:240
 #     fix(m[:vNEW_TRANS_CAP_DECISION_INT][i, 1], 0)
 # end
-# optimize!(m)
+optimize!(m)
 
 
 

@@ -49,22 +49,21 @@ for i in 1:length(buses)
     end
 end
 
+cpus_per_task = parse(Int, ENV["SLURM_CPUS_PER_TASK"]);
+addprocs(cpus_per_task)
+println("Adding processors")
+@everywhere begin
+    import Pkg
+    Pkg.activate("/scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX")
+end
 
-# cpus_per_task = parse(Int, ENV["SLURM_CPUS_PER_TASK"]);
-# addprocs(cpus_per_task)
-# println("Adding processors")
-# @everywhere begin
-#     import Pkg
-#     Pkg.activate("/home/ml6802/GenX")
-# end
-
-# println("Number of procs: ", nprocs())
-# println("Number of workers: ", nworkers())
-# for i in workers()
-#     id, pid, host = fetch(@spawnat i (myid(), getpid(), gethostname()))
-#     println(id, " " , pid, " ", host)
-# end
-# @everywhere include("/home/ml6802/GenX/src/GenX.jl")
+println("Number of procs: ", nprocs())
+println("Number of workers: ", nworkers())
+for i in workers()
+    id, pid, host = fetch(@spawnat i (myid(), getpid(), gethostname()))
+    println(id, " " , pid, " ", host)
+end
+@everywhere using GenX, Distributed
 
 
 benders_settings_path = GenX.get_settings_path(case, "benders_settings.yml")

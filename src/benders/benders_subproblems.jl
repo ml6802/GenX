@@ -159,8 +159,8 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
 
 	fix_planning_variables!(EP,planning_sol,planning_variables_sub)
 
-    #new_optimizer = EP.ext[:solver]
-    #set_optimizer(EP, new_optimizer)
+    new_optimizer = EP.ext[:solver]
+    set_optimizer(EP, new_optimizer)
 
 	optimize!(EP)
 

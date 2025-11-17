@@ -1,0 +1,1128 @@
+
+libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+
+libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+ERROR: Method overwriting is not permitted during Module precompilation. Use `__precompile__(false)` to opt-out of precompilation.
+WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+WARNING: Method definition to_floats_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:38 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:60.
+Set parameter LicenseID to value 197246
+Set parameter GURO_PAR_SPECIAL
+Set parameter TokenServer to value "license.rc.princeton.edu"
+Loading RTS data from database: /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/example_systems/RTS_Case_Latest/sys_DA.sqlite
+Parameters:
+  - Discount rate: 0.05
+  - Inflation rate: 0.07
+  - Interest rate: 0.07
+  - Base year: 2025
+  - Aggregation: ACBus
+
+🔄 Starting portfolio creation...
+🔄 Opening database connection...
+✅ Database loaded successfully
+✅ Nodes created (with validation warnings)
+✅ Technologies processed (some types skipped as expected)
+✅ Power system data processed
+✅ Time series deserialization completed
+
+✅ Successfully created portfolio structs!
+Portfolio object type: Portfolio
+
+Portfolio summary:
+  - Aggregation type: ACBus
+  - Discount rate: 0.05
+  - Inflation rate: 0.07
+  - Interest rate: 0.07
+  - Base year: 2025
+
+Portfolio loading complete.
+Adding processors
+      From worker 22:	  Activating project at `/scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX`
+      From worker 9:	  Activating project at `/scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX`
+      From worker 14:	  Activating project at `/scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX`
+      From worker 21:	  Activating project at `/scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX`
+      From worker 19:	  Activating project at `/scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX`
+      From worker 18:	  Activating project at `/scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX`
+      From worker 16:	  Activating project at `/scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX`
+      From worker 5:	  Activating project at `/scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX`
+      From worker 12:	  Activating project at `/scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX`
+      From worker 20:	  Activating project at `/scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX`
+      From worker 13:	  Activating project at `/scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX`
+      From worker 11:	  Activating project at `/scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX`
+      From worker 10:	  Activating project at `/scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX`
+      From worker 15:	  Activating project at `/scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX`
+      From worker 6:	  Activating project at `/scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX`
+      From worker 7:	  Activating project at `/scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX`
+      From worker 3:	  Activating project at `/scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX`
+      From worker 2:	  Activating project at `/scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX`
+      From worker 4:	  Activating project at `/scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX`
+      From worker 8:	  Activating project at `/scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX`
+      From worker 25:	  Activating project at `/scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX`
+      From worker 17:	  Activating project at `/scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX`
+      From worker 27:	  Activating project at `/scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX`
+      From worker 24:	  Activating project at `/scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX`
+      From worker 23:	  Activating project at `/scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX`
+      From worker 26:	  Activating project at `/scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX`
+Number of procs: 27
+Number of workers: 26
+2 2808502 della-h16n2
+3 2808505 della-h16n2
+4 2808506 della-h16n2
+5 2808507 della-h16n2
+6 2808509 della-h16n2
+7 2808512 della-h16n2
+8 2808513 della-h16n2
+9 2808516 della-h16n2
+10 2808518 della-h16n2
+11 2808521 della-h16n2
+12 2808525 della-h16n2
+13 2808531 della-h16n2
+14 2808535 della-h16n2
+15 2808536 della-h16n2
+16 2808537 della-h16n2
+17 2808538 della-h16n2
+18 2808544 della-h16n2
+19 2808545 della-h16n2
+20 2808548 della-h16n2
+21 2808550 della-h16n2
+22 2808552 della-h16n2
+23 2808562 della-h16n2
+24 2808564 della-h16n2
+25 2808568 della-h16n2
+26 2808571 della-h16n2
+27 2808573 della-h16n2
+      From worker 13:	
+      From worker 13:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 13:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 13:	ERROR: Method overwriting is not permitted during Module precompilation. Use `__precompile__(false)` to opt-out of precompilation.
+      From worker 13:	
+      From worker 13:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 13:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 13:	WARNING: Method definition to_floats_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:38 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:60.
+      From worker 9:	
+      From worker 9:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 9:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 9:	ERROR: Method overwriting is not permitted during Module precompilation. Use `__precompile__(false)` to opt-out of precompilation.
+      From worker 13:	Set parameter LicenseID to value 197246
+      From worker 13:	Set parameter GURO_PAR_SPECIAL
+      From worker 13:	Set parameter TokenServer to value "license.rc.princeton.edu"
+      From worker 9:	
+      From worker 9:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 9:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 9:	WARNING: Method definition to_floats_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:38 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:60.
+      From worker 25:	
+      From worker 25:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 25:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 25:	ERROR: Method overwriting is not permitted during Module precompilation. Use `__precompile__(false)` to opt-out of precompilation.
+      From worker 25:	
+      From worker 25:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 9:	Set parameter LicenseID to value 197246
+      From worker 9:	Set parameter GURO_PAR_SPECIAL
+      From worker 9:	Set parameter TokenServer to value "license.rc.princeton.edu"
+      From worker 25:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 25:	WARNING: Method definition to_floats_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:38 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:60.
+      From worker 24:	
+      From worker 24:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 24:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 24:	ERROR: Method overwriting is not permitted during Module precompilation. Use `__precompile__(false)` to opt-out of precompilation.
+      From worker 24:	
+      From worker 24:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 25:	Set parameter LicenseID to value 197246
+      From worker 25:	Set parameter GURO_PAR_SPECIAL
+      From worker 25:	Set parameter TokenServer to value "license.rc.princeton.edu"
+      From worker 24:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 24:	WARNING: Method definition to_floats_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:38 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:60.
+      From worker 11:	
+      From worker 11:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 11:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 11:	ERROR: Method overwriting is not permitted during Module precompilation. Use `__precompile__(false)` to opt-out of precompilation.
+      From worker 11:	
+      From worker 11:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 24:	Set parameter LicenseID to value 197246
+      From worker 24:	Set parameter GURO_PAR_SPECIAL
+      From worker 24:	Set parameter TokenServer to value "license.rc.princeton.edu"
+      From worker 11:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 11:	WARNING: Method definition to_floats_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:38 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:60.
+      From worker 4:	
+      From worker 4:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 4:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 4:	ERROR: Method overwriting is not permitted during Module precompilation. Use `__precompile__(false)` to opt-out of precompilation.
+      From worker 4:	
+      From worker 4:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 11:	Set parameter LicenseID to value 197246
+      From worker 11:	Set parameter GURO_PAR_SPECIAL
+      From worker 11:	Set parameter TokenServer to value "license.rc.princeton.edu"
+      From worker 4:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 4:	WARNING: Method definition to_floats_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:38 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:60.
+      From worker 16:	
+      From worker 16:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 16:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 16:	ERROR: Method overwriting is not permitted during Module precompilation. Use `__precompile__(false)` to opt-out of precompilation.
+      From worker 16:	
+      From worker 16:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 4:	Set parameter LicenseID to value 197246
+      From worker 4:	Set parameter GURO_PAR_SPECIAL
+      From worker 4:	Set parameter TokenServer to value "license.rc.princeton.edu"
+      From worker 16:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 16:	WARNING: Method definition to_floats_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:38 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:60.
+      From worker 7:	
+      From worker 7:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 7:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 7:	ERROR: Method overwriting is not permitted during Module precompilation. Use `__precompile__(false)` to opt-out of precompilation.
+      From worker 7:	
+      From worker 7:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 16:	Set parameter LicenseID to value 197246
+      From worker 16:	Set parameter GURO_PAR_SPECIAL
+      From worker 16:	Set parameter TokenServer to value "license.rc.princeton.edu"
+      From worker 5:	
+      From worker 5:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 7:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 7:	WARNING: Method definition to_floats_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:38 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:60.
+      From worker 5:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 5:	ERROR: Method overwriting is not permitted during Module precompilation. Use `__precompile__(false)` to opt-out of precompilation.
+      From worker 5:	
+      From worker 5:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 5:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 5:	WARNING: Method definition to_floats_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:38 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:60.
+      From worker 7:	Set parameter LicenseID to value 197246
+      From worker 7:	Set parameter GURO_PAR_SPECIAL
+      From worker 7:	Set parameter TokenServer to value "license.rc.princeton.edu"
+      From worker 2:	
+      From worker 2:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 2:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 2:	ERROR: Method overwriting is not permitted during Module precompilation. Use `__precompile__(false)` to opt-out of precompilation.
+      From worker 2:	
+      From worker 2:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 5:	Set parameter LicenseID to value 197246
+      From worker 5:	Set parameter GURO_PAR_SPECIAL
+      From worker 5:	Set parameter TokenServer to value "license.rc.princeton.edu"
+      From worker 2:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 2:	WARNING: Method definition to_floats_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:38 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:60.
+      From worker 6:	
+      From worker 6:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 6:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 6:	ERROR: Method overwriting is not permitted during Module precompilation. Use `__precompile__(false)` to opt-out of precompilation.
+      From worker 6:	
+      From worker 6:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 2:	Set parameter LicenseID to value 197246
+      From worker 2:	Set parameter GURO_PAR_SPECIAL
+      From worker 2:	Set parameter TokenServer to value "license.rc.princeton.edu"
+      From worker 6:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 6:	WARNING: Method definition to_floats_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:38 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:60.
+      From worker 23:	
+      From worker 23:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 23:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 23:	ERROR: Method overwriting is not permitted during Module precompilation. Use `__precompile__(false)` to opt-out of precompilation.
+      From worker 23:	
+      From worker 23:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 6:	Set parameter LicenseID to value 197246
+      From worker 6:	Set parameter GURO_PAR_SPECIAL
+      From worker 6:	Set parameter TokenServer to value "license.rc.princeton.edu"
+      From worker 23:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 23:	WARNING: Method definition to_floats_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:38 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:60.
+      From worker 20:	
+      From worker 20:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 20:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 20:	ERROR: Method overwriting is not permitted during Module precompilation. Use `__precompile__(false)` to opt-out of precompilation.
+      From worker 20:	
+      From worker 20:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 23:	Set parameter LicenseID to value 197246
+      From worker 23:	Set parameter GURO_PAR_SPECIAL
+      From worker 23:	Set parameter TokenServer to value "license.rc.princeton.edu"
+      From worker 20:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 20:	WARNING: Method definition to_floats_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:38 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:60.
+      From worker 22:	
+      From worker 22:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 22:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 22:	ERROR: Method overwriting is not permitted during Module precompilation. Use `__precompile__(false)` to opt-out of precompilation.
+      From worker 22:	
+      From worker 22:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 20:	Set parameter LicenseID to value 197246
+      From worker 20:	Set parameter GURO_PAR_SPECIAL
+      From worker 20:	Set parameter TokenServer to value "license.rc.princeton.edu"
+      From worker 22:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 22:	WARNING: Method definition to_floats_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:38 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:60.
+      From worker 8:	
+      From worker 8:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 8:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 8:	ERROR: Method overwriting is not permitted during Module precompilation. Use `__precompile__(false)` to opt-out of precompilation.
+      From worker 8:	
+      From worker 8:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 22:	Set parameter LicenseID to value 197246
+      From worker 22:	Set parameter GURO_PAR_SPECIAL
+      From worker 22:	Set parameter TokenServer to value "license.rc.princeton.edu"
+      From worker 8:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 8:	WARNING: Method definition to_floats_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:38 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:60.
+      From worker 12:	
+      From worker 12:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 12:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 12:	ERROR: Method overwriting is not permitted during Module precompilation. Use `__precompile__(false)` to opt-out of precompilation.
+      From worker 12:	
+      From worker 12:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 8:	Set parameter LicenseID to value 197246
+      From worker 8:	Set parameter GURO_PAR_SPECIAL
+      From worker 8:	Set parameter TokenServer to value "license.rc.princeton.edu"
+      From worker 12:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 12:	WARNING: Method definition to_floats_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:38 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:60.
+      From worker 18:	
+      From worker 18:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 18:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 18:	ERROR: Method overwriting is not permitted during Module precompilation. Use `__precompile__(false)` to opt-out of precompilation.
+      From worker 18:	
+      From worker 18:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 12:	Set parameter LicenseID to value 197246
+      From worker 12:	Set parameter GURO_PAR_SPECIAL
+      From worker 12:	Set parameter TokenServer to value "license.rc.princeton.edu"
+      From worker 18:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 18:	WARNING: Method definition to_floats_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:38 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:60.
+      From worker 17:	
+      From worker 17:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 17:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 17:	ERROR: Method overwriting is not permitted during Module precompilation. Use `__precompile__(false)` to opt-out of precompilation.
+      From worker 17:	
+      From worker 17:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 18:	Set parameter LicenseID to value 197246
+      From worker 18:	Set parameter GURO_PAR_SPECIAL
+      From worker 18:	Set parameter TokenServer to value "license.rc.princeton.edu"
+      From worker 17:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 17:	WARNING: Method definition to_floats_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:38 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:60.
+      From worker 15:	
+      From worker 15:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 15:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 15:	ERROR: Method overwriting is not permitted during Module precompilation. Use `__precompile__(false)` to opt-out of precompilation.
+      From worker 15:	
+      From worker 15:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 17:	Set parameter LicenseID to value 197246
+      From worker 17:	Set parameter GURO_PAR_SPECIAL
+      From worker 17:	Set parameter TokenServer to value "license.rc.princeton.edu"
+      From worker 15:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 15:	WARNING: Method definition to_floats_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:38 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:60.
+      From worker 21:	
+      From worker 21:	libgomp: Invalid value for environment variable OMP_NUM_THREADS: invalid
+      From worker 21:	WARNING: Method definition as_vector_cand(Symbol) in module GenX at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:37 overwritten at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:59.
+      From worker 21:	ERROR: Method overwriting is not permitted during Module precompilation. Use `__precompile__(false)` to opt-out of precompilation.
+      From worker 21:	
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: struct Node does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems ~/.julia/packages/InfrastructureSystems/XTDUH/src/validation.jl:51
+┌ Warning: Technologies of type ROR are not currently supported in portfolios. Skipping serialization.
+└ @ PowerSystemsInvestmentsPortfolios /scratch/gpfs/dc0173/git/forked/Mike/Benders-PSIP-GenX/PSIP-GenX/PowerSystemsInvestmentsPortfolios.jl/src/db_parser.jl:543
+┌ Warning: Technologies of type ROR are not currently supported in portfolios. Skipping serialization.
+└ @ PowerSystemsInvestmentsPortfolios /scratch/gpfs/dc0173/git/forked/Mike/Benders-PSIP-GenX/PSIP-GenX/PowerSystemsInvestmentsPortfolios.jl/src/db_parser.jl:543
+┌ Warning: Technologies of type ROR are not currently supported in portfolios. Skipping serialization.
+└ @ PowerSystemsInvestmentsPortfolios /scratch/gpfs/dc0173/git/forked/Mike/Benders-PSIP-GenX/PSIP-GenX/PowerSystemsInvestmentsPortfolios.jl/src/db_parser.jl:543
+┌ Warning: Technologies of type HYDRO are not currently supported in portfolios. Skipping serialization.
+└ @ PowerSystemsInvestmentsPortfolios /scratch/gpfs/dc0173/git/forked/Mike/Benders-PSIP-GenX/PSIP-GenX/PowerSystemsInvestmentsPortfolios.jl/src/db_parser.jl:543
+┌ Warning: Technologies of type HYDRO are not currently supported in portfolios. Skipping serialization.
+└ @ PowerSystemsInvestmentsPortfolios /scratch/gpfs/dc0173/git/forked/Mike/Benders-PSIP-GenX/PSIP-GenX/PowerSystemsInvestmentsPortfolios.jl/src/db_parser.jl:543
+┌ Warning: Technologies of type HYDRO are not currently supported in portfolios. Skipping serialization.
+└ @ PowerSystemsInvestmentsPortfolios /scratch/gpfs/dc0173/git/forked/Mike/Benders-PSIP-GenX/PSIP-GenX/PowerSystemsInvestmentsPortfolios.jl/src/db_parser.jl:543
+┌ Warning: Technologies of type SYNC_COND are not currently supported in portfolios. Skipping serialization.
+└ @ PowerSystemsInvestmentsPortfolios /scratch/gpfs/dc0173/git/forked/Mike/Benders-PSIP-GenX/PSIP-GenX/PowerSystemsInvestmentsPortfolios.jl/src/db_parser.jl:543
+┌ Warning: Technologies of type SYNC_COND are not currently supported in portfolios. Skipping serialization.
+└ @ PowerSystemsInvestmentsPortfolios /scratch/gpfs/dc0173/git/forked/Mike/Benders-PSIP-GenX/PSIP-GenX/PowerSystemsInvestmentsPortfolios.jl/src/db_parser.jl:543
+┌ Warning: Technologies of type SYNC_COND are not currently supported in portfolios. Skipping serialization.
+└ @ PowerSystemsInvestmentsPortfolios /scratch/gpfs/dc0173/git/forked/Mike/Benders-PSIP-GenX/PSIP-GenX/PowerSystemsInvestmentsPortfolios.jl/src/db_parser.jl:543
+┌ Warning: Data for branch Line: C31-2 rating is 2.374607988997963e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: B8 rating is 3.412020657109672e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: B26 rating is 4.760469034455994e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: A32-2 rating is 3.657407250406044e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: CA-1 rating is 8.867813027719716e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: A5 rating is 6.300344465579037e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: B34 rating is 6.223381904101945e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: B19 rating is 3.837530225455093e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: B31-2 rating is 2.374607988997963e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C30 rating is 9.61086374062237e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: B27 rating is 2.374607988997963e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: A21 rating is 8.867813027719716e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: A32-1 rating is 3.657407250406044e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: B29 rating is 1.2831033435361165e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: A18 rating is 4.388888700487253e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C5 rating is 6.300344465579037e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C13-2 rating is 5.414608693800843e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C24 rating is 1.5530321595619228e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C28 rating is 2.104445953599351e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: A29 rating is 1.2831033435361165e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: A3 rating is 2.7881344079821245e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: AB1 rating is 5.283685352123944e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: AB2 rating is 6.864902671873121e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C27 rating is 2.374607988997963e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C35 rating is 1.1791154813007058e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: A25-1 rating is 4.4789313242679405e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: B5 rating is 6.300344465579037e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: B2 rating is 6.924233044189996e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: B31-1 rating is 2.374607988997963e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C20 rating is 4.388888700487253e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: B23 rating is 5.372205222633732e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: A28 rating is 2.104445953599351e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: A19 rating is 3.837530225455093e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C9 rating is 2.8883259047372405e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C1 rating is 4.546650943344775e14 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C2 rating is 6.924233044189996e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: B25-1 rating is 4.4789313242679405e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: A9 rating is 2.8883259047372405e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C11 rating is 2.0025920082033372e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C19 rating is 3.837530225455093e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C23 rating is 5.372205222633732e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C25-1 rating is 4.4789313242679405e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C32-2 rating is 3.657407250406044e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: B20 rating is 4.388888700487253e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: B9 rating is 2.8883259047372405e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C25-2 rating is 4.4789313242679405e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C12-1 rating is 5.414608693800843e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: A27 rating is 2.374607988997963e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: C21 rating is 8.867813027719716e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+┌ Warning: Data for branch Line: A34 rating is 6.223381904101945e15 times larger than the base MVA for the system
+└ @ PowerSystems ~/.julia/packages/PowerSystems/AHyDB/src/utils/IO/branchdata_checks.jl:102
+  Activating project at `/scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX`
+[ Info: Loading inputs from portfolio
+┌ Warning: Because the DC_OPF flag is active, GenX will not allow any transmission capacity expansion. Set the DC_OPF flag to 0 if you want to optimize tranmission capacity expansion.
+└ @ GenX /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_network_data.jl:385
+┌ Warning: DAY_AHEAD_regional_Load.csv not found at /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/example_systems/DAY_AHEAD_regional_Load.csv. Skipping demand validation.
+└ @ GenX /scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX/src/load_inputs/load_demand_data.jl:359
+[ Info: 122_WIND_1 Successfully Read.
+[ Info: 324_PV_3 Successfully Read.
+[ Info: 312_PV_1 Successfully Read.
+[ Info: CSP14 Successfully Read.
+[ Info: 102_PV_1 Successfully Read.
+[ Info: 101_PV_1 Successfully Read.
+[ Info: 324_PV_2 Successfully Read.
+[ Info: 313_PV_2 Successfully Read.
+[ Info: RTPV20 Successfully Read.
+[ Info: 104_PV_1 Successfully Read.
+[ Info: WIND16 Successfully Read.
+[ Info: 101_PV_2 Successfully Read.
+[ Info: CSP15 Successfully Read.
+[ Info: WIND18 Successfully Read.
+[ Info: 309_WIND_1 Successfully Read.
+[ Info: 310_PV_2 Successfully Read.
+[ Info: PV12 Successfully Read.
+[ Info: 113_PV_1 Successfully Read.
+[ Info: 317_WIND_1 Successfully Read.
+[ Info: PV11 Successfully Read.
+[ Info: 314_PV_1 Successfully Read.
+[ Info: 324_PV_1 Successfully Read.
+[ Info: 103_PV_1 Successfully Read.
+[ Info: RTPV21 Successfully Read.
+[ Info: 212_CSP_1 Successfully Read.
+[ Info: RTPV19 Successfully Read.
+[ Info: 303_WIND_1 Successfully Read.
+[ Info: 314_PV_2 Successfully Read.
+[ Info: WIND17 Successfully Read.
+[ Info: 102_PV_2 Successfully Read.
+[ Info: 314_PV_3 Successfully Read.
+[ Info: 320_PV_1 Successfully Read.
+[ Info: 101_PV_3 Successfully Read.
+[ Info: 319_PV_1 Successfully Read.
+[ Info: PV10 Successfully Read.
+[ Info: CSP13 Successfully Read.
+[ Info: 314_PV_4 Successfully Read.
+[ Info: 310_PV_1 Successfully Read.
+[ Info: 215_PV_1 Successfully Read.
+[ Info: 313_PV_1 Successfully Read.
+[ Info: 101_PV_4 Successfully Read.
+[ Info: 119_PV_1 Successfully Read.
+[ Info: 322_CT_6 Successfully Read.
+[ Info: STEAM30 Successfully Read.
+[ Info: 321_CC_1 Successfully Read.
+[ Info: 202_STEAM_3 Successfully Read.
+[ Info: CT36 Successfully Read.
+[ Info: 315_STEAM_1 Successfully Read.
+[ Info: 223_CT_4 Successfully Read.
+[ Info: 123_STEAM_2 Successfully Read.
+[ Info: 213_CT_1 Successfully Read.
+[ Info: 223_CT_6 Successfully Read.
+[ Info: 313_CC_1 Successfully Read.
+[ Info: CT26 Successfully Read.
+[ Info: 202_CT_2 Successfully Read.
+[ Info: 101_STEAM_3 Successfully Read.
+[ Info: 302_CT_1 Successfully Read.
+[ Info: 123_CT_1 Successfully Read.
+[ Info: STEAM29 Successfully Read.
+[ Info: CT35 Successfully Read.
+[ Info: 113_CT_3 Successfully Read.
+[ Info: 302_CT_3 Successfully Read.
+[ Info: NUCLEAR42 Successfully Read.
+[ Info: 215_CT_4 Successfully Read.
+[ Info: 102_STEAM_3 Successfully Read.
+[ Info: 301_CT_4 Successfully Read.
+[ Info: 202_CT_1 Successfully Read.
+[ Info: 113_CT_2 Successfully Read.
+[ Info: 221_CC_1 Successfully Read.
+[ Info: 223_CT_5 Successfully Read.
+[ Info: 315_CT_7 Successfully Read.
+[ Info: CC33 Successfully Read.
+[ Info: 215_CT_5 Successfully Read.
+[ Info: 323_CC_1 Successfully Read.
+[ Info: 101_STEAM_4 Successfully Read.
+[ Info: 113_CT_1 Successfully Read.
+[ Info: 223_STEAM_3 Successfully Read.
+[ Info: 318_CC_1 Successfully Read.
+[ Info: 307_CT_2 Successfully Read.
+[ Info: 213_CT_2 Successfully Read.
+[ Info: NUCLEAR41 Successfully Read.
+[ Info: 113_CT_4 Successfully Read.
+[ Info: 315_STEAM_3 Successfully Read.
+[ Info: 118_CC_1 Successfully Read.
+[ Info: 315_CT_8 Successfully Read.
+[ Info: 302_CT_2 Successfully Read.
+[ Info: 218_CC_1 Successfully Read.
+[ Info: STEAM38 Successfully Read.
+[ Info: CT27 Successfully Read.
+[ Info: 213_CC_3 Successfully Read.
+[ Info: 115_STEAM_3 Successfully Read.
+[ Info: 323_CC_2 Successfully Read.
+[ Info: 101_CT_1 Successfully Read.
+[ Info: 115_STEAM_2 Successfully Read.
+[ Info: STEAM37 Successfully Read.
+[ Info: 101_CT_2 Successfully Read.
+[ Info: 322_CT_5 Successfully Read.
+[ Info: CC32 Successfully Read.
+[ Info: 315_STEAM_5 Successfully Read.
+[ Info: 207_CT_2 Successfully Read.
+[ Info: 123_STEAM_3 Successfully Read.
+[ Info: 223_STEAM_1 Successfully Read.
+[ Info: 123_CT_5 Successfully Read.
+[ Info: STEAM39 Successfully Read.
+[ Info: 301_CT_1 Successfully Read.
+[ Info: 223_STEAM_2 Successfully Read.
+[ Info: 202_STEAM_4 Successfully Read.
+[ Info: 116_STEAM_1 Successfully Read.
+[ Info: 315_STEAM_4 Successfully Read.
+[ Info: 115_STEAM_1 Successfully Read.
+[ Info: 315_STEAM_2 Successfully Read.
+[ Info: 121_NUCLEAR_1 Successfully Read.
+[ Info: 102_CT_2 Successfully Read.
+[ Info: NUCLEAR40 Successfully Read.
+[ Info: 123_CT_4 Successfully Read.
+[ Info: STEAM28 Successfully Read.
+[ Info: CT25 Successfully Read.
+[ Info: 207_CT_1 Successfully Read.
+[ Info: 301_CT_3 Successfully Read.
+[ Info: 316_STEAM_1 Successfully Read.
+[ Info: 102_CT_1 Successfully Read.
+[ Info: 216_STEAM_1 Successfully Read.
+[ Info: 315_CT_6 Successfully Read.
+[ Info: 201_CT_2 Successfully Read.
+[ Info: 201_STEAM_3 Successfully Read.
+[ Info: 201_CT_1 Successfully Read.
+[ Info: 301_CT_2 Successfully Read.
+[ Info: 302_CT_4 Successfully Read.
+[ Info: CT34 Successfully Read.
+[ Info: 307_CT_1 Successfully Read.
+[ Info: 102_STEAM_4 Successfully Read.
+[ Info: CC31 Successfully Read.
+[ Info: 107_CC_1 Successfully Read.
+[ Info: 313_RTPV_1 Successfully Read.
+[ Info: 320_RTPV_2 Successfully Read.
+[ Info: 213_RTPV_1 Successfully Read.
+[ Info: 313_RTPV_9 Successfully Read.
+[ Info: 313_RTPV_2 Successfully Read.
+[ Info: 313_RTPV_7 Successfully Read.
+[ Info: 320_RTPV_3 Successfully Read.
+[ Info: 308_RTPV_1 Successfully Read.
+[ Info: 313_RTPV_4 Successfully Read.
+[ Info: 313_RTPV_5 Successfully Read.
+[ Info: 313_RTPV_6 Successfully Read.
+[ Info: 320_RTPV_1 Successfully Read.
+[ Info: 320_RTPV_6 Successfully Read.
+[ Info: 320_RTPV_5 Successfully Read.
+[ Info: 118_RTPV_2 Successfully Read.
+Set parameter LicenseID to value 197246
+Set parameter GURO_PAR_SPECIAL
+Set parameter TokenServer to value "license.rc.princeton.edu"
+Set parameter TimeLimit to value 72000
+Set parameter MIPGap to value 0.001
+Set parameter MIPGap to value 0.001
+Set parameter TimeLimit to value 72000
+Gurobi Optimizer version 12.0.3 build v12.0.3rc0 (linux64 - "Red Hat Enterprise Linux 9.6 (Plow)")
+
+CPU model: AMD EPYC 9654 96-Core Processor, instruction set [SSE2|AVX|AVX2|AVX512]
+Thread count: 192 physical cores, 192 logical processors, using up to 32 threads
+
+Non-default parameters:
+TimeLimit  72000
+MIPGap  0.001
+
+Optimize a model with 10291188 rows, 7168205 columns and 30880872 nonzeros
+Model fingerprint: 0xaa7a41bd
+Variable types: 7168085 continuous, 120 integer (120 binary)
+Coefficient statistics:
+  Matrix range     [1e-04, 8e+04]
+  Objective range  [8e-01, 3e+06]
+  Bounds range     [8e-01, 1e+02]
+  RHS range        [1e-03, 1e+08]
+Presolve removed 3482394 rows and 3761959 columns (presolve time = 5s)...
+Presolve removed 3482394 rows and 3784787 columns (presolve time = 10s)...
+Presolve removed 3540270 rows and 3840479 columns (presolve time = 15s)...
+Presolve removed 3619986 rows and 3851296 columns (presolve time = 20s)...
+Presolve removed 3621078 rows and 3851296 columns (presolve time = 26s)...
+Presolve removed 3622169 rows and 3852387 columns (presolve time = 30s)...
+Presolve removed 3622170 rows and 3858843 columns (presolve time = 35s)...
+Presolve removed 3622170 rows and 3858843 columns (presolve time = 40s)...
+Presolve removed 4274841 rows and 4253811 columns (presolve time = 45s)...
+Presolve removed 4274841 rows and 4253811 columns (presolve time = 50s)...
+Presolve removed 4274841 rows and 4253811 columns (presolve time = 55s)...
+Presolve removed 4274841 rows and 4253811 columns (presolve time = 60s)...
+Presolve removed 4274841 rows and 4253811 columns (presolve time = 65s)...
+Presolve removed 4274841 rows and 4253811 columns (presolve time = 70s)...
+Presolve removed 4274841 rows and 4253811 columns (presolve time = 75s)...
+Presolve removed 4274841 rows and 4253811 columns (presolve time = 81s)...
+Presolve removed 4274841 rows and 4253811 columns
+Presolve time: 81.78s
+Presolved: 6016347 rows, 2914394 columns, 21800173 nonzeros
+Variable types: 2914274 continuous, 120 integer (120 binary)
+
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Elapsed ordering time = 5s
+Elapsed ordering time = 16s
+Ordering time: 65.21s
+
+Barrier statistics:
+ Dense cols : 307
+ AA' NZ     : 4.874e+07
+ Factor NZ  : 5.516e+08 (roughly 8.0 GB of memory)
+ Factor Ops : 7.344e+11 (roughly 2 seconds per iteration)
+ Threads    : 29
+
+                  Objective                Residual
+Iter       Primal          Dual         Primal    Dual     Compl     Time
+   0   8.93484840e+18 -1.45233187e+19  9.07e+09 9.61e+03  1.73e+14   192s
+   1   6.18348247e+18 -5.00283226e+18  6.11e+09 7.11e+05  1.07e+14   195s
+   2   4.94030442e+18 -4.04536817e+18  4.84e+09 6.56e+05  8.37e+13   199s
+   3   3.17403562e+18 -3.74870423e+18  3.09e+09 9.19e+05  5.35e+13   203s
+   4   2.78628106e+17 -2.95239046e+18  2.32e+08 8.63e+05  4.29e+12   208s
+   5   9.21112931e+16 -8.14798551e+17  4.94e+07 1.54e+08  9.27e+11   210s
+   6   3.78956840e+16 -5.43748050e+17  6.89e+06 1.49e+08  1.70e+11   213s
+   7   1.66307348e+16 -5.50688248e+16  7.13e+05 1.38e+07  1.94e+10   218s
+   8   1.80405211e+15 -1.12793594e+16  3.68e+03 2.62e+06  1.24e+09   224s
+   9   5.36427709e+14 -2.14702205e+15  4.85e+02 5.27e+05  2.54e+08   230s
+  10   3.06675052e+14 -1.35200395e+15  7.89e+01 3.45e+05  1.51e+08   234s
+  11   2.34251994e+14 -8.50675549e+14  1.34e+01 2.29e+05  9.80e+07   240s
+  12   1.78458171e+14 -3.95651390e+14  3.79e+00 1.18e+05  5.18e+07   244s
+  13   6.71667467e+13 -4.49480377e+13  8.53e-01 1.69e+04  1.01e+07   249s
+  14   1.08480039e+13 -8.18137974e+12  1.35e-01 2.41e+03  1.71e+06   256s
+  15   5.53015790e+12 -2.66261455e+12  6.93e-02 6.59e+02  7.37e+05   262s
+  16   2.01191153e+12 -1.07434250e+12  2.51e-02 2.36e+02  2.78e+05   267s
+  17   5.69770274e+11 -3.37848031e+11  7.04e-03 6.27e+01  8.16e+04   271s
+  18   2.90155625e+11 -1.81466118e+11  3.56e-03 3.14e+01  4.24e+04   275s
+  19   7.26982105e+10 -1.11456456e+11  8.71e-04 1.86e+01  1.66e+04   280s
+  20   4.46643645e+10 -5.08777165e+10  5.28e-04 8.57e+00  8.59e+03   287s
+  21   2.76527101e+10 -3.58548449e+10  3.30e-04 6.09e+00  5.71e+03   292s
+  22   1.63596776e+10 -3.09586811e+10  1.91e-04 5.22e+00  4.25e+03   295s
+  23   8.75766624e+09 -2.46534264e+10  9.90e-05 4.17e+00  3.00e+03   299s
+  24   6.40001993e+09 -1.95399967e+10  7.01e-05 3.31e+00  2.33e+03   302s
+  25   4.80170656e+09 -1.40501219e+10  5.10e-05 2.40e+00  1.69e+03   307s
+  26   3.52535682e+09 -1.18955508e+10  3.61e-05 2.05e+00  1.39e+03   312s
+  27   2.98242014e+09 -9.11558300e+09  3.01e-05 1.59e+00  1.09e+03   317s
+  28   2.33298196e+09 -8.14054240e+09  2.27e-05 1.43e+00  9.41e+02   323s
+  29   1.79167881e+09 -6.73723827e+09  1.60e-05 1.21e+00  7.67e+02   329s
+  30   1.57087164e+09 -4.99812774e+09  1.33e-05 9.29e-01  5.91e+02   335s
+  31   1.41306880e+09 -3.72935910e+09  1.09e-05 7.19e-01  4.62e+02   341s
+  32   1.34665566e+09 -3.14995280e+09  9.89e-06 6.27e-01  4.04e+02   348s
+  33   1.15237023e+09 -2.65971411e+09  6.88e-06 5.49e-01  3.43e+02   354s
+  34   1.07262846e+09 -2.40852921e+09  5.65e-06 5.09e-01  3.13e+02   359s
+  35   9.95021592e+08 -1.93629737e+09  4.46e-06 4.31e-01  2.64e+02   366s
+  36   9.72231709e+08 -1.79347796e+09  4.04e-06 4.08e-01  2.49e+02   370s
+  37   9.47747268e+08 -1.45049744e+09  3.56e-06 3.53e-01  2.16e+02   375s
+  38   9.28034283e+08 -1.16495941e+09  3.07e-06 3.09e-01  1.88e+02   381s
+  39   9.09124258e+08 -9.75043494e+08  2.66e-06 2.79e-01  1.69e+02   387s
+  40   8.94568605e+08 -6.00062393e+08  2.38e-06 2.23e-01  1.34e+02   393s
+  41   8.82075931e+08 -4.77177110e+08  2.13e-06 2.02e-01  1.22e+02   398s
+  42   8.73260874e+08 -3.76390880e+08  1.93e-06 1.85e-01  1.12e+02   404s
+  43   8.58576279e+08 -2.28955260e+08  1.64e-06 1.60e-01  9.78e+01   408s
+  44   8.44675459e+08 -8.45250112e+07  1.37e-06 1.39e-01  8.35e+01   414s
+  45   8.36542060e+08  7.45834598e+07  1.23e-06 1.13e-01  6.85e+01   421s
+  46   8.29640111e+08  1.96193674e+08  1.12e-06 9.29e-02  5.69e+01   427s
+  47   8.24103153e+08  2.69922045e+08  1.02e-06 8.06e-02  4.98e+01   433s
+  48   8.16000935e+08  3.22169096e+08  1.74e-06 7.16e-02  4.44e+01   439s
+  49   8.10852582e+08  3.63174541e+08  2.29e-06 6.45e-02  4.02e+01   444s
+  50   8.03505698e+08  4.02631714e+08  3.35e-06 5.78e-02  3.60e+01   451s
+  51   7.99003142e+08  4.43344356e+08  3.97e-05 5.12e-02  3.20e+01   457s
+  52   7.94203526e+08  4.90099632e+08  1.45e-04 4.37e-02  2.73e+01   462s
+  53   7.91253727e+08  5.29356689e+08  1.46e-04 3.73e-02  2.35e+01   468s
+  54   7.86956847e+08  5.52810046e+08  1.75e-04 3.34e-02  2.10e+01   472s
+  55   7.83801582e+08  5.70695438e+08  1.79e-04 3.04e-02  1.92e+01   478s
+  56   7.81004957e+08  5.84642141e+08  1.73e-04 2.80e-02  1.77e+01   484s
+  57   7.77344237e+08  6.08681978e+08  1.56e-04 2.39e-02  1.52e+01   490s
+  58   7.75457700e+08  6.18719235e+08  1.46e-04 2.23e-02  1.41e+01   496s
+  59   7.72590753e+08  6.35810818e+08  1.28e-04 1.94e-02  1.23e+01   502s
+  60   7.70766507e+08  6.42744518e+08  1.18e-04 1.83e-02  1.15e+01   508s
+  61   7.69629883e+08  6.59386081e+08  1.09e-04 1.56e-02  9.91e+00   513s
+  62   7.68073032e+08  6.65660975e+08  1.66e-04 1.45e-02  9.21e+00   519s
+  63   7.66184119e+08  6.76446046e+08  1.80e-04 1.26e-02  8.07e+00   524s
+  64   7.64497432e+08  6.82293241e+08  2.01e-04 1.17e-02  7.39e+00   530s
+  65   7.63499105e+08  6.92128502e+08  1.92e-04 1.00e-02  6.42e+00   535s
+  66   7.62214643e+08  7.00832606e+08  1.95e-04 8.53e-03  5.52e+00   540s
+  67   7.61210299e+08  7.08619846e+08  1.60e-04 7.20e-03  4.73e+00   546s
+  68   7.60455375e+08  7.11958395e+08  1.81e-04 6.62e-03  4.36e+00   551s
+  69   7.59924519e+08  7.12894614e+08  1.93e-04 6.47e-03  4.23e+00   559s
+  70   7.59080024e+08  7.17767495e+08  2.04e-04 5.64e-03  3.71e+00   566s
+  71   7.58225291e+08  7.20499663e+08  2.08e-04 5.17e-03  3.39e+00   573s
+  72   7.57391293e+08  7.25977781e+08  2.13e-04 4.23e-03  2.82e+00   581s
+  73   7.56880786e+08  7.30802630e+08  2.00e-04 3.40e-03  2.34e+00   592s
+  74   7.55669426e+08  7.34707630e+08  1.87e-04 2.74e-03  1.88e+00   601s
+  75   7.54882915e+08  7.37081169e+08  1.91e-04 2.33e-03  1.60e+00   614s
+  76   7.54268979e+08  7.38997284e+08  1.92e-04 1.99e-03  1.37e+00   625s
+  77   7.53891036e+08  7.40998433e+08  1.99e-04 1.64e-03  1.16e+00   640s
+  78   7.53324769e+08  7.43386474e+08  2.18e-04 1.22e-03  8.93e-01   654s
+  79   7.53103188e+08  7.44169691e+08  2.36e-04 1.08e-03  8.03e-01   668s
+  80   7.52962225e+08  7.44545473e+08  2.48e-04 1.02e-03  7.57e-01   683s
+  81   7.52693397e+08  7.45266761e+08  2.71e-04 8.96e-04  6.68e-01   698s
+  82   7.52575469e+08  7.45745499e+08  2.81e-04 8.14e-04  6.14e-01   714s
+  83   7.52365024e+08  7.46087167e+08  3.07e-04 7.56e-04  5.64e-01   734s
+  84   7.52114506e+08  7.46742547e+08  3.90e-04 6.41e-04  4.83e-01   754s
+  85   7.52006057e+08  7.47000106e+08  4.02e-04 5.96e-04  4.50e-01   768s
+  86   7.51830133e+08  7.47649071e+08  4.16e-04 4.87e-04  3.76e-01   790s
+  87   7.51641267e+08  7.48265346e+08  3.89e-04 3.78e-04  3.03e-01   811s
+  88   7.51549923e+08  7.48633083e+08  3.61e-04 3.09e-04  2.62e-01   832s
+  89   7.51432668e+08  7.48938663e+08  3.24e-04 2.57e-04  2.24e-01   854s
+  90   7.51240181e+08  7.49470356e+08  9.07e-04 1.65e-04  1.59e-01   875s
+  91   7.51064998e+08  7.49755400e+08  7.92e-04 1.16e-04  1.18e-01   888s
+  92   7.51004617e+08  7.49910687e+08  7.56e-04 9.08e-05  9.83e-02   909s
+  93   7.50867219e+08  7.50027656e+08  9.52e-04 7.17e-05  7.55e-02   930s
+  94   7.50792628e+08  7.50039685e+08  1.70e-03 6.97e-05  6.77e-02   947s
+  95   7.50747680e+08  7.50159809e+08  2.13e-03 4.92e-05  5.29e-02   967s
+  96   7.50727679e+08  7.50203996e+08  2.09e-03 4.18e-05  4.71e-02   989s
+  97   7.50677822e+08  7.50232377e+08  2.04e-03 3.69e-05  4.01e-02  1005s
+  98   7.50631208e+08  7.50240815e+08  1.97e-03 3.55e-05  3.51e-02  1016s
+  99   7.50618483e+08  7.50278368e+08  1.93e-03 2.93e-05  3.06e-02  1030s
+ 100   7.50567649e+08  7.50348107e+08  1.91e-03 1.75e-05  1.97e-02  1043s
+ 101   7.50561194e+08  7.50353934e+08  1.91e-03 1.66e-05  1.86e-02  1063s
+ 102   7.50547415e+08  7.50358033e+08  1.96e-03 1.59e-05  1.70e-02  1079s
+ 103   7.50542041e+08  7.50366462e+08  2.08e-03 1.45e-05  1.58e-02  1098s
+ 104   7.50538053e+08  7.50376156e+08  2.14e-03 1.29e-05  1.46e-02  1120s
+ 105   7.50532695e+08  7.50384788e+08  2.06e-03 1.15e-05  1.33e-02  1137s
+ 106   7.50525261e+08  7.50393139e+08  1.94e-03 1.02e-05  1.19e-02  1157s
+ 107   7.50522507e+08  7.50409149e+08  1.86e-03 7.51e-06  1.02e-02  1172s
+ 108   7.50503948e+08  7.50420929e+08  1.44e-03 5.53e-06  7.47e-03  1187s
+ 109   7.50500936e+08  7.50423822e+08  1.36e-03 5.07e-06  6.94e-03  1209s
+ 110   7.50499126e+08  7.50425386e+08  1.32e-03 4.82e-06  6.64e-03  1228s
+ 111   7.50495757e+08  7.50427150e+08  1.23e-03 4.54e-06  6.17e-03  1248s
+ 112   7.50492632e+08  7.50429288e+08  1.15e-03 4.20e-06  5.70e-03  1261s
+ 113   7.50490696e+08  7.50432936e+08  1.11e-03 3.62e-06  5.20e-03  1272s
+ 114   7.50489045e+08  7.50435292e+08  1.07e-03 3.23e-06  4.84e-03  1285s
+ 115   7.50483476e+08  7.50437873e+08  9.01e-04 2.82e-06  4.10e-03  1303s
+ 116   7.50480699e+08  7.50438158e+08  8.15e-04 2.77e-06  3.83e-03  1323s
+ 117   7.50480384e+08  7.50438703e+08  8.05e-04 2.68e-06  3.75e-03  1335s
+ 118   7.50477888e+08  7.50439355e+08  7.30e-04 2.58e-06  3.47e-03  1356s
+ 119   7.50476683e+08  7.50442697e+08  6.91e-04 2.05e-06  3.06e-03  1371s
+ 120   7.50472980e+08  7.50444273e+08  5.81e-04 1.81e-06  2.58e-03  1387s
+ 121   7.50467269e+08  7.50447393e+08  4.15e-04 1.33e-06  1.79e-03  1405s
+ 122   7.50457085e+08  7.50454894e+08  3.35e-05 1.01e-07  1.97e-04  1419s
+ 123   7.50456460e+08  7.50455304e+08  1.56e-05 6.00e-08  1.04e-04  1430s
+
+Barrier solved model in 123 iterations and 1429.68 seconds (1970.68 work units)
+Optimal objective 7.50456460e+08
+
+
+Root crossover log...
+
+ 1417056 DPushes remaining with DInf 0.0000000e+00              1433s
+  350320 DPushes remaining with DInf 0.0000000e+00              1439s
+  161442 DPushes remaining with DInf 0.0000000e+00              1444s
+   83255 DPushes remaining with DInf 0.0000000e+00              1448s
+   62468 DPushes remaining with DInf 0.0000000e+00              1450s
+   57880 DPushes remaining with DInf 0.0000000e+00              1455s
+   56640 DPushes remaining with DInf 0.0000000e+00              1467s
+   55516 DPushes remaining with DInf 0.0000000e+00              1478s
+   54392 DPushes remaining with DInf 0.0000000e+00              1490s
+   53268 DPushes remaining with DInf 0.0000000e+00              1502s
+   52136 DPushes remaining with DInf 0.0000000e+00              1510s
+   51012 DPushes remaining with DInf 0.0000000e+00              1517s
+   49888 DPushes remaining with DInf 0.0000000e+00              1525s
+   48764 DPushes remaining with DInf 0.0000000e+00              1535s
+   46508 DPushes remaining with DInf 0.0000000e+00              1544s
+   45384 DPushes remaining with DInf 0.0000000e+00              1548s
+   44260 DPushes remaining with DInf 0.0000000e+00              1552s
+   43135 DPushes remaining with DInf 0.0000000e+00              1556s
+   42011 DPushes remaining with DInf 0.0000000e+00              1560s
+   40887 DPushes remaining with DInf 0.0000000e+00              1565s
+   38639 DPushes remaining with DInf 0.0000000e+00              1575s
+   37515 DPushes remaining with DInf 0.0000000e+00              1580s
+   36391 DPushes remaining with DInf 0.0000000e+00              1586s
+   35267 DPushes remaining with DInf 0.0000000e+00              1596s
+   34143 DPushes remaining with DInf 0.0000000e+00              1618s
+   33019 DPushes remaining with DInf 0.0000000e+00              1642s
+   31895 DPushes remaining with DInf 0.0000000e+00              1668s
+   30771 DPushes remaining with DInf 0.0000000e+00              1693s
+   29801 DPushes remaining with DInf 0.0000000e+00              1724s
+   28677 DPushes remaining with DInf 0.0000000e+00              1748s
+   27553 DPushes remaining with DInf 0.0000000e+00              1764s
+   26429 DPushes remaining with DInf 0.0000000e+00              1781s
+   25305 DPushes remaining with DInf 0.0000000e+00              1797s
+   24181 DPushes remaining with DInf 0.0000000e+00              1810s
+   23057 DPushes remaining with DInf 0.0000000e+00              1824s
+   21933 DPushes remaining with DInf 0.0000000e+00              1833s
+   20809 DPushes remaining with DInf 0.0000000e+00              1837s
+   19685 DPushes remaining with DInf 0.0000000e+00              1840s
+   17390 DPushes remaining with DInf 0.0000000e+00              1851s
+   16266 DPushes remaining with DInf 0.0000000e+00              1865s
+   15142 DPushes remaining with DInf 0.0000000e+00              1878s
+   14018 DPushes remaining with DInf 0.0000000e+00              1892s
+   12894 DPushes remaining with DInf 0.0000000e+00              1916s
+   12014 DPushes remaining with DInf 0.0000000e+00              1942s
+   11134 DPushes remaining with DInf 0.0000000e+00              1966s
+   10264 DPushes remaining with DInf 0.0000000e+00              1995s
+    9384 DPushes remaining with DInf 0.0000000e+00              2022s
+    7945 DPushes remaining with DInf 0.0000000e+00              2029s
+    4757 DPushes remaining with DInf 0.0000000e+00              2032s
+    3745 DPushes remaining with DInf 0.0000000e+00              2060s
+    2945 DPushes remaining with DInf 0.0000000e+00              2082s
+    2085 DPushes remaining with DInf 0.0000000e+00              2109s
+    1295 DPushes remaining with DInf 0.0000000e+00              2130s
+     395 DPushes remaining with DInf 0.0000000e+00              2158s
+       0 DPushes remaining with DInf 0.0000000e+00              2163s
+
+ 1554694 PPushes remaining with PInf 1.6743094e-01              2164s
+  543619 PPushes remaining with PInf 6.2605487e-01              2182s
+  382228 PPushes remaining with PInf 4.9984559e-01              2192s
+  315555 PPushes remaining with PInf 3.1621619e-01              2198s
+  267319 PPushes remaining with PInf 2.5522842e-01              2202s
+  228031 PPushes remaining with PInf 2.5020293e-01              2206s
+  160002 PPushes remaining with PInf 3.2415158e-01              2214s
+  134799 PPushes remaining with PInf 3.4990553e-01              2219s
+  117992 PPushes remaining with PInf 3.6304483e-01              2223s
+  104317 PPushes remaining with PInf 3.6299373e-01              2227s
+   92486 PPushes remaining with PInf 3.4676004e-01              2232s
+   82026 PPushes remaining with PInf 3.2017545e-01              2236s
+   72418 PPushes remaining with PInf 2.9902394e-01              2240s
+   57988 PPushes remaining with PInf 2.5177370e-01              2249s
+   52104 PPushes remaining with PInf 2.3661718e-01              2254s
+   45518 PPushes remaining with PInf 2.1982191e-01              2258s
+   40142 PPushes remaining with PInf 1.9711079e-01              2262s
+   35654 PPushes remaining with PInf 1.7222841e-01              2267s
+   30802 PPushes remaining with PInf 1.4862791e-01              2271s
+   26164 PPushes remaining with PInf 1.2737445e-01              2276s
+   21476 PPushes remaining with PInf 1.0289373e-01              2282s
+   17697 PPushes remaining with PInf 8.1045199e-02              2286s
+   13971 PPushes remaining with PInf 7.3030842e-02              2292s
+   10381 PPushes remaining with PInf 6.0938687e-02              2297s
+    8138 PPushes remaining with PInf 4.7069320e-02              2302s
+       0 PPushes remaining with PInf 0.0000000e+00              2316s
+
+  Push phase complete: Pinf 0.0000000e+00, Dinf 7.2884114e+05   2316s
+
+
+Root simplex log...
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+ 2246104    7.5045592e+08   0.000000e+00   7.288411e+05   2319s
+ 2247228    7.5045591e+08   0.000000e+00   1.211850e+04   2323s
+ 2250834    7.5045591e+08   0.000000e+00   3.670909e+00   2328s
+ 2250984    7.5045591e+08   0.000000e+00   9.523034e-01   2341s
+ 2251124    7.5045591e+08   0.000000e+00   8.458571e-01   2354s
+ 2251264    7.5045591e+08   0.000000e+00   2.073051e+00   2367s
+ 2251404    7.5045591e+08   0.000000e+00   4.201659e+01   2381s
+ 2251511   -2.6739969e+23   5.545532e+34   1.024564e-06   2391s
+ 2251749    7.5045591e+08   0.000000e+00   0.000000e+00   2406s
+ 2252295    8.0071921e+08   5.455069e+02   1.184513e+10   2434s
+ 2252722    8.0032293e+08   1.377427e+02   6.389685e+10   2449s
+ 2252990    7.8025890e+08   4.396077e+01   2.059827e+10   2464s
+ 2253251    7.6496319e+08   2.805558e+00   2.035865e+09   2480s
+ 2253409    7.5522659e+08   1.485323e+00   5.392842e+09   2495s
+ 2253540    7.5054387e+08   8.429368e-03   2.896044e+08   2511s
+ 2253650    7.5051794e+08   0.000000e+00   8.094553e+07   2527s
+ 2253770    7.5050475e+08   0.000000e+00   1.845792e+08   2543s
+Concurrent spin time: 1.57s
+
+Solved with dual simplex
+
+Root relaxation: objective 7.504559e+08, 4129303 iterations, 2456.09 seconds (2284.34 work units)
+Total elapsed time = 2595.31s (DegenMoves)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 7.5046e+08    0   26          - 7.5046e+08      -     - 2601s
+H    0     0                    1.359982e+10 7.5046e+08  94.5%     - 2921s
+H    0     0                    3.924588e+09 7.5046e+08  80.9%     - 3192s
+     0     0 7.5507e+08    0   36 3.9246e+09 7.5507e+08  80.8%     - 4568s
+     0     0 7.5507e+08    0   36 3.9246e+09 7.5507e+08  80.8%     - 4640s
+     0     0 7.5519e+08    0   36 3.9246e+09 7.5519e+08  80.8%     - 5727s
+     0     0 7.5519e+08    0   36 3.9246e+09 7.5519e+08  80.8%     - 5778s
+     0     0 7.5519e+08    0   36 3.9246e+09 7.5519e+08  80.8%     - 5881s
+     0     0 7.5519e+08    0   36 3.9246e+09 7.5519e+08  80.8%     - 5966s
+     0     0 7.5730e+08    0   38 3.9246e+09 7.5730e+08  80.7%     - 6493s
+     0     0 7.5730e+08    0   38 3.9246e+09 7.5730e+08  80.7%     - 6594s
+     0     0 7.6040e+08    0   41 3.9246e+09 7.6040e+08  80.6%     - 7744s
+     0     0 7.6040e+08    0   41 3.9246e+09 7.6040e+08  80.6%     - 8233s
+     0     0 7.6149e+08    0   48 3.9246e+09 7.6149e+08  80.6%     - 8712s
+     0     0 7.6149e+08    0   48 3.9246e+09 7.6149e+08  80.6%     - 8812s
+     0     0 7.6183e+08    0   51 3.9246e+09 7.6183e+08  80.6%     - 9350s
+     0     0 7.6183e+08    0   51 3.9246e+09 7.6183e+08  80.6%     - 9425s
+     0     0 7.6185e+08    0   51 3.9246e+09 7.6185e+08  80.6%     - 9587s
+     0     0 7.6185e+08    0   51 3.9246e+09 7.6185e+08  80.6%     - 9701s
+     0     0 7.6185e+08    0   50 3.9246e+09 7.6185e+08  80.6%     - 9854s
+     0     0 7.6185e+08    0   50 3.9246e+09 7.6185e+08  80.6%     - 9878s
+     0     0 7.6186e+08    0   50 3.9246e+09 7.6186e+08  80.6%     - 10011s
+     0     0 7.6186e+08    0   50 3.9246e+09 7.6186e+08  80.6%     - 11478s
+     0     0 7.6187e+08    0   50 3.9246e+09 7.6187e+08  80.6%     - 11657s
+     0     0 7.6187e+08    0   50 3.9246e+09 7.6187e+08  80.6%     - 11773s
+     0     0 7.6199e+08    0   50 3.9246e+09 7.6199e+08  80.6%     - 12134s
+     0     0 7.6199e+08    0   50 3.9246e+09 7.6199e+08  80.6%     - 12200s
+     0     0 7.6200e+08    0   50 3.9246e+09 7.6200e+08  80.6%     - 12492s
+     0     0 7.6200e+08    0   50 3.9246e+09 7.6200e+08  80.6%     - 12736s
+     0     0 7.6203e+08    0   49 3.9246e+09 7.6203e+08  80.6%     - 13006s
+     0     0 7.6203e+08    0   49 3.9246e+09 7.6203e+08  80.6%     - 13083s
+     0     0 7.6203e+08    0   49 3.9246e+09 7.6203e+08  80.6%     - 14250s
+     0     0 7.6203e+08    0   49 3.9246e+09 7.6203e+08  80.6%     - 14340s
+     0     0 7.6203e+08    0   49 3.9246e+09 7.6203e+08  80.6%     - 14474s
+     0     0 7.6203e+08    0   49 3.9246e+09 7.6203e+08  80.6%     - 14554s
+     0     0 7.6446e+08    0   50 3.9246e+09 7.6446e+08  80.5%     - 16496s
+     0     0 7.6446e+08    0   50 3.9246e+09 7.6446e+08  80.5%     - 16574s
+     0     0 7.6513e+08    0   49 3.9246e+09 7.6513e+08  80.5%     - 21268s
+     0     0 7.6513e+08    0   49 3.9246e+09 7.6513e+08  80.5%     - 21347s
+     0     0 7.6549e+08    0   51 3.9246e+09 7.6549e+08  80.5%     - 21857s
+     0     0 7.6549e+08    0   51 3.9246e+09 7.6549e+08  80.5%     - 21913s
+     0     0 7.6578e+08    0   48 3.9246e+09 7.6578e+08  80.5%     - 22250s
+     0     0 7.6578e+08    0   48 3.9246e+09 7.6578e+08  80.5%     - 22315s
+     0     0 7.6581e+08    0   49 3.9246e+09 7.6581e+08  80.5%     - 22615s
+     0     0 7.6581e+08    0   49 3.9246e+09 7.6581e+08  80.5%     - 22689s
+     0     0 7.6581e+08    0   49 3.9246e+09 7.6581e+08  80.5%     - 23935s
+     0     0 7.6581e+08    0   49 3.9246e+09 7.6581e+08  80.5%     - 24005s
+     0     0 7.6656e+08    0   60 3.9246e+09 7.6656e+08  80.5%     - 25692s
+     0     0 7.6656e+08    0   60 3.9246e+09 7.6656e+08  80.5%     - 25888s
+     0     0 7.6671e+08    0   58 3.9246e+09 7.6671e+08  80.5%     - 32779s
+     0     0 7.6671e+08    0   58 3.9246e+09 7.6671e+08  80.5%     - 32849s
+     0     0 7.6676e+08    0   57 3.9246e+09 7.6676e+08  80.5%     - 33169s
+     0     0 7.6676e+08    0   57 3.9246e+09 7.6676e+08  80.5%     - 33218s
+     0     0 7.6679e+08    0   56 3.9246e+09 7.6679e+08  80.5%     - 33615s
+     0     0 7.6679e+08    0   56 3.9246e+09 7.6679e+08  80.5%     - 33732s
+     0     0 7.6679e+08    0   57 3.9246e+09 7.6679e+08  80.5%     - 34020s
+     0     0 7.6679e+08    0   57 3.9246e+09 7.6679e+08  80.5%     - 34115s
+     0     0 7.6780e+08    0   56 3.9246e+09 7.6780e+08  80.4%     - 34977s
+     0     0 7.6780e+08    0   56 3.9246e+09 7.6780e+08  80.4%     - 35060s
+     0     0 7.6791e+08    0   56 3.9246e+09 7.6791e+08  80.4%     - 35786s
+     0     0 7.6791e+08    0   56 3.9246e+09 7.6791e+08  80.4%     - 35884s
+     0     0 7.6792e+08    0   57 3.9246e+09 7.6792e+08  80.4%     - 36073s
+     0     0 7.6792e+08    0   57 3.9246e+09 7.6792e+08  80.4%     - 36127s
+     0     0 7.6796e+08    0   59 3.9246e+09 7.6796e+08  80.4%     - 36410s
+     0     0 7.6796e+08    0   59 3.9246e+09 7.6796e+08  80.4%     - 37145s
+     0     0 7.6797e+08    0   59 3.9246e+09 7.6797e+08  80.4%     - 37317s
+     0     0 7.6797e+08    0   59 3.9246e+09 7.6797e+08  80.4%     - 37431s
+     0     0 7.6797e+08    0   59 3.9246e+09 7.6797e+08  80.4%     - 37576s
+     0     0 7.6797e+08    0   59 3.9246e+09 7.6797e+08  80.4%     - 37677s
+     0     0 7.6797e+08    0   59 3.9246e+09 7.6797e+08  80.4%     - 37882s
+     0     0 7.6797e+08    0   59 3.9246e+09 7.6797e+08  80.4%     - 37964s
+     0     0 7.6797e+08    0   60 3.9246e+09 7.6797e+08  80.4%     - 38063s
+     0     0 7.6797e+08    0   60 3.9246e+09 7.6797e+08  80.4%     - 38252s
+     0     0 7.6797e+08    0   60 3.9246e+09 7.6797e+08  80.4%     - 38463s
+     0     0 7.6797e+08    0   60 3.9246e+09 7.6797e+08  80.4%     - 38529s
+     0     0 7.6797e+08    0   60 3.9246e+09 7.6797e+08  80.4%     - 38656s
+     0     0 7.6797e+08    0   60 3.9246e+09 7.6797e+08  80.4%     - 38765s
+     0     0 7.6802e+08    0   59 3.9246e+09 7.6802e+08  80.4%     - 39171s
+     0     0 7.6802e+08    0   59 3.9246e+09 7.6802e+08  80.4%     - 39294s
+     0     0 7.6805e+08    0   60 3.9246e+09 7.6805e+08  80.4%     - 39672s
+     0     0 7.6805e+08    0   60 3.9246e+09 7.6805e+08  80.4%     - 39781s
+     0     0 7.6805e+08    0   60 3.9246e+09 7.6805e+08  80.4%     - 39919s
+     0     0 7.6805e+08    0   60 3.9246e+09 7.6805e+08  80.4%     - 39990s
+     0     0 7.6805e+08    0   60 3.9246e+09 7.6805e+08  80.4%     - 40098s
+     0     0 7.6805e+08    0   60 3.9246e+09 7.6805e+08  80.4%     - 40266s
+     0     0 7.6807e+08    0   60 3.9246e+09 7.6807e+08  80.4%     - 40456s
+     0     0 7.6807e+08    0   60 3.9246e+09 7.6807e+08  80.4%     - 40526s
+     0     0 7.6807e+08    0   60 3.9246e+09 7.6807e+08  80.4%     - 41033s
+     0     0 7.6807e+08    0   60 3.9246e+09 7.6807e+08  80.4%     - 41193s
+     0     0 7.6807e+08    0   60 3.9246e+09 7.6807e+08  80.4%     - 41263s
+     0     0 7.6807e+08    0   60 3.9246e+09 7.6807e+08  80.4%     - 41407s
+     0     0 7.6807e+08    0   60 3.9246e+09 7.6807e+08  80.4%     - 41437s
+     0     0 7.6807e+08    0   60 3.9246e+09 7.6807e+08  80.4%     - 41674s
+     0     0 7.6807e+08    0   60 3.9246e+09 7.6807e+08  80.4%     - 41768s
+     0     0 7.6807e+08    0   60 3.9246e+09 7.6807e+08  80.4%     - 42692s
+[2025-11-06T08:03:16.020] error: *** JOB 2041211 ON della-h16n2 CANCELLED AT 2025-11-06T08:03:16 DUE TO TIME LIMIT ***

@@ -55,7 +55,7 @@ function load_generators_variability!(setup::Dict, p::Portfolio, inputs::Dict)
     G = inputs["G"]
 
     index_to_technology = inputs["index_to_technology"]
-    
+
     # Initialize the pP_Max matrix (G resources x T time steps)
     inputs["pP_Max"] = ones(Float64, G, T)
     

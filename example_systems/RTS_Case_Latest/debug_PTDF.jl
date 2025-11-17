@@ -16,8 +16,11 @@ function find_matching_index(a::Vector, b::Vector, x, y)
     end
     return nothing 
 end
-
-function calculate_ptdf_matrices(inputs::Dict, slack_bus::Int=1; tol = eps())
+inputs = deepcopy(myinputs)
+using SparseArrays
+using PowerNetworkMatrices
+const PNM = PowerNetworkMatrices
+#function calculate_ptdf_matrices(inputs::Dict, slack_bus::Int=1; tol = eps())
     # A is adjacency matrix of size num_bus x num_bus
     # adjacency matrix is based on corridors, not individual lines
     A_I = Int[]
@@ -85,6 +88,7 @@ function calculate_ptdf_matrices(inputs::Dict, slack_bus::Int=1; tol = eps())
             B_total[line] = B_net[i]
         end
     end
+    slack_bus =1
     A =  SparseArrays.sparse(A_I, A_J, A_V)
     BA = SparseArrays.sparse(BA_I, BA_J, BA_V)
     ref_bus_position = Set([slack_bus])
@@ -92,11 +96,40 @@ function calculate_ptdf_matrices(inputs::Dict, slack_bus::Int=1; tol = eps())
 
     ptdf_mat = PowerNetworkMatrices._calculate_PTDF_matrix_KLU(A, BA, Set([slack_bus]), Float64[])# [1.0 for i in 1:num_buses])
 
+    tol = 0.01
     ptdf_data = PTDF(PNM.sparsify(ptdf_mat, tol), (buses, all_lines), (bus_map, line_to_idx_map), subnetworks, ref_bus_position, Base.RefValue(tol), RadialNetworkReduction())
 
-    return ptdf_data
-end
+    # total_lines = length(net_line_list)
 
+    # ptdf_by_line = zeros(num_buses, total_lines)
+    # ind_line_to_idx_map = Dict()
+    # all_ind_lines = Tuple[]
+
+    # for (i, line) in enumerate(net_line_list)
+    #     B_total_val = B_total[line]
+    #     new_line_name = (line[1], line[2], 0) # I think the new name should maybe have a fourth index of the line index; so the form will be (to, from, line_idx, candidate number)
+    #     ind_line_to_idx_map[new_line_name] = i
+    #     B_val = B_net[i]
+    #     push!(all_ind_lines, new_line_name)
+    #     ptdf_by_line[:, i] = ptdf_data.data[:, line_to_idx_map[line]] * B_val / B_total_val #TODO: Update this line so that it finds the line that i corresponds to 
+    # end
+
+    # for (i, line) in enumerate(net_line_list_cand)
+    #     B_total_val = B_total[line]
+    #     num_lines = B_num_lines[i]
+    #     B_val = B_net_cand[i]
+    #     for j in 1:num_lines
+    #         new_line_name = (line[1], line[2], j)
+    #         push!(all_ind_lines, new_line_name)
+    #         ind_line_to_idx_map[new_line_name] = length(ind_line_to_idx_map) + 1
+    #         ptdf_by_line[:, length(ind_line_to_idx_map)] = ptdf_data.data[:, line_to_idx_map[line]] * B_val / B_total_val
+    #     end
+    # end
+
+    #ptdf_data_by_line = PTDF(PNM.sparsify(ptdf_by_line, tol), (buses, all_ind_lines), (bus_map, ind_line_to_idx_map), Dict{Int, Set{Int}}(), ref_bus_position, Base.RefValue(tol), RadialNetworkReduction())
+
+#    return ptdf_data, ptdf_data_by_line
+#end
 
 function get_ptdf_line_diff(ptdf_mat, line_idx, line_virtual_idx, idx_to_line_map)
     line_tuple = idx_to_line_map[line_idx]
@@ -104,9 +137,4 @@ function get_ptdf_line_diff(ptdf_mat, line_idx, line_virtual_idx, idx_to_line_ma
     bus_vector = ptdf_mat.data[:, line_idx]
     diff = bus_vector[line_virtual_tuple[1]] - bus_vector[line_virtual_tuple[2]]
     return diff
-end
-
-function get_ptdf_vector(ptdf_mat, line_idx, line_to_idx_map)
-    line_tuple = line_to_idx_map[line_idx]
-    return ptdf_mat.data[:, line_idx]
 end

@@ -28,13 +28,23 @@ function discharge_capacity_decisions!(EP, inputs::Dict, setup::Dict)
     COMMIT = inputs["COMMIT"] # Set of all resources eligible for unit commitment
     RETROFIT_CAP = inputs["RETROFIT_CAP"]  # Set of all resources being retrofitted
 
+    VRE = inputs["VRE"]
+
     ### Variables ###
 
     # Retired capacity of resource "y" from existing capacity
     @variable(EP, vRETCAP[y in RET_CAP]>=0)
 
     # New installed capacity of resource "y"
-    @variable(EP, vCAP[y in NEW_CAP]>=0)
+    if haskey(setup, "IntegerInvestments")
+        if setup["IntegerInvestments"] == 1
+            @variable(EP, vCAP[y in NEW_CAP]>=0, Int)
+        else
+            @variable(EP, vCAP[y in NEW_CAP]>=0)
+        end
+    else
+        @variable(EP, vCAP[y in NEW_CAP]>=0)
+    end
 
     # Being retrofitted capacity of resource y
     @variable(EP, vRETROFITCAP[y in RETROFIT_CAP]>=0)
@@ -44,33 +54,33 @@ function discharge_capacity_decisions!(EP, inputs::Dict, setup::Dict)
 
     @expression(EP, eTotalCap[y in 1:G],
         if y in intersect(NEW_CAP, RET_CAP, RETROFIT_CAP) # Resources eligible for new capacity, retirements and being retrofitted
-            if y in COMMIT
+            if y in COMMIT || (y in VRE && setup["IntegerInvestments"] == 1)
                 eExistingCap[y] +
                 cap_size(gen[y]) * (EP[:vCAP][y] - EP[:vRETCAP][y] - EP[:vRETROFITCAP][y])
             else
                 eExistingCap[y] + EP[:vCAP][y] - EP[:vRETCAP][y] - EP[:vRETROFITCAP][y]
             end
         elseif y in intersect(setdiff(RET_CAP, NEW_CAP), setdiff(RET_CAP, RETROFIT_CAP)) # Resources eligible for only capacity retirements
-            if y in COMMIT
+            if y in COMMIT || (y in VRE && setup["IntegerInvestments"] == 1)
                 eExistingCap[y] - cap_size(gen[y]) * EP[:vRETCAP][y]
             else
                 eExistingCap[y] - EP[:vRETCAP][y]
             end
         elseif y in setdiff(intersect(RET_CAP, NEW_CAP), RETROFIT_CAP) # Resources eligible for retirement and new capacity
-            if y in COMMIT
+            if y in COMMIT || (y in VRE && setup["IntegerInvestments"] == 1)
                 eExistingCap[y] + cap_size(gen[y]) * (EP[:vCAP][y] - EP[:vRETCAP][y])
             else
                 eExistingCap[y] + EP[:vCAP][y] - EP[:vRETCAP][y]
             end
         elseif y in setdiff(intersect(RET_CAP, RETROFIT_CAP), NEW_CAP) # Resources eligible for retirement and retrofitting
-            if y in COMMIT
+            if y in COMMIT || (y in VRE && setup["IntegerInvestments"] == 1)
                 eExistingCap[y] -
                 cap_size(gen[y]) * (EP[:vRETROFITCAP][y] + EP[:vRETCAP][y])
             else
                 eExistingCap[y] - (EP[:vRETROFITCAP][y] + EP[:vRETCAP][y])
             end
         elseif y in intersect(setdiff(NEW_CAP, RET_CAP), setdiff(NEW_CAP, RETROFIT_CAP))  # Resources eligible for only new capacity
-            if y in COMMIT
+            if y in COMMIT || (y in VRE && setup["IntegerInvestments"] == 1)
                 eExistingCap[y] + cap_size(gen[y]) * EP[:vCAP][y]
             else
                 eExistingCap[y] + EP[:vCAP][y]
@@ -179,15 +189,17 @@ function transmission_capacity_decisions!(EP, inputs::Dict, setup::Dict)
                 end
                 inputs["EXPANSION_LEVELS"] = EXPANSION_LEVELS
                 @variable(EP, vNEW_TRANS_CAP[l in CANDIDATE_LINES]>=0)
-            elseif setup["ptdf"] == 1
-                REINFORCEMENT_CAP_SIZE = inputs["Line_Reinforcement_Cap_Size"]
-                MAX_TRANS_EXPANSION_LIMIT=inputs["Max_Trans_Cap"]
-                EXPANSION_LEVELS=Dict{Int,Vector{Float64}}()
-                for l in CANDIDATE_LINES
-                    EXPANSION_LEVELS[l] = (0:1:MAX_TRANS_EXPANSION_LIMIT[l]) #-Might not need multiplication of this part -->* REINFORCEMENT_CAP_SIZE[l]
-                end
-                inputs["EXPANSION_LEVELS"] = EXPANSION_LEVELS
-                @variable(EP, vZ_BUILD[l in CANDIDATE_LINES, i in 1:(inputs["Max_Trans_Cap"][l])] in Parameter(0)) #PTDF variable
+            # elseif setup["ptdf"] == 1
+            #     REINFORCEMENT_CAP_SIZE = inputs["Line_Reinforcement_Cap_Size"]
+            #     MAX_TRANS_EXPANSION_LIMIT=inputs["Max_Trans_Cap"]
+            #     EXPANSION_LEVELS=Dict{Int,Vector{Float64}}()
+            #     for l in CANDIDATE_LINES
+            #         EXPANSION_LEVELS[l] = (0:1:MAX_TRANS_EXPANSION_LIMIT[l]) #-Might not need multiplication of this part -->* REINFORCEMENT_CAP_SIZE[l]
+            #     end
+            #     inputs["EXPANSION_LEVELS"] = EXPANSION_LEVELS
+            #     @variable(EP, vZ_BUILD[l in CANDIDATE_LINES] in Parameter(0)) #PTDF variable
+
+                
             # elseif setup["bilinear"] == 1
             #         REINFORCEMENT_CAP_SIZE = inputs["Line_Reinforcement_Cap_Size"]
             #     MAX_TRANS_EXPANSION_LIMIT=inputs["Max_Trans_Cap"]
@@ -200,7 +212,7 @@ function transmission_capacity_decisions!(EP, inputs::Dict, setup::Dict)
             else
                 @variable(EP, vRECONDUCTOR_SLACK_LOW[l in RECONDUCTOR_LINES] >= 0)
                 @variable(EP, vRECONDUCTOR_SLACK_HIGH[l in RECONDUCTOR_LINES] >= 0)
-                @variable(EP, vNEW_TRANS_CAP_DECISION_INT[l in CANDIDATE_LINES, i in 1:inputs["Max_Trans_Cap"][l]] in Parameter(0))
+                @variable(EP, vNEW_TRANS_CAP_DECISION_INT[l in CANDIDATE_LINES] in Parameter(0))
                 REINFORCEMENT_CAP_SIZE = inputs["Line_Reinforcement_Cap_Size"]
                 MAX_TRANS_EXPANSION_LIMIT=inputs["Max_Trans_Cap"]
                 EXPANSION_LEVELS=Dict{Int,Vector{Float64}}()
@@ -242,14 +254,14 @@ function transmission_capacity_decisions!(EP, inputs::Dict, setup::Dict)
                 else
                     eTransMax[l]
                 end)
-            elseif setup["ptdf"] == 1
-                @expression(EP, eAvail_Trans_Cap[l = 1:L],
-                    if l in CANDIDATE_LINES
-                        eTransMax[l] + sum(vZ_BUILD[l, i] for i in 1:(inputs["Max_Trans_Cap"][l])) * inputs["Line_Reinforcement_Cap_Size"][l] #TODO: Make sure this "l" is the correct index
-                    else
-                        eTransMax[l]
-                    end
-                )
+            # elseif setup["ptdf"] == 1
+            #     @expression(EP, eAvail_Trans_Cap[l = 1:L],
+            #         if l in CANDIDATE_LINES
+            #             eTransMax[l] + sum(vZ_BUILD[l]) * inputs["Line_Reinforcement_Cap_Size"][l] #TODO: Make sure this "l" is the correct index
+            #         else
+            #             eTransMax[l]
+            #         end
+            #     )
             # elseif setup["bilinear"] == 1
             #     @expression(EP, eAvail_Trans_Cap[l = 1:L],
             #     if l in CANDIDATE_LINES
@@ -261,9 +273,9 @@ function transmission_capacity_decisions!(EP, inputs::Dict, setup::Dict)
                 @expression(EP, eAvail_Trans_Cap[l = 1:L],
                     if l in CANDIDATE_LINES
                         if l in RECONDUCTOR_LINES
-                            eTransMax[l] + sum(vNEW_TRANS_CAP_DECISION_INT[l,i] for i in 1:inputs["Max_Trans_Cap"][l])*inputs["Line_Reinforcement_Cap_Size"][l] + vRECONDUCTOR_SLACK_LOW[l] + vRECONDUCTOR_SLACK_HIGH[l]
+                            eTransMax[l] + sum(vNEW_TRANS_CAP_DECISION_INT[l])*inputs["Line_Reinforcement_Cap_Size"][l] + vRECONDUCTOR_SLACK_LOW[l] + vRECONDUCTOR_SLACK_HIGH[l]
                         else
-                            eTransMax[l] + sum(vNEW_TRANS_CAP_DECISION_INT[l,i] for i in 1:inputs["Max_Trans_Cap"][l])*inputs["Line_Reinforcement_Cap_Size"][l]
+                            eTransMax[l] + sum(vNEW_TRANS_CAP_DECISION_INT[l])*inputs["Line_Reinforcement_Cap_Size"][l]
                         end
                     else
                         if l in RECONDUCTOR_LINES

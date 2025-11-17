@@ -356,17 +356,17 @@ function create_resources_sametype(resource_in::DataFrame, ResourceType)
     return resources
 end
 
-function default_resource_dict(p::Portfolio, t::ResourceTechnology)
+function default_resource_dict(p::Portfolio, t::ResourceTechnology, i = 1)
     return Dict(
         :resource => resource_name(t),
-        :zone => zone_id(region(t)[1]),
+        :zone => zone_id(region(t)[i]),
         :new_build => Int(new_build(t)),
         :can_retire => can_retire(t),
         :existing_cap_mw => existing_cap_mw(p, t),
         :retrofit => 0,   #TODO: set to zero for now
         :retrofit_id => nothing,
         :id => resource_id(t),
-        :region => region(t)[1],
+        :region => region(t)[i],
         :cluster => nothing,
         :max_cap_mw => max_cap_mw(t),
         :min_cap_mw => min_cap_mw(t),
@@ -376,8 +376,8 @@ function default_resource_dict(p::Portfolio, t::ResourceTechnology)
     )
 end
 
-function translate_resource_dict(p::Portfolio, t::SupplyTechnology{PSY.ThermalStandard})
-    default_attributes = default_resource_dict(p, t)
+function translate_resource_dict(p::Portfolio, t::SupplyTechnology{PSY.ThermalStandard}, i = 1)
+    default_attributes = default_resource_dict(p, t, i)
     return merge(default_attributes,
         Dict(
             :model => 1,    #TODO: uc for now 
@@ -394,8 +394,8 @@ function translate_resource_dict(p::Portfolio, t::SupplyTechnology{PSY.ThermalSt
     )
 end
 
-function translate_resource_dict(p::Portfolio, s::StorageTechnology)
-    default_attributes = default_resource_dict(p, s)
+function translate_resource_dict(p::Portfolio, s::StorageTechnology, i = 1)
+    default_attributes = default_resource_dict(p, s, i)
     # a storage technology is asymmetric if:
     #   1. has a charge cost (inv_cost_charge_per_mwyr > 0), or
     #   2. has an existing charge capacity (existing_charge_cap_mw > 0)
@@ -423,8 +423,8 @@ function translate_resource_dict(p::Portfolio, s::StorageTechnology)
     )
 end
 
-function translate_resource_dict(p::Portfolio, t::SupplyTechnology{PSY.RenewableDispatch})
-    default_attributes = default_resource_dict(p, t)
+function translate_resource_dict(p::Portfolio, t::SupplyTechnology{PSY.RenewableDispatch}, i = 1)
+    default_attributes = default_resource_dict(p, t, i)
     return merge(default_attributes,
         Dict(
             :vre_bins => 1
@@ -432,8 +432,8 @@ function translate_resource_dict(p::Portfolio, t::SupplyTechnology{PSY.Renewable
     )
 end
 
-function translate_resource_dict(p::Portfolio, t::SupplyTechnology{PSY.RenewableNonDispatch})
-    default_attributes = default_resource_dict(p, t)
+function translate_resource_dict(p::Portfolio, t::SupplyTechnology{PSY.RenewableNonDispatch}, i = 1)
+    default_attributes = default_resource_dict(p, t, i)
     return merge(default_attributes,
         Dict(
             :vre_bins => 1
