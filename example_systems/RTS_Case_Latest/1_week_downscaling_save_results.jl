@@ -88,7 +88,7 @@ if haskey(mysetup, "IntegerInvestments")
     if mysetup["IntegerInvestments"] == 1
         for i in myinputs["NEW_CAP"]
             resource = myinputs["RESOURCES"][i]
-            parent(resource)[:cap_size] = 100
+            parent(resource)[:cap_size] = 200
         end
     end
 end
@@ -122,6 +122,7 @@ function find_tech_type_by_id(id, techs)
     end
     return nothing
 end
+#NOTE: SOLUTIONS ARE IN MW
 for i in z_inputs["NEW_CAP"]
     new_cap_val = value(mz[:vCAP][i])
     if new_cap_val > 0
@@ -138,7 +139,7 @@ end
 # Append data to the inputs dictionary for these new resource copies
 GenX.expand_new_cap_resources_to_nodal!(myinputs, mysetup, p, "")
 GenX.load_generators_variability!(mysetup, p, myinputs)
-mysetup["DC_OPF"] = 0
+mysetup["DC_OPF"] = 1
 mysetup["NetworkExpansion"] = 0
 
 # Portfolio contains no capacity or unit sizes
@@ -147,7 +148,7 @@ if haskey(mysetup, "IntegerInvestments")
     if mysetup["IntegerInvestments"] == 1
         for i in myinputs["NEW_CAP"]
             resource = myinputs["RESOURCES"][i]
-            parent(resource)[:cap_size] = 100
+            parent(resource)[:cap_size] = 200
         end
     end
 end
@@ -162,6 +163,7 @@ optimize!(m)
 investment_solutions_nodal = Dict()
 techs = collect(get_technologies(ResourceTechnology, p))
 index_to_technology = myinputs["index_to_technology"]
+#NOTE: SOLUTIONS ARE IN MW
 for i in myinputs["NEW_CAP"]
     new_cap_val = value(m[:vCAP][i])
     if new_cap_val > 0
@@ -174,4 +176,3 @@ for i in myinputs["NEW_CAP"]
         investment_solutions_nodal[tuple_key] = new_cap_val * GenX.cap_size(resource)
     end
 end
-
