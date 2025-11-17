@@ -127,7 +127,7 @@ for i in z_inputs["NEW_CAP"]
     new_cap_val = value(mz[:vCAP][i])
     if new_cap_val > 0
         resource = z_inputs["RESOURCES"][i]
-        name = parent(resource)[:resource]
+        name = GenX.resource_name(resource)
         tech_id = index_to_technology[i]
         tech_type = find_tech_type_by_id(tech_id, techs)
         tuple_key = (tech_type, name)
@@ -168,8 +168,8 @@ for i in myinputs["NEW_CAP"]
     new_cap_val = value(m[:vCAP][i])
     if new_cap_val > 0
         resource = myinputs["RESOURCES"][i]
-        name = parent(resource)[:resource]
-        region = parent(resource)[:region]
+        name = GenX.resource_name(resource)
+        region = GenX.region(resource)
         tech_id = index_to_technology[i]
         tech_type = find_tech_type_by_id(tech_id, techs)
         tuple_key = (tech_type, region, name)
