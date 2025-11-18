@@ -12,4 +12,4 @@
 module purge
 module load gurobi/12.0.0
 module load julia/1.10.5
-julia -t 14 --project=./ ./example_systems/RTS_Case_Latest/6_month_run_Benders_reconductoring.jl
+julia -t 14 --project=./ ./example_systems/RTS_Case_Latest/6_month_run_Benders_multicut_reconductoring.jl
