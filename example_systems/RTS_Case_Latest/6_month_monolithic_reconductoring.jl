@@ -146,12 +146,11 @@ mysetup["IntegerInvestments"] = 1
 
 m = GenX.generate_model(mysetup, myinputs, optimizer)
 
+optimize!(m)
+for v in m[:vNEW_TRANS_CAP_DECISION_INT]
+    println(v, "   ", value(v))
+end
 
-println("RUNNING 6 Months")
-# println(operational_sol1.summation_map)
-
-for i in keys(planning_sol1.values)
-    if planning_sol1.values[i] != 0
-        println(i, " = ", planning_sol1.values[i])
-    end
+for v in m[:vCAP]
+    println(v, "   ", value(v))
 end
