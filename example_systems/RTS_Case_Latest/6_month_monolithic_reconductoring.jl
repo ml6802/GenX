@@ -17,7 +17,6 @@ const PSIP = PowerSystemsInvestmentsPortfolios
 const IS = InfrastructureSystems
 const PSY = PowerSystems
 using Plots
-using Distributed, ClusterManagers
 
 # Load in portfolio
 include((@__DIR__)*"/load_portfolio.jl")
@@ -51,21 +50,6 @@ for i in 1:length(buses)
     end
 end
 
-cpus_per_task = parse(Int, ENV["SLURM_CPUS_PER_TASK"]);
-addprocs(cpus_per_task)
-println("Adding processors")
-@everywhere begin
-    import Pkg
-    Pkg.activate("/scratch/gpfs/JENKINS/dc0173/git/forked/reconductoring/GenX")
-end
-
-println("Number of procs: ", nprocs())
-println("Number of workers: ", nworkers())
-for i in workers()
-    id, pid, host = fetch(@spawnat i (myid(), getpid(), gethostname()))
-    println(id, " " , pid, " ", host)
-end
-@everywhere using GenX, Distributed
 
 
 
@@ -137,10 +121,11 @@ GenX.expand_new_cap_resources_to_nodal!(myinputs, mysetup, p, "")
 GenX.load_generators_variability!(mysetup, p, myinputs)
 
 # Set additional inputs so it only solves for one week
-myinputs["hours_per_subperiod"] = 168
-myinputs["INTERIOR_SUBPERIODS"] = [i for i in 2:myinputs["hours_per_subperiod"]]
-myinputs["T"] = 168
-
+hours_per_subperiod = 168
+myinputs["hours_per_subperiod"] = hours_per_subperiod
+myinputs["T"] = 4368
+myinputs["START_SUBPERIODS"] = 1:hours_per_subperiod:myinputs["T"]
+myinputs["INTERIOR_SUBPERIODS"] = setdiff(1:myinputs["T"], myinputs["START_SUBPERIODS"])
 
 if haskey(mysetup, "IntegerInvestments")
     if mysetup["IntegerInvestments"] == 1
@@ -153,18 +138,15 @@ end
 
 
 mysetup["NetworkExpansion"] = 1
-mysetup["Benders"] = 1
-mysetup["bilinear"] = 1
+mysetup["Benders"] = 0
+mysetup["bilinear"] = 0
 mysetup["DC_OPF"] = 1
 mysetup["IntegerInvestments"] = 1
 
-myinputs_decomp = GenX.separate_inputs_subperiods(myinputs);
-benders_inputs = GenX.generate_benders_inputs(mysetup,myinputs,myinputs_decomp)
-
-planning_problem1, planning_sol1, operational_sol1, LB_hist1,UB_hist1, cpu_time1,feasibility_hist1, build_decisions1  = GenX.benders(benders_inputs,mysetup,myinputs);
+m = GenX.generate_model(mysetup, myinputs, optimizer)
 
 
-println("RUNNING 1 Month")
+println("RUNNING 6 Months")
 # println(operational_sol1.summation_map)
 
 for i in keys(planning_sol1.values)
