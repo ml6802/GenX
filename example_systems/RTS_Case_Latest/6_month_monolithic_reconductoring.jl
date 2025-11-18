@@ -17,6 +17,7 @@ const PSIP = PowerSystemsInvestmentsPortfolios
 const IS = InfrastructureSystems
 const PSY = PowerSystems
 using Plots
+using Random
 
 # Load in portfolio
 include((@__DIR__)*"/load_portfolio.jl")
