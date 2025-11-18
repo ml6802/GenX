@@ -1,4 +1,3 @@
-
 function generate_operation_subproblem(setup::Dict, inputs::Dict, OPTIMIZER::MOI.OptimizerWithAttributes)
 
     ## Start pre-solve timer
@@ -156,13 +155,16 @@ function solve_local_subproblem(subproblem_local::Vector{Dict{Any,Any}},planning
 end
 
 function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_sub::Vector{String},inputs)
-
+    println("TRYING TO SOLVE SUBPROBLEM!")
+    flush(stdout)
 	fix_planning_variables!(EP,planning_sol,planning_variables_sub)
 
     new_optimizer = EP.ext[:solver]
     set_optimizer(EP, new_optimizer)
 
-	optimize!(EP)
+	t = @elapsed optimize!(EP)
+	println("Time for solving subproblem was ", t/60, " minutes")
+	flush(stdout)
 
     if !haskey(EP.ext, :idx)
         EP.ext[:idx] = [1.]
@@ -180,22 +182,27 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
             sols = value.(all_variables(EP))
             original_obj_scale = get_attribute(EP, "ObjScale")
             @warn "Dual Status not computed; trying to increase ObjScale"
-            set_optimizer_attribute(EP, "ObjScale", original_obj_scale * 100)
+            set_optimizer_attribute(EP, "ObjScale", original_obj_scale * 10000)
             optimize!(EP)
             if dual_status(EP) == MOI.NO_SOLUTION
+                println("DUAL STATUS NOT COMPUTED; TRYING TO INCREASE OBJSCALE AGAIN")
+                flush(stdout)
                 @warn "Dual Status not computed; trying to increase ObjScale again"
                 set_optimizer_attribute(EP, "ObjScale", original_obj_scale * 10000)
                 optimize!(EP)
                 if has_values(EP) && dual_status(EP) == MOI.NO_SOLUTION
+                    println("NO SOLUTION WITH GUROBI; TRYING IPOPT")
+                    flush(stdout)
                     @warn "No solution with Gurobi; trying Ipopt"
                     set_optimizer(EP, Ipopt.Optimizer)
                     set_attribute(EP, "hsllib", HSL_jll.libhsl_path)
                     set_attribute(EP, "linear_solver", "ma57")
                     set_attribute(EP, "max_cpu_time", 3600.)
+                    set_attribute(EP, "print_level", 5)
                     vars = all_variables(EP)
                     idx = EP.ext[:idx][1]
                     EP.ext[:idx][1] += 1
-                    JuMP.write_to_file(EP, "/scratch/gpfs/dc0173/git/forked/subproblem__$idx.lp")
+                    JuMP.write_to_file(EP, "/scratch/gpfs/JENKINS/dc0173/git/forked/subproblem__$idx.lp")
                     for (i, v) in enumerate(vars)
                         if !(is_parameter(v))
                             set_start_value(vars[i], sols[i])

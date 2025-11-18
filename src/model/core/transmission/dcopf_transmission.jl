@@ -385,7 +385,7 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
 
         @constraint(EP,
             cCANDFLOW[l in CANDIDATE_LINES, t = 1:T],
-            vCANDFLOW[l, t, i] == inputs["pDC_OPF_coeff"][l] *
+            vCANDFLOW[l, t] == inputs["pDC_OPF_coeff"][l] *
                         sum(inputs["pNet_Map"][l, z] * vANGLE[z, t] for z in 1:Z) * EP[:vNEW_TRANS_CAP_DECISION_INT][l]
         )
 

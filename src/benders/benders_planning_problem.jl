@@ -70,9 +70,13 @@ end
 
 
 function solve_planning_problem(EP::Model,planning_variables::Vector{String},inputs)
+    println("TRYING TO SOLVE PLANNING PROBLEM!")
+    flush(stdout)
 	if any(is_integer.(all_variables(EP)))
 		println("The planning model is a MILP")
-		optimize!(EP)
+		t = @elapsed optimize!(EP)
+		println("TIME FOR SOLVING PLANNING PROBLEM IS ", t, " seconds")
+		flush(stdout)
 			if has_values(EP) #
 				println("OBJECTIVE OF MASTER IS :", objective_value(EP) - sum(value.(EP[:vTHETA])))
 				zone_inv_cost = 0#make_benders_zonal_invcost(inputs, EP)
@@ -93,6 +97,9 @@ function solve_planning_problem(EP::Model,planning_variables::Vector{String},inp
 	else 
 		### The planning model is an LP
 		optimize!(EP)
+		t = @elapsed optimize!(EP)
+		println("TIME FOR SOLVING (LP?) PLANNING PROBLEM IS ", t, " seconds")
+		flush(stdout)
 		if has_values(EP)
 			neg_cap_bool = check_negative_capacities(EP);
 			

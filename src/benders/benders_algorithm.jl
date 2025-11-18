@@ -79,18 +79,23 @@ end
 		
 		start_subop_sol = time();
 
-        subop_sol = solve_dist_subproblems(subproblems,planning_sol,inputs);
+        
+        t1 = @elapsed subop_sol = solve_dist_subproblems(subproblems,planning_sol,inputs);
+        println("Time to run distributed subproblems is ", t1 / 60, " minutes")
         
 		cpu_subop_sol = time()-start_subop_sol;
 		@info "Solving the subproblems required $cpu_subop_sol seconds"
 		@info "Investment Cost: " planning_sol.inv_cost
 		@info "Operational Cost: " sum(subop_sol[w].op_cost for w in keys(subop_sol))
 
+        t2 = @elapsed begin
 		UBnew = sum((subop_sol[w].theta_coeff==0 ? Inf : subop_sol[w].op_cost) for w in keys(subop_sol))+planning_sol.inv_cost;
 		if UBnew < UB
 			planning_sol_best = deepcopy(planning_sol);
 			UB = UBnew;
 		end
+		end
+		println("Time to copy planning_sol was ", t2 / 60, " minutes")
 
 		print("Updating the planning problem....")
 		time_start_update = time()
@@ -145,9 +150,9 @@ end
 		#cap_builds = findall(x -> x > 0.1, Vector(value.(planning_problem[:vCAP])))
 		#@debug "vCAP Builds" cap_builds
 
-
+        flush(stdout)
 		
-        if (UB-LB)/abs(LB) <= ConvTol
+        if (UB-LB)/abs(LB) <= ConvTol || (integer_routine_flag && k == 250)# || (warmstart_bilinear_routine && k == 100)
 			if integer_routine_flag
 				println()
 				println()
@@ -161,12 +166,21 @@ end
 				println()
 				println()
 				UB = Inf;
-				set_integer.(integer_variables)
-				set_binary.(binary_variables)
+				#set_integer.(integer_variables)
+				#set_binary.(binary_variables)
 				planning_sol = solve_planning_problem(planning_problem,planning_variables,inputs);
+				if haskey(setup, "print_sols")
+				    for var in all_variables(planning_problem)
+				        if value(var) > 0
+				            println(var, "   ", value(var))
+				        end
+				    end
+				    return nothing
+				end
 				LB = planning_sol.LB;
 				planning_sol_best = deepcopy(planning_sol);
 				integer_routine_flag = false;
+				return (planning_problem=planning_problem,planning_sol = planning_sol_best,operational_sol = subop_sol,LB_hist = LB_hist,UB_hist = UB_hist,cpu_time = cpu_time,feasibility_hist = feasibility_hist, build_decisions = build_decisions)
 			elseif warmstart_bilinear_routine
 				println()
 				println()
@@ -191,6 +205,7 @@ end
 				solver_start_time = solver_start_time + t
 				UB = Inf
 				warmstart_bilinear_routine = false
+				stab_method = "off"
 			else
 				break
 			end

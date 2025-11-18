@@ -2,9 +2,6 @@ ENV["GENX_PRECOMPILE"] = "false"
 
 import Pkg
 
-# Pkg.activate("/home/ml6802/GenX")
-# include("/home/ml6802/GenX/src/GenX.jl")
-
 using Revise
 using JuMP
 using GenX
@@ -22,8 +19,13 @@ const PSY = PowerSystems
 using Plots
 using Distributed, ClusterManagers
 
+# Load in portfolio
 include((@__DIR__)*"/load_portfolio.jl")
-include((@__DIR__)*"/../convert_input_dict.jl")
+# Load in functions for downscaling
+include((@__DIR__)*"/../convert_input_dict_reconductoring.jl")
+# Load in functions for adding candidate lines
+include((@__DIR__)*"/load_candidate_line_functions.jl")
+
 
 rep_periods = 26
 p.internal.ext["Rep_Periods"] = rep_periods
@@ -49,13 +51,12 @@ for i in 1:length(buses)
     end
 end
 
-
 cpus_per_task = parse(Int, ENV["SLURM_CPUS_PER_TASK"]);
 addprocs(cpus_per_task)
 println("Adding processors")
 @everywhere begin
     import Pkg
-    Pkg.activate("/scratch/gpfs/dc0173/git/forked/Mike/reconductoring/GenX")
+    Pkg.activate("/scratch/gpfs/JENKINS/dc0173/git/forked/reconductoring/GenX")
 end
 
 println("Number of procs: ", nprocs())
@@ -67,108 +68,95 @@ end
 @everywhere using GenX, Distributed
 
 
-benders_settings_path = GenX.get_settings_path(case, "benders_settings.yml")
-mysetup_benders = GenX.configure_benders(benders_settings_path) 
 
+# Load in settings
 genx_settings = GenX.get_settings_path(case, "genx_settings.yml") # Settings YAML file path
 writeoutput_settings = GenX.get_settings_path(case, "output_settings.yml") # Write-output settings YAML file path
 mysetup = GenX.configure_settings(genx_settings, writeoutput_settings) # mysetup dictionary stores settings and GenX-specific parameters
-mysetup["ParameterScale"] = 0
 
+# Make sure certain parameters are set
+mysetup["ParameterScale"] = 0
 mysetup["DC_OPF"] = 1
-myinputs = GenX.load_inputs(mysetup, case, p)
 mysetup["ptdf"] = 0
 mysetup["bilinear"] = 0
 mysetup["disaggregate"] = 0
 mysetup["unfix_slacks"] = 0
 mysetup["SOS1"] = 0
-mysetup = merge(mysetup,mysetup_benders);
-
 settings_path = GenX.get_settings_path(case)    
 mysetup["settings_path"] = settings_path;
+mysetup["NetworkExpansion"] = 1
+mysetup["IntegerInvestments"] = 1
 
-# myinputs["pTrans_Max"] .*= 2
-#myinputs["pD"] .*= 1
-# myinputs["Voll"] .*= 10
-myinputs["pTrans_Max"] .*= 1
-#myinputs["pTrans_Max"][[5,23,24,70,75]] .*= 1/70
-L = myinputs["L"]
-L_exist = L
-L_cand = L
-myinputs["L_cand"] = L_cand
-myinputs["L_exist"] = L_exist
-myinputs["L"] = L * 2
-myinputs["Z_cand"] = myinputs["Z"]
-myinputs["pNet_Map"] = vcat(myinputs["pNet_Map"], myinputs["pNet_Map"])
-myinputs["pDC_OPF_coeff"] = vcat(myinputs["pDC_OPF_coeff"], myinputs["pDC_OPF_coeff"])
-myinputs["Line_Angle_Limit"] = [6.282 for i in 1:myinputs["L"]]
-myinputs["Line_Reinforcement_Cap_Size"] = vcat([0 for i in 1:L_exist], [i for i in myinputs["pTrans_Max"]])
-myinputs["Max_Trans_Cap"] = vcat([0 for i in 1:L_exist], [1 for i in myinputs["pTrans_Max"]])
-myinputs["pTrans_Max"] = vcat([i for i in myinputs["pTrans_Max"]], [0 for i in 1:L_cand])
+node_names = ["Carew", "Chase", "Carrel", "Carter", "Cabot", "Bajer", "Baker", "Baffin", "Cabell", "Caine", "Camus", "Bach", "Bain", "Barlow", "Banks", "Balch", "Alger", "Alber", "Alder", "Avery", "Aiken"]
 
+# Split node names by initial letter (A, B, C)
+a_node_names = filter(n -> startswith(n, "A"), node_names)
+b_node_names = filter(n -> startswith(n, "B"), node_names)
+c_node_names = filter(n -> startswith(n, "C"), node_names)
 
-
-EXPANSION_LEVELS = Dict{Int, Vector}()
-for i in (L_exist + 1):(L_exist + L_cand)
-    EXPANSION_LEVELS[i] = (0:1:myinputs["Max_Trans_Cap"][i])
+# Set a reproducible seed (outside the function)
+function sample_four(names::AbstractVector{<:AbstractString})
+    @assert length(names) >= 3 "Need at least 4 names (got $(length(names)))"
+    idxs = sort(randperm(length(names))[1:4])
+    return collect(names[idxs])
 end
-EXPANSION_LINES = [i for i in (L_exist + 1):(L_exist + L_cand)]
-myinputs["EXPANSION_LINES"] = EXPANSION_LINES
-myinputs["CANDIDATE_LINES"] = copy(EXPANSION_LINES)
-myinputs["EXISTING_LINES"] = [i for i in 1:L_exist]
-myinputs["pPercent_Loss"] = vcat(myinputs["pPercent_Loss"], myinputs["pPercent_Loss"])
+node_name_dict = Dict('A' => a_node_names, 'B' => b_node_names, 'C' => c_node_names)
+techs = collect(get_technologies(ResourceTechnology, p))
 
-lines = collect(get_technologies(TransmissionTechnology, p));
-myinputs["pC_Line_Reinforcement"] = zeros(myinputs["L"])
-myinputs["pC_Line_Reconductor_High"] = zeros(myinputs["L"])
-myinputs["pC_Line_Reconductor_Low"] = zeros(myinputs["L"])
-
-scale_factor = mysetup["ParameterScale"] == 1 ? GenX.ModelScalingFactor : 1
-
-CAN_RETIRE_LINES = Int[]
-CANNOT_RETIRE_LINES = Int[]
-RECONDUCTOR_LINES = Int[]
-existing_to_cand_map = Dict()
-
-using Random
-Random.seed!(1)
-for i in 1:length(lines)
-    #check for reconductoring; 
-
-    distance = 60 * rand()
-    cap_val = distance * 1200
-    cost = cap_val * (0.044) / (1 - (1 + 0.044)^(-60))
-    myinputs["pC_Line_Reinforcement"][i + L_exist] = cost
-
-    if get_existing_capacity_mw(p, lines[i]) > 200
-        push!(CANNOT_RETIRE_LINES, i)
-        push!(RECONDUCTOR_LINES, i)
-        myinputs["pC_Line_Reconductor_Low"][i] = cost .* 0.3
-        myinputs["pC_Line_Reconductor_High"][i] = cost .* 0.7
-        myinputs["Line_Reinforcement_Cap_Size"][L_exist + i] *= 1.5
-        myinputs["pDC_OPF_coeff"][L_exist + i] *= 1.5
-    else
-        push!(CAN_RETIRE_LINES, i)
-        existing_to_cand_map[i] = L_exist + i
-        myinputs["Line_Reinforcement_Cap_Size"][L_exist + i] *= 2.5
-        #myinputs["pDC_OPF_coeff"][L_exist + i] *= 2.5
+Random.seed!(1234)
+for i in 1:length(techs)
+    t = techs[i]
+    if length(t.region) > 1
+        old_region_list = t.region
+        new_region_list = PSIP.RegionTopology[]
+        key = t.region[1].name[1]
+        node_name_vector = node_name_dict[key]
+        new_nodes = sample_four(node_name_vector)
+        for name in new_nodes
+            for n in old_region_list
+                if n.name == name
+                    push!(new_region_list, n)
+                    break
+                end 
+            end
+        end
+        @assert length(new_region_list) >=1
+        t.region = new_region_list
     end
 end
 
-myinputs["pDC_OPF_coeff"] .*= 2000 #2000
+myinputs = GenX.load_inputs(mysetup, case, p)
 
-myinputs["CAN_RETIRE_LINES"] = CAN_RETIRE_LINES
-myinputs["CANNOT_RETIRE_LINES"] = CANNOT_RETIRE_LINES
-myinputs["RECONDUCTOR_LINES"] = RECONDUCTOR_LINES
-myinputs["existing_to_cand_map"] = existing_to_cand_map
+optimizer = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 300, "MIPGap" => 1e-3)
 
+# Add expected candidate line data
+# also scales demands up by 4x
+load_candidates_base(myinputs, 168)
+
+GenX.expand_new_cap_resources_to_nodal!(myinputs, mysetup, p, "")
+GenX.load_generators_variability!(mysetup, p, myinputs)
+
+# Set additional inputs so it only solves for one week
 myinputs["hours_per_subperiod"] = 168
 myinputs["INTERIOR_SUBPERIODS"] = [i for i in 2:myinputs["hours_per_subperiod"]]
 myinputs["T"] = 168
 
 
+if haskey(mysetup, "IntegerInvestments")
+    if mysetup["IntegerInvestments"] == 1
+        for i in myinputs["NEW_CAP"]
+            resource = myinputs["RESOURCES"][i]
+            parent(resource)[:cap_size] = 200
+        end
+    end
+end
+
+
 mysetup["NetworkExpansion"] = 1
 mysetup["Benders"] = 1
+mysetup["bilinear"] = 1
+mysetup["DC_OPF"] = 1
+mysetup["IntegerInvestments"] = 1
 
 myinputs_decomp = GenX.separate_inputs_subperiods(myinputs);
 benders_inputs = GenX.generate_benders_inputs(mysetup,myinputs,myinputs_decomp)
