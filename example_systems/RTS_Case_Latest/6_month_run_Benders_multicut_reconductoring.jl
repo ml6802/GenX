@@ -151,6 +151,10 @@ if haskey(mysetup, "IntegerInvestments")
     end
 end
 
+benders_settings_path = GenX.get_settings_path(case, "benders_settings.yml")
+mysetup_benders = GenX.configure_benders(benders_settings_path) 
+mysetup = merge(mysetup,mysetup_benders);
+
 
 mysetup["NetworkExpansion"] = 1
 mysetup["Benders"] = 1
