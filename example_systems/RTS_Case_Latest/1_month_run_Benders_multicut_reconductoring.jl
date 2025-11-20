@@ -32,6 +32,7 @@ p.internal.ext["Rep_Periods"] = rep_periods
 p.internal.ext["Timesteps_per_Rep_Period"] = 168
 p.internal.ext["sub_weights"] = [8784/4 for i in 1:rep_periods]
 p.internal.ext["hours_per_subperiod"] = 168
+add_om_costs(p)
 
 buses = collect(get_components(Bus, p.base_system))
 zones = []
@@ -85,7 +86,7 @@ mysetup["SOS1"] = 0
 settings_path = GenX.get_settings_path(case)    
 mysetup["settings_path"] = settings_path;
 mysetup["NetworkExpansion"] = 1
-mysetup["IntegerInvestments"] = 1
+mysetup["Benders"] = 0
 
 node_names = ["Carew", "Chase", "Carrel", "Carter", "Cabot", "Bajer", "Baker", "Baffin", "Cabell", "Caine", "Camus", "Bach", "Bain", "Barlow", "Banks", "Balch", "Alger", "Alber", "Alder", "Avery", "Aiken"]
 
