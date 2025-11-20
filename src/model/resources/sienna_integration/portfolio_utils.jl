@@ -61,7 +61,7 @@ function expand_new_cap_resources_to_nodal!(inputs::Dict, setup::Dict, p::Portfo
         end
         tech = techs[1]
         regions = GenX.region(tech) #vector of nodes
-        new_id_set = Int[]
+        new_id_set = Int[i]
         for j in 2:length(regions)
             new_resource = translate_resource_dict(p, tech, j)
             scale_resources_data!(new_resource, scale_factor)
@@ -107,7 +107,6 @@ function save_zonal_capacity_results!(mz::Model, inputs::Dict, z_inputs::Dict)
         zonal_to_nodal_new_cap = z_inputs["zonal_to_nodal_new_cap"] #map of name to idx)
         for name in new_cap_names
             name_to_cap[name] = sum(value(mz[:vCAP][idx]) for idx in zonal_to_nodal_new_cap[name])
-
         end
     else
         for (i, idx) in enumerate(zonal_new_cap)

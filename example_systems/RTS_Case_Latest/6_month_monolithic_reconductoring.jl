@@ -112,7 +112,7 @@ end
 
 myinputs = GenX.load_inputs(mysetup, case, p)
 
-optimizer = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 300, "MIPGap" => 1e-3)
+optimizer = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 57600, "MIPGap" => 1e-3)
 
 # Add expected candidate line data
 # also scales demands up by 4x

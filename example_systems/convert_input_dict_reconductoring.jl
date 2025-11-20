@@ -211,6 +211,8 @@ function build_single_nodal_input(inputs::Dict, node_to_zone_map::Dict, zone::In
     nodal_inputs["G"] = length(generator_list)
     pP_Max = inputs["pP_Max"]
     new_pP_Max_data = zeros(nodal_inputs["G"], size(pP_Max, 2))
+    g2n_map = Dict()
+    n2g_map = Dict()
     for (i, g_idx) in enumerate(generator_list)
         next_resource = resources[g_idx]
         resource_name = resource_names[g_idx]
@@ -222,11 +224,13 @@ function build_single_nodal_input(inputs::Dict, node_to_zone_map::Dict, zone::In
         g_dict[:id] = i
 
         new_pP_Max_data[i, :] .= pP_Max[original_id, :]
- 
+        g2n_map[g_idx] = i
+        n2g_map[i] = g_idx
         push!(nodal_resources, next_resource)
         push!(nodal_resource_names, resource_name)
     end
-
+    nodal_inputs["g2n_map"] = g2n_map
+    nodal_inputs["n2g_map"] = n2g_map
     nodal_inputs["RESOURCES"] = nodal_resources
     nodal_inputs["RESOURCE_NAMES"] = nodal_resource_names
     nodal_inputs["Z"] = num_nodes

@@ -1,4 +1,4 @@
-function load_candidates_base(myinputs, T=168)
+function load_candidates_base(myinputs, T=168; demand_scale = 2)
     # myinputs["pTrans_Max"] .*= 2
     #myinputs["pD"] .*= 1
     # myinputs["Voll"] .*= 10
@@ -77,10 +77,10 @@ function load_candidates_base(myinputs, T=168)
     myinputs["hours_per_subperiod"] = T
     myinputs["INTERIOR_SUBPERIODS"] = [i for i in 2:myinputs["hours_per_subperiod"]]
     myinputs["T"] = T
-    myinputs["pD"] .*= 4
+    myinputs["pD"] .*= demand_scale
 end
 
-function load_no_candidates(myinputs, T=168)
+function load_no_candidates(myinputs, T=168; demand_scale = 2)
     # myinputs["pTrans_Max"] .*= 2
     #myinputs["pD"] .*= 1
     # myinputs["Voll"] .*= 10
@@ -136,5 +136,74 @@ function load_no_candidates(myinputs, T=168)
     myinputs["hours_per_subperiod"] = T
     myinputs["INTERIOR_SUBPERIODS"] = [i for i in 2:myinputs["hours_per_subperiod"]]
     myinputs["T"] = T
-    myinputs["pD"] .*= 4
+    myinputs["pD"] .*= 2
 end
+
+vom_dict = Dict("CC" => 2.12, "CT" => 2.12, "STEAM" => 9.18, "NUCLEAR" => 2.8, "PV" => 0, "CSP" => 3.8, "WIND" => 0)
+
+fom_dict = Dict("CC" => 33500, "CT" => 33500, "STEAM" => 33500, "NUCLEAR" => 175000, "PV" => 22000, "CSP" => 74000, "WIND" => 31000)
+
+function add_om_costs(p)
+    techs = collect(get_technologies(ResourceTechnology, p))
+
+    for t in techs
+        if isa(t, StorageTechnology)
+            continue
+        end
+        op_cost = t.operation_costs.variable
+
+        key_val = [""]
+        for key in keys(vom_dict)
+            if occursin(key, t.name)
+                key_val[1] = key
+                break
+            end
+        end
+        if key_val[1] == ""
+            error("Technology of name $(t.name) does not have a corresponding dictionary pairing")
+        end
+        vom_val = vom_dict[key_val[1]]
+        fom_val = fom_dict[key_val[1]]
+        if isa(op_cost, CostCurve)
+            new_cc = CostCurve(LinearCurve(LinearFunctionData(0, fom_val)), op_cost.power_units, LinearCurve(LinearFunctionData(vom_val, 0)))
+            t.operation_costs.variable = new_cc
+        elseif isa(op_cost, FuelCurve)
+            new_fc = FuelCurve(op_cost.value_curve, op_cost.power_units, op_cost.fuel_cost, op_cost.startup_fuel_offtake, LinearCurve(LinearFunctionData(vom_val, 0)))
+            t.operation_costs.variable = new_fc
+            t.operation_costs.fixed = fom_val
+        else
+            error("Variable Costs are of type , ", typeof(op_cost))
+        end
+    end
+end
+
+# for t in techs
+#     if has_time_series(t) && !(has_supplemental_attributes(t))
+#         tkeys = get_time_series_keys(t)
+#         vom_key = [""]
+#         for k in tkeys
+#             if occursin("fom", k.name) || occursin("ixed", k.name)
+#             # if occursin("vom", k.name) || occursin("Var", k.name)
+#                 vom_key[1] = k.name
+#                 break
+#             end
+#         end
+#         if vom_key[1] == ""
+#             println()
+#             println()
+#             println(t.name, "    ", length(tkeys), "   ", tkeys)
+#             println()
+#             println()
+            
+#         else
+#             tvalues = get_time_series_values(SingleTimeSeries, t, vom_key[1])
+#             vom_val = tvalues[16]
+#             println(t.name, "   ", vom_val)
+#             if vom_val == 0
+#                 println("ZERO VALUE FOR ", t.name)
+#             end
+#             push!(voms, vom_val)
+#         end
+        
+#     end
+# end

@@ -32,6 +32,7 @@ p.internal.ext["Rep_Periods"] = 1
 p.internal.ext["Timesteps_per_Rep_Period"] = 168
 p.internal.ext["hours_per_subperiod"] = 168
 p.internal.ext["sub_weights"] = [8784 for i in 1:p.internal.ext["Rep_Periods"]] 
+add_om_costs(p)
 
 # Build map of buses to zones; used in downscaling
 buses = collect(get_components(Bus, p.base_system))
@@ -139,8 +140,6 @@ if haskey(mysetup, "IntegerInvestments")
 end
 
 
-
-
 # Build zonal inputs (this is a downscaling step)
 z_inputs = build_zonal_inputs(myinputs, zone_map, 3)
 
@@ -176,10 +175,8 @@ println("TOTAL NEW THERMAL = ", new_thermal[1])
 println("TOTAL NEW VRE = ", new_vre[1])
 
 
-
-
-
 GenX.save_zonal_capacity_results!(mz, myinputs, z_inputs)
+
 if haskey(mysetup, "IntegerInvestments")
     if mysetup["IntegerInvestments"] == 1
         for i in myinputs["NEW_CAP"]
@@ -217,15 +214,15 @@ optimize!(m1)
 
 
 
-benders_settings_path = GenX.get_settings_path(case, "benders_settings.yml")
-mysetup_benders = GenX.configure_benders(benders_settings_path) 
-nodal_setup = merge(mysetup_benders, nodal_setup)
+# benders_settings_path = GenX.get_settings_path(case, "benders_settings.yml")
+# mysetup_benders = GenX.configure_benders(benders_settings_path) 
+# nodal_setup = merge(mysetup_benders, nodal_setup)
 
-nodal_setup["Benders"] = 1
-nodal_setup["bilinear"] = 1
-myinputs_decomp = GenX.separate_inputs_subperiods(n_inputs[1]);
-benders_inputs = GenX.generate_benders_inputs(nodal_setup,n_inputs[1],myinputs_decomp)
-planning_problem1, planning_sol1, operational_sol1, LB_hist1,UB_hist1, cpu_time,feasibility_hist1, build_decisions1  = GenX.benders(benders_inputs,nodal_setup,myinputs);
+# nodal_setup["Benders"] = 1
+# nodal_setup["bilinear"] = 1
+# myinputs_decomp = GenX.separate_inputs_subperiods(n_inputs[1]);
+# benders_inputs = GenX.generate_benders_inputs(nodal_setup,n_inputs[1],myinputs_decomp)
+# planning_problem1, planning_sol1, operational_sol1, LB_hist1,UB_hist1, cpu_time,feasibility_hist1, build_decisions1  = GenX.benders(benders_inputs,nodal_setup,myinputs);
 
 
 # mysetup["bilinear"] = 1
@@ -246,10 +243,100 @@ set_nodal_capacity_builds(n_inputs[3], m3)
 
 optimize!(m3)
 
-println("ZONAL OBJECTIVE = ", objective_value(mz))
-println("NODAL OBJECTIVE = ", objective_value(m1) + objective_value(m2) + objective_value(m3))
+zonal_objective = objective_value(mz)
+nodal_objective = objective_value(m1) + objective_value(m2) + objective_value(m3)
+println("ZONAL OBJECTIVE = ", zonal_objective)
+println("NODAL OBJECTIVE = ", nodal_objective)
 
 println("Number new builds = ", sum(value.(m1[:vNEW_TRANS_CAP_DECISION_INT])) + sum(value.(m2[:vNEW_TRANS_CAP_DECISION_INT])) + sum(value.(m3[:vNEW_TRANS_CAP_DECISION_INT])))
+
+
+
+
+
+
+
+# Save transmisison line info
+new_transmission_builds_df = DataFrame()
+new_transmission_builds_df[!, "LINES"] = [i for i in 1:myinputs["L"]]
+reconductor_lines_low = zeros(myinputs["L"])
+reconductor_lines_high = zeros(myinputs["L"])
+new_lines = zeros(myinputs["L"])
+
+for l in z_inputs["CANDIDATE_LINES"]
+    z2l_map = z_inputs["z2l_map"]
+    if value(mz[:vNEW_TRANS_LINES][l]) == 1
+        new_lines[z2l_map[l]] = 1
+    end
+end
+models = [m1, m2, m3]
+for i in 1:num_zones
+    n_input = n_inputs[i]
+    l2l_map = n_input["l2l_map_rev"]
+    for l in n_input["CANDIDATE_LINES"]
+        if value(models[i][:vNEW_TRANS_CAP_DECISION_INT][l]) == 1
+            new_lines[l2l_map[l]] = 1
+        end
+    end
+    for l in n_input["RECONDUCTOR_LINES"]
+        if value(models[i][:vRECONDUCTOR_SLACK_LOW][l]) > 1e-4
+            reconductor_lines_low[l2l_map[l]] = 1
+        end
+        if value(models[i][:vRECONDUCTOR_SLACK_HIGH][l]) > 1e-4
+            reconductor_lines_high[l2l_map[l]] = 1
+        end
+    end
+end
+new_transmission_builds_df[!, "NEW_LINES"] = new_lines
+new_transmission_builds_df[!, "RECONDUCTOR_LOW"] = reconductor_lines_low
+new_transmission_builds_df[!, "RECONDUCTOR_HIGH"] = reconductor_lines_high
+
+CSV.write((@__DIR__)*"/transmission_downscaling_results.csv", new_transmission_builds_df)
+
+
+
+new_gen_cap_df = DataFrame()
+new_gen_cap_df[!, "Generators"] = [i for i in 1:myinputs["G"]]
+generator_names = []
+generator_nodes = []
+generator_node_idx = []
+
+region_to_index = myinputs["region_to_index"]
+for i in 1:length(myinputs["RESOURCES"])
+    r = myinputs["RESOURCES"][i]
+    name = GenX.resource_name(r)
+    region = GenX.region(r)
+    node_name = region.name
+    region_idx = region.id
+    bus_idx = region_to_index[region_idx]
+    push!(generator_names, name)
+    push!(generator_nodes, node_name)
+    push!(generator_node_idx, bus_idx)
+end
+new_gen_cap_df[!, "NAME"] = generator_names
+new_gen_cap_df[!, "NODE"] = generator_nodes
+new_gen_cap_df[!, "NODE_NUMBER"] = generator_node_idx
+new_cap_results = zeros(myinputs["G"])
+
+for i in 1:num_zones
+    n_input = n_inputs[i]
+    n2g_map = n_input["n2g_map"]
+    for j in n_input["NEW_CAP"]
+        if value(models[i][:vCAP][j]) > 0 
+            new_cap_results[n2g_map[j]] = value(models[i][:vCAP][j]) * GenX.cap_size(n_input["RESOURCES"][j])
+        end
+    end
+end
+new_gen_cap_df[!, "NEW_CAP"] = new_cap_results
+
+CSV.write((@__DIR__)*"/new_cap_downscaling_results.csv", new_transmission_builds_df)
+
+
+# Save new build capacities
+
+
+
+
 
 # plot results
 using PlasmoData, PlasmoDataPlots
@@ -370,11 +457,12 @@ for i in 1:num_zones
     vcap_nodes = models[i][:vCAP].axes[1]
     for j in vcap_nodes
         #println(j)
-        if value(models[i][:vCAP][j]) > 1
+        if value(models[i][:vCAP][j]) >= 1
 
             val = value(models[i][:vCAP][j])
             resource = n_input["RESOURCES"][j]
-            #println(parent(resource)[:resource])
+
+            println(parent(resource)[:resource])
             genx_zone = parent(resource)[:zone]
             node = n2n_map_back[genx_zone]
             add_node_data!(dg, node, "black", "color")
