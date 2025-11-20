@@ -44,11 +44,11 @@ end
 	if integer_routine_flag# && stab_method != "off"
 		all_planning_variables = all_variables(planning_problem);
 		integer_variables = all_planning_variables[is_integer.(all_planning_variables)];
-		binary_variables = all_planning_variables[is_binary.(all_planning_variables)];
+		#binary_variables = all_planning_variables[is_binary.(all_planning_variables)]; #APPEND
 		unset_integer.(integer_variables)
-		unset_binary.(binary_variables)
-		set_upper_bound.(binary_variables, 1)
-		set_lower_bound.(binary_variables, 0)
+		#unset_binary.(binary_variables)
+		#set_upper_bound.(binary_variables, 1)
+		#set_lower_bound.(binary_variables, 0)
 		integer_routine_flag = true;
 	end
 
@@ -161,7 +161,7 @@ end
 				println()
 				println("*** Switching on integer constraints *** ")
 				println()
-				println()
+				println()  
 				println()
 				println()
 				println()
@@ -177,10 +177,11 @@ end
 				    end
 				    return nothing
 				end
+				set_integer.(planning_problem[:vCAP]) #APPENDED AFTER
 				LB = planning_sol.LB;
 				planning_sol_best = deepcopy(planning_sol);
 				integer_routine_flag = false;
-				return (planning_problem=planning_problem,planning_sol = planning_sol_best,operational_sol = subop_sol,LB_hist = LB_hist,UB_hist = UB_hist,cpu_time = cpu_time,feasibility_hist = feasibility_hist, build_decisions = build_decisions)
+				#return (planning_problem=planning_problem,planning_sol = planning_sol_best,operational_sol = subop_sol,LB_hist = LB_hist,UB_hist = UB_hist,cpu_time = cpu_time,feasibility_hist = feasibility_hist, build_decisions = build_decisions)
 			elseif warmstart_bilinear_routine
 				println()
 				println()

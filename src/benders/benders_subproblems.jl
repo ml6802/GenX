@@ -46,7 +46,7 @@ function init_subproblem(setup::Dict, inputs::Dict, OPTIMIZER::MOI.OptimizerWith
     return EP, planning_variables_sub
 end
 
-function init_local_subproblems!(setup::Dict,inputs_local::Vector{Dict{Any,Any}},subproblems_local::Vector{Dict{Any,Any}},planning_variables::Vector{String},OPTIMIZER::MOI.OptimizerWithAttributes)
+function init_local_subproblems!(setup::Dict,inputs_local::Vector,subproblems_local::Vector{Dict{Any,Any}},planning_variables::Vector{String},OPTIMIZER::MOI.OptimizerWithAttributes)
 
     nW = length(inputs_local)
 
@@ -177,6 +177,7 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
         zone_cost = 0#make_benders_zonal_opcost(inputs,EP)
 		emissions = value.(EP[:eEmissionsByZone])
         original_obj_scale = get_attribute(EP, "ObjScale")
+        println("ORIGINAL OBJ SCALE IS ", original_obj_scale)
         lambda=[]
         if dual_status(EP) == MOI.NO_SOLUTION
             sols = value.(all_variables(EP))
@@ -188,7 +189,7 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
                 println("DUAL STATUS NOT COMPUTED; TRYING TO INCREASE OBJSCALE AGAIN")
                 flush(stdout)
                 @warn "Dual Status not computed; trying to increase ObjScale again"
-                set_optimizer_attribute(EP, "ObjScale", original_obj_scale * 10000)
+                set_optimizer_attribute(EP, "ObjScale", original_obj_scale / 10000)
                 optimize!(EP)
                 if has_values(EP) && dual_status(EP) == MOI.NO_SOLUTION
                     println("NO SOLUTION WITH GUROBI; TRYING IPOPT")
@@ -197,7 +198,7 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
                     set_optimizer(EP, Ipopt.Optimizer)
                     set_attribute(EP, "hsllib", HSL_jll.libhsl_path)
                     set_attribute(EP, "linear_solver", "ma57")
-                    set_attribute(EP, "max_cpu_time", 3600.)
+                    set_attribute(EP, "max_cpu_time", 8000.)
                     set_attribute(EP, "print_level", 5)
                     vars = all_variables(EP)
                     idx = EP.ext[:idx][1]

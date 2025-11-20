@@ -5,5 +5,5 @@ BarConvTol: 1e-8          # Barrier convergence tolerance (determines when barri
 Crossover: 1                 # Barrier crossver strategy. -1=automatic, 0=off (Default -1)
 #Threads: 8
 QCPDual: 1
-ObjScale: 1e7
+ObjScale: 1e8
 ScaleFlag: 2

@@ -17,7 +17,7 @@ const PSIP = PowerSystemsInvestmentsPortfolios
 const IS = InfrastructureSystems
 const PSY = PowerSystems
 using Plots
-using Random
+using Distributed, ClusterManagers, Random  
 
 # Load in portfolio
 include((@__DIR__)*"/load_portfolio.jl")
@@ -27,10 +27,10 @@ include((@__DIR__)*"/../convert_input_dict_reconductoring.jl")
 include((@__DIR__)*"/load_candidate_line_functions.jl")
 
 
-rep_periods = 26
+rep_periods = 4
 p.internal.ext["Rep_Periods"] = rep_periods
 p.internal.ext["Timesteps_per_Rep_Period"] = 168
-p.internal.ext["sub_weights"] = [8784/26 for i in 1:rep_periods]
+p.internal.ext["sub_weights"] = [8784/4 for i in 1:rep_periods]
 p.internal.ext["hours_per_subperiod"] = 168
 
 buses = collect(get_components(Bus, p.base_system))
@@ -51,6 +51,21 @@ for i in 1:length(buses)
     end
 end
 
+cpus_per_task = parse(Int, ENV["SLURM_CPUS_PER_TASK"]);
+addprocs(cpus_per_task)
+println("Adding processors")
+@everywhere begin
+    import Pkg
+    Pkg.activate("/scratch/gpfs/JENKINS/dc0173/git/forked/reconductoring/GenX")
+end
+
+println("Number of procs: ", nprocs())
+println("Number of workers: ", nworkers())
+for i in workers()
+    id, pid, host = fetch(@spawnat i (myid(), getpid(), gethostname()))
+    println(id, " " , pid, " ", host)
+end
+@everywhere using GenX, Distributed
 
 
 
@@ -112,7 +127,7 @@ end
 
 myinputs = GenX.load_inputs(mysetup, case, p)
 
-optimizer = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 57600, "MIPGap" => 1e-3)
+optimizer = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 300, "MIPGap" => 1e-3)
 
 # Add expected candidate line data
 # also scales demands up by 4x
@@ -122,11 +137,10 @@ GenX.expand_new_cap_resources_to_nodal!(myinputs, mysetup, p, "")
 GenX.load_generators_variability!(mysetup, p, myinputs)
 
 # Set additional inputs so it only solves for one week
-hours_per_subperiod = 168
-myinputs["hours_per_subperiod"] = hours_per_subperiod
-myinputs["T"] = 4368
-myinputs["START_SUBPERIODS"] = 1:hours_per_subperiod:myinputs["T"]
-myinputs["INTERIOR_SUBPERIODS"] = setdiff(1:myinputs["T"], myinputs["START_SUBPERIODS"])
+myinputs["hours_per_subperiod"] = 168
+myinputs["INTERIOR_SUBPERIODS"] = [i for i in 2:myinputs["hours_per_subperiod"]]
+myinputs["T"] = 168
+
 
 if haskey(mysetup, "IntegerInvestments")
     if mysetup["IntegerInvestments"] == 1
@@ -137,20 +151,28 @@ if haskey(mysetup, "IntegerInvestments")
     end
 end
 
+benders_settings_path = GenX.get_settings_path(case, "benders_settings.yml")
+mysetup_benders = GenX.configure_benders(benders_settings_path) 
+mysetup = merge(mysetup,mysetup_benders);
+
 
 mysetup["NetworkExpansion"] = 1
-mysetup["Benders"] = 0
-mysetup["bilinear"] = 0
+mysetup["Benders"] = 1
+mysetup["bilinear"] = 1
 mysetup["DC_OPF"] = 1
 mysetup["IntegerInvestments"] = 1
 
-m = GenX.generate_model(mysetup, myinputs, optimizer)
+myinputs_decomp = GenX.separate_inputs_subperiods(myinputs);
+benders_inputs = GenX.generate_benders_inputs(mysetup,myinputs,myinputs_decomp)
 
-optimize!(m)
-for v in m[:vNEW_TRANS_CAP_DECISION_INT]
-    println(v, "   ", value(v))
-end
+planning_problem1, planning_sol1, operational_sol1, LB_hist1,UB_hist1, cpu_time1,feasibility_hist1, build_decisions1  = GenX.benders(benders_inputs,mysetup,myinputs);
 
-for v in m[:vCAP]
-    println(v, "   ", value(v))
+
+println("RUNNING 1 Month")
+# println(operational_sol1.summation_map)
+
+for i in keys(planning_sol1.values)
+    if planning_sol1.values[i] != 0
+        println(i, " = ", planning_sol1.values[i])
+    end
 end
