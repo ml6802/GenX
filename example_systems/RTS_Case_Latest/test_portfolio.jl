@@ -1108,13 +1108,175 @@ function validate_and_fix_time_series_lengths(portfolio, expected_length=8784)
     return portfolio
 end
 
+"""
+    clean_time_series_for_tdr(portfolio)
+
+Removes non-variability time series (fuel prices, etc.) that have different lengths
+than the main variability time series, keeping only the 8784-hour availability data.
+"""
+function clean_time_series_for_tdr(portfolio)
+    log_info("Cleaning time series data for TDR compatibility...")
+    
+    # Get all supply technologies (where the problem occurs)
+    supply_techs = collect(get_technologies(SupplyTechnology, portfolio))
+    
+    removed_count = 0
+    
+    for tech in supply_techs
+        tech_name = PSIP.get_name(tech)
+        
+        if !IS.has_time_series(tech)
+            continue
+        end
+        
+        ts_keys = IS.get_time_series_keys(tech)
+        
+        if length(ts_keys) <= 1
+            continue  # No problem if only one time series
+        end
+        
+        # Find all time series and categorize by length
+        ts_by_length = Dict{Int, Vector}()
+        
+        for key in ts_keys
+            try
+                ts_data = IS.get_time_series(tech, key)
+                ts_values = PSIP.get_data(ts_data)
+                
+                length_val = if ts_values isa TS.TimeArray
+                    length(values(ts_values))
+                else
+                    length(ts_values)
+                end
+                
+                if !haskey(ts_by_length, length_val)
+                    ts_by_length[length_val] = []
+                end
+                
+                push!(ts_by_length[length_val], (key=key, data=ts_data))
+                
+            catch e
+                log_warn("Error reading time series '$key' for $tech_name: $e")
+            end
+        end
+        
+        # If we have multiple lengths, keep only the longest one (8784)
+        if length(ts_by_length) > 1
+            max_length = maximum(keys(ts_by_length))
+            
+            log_info("Tech '$tech_name' has $(length(ts_keys)) time series with lengths: $(keys(ts_by_length))")
+            log_info("  Keeping only time series with length $max_length")
+            
+            # Remove all time series that don't match max_length
+            for (len, ts_list) in ts_by_length
+                if len != max_length
+                    for ts_info in ts_list
+                        try
+                            # Determine removal method based on key type
+                            if hasfield(typeof(ts_info.key), :initial_timestamp)
+                                IS.remove_time_series!(
+                                    portfolio.data, 
+                                    tech, 
+                                    ts_info.key.name, 
+                                    ts_info.key.initial_timestamp
+                                )
+                            else
+                                IS.remove_time_series!(
+                                    portfolio.data, 
+                                    tech, 
+                                    ts_info.key.name
+                                )
+                            end
+                            
+                            log_info("    Removed '$(ts_info.key.name)' (length $len)")
+                            removed_count += 1
+                            
+                        catch e
+                            log_warn("    Failed to remove '$(ts_info.key.name)': $e")
+                        end
+                    end
+                end
+            end
+        end
+    end
+    
+    log_success("Cleaned time series: removed $removed_count incompatible series")
+    return portfolio
+end
+
+"""
+    check_time_series_consistency(portfolio)
+
+Simply checks and reports time series lengths without modification.
+"""
+function check_time_series_consistency(portfolio)
+    log_info("Checking time series consistency...")
+    
+    all_techs = vcat(
+        collect(get_technologies(SupplyTechnology, portfolio)),
+        collect(get_technologies(StorageTechnology, portfolio)),
+        collect(get_technologies(DemandRequirement, portfolio))
+    )
+    
+    issues_found = false
+    
+    for tech in all_techs
+        tech_name = PSIP.get_name(tech)
+        
+        if !IS.has_time_series(tech)
+            log_warn("$tech_name has no time series")
+            issues_found = true
+            continue
+        end
+        
+        ts_keys = IS.get_time_series_keys(tech)
+        lengths = Set()
+        
+        for key in ts_keys
+            try
+                ts_data = IS.get_time_series(tech, key)
+                ts_values = PSIP.get_data(ts_data)
+                
+                length_val = if ts_values isa TS.TimeArray
+                    length(values(ts_values))
+                else
+                    length(ts_values)
+                end
+                
+                push!(lengths, length_val)
+            catch e
+                log_warn("Error reading time series for $tech_name: $e")
+            end
+        end
+        
+        if length(lengths) > 1
+            log_warn("$tech_name has inconsistent time series lengths: $lengths")
+            issues_found = true
+        elseif !isempty(lengths)
+            log_info("$tech_name: $(first(lengths)) hours × $(length(ts_keys)) series")
+        end
+    end
+    
+    if !issues_found
+        log_success("All time series are consistent")
+    end
+    
+    return portfolio
+end
+
 if read_from_json == false && rts_case == true
     # Build portfolio from the function above and then run GenX
     case = @__DIR__#joinpath(@__DIR__, "/Users/sc87/code/GenX_PowerGenome/GenX_Benders_DC_OPF/GenX/example_systems/RTS_Case_Latest/")
     p = load_rts(case)
     
     # Validate and fix time series lengths after loading
-    p = validate_and_fix_time_series_lengths(p, 8784)
+    #**p = validate_and_fix_time_series_lengths(p, 8784)**
+
+    # CRITICAL: Clean time series BEFORE any validation
+    p = clean_time_series_for_tdr(p)
+    
+    # Now validate that everything is consistent
+    p = check_time_series_consistency(p)
     
 elseif read_from_json == true && rts_case == true
     # Load portfolio from file
@@ -1123,7 +1285,11 @@ elseif read_from_json == true && rts_case == true
     p = PSIP.Portfolio(case_json)
     
     # Validate and fix time series lengths after loading
-    p = validate_and_fix_time_series_lengths(p, 8784)
+    #**p = validate_and_fix_time_series_lengths(p, 8784)**
+
+    # Clean time series from loaded portfolio too
+    p = clean_time_series_for_tdr(p)
+    p = check_time_series_consistency(p)
     
 elseif read_from_json == false && rts_case == false
     # Build portfolio from the function above and then run GenX
@@ -1136,7 +1302,11 @@ else
     p = PSIP.Portfolio(case_json)
     
     # Validate and fix time series lengths after loading
-    p = validate_and_fix_time_series_lengths(p, 8784)
+    #**p = validate_and_fix_time_series_lengths(p, 8784)**
+
+    # Clean time series from loaded portfolio too
+    p = clean_time_series_for_tdr(p)
+    p = check_time_series_consistency(p)
 end
 
 
@@ -1168,7 +1338,9 @@ if mysetup["TimeDomainReduction"] == 1
         
         # Final cleanup: Ensure only 8784-length time series remain before TDR
         log_info("Final cleanup: Ensuring only 8784-length time series before TDR...")
-        p = validate_and_fix_time_series_lengths(p, 8784)
+        #**p = validate_and_fix_time_series_lengths(p, 8784)**
+
+        p = clean_time_series_for_tdr(p)
         
         # Debug: Check time series consistency before clustering
         log_info("Debugging time series data before clustering...")
