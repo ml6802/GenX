@@ -213,12 +213,12 @@ function solve_mga_master_problem(EP::Model,master_vars::Vector{String}, inputs:
         optimize!(EP)
         if has_values(EP)
             zone_inv_cost = make_benders_zonal_invcost(inputs, EP)
-            master_sol =  (inv_cost =value(EP[:eObj]),zone_inv_cost = zone_inv_cost, values =Dict([s=>value.(variable_by_name(EP,s)) for s in master_vars]), id = id, iteration = iteration, mga_it=mga_it)
+            master_sol =  (inv_cost =value(EP[:eObj]), net_exp_cost = value(EP[:eTotalCNetworkExp]), zone_inv_cost = zone_inv_cost, values =Dict([s=>value.(variable_by_name(EP,s)) for s in master_vars]), id = id, iteration = iteration, mga_it=mga_it)
             set_attribute(EP, "Crossover", 0)
         end
     else
         zone_inv_cost = make_benders_zonal_invcost(inputs, EP)
-        master_sol =  (inv_cost =value(EP[:eObj]),zone_inv_cost = zone_inv_cost, values =Dict([s=>value.(variable_by_name(EP,s)) for s in master_vars]), id=id, iteration=iteration,mga_it=mga_it)
+        master_sol =  (inv_cost =value(EP[:eObj]),net_exp_cost = value(EP[:eTotalCNetworkExp]),zone_inv_cost = zone_inv_cost, values =Dict([s=>value.(variable_by_name(EP,s)) for s in master_vars]), id=id, iteration=iteration,mga_it=mga_it)
     end
 	return master_sol
 end

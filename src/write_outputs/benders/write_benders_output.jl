@@ -67,8 +67,45 @@ function get_op_cost(subop_sol::Dict)
 	for z in eachindex(zone_op_cost)
 		zone_op_cost[z] = sum(subop_sol[i].zone_cost.COpTot[z] for i in keys(subop_sol))
 	end
-	println("zone_op_cost inside get_op_cost: ", zone_op_cost)
 	return ann_op_cost,zone_op_cost
+end
+
+function breakout_costs(master_sol::NamedTuple, subop_sol::Dict)
+	list_of_costs = ["CTotal","CFix","CVar","CFuel","CStart","CNetworkExp","CNSE", "COpTot"]
+	list_of_zones = ["_" * string(x) for x in 1:length(subop_sol[1].zone_cost.CTotal)]
+	cost_mat = Array{Float64,2}(undef,(length(list_of_costs),length(list_of_zones)))
+	names = Array{String,2}(undef,(length(list_of_costs),length(list_of_zones)))
+	for (j, zone) in enumerate(list_of_zones)
+		for (i, cost_name) in enumerate(list_of_costs)
+			if cost_name == "CFix"
+				cost_mat[i,j] = master_sol.zone_inv_cost[j]
+			elseif cost_name == "CNetworkExp"
+				cost_mat[i,j] = 0.0
+			elseif cost_name == "CTotal"
+				cost_mat[i,j] = subop_sol[1].zone_cost.CTotal[j] + master_sol.zone_inv_cost[j]
+			else
+				cost_mat[i,j] = subop_sol[1].zone_cost[Symbol(cost_name)][j]
+			end
+			names[i,j] = cost_name * zone
+		end
+	end
+	total_costs = construct_total_costs(cost_mat, master_sol)
+	flat_mat = reshape(cost_mat, (length(list_of_costs)*length(list_of_zones),))
+	costs = vcat(total_costs, flat_mat)
+	names = reshape(names, (length(list_of_costs)*length(list_of_zones),))
+	complete_names = vcat(list_of_costs, names)
+	dfCosts = DataFrame(costs', complete_names)
+	return dfCosts
+end
+
+function construct_total_costs(cost_mat, master_sol)
+	total_costs = zeros(size(cost_mat,1))
+	for i in 1:size(cost_mat,1)
+		total_costs[i] = sum(cost_mat[i,j] for j in 1:size(cost_mat,2))
+	end
+	total_costs[6] = master_sol.net_exp_cost*ModelScalingFactor^2
+	total_costs[1] += master_sol.net_exp_cost*ModelScalingFactor^2
+	return total_costs
 end
 
 function gather_emissions(inputs_decomp::Dict,subop_sol::Dict)
@@ -194,7 +231,6 @@ function write_capacity_benders(inputs::Dict, master_sol::NamedTuple)
 end
 
 function add_zone_costs!(costs::NamedTuple, dfResults::DataFrame)
-	println(costs)
 	for k in eachindex(costs.zone_inv_cost)
 		zone = "Zone"*string(k)*"_TotalCost"
 		dfResults[!,Symbol(zone)] .= costs.zone_inv_cost[k] + costs.zone_op_cost[k]
@@ -217,24 +253,29 @@ function make_benders_results_df(master_sol::NamedTuple, subop_sol::Dict, path::
 	dfResults[!,:FixedCost] .= costs.investment_costs*ModelScalingFactor^2
 	dfResults[!,:OpCost] .= costs.annual_op_cost*ModelScalingFactor^2
 	dfResults[!,:TotalCost] .= dfResults.FixedCost[1]+dfResults.OpCost[1]
+
+	dfCosts = breakout_costs(master_sol, subop_sol)
+
 	add_zone_costs!(costs, dfResults)
 	total_ems, zonal_ems = gather_emissions(inputs_decomp,subop_sol)
 	dfResults[!,:TotalEmissions] .= total_ems*ModelScalingFactor
 	add_zone_ems!(zonal_ems.*ModelScalingFactor, dfResults)
-	return dfResults
+	return dfResults, dfCosts
 end
 
-function write_benders_mga_results!(Results_df::DataFrame, power_df::DataFrame, results::AbstractArray, path::AbstractString, setup::Dict, inputs::Dict, inputs_decomp::Dict, sumtime_df::DataFrame)
+function write_benders_mga_results!(Results_df::DataFrame, Costs_df::DataFrame, power_df::DataFrame, results::AbstractArray, path::AbstractString, setup::Dict, inputs::Dict, inputs_decomp::Dict, sumtime_df::DataFrame)
 	num_its = 2*setup["ModelingToGenerateAlternativeIterations"]
 	for i in 1:num_its
-		temp_df = make_benders_results_df(results[i,1],results[i,2],path,setup,inputs,inputs_decomp)
+		temp_df, temp_costs = make_benders_results_df(results[i,1],results[i,2],path,setup,inputs,inputs_decomp)
 		temp_power_df = make_power_df(inputs,inputs_decomp,results[i,2], setup)
 		append!(Results_df,temp_df)
 		append!(power_df,temp_power_df)
+		append!(Costs_df,temp_costs)
 	end
 	iterations = collect(0:num_its)
 	Results_df[!,:MGAIteration] .= iterations
 	power_df[!,:MGAIteration] .= iterations
+	Costs_df[!,:MGAIteration] .= iterations
 	outpath = joinpath(path,"Outputs")
 	if setup["OverwriteResults"] == 1
 		# Overwrite existing results if dir exists
@@ -250,6 +291,7 @@ function write_benders_mga_results!(Results_df::DataFrame, power_df::DataFrame, 
     CSV.write(joinpath(outpath, "SummaryMGA.csv"),Results_df)
     CSV.write(joinpath(outpath, "SummaryMGATimes.csv"),sumtime_df)
 	CSV.write(joinpath(outpath, "AnnualPowerByGen.csv"),power_df)
+	CSV.write(joinpath(outpath, "FullCostsMGA.csv"),Costs_df)
 end
 
 function splitfun(x)
