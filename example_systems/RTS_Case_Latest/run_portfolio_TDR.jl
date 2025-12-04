@@ -35,21 +35,6 @@ p.internal.ext["sub_weights"] = [8784 for i in 1:p.internal.ext["Rep_Periods"]]
 add_om_costs(p)
 
 techs = collect(get_technologies(SupplyTechnology, p))
-# for (i, t) in enumerate(techs)
-#     # if isa(t.operation_costs.variable, FuelCurve)
-#     #     if t.operation_costs.fixed > 0#vom_cost.function_data.proportional_term == 0
-#     #         #println(t.operation_costs.fixed, "   ", has_supplemental_attributes(ExistingCapacity, t))
-#     #     end
-#     # else 
-#     #     if !has_supplemental_attributes(ExistingCapacity, t)
-#     #         println(i, "  ", t.name)
-#     #     end
-#     # end
-#     if !has_supplemental_attributes(ExistingCapacity, t)
-#             println(i, "  ", t.name)
-#         end
-# end
-
 
 # Build map of buses to zones; used in downscaling
 buses = collect(get_components(Bus, p.base_system))
@@ -131,12 +116,12 @@ myinputs = GenX.load_inputs(mysetup, case, p)
 optimizer = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 300, "MIPGap" => 1e-3)
 
 
-
 # Add expected candidate line data
 # also scales demands up by 2x
 load_candidates_base(myinputs, 8784)
-cr = cluster_inputs(case, settings_path, mysetup; inputs = myinputs)
-myinputs["T"] = size(myinputs["pD"], 1)
+
+# Run TDR
+cluster_inputs(case, settings_path, mysetup; inputs = myinputs)
 
 GenX.expand_new_cap_resources_to_nodal!(myinputs, mysetup, p, "")
 

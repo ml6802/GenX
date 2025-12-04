@@ -1577,6 +1577,7 @@ function cluster_inputs(inpath,
                 inputs["fuel_costs"][k] = inputs["fuel_costs"][k][1:total_tdr_length] 
             end
 
+            myinputs["T"] = total_tdr_length
             return nothing# GVOutputData, GVColMap,  PeriodMap, FPOutputData, DMOutputData, DemandCols
         else
             if v
