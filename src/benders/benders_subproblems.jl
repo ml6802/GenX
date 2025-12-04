@@ -183,13 +183,13 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
             sols = value.(all_variables(EP))
             original_obj_scale = get_attribute(EP, "ObjScale")
             @warn "Dual Status not computed; trying to increase ObjScale"
-            set_optimizer_attribute(EP, "ObjScale", original_obj_scale * 10000)
+            set_optimizer_attribute(EP, "ObjScale", original_obj_scale * 100000)
             optimize!(EP)
             if dual_status(EP) == MOI.NO_SOLUTION
                 println("DUAL STATUS NOT COMPUTED; TRYING TO INCREASE OBJSCALE AGAIN")
                 flush(stdout)
-                @warn "Dual Status not computed; trying to increase ObjScale again"
-                set_optimizer_attribute(EP, "ObjScale", original_obj_scale / 10000)
+                @warn "Dual Status not computed; trying to decrease ObjScale"
+                set_optimizer_attribute(EP, "OjScale", original_obj_scale / 10000)
                 optimize!(EP)
                 if has_values(EP) && dual_status(EP) == MOI.NO_SOLUTION
                     println("NO SOLUTION WITH GUROBI; TRYING IPOPT")

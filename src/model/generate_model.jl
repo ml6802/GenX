@@ -122,7 +122,7 @@ function operation_model!(EP::Model,setup::Dict, inputs::Dict)
 
     create_empty_expression!(EP, :eGenerationByZone, (Z, T))
 
-    if haskey(inputs, "node_to_timeseries")
+    if haskey(inputs, "node_to_timeseries") && setup["ptdf"] == 0
         scale_factor = setup["ParameterScale"] == 1 ? ModelScalingFactor : 1
         node_to_timeseries = inputs["node_to_timeseries"]
         connected_nodes = sort(collect(keys(node_to_timeseries)))

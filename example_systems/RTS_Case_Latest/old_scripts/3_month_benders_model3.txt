@@ -1,0 +1,2488 @@
+
+  "Crossover" => 0
+  "MIPGap" => 0.0001
+  "BarConvTol" => 1.0e-8
+Investment Discharge Module
+Investment Transmission Module
+Investment Storage Resources Module
+Storage Investment Module
+Charge Investment Module
+Minimum Capacity Requirement Module
+Subproblem Gurobi attributes:
+Dict{String, Any} with 8 entries:
+  "Method" => 2
+  "Crossover" => 1
+  "MIPGap" => 0.001
+  "Threads" => 20
+  "ScaleFlag" => 2
+  "ObjScale" => 10000
+  "BarConvTol" => 1.0e-8
+  "QCPDual" => 1
+Investment Discharge Module
+Discharge Module
+Non-served Energy Module
+Unit Commitment Module
+Fuel Module
+CO2 Module
+Dispatchable Resources Module
+Must-Run Resources Module
+Storage Core Resources Module
+Storage Resources with Asmymetric Charge/Discharge Capacity Module
+Thermal (Unit Commitment) Resources Module
+DC-OPF Transmission Flows Module
+Distributed operational subproblems generation took 53.11823892593384 seconds
+OPTIMAL
+OBJECTIVE OF SUBPROBLEM IS : 3.33976670186005e11
+6.641017626814423e-6
+Updating the planning problem....done (it took 0.0002491474151611328 s).
+OPTIMAL
+Solving the planning problem required 0.0017850399017333984 seconds
+k = 0      LB = 2.2284894680296898e7     UB = 3.33976670186005e11       Gap = 14985.683804312037       CPU Time = 70.78236198425293
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 8.554796924782185e10
+0.00011145106777985316
+Updating the planning problem....done (it took 0.00022482872009277344 s).
+OPTIMAL
+Solving the planning problem required 0.002025127410888672 seconds
+k = 1      LB = 3.438155646042864e7     UB = 8.557025414250215e10       Gap = 2487.8417789051814       CPU Time = 143.65874814987183
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 2.606758286808158e10
+0.0004393328745984092
+Updating the planning problem....done (it took 0.0002288818359375 s).
+OPTIMAL
+Solving the planning problem required 0.0017578601837158203 seconds
+k = 2      LB = 4.4893962997388005e7     UB = 2.610196442454201e10       Gap = 580.4136841975983       CPU Time = 211.8892321586609
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 1.8534979624947643e10
+3.806623347048242e-5
+Updating the planning problem....done (it took 0.00021696090698242188 s).
+OPTIMAL
+Solving the planning problem required 0.0019578933715820312 seconds
+k = 3      LB = 1.0737739668888238e8     UB = 1.857987358794503e10       Gap = 172.03337723654042       CPU Time = 270.8264830112457
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 6.566204526656972e9
+1.7957143964486275e-5
+Updating the planning problem....done (it took 0.00021314620971679688 s).
+OPTIMAL
+Solving the planning problem required 0.04839205741882324 seconds
+k = 4      LB = 1.0777078279877362e8     UB = 6.673581923345855e9       Gap = 60.92385125202781       CPU Time = 334.5249180793762
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 6.528315644292227e9
+4.574740097554343e-5
+Updating the planning problem....done (it took 0.00021004676818847656 s).
+OPTIMAL
+Solving the planning problem required 0.07572722434997559 seconds
+k = 5      LB = 1.090687996801735e8     UB = 6.636086427091001e9       Gap = 59.8431232996993       CPU Time = 396.42261505126953
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 7.043063531873213e9
+3.659332309692528e-5
+Updating the planning problem....done (it took 0.00022602081298828125 s).
+OPTIMAL
+Solving the planning problem required 0.11568903923034668 seconds
+k = 6      LB = 1.0946218579006475e8     UB = 6.636086427091001e9       Gap = 59.624464779263704       CPU Time = 460.27023911476135
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 6.960458300440866e9
+8.885437769088253e-6
+Updating the planning problem....done (it took 0.00023984909057617188 s).
+OPTIMAL
+Solving the planning problem required 0.09094810485839844 seconds
+k = 7      LB = 1.1180479496588832e8     UB = 6.636086427091001e9       Gap = 58.35422026502238       CPU Time = 525.7762742042542
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 5.233941694543743e9
+1.4142033534786358e-5
+Updating the planning problem....done (it took 0.0002429485321044922 s).
+OPTIMAL
+Solving the planning problem required 0.09297990798950195 seconds
+k = 8      LB = 1.1219818107577921e8     UB = 5.345746489509631e9       Gap = 46.6455717753489       CPU Time = 590.0074892044067
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 2.5625248120593953e9
+1.2458830850561433
+Updating the planning problem....done (it took 0.00023603439331054688 s).
+OPTIMAL
+Solving the planning problem required 0.0691521167755127 seconds
+k = 9      LB = 1.1946469563985932e8     UB = 2.6747229931351748e9       Gap = 21.38923372975769       CPU Time = 651.0220382213593
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 2.465067290626534e9
+5.440515036345858e-6
+Updating the planning problem....done (it took 0.00023293495178222656 s).
+OPTIMAL
+Solving the planning problem required 0.07677602767944336 seconds
+k = 10      LB = 1.198016074008411e8     UB = 2.584531986266393e9       Gap = 20.57343329809319       CPU Time = 717.7398190498352
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 1.4864405273855753e9
+4.472212533837144e-6
+Updating the planning problem....done (it took 0.00022292137145996094 s).
+OPTIMAL
+Solving the planning problem required 0.10638308525085449 seconds
+k = 11      LB = 1.2425754674916296e8     UB = 1.6062421347864163e9       Gap = 11.926716942423752       CPU Time = 781.3586320877075
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 5.2859778446947926e8
+106.53247782861322
+Updating the planning problem....done (it took 0.0002219676971435547 s).
+OPTIMAL
+Solving the planning problem required 0.03370809555053711 seconds
+k = 12      LB = 1.2430358031293195e8     UB = 6.528553312186422e8       Gap = 4.252103998735121       CPU Time = 847.3230390548706
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 2.8114229579472804e8
+1.2461871360980406e-8
+Updating the planning problem....done (it took 0.00021219253540039062 s).
+OPTIMAL
+Solving the planning problem required 0.11971902847290039 seconds
+k = 13      LB = 1.2442769165961768e8     UB = 4.0544587610766e8       Gap = 2.2584858780213573       CPU Time = 913.6433200836182
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 1.7194936701519203e8
+3.1461252702203724e-6
+Updating the planning problem....done (it took 0.00021409988403320312 s).
+OPTIMAL
+Solving the planning problem required 0.09156990051269531 seconds
+k = 14      LB = 1.2447039540402317e8     UB = 2.963770586748097e8       Gap = 1.3811048218557367       CPU Time = 977.8703770637512
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 9.89006335448691e7
+5.5873673578302195e-8
+Updating the planning problem....done (it took 0.00023603439331054688 s).
+OPTIMAL
+Solving the planning problem required 0.11339187622070312 seconds
+k = 15      LB = 1.2456350665721545e8     UB = 2.2337102894889224e8       Gap = 0.793230095581556       CPU Time = 1038.825189113617
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 4.875725514106484e9
+2.0023589668730885e-5
+Updating the planning problem....done (it took 0.0002288818359375 s).
+OPTIMAL
+Solving the planning problem required 0.0962059497833252 seconds
+k = 16      LB = 1.2474273298949212e8     UB = 2.2337102894889224e8       Gap = 0.7906536404626329       CPU Time = 1104.6373620033264
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 5.433766319242285e7
+3.586795568911604e-8
+Updating the planning problem....done (it took 0.000225067138671875 s).
+OPTIMAL
+Solving the planning problem required 0.11482596397399902 seconds
+k = 17      LB = 1.2475746006464665e8     UB = 1.7908039618191496e8       Gap = 0.43542835906661875       CPU Time = 1171.3788821697235
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 3.9608388112031803e9
+2.8960369772416673e-5
+Updating the planning problem....done (it took 0.00023603439331054688 s).
+OPTIMAL
+Solving the planning problem required 0.1086111068725586 seconds
+k = 18      LB = 1.2488286085722384e8     UB = 1.7908039618191496e8       Gap = 0.4339869774976897       CPU Time = 1235.944342136383
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 3.9511578399595537e9
+3.694132387861368e-6
+Updating the planning problem....done (it took 0.0002269744873046875 s).
+OPTIMAL
+Solving the planning problem required 0.14581799507141113 seconds
+k = 19      LB = 1.2493761899960808e8     UB = 1.7908039618191496e8       Gap = 0.4333584841446091       CPU Time = 1300.7431011199951
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 1.664713456857758e9
+7.039488970604895e-6
+Updating the planning problem....done (it took 0.0002491474151611328 s).
+OPTIMAL
+Solving the planning problem required 0.09550285339355469 seconds
+k = 20      LB = 1.2498466373904565e8     UB = 1.7908039618191496e8       Gap = 0.43281896213934934       CPU Time = 1365.880746126175
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 4.91727543748609e7
+4.178538455253201e-8
+Updating the planning problem....done (it took 0.0002048015594482422 s).
+OPTIMAL
+Solving the planning problem required 0.015506982803344727 seconds
+k = 21      LB = 1.2771572536212283e8     UB = 1.7415741811390653e8       Gap = 0.36363331625846207       CPU Time = 1432.1423330307007
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 3.2842617344975305e8
+1.6195318128312007e-6
+Updating the planning problem....done (it took 0.00021195411682128906 s).
+OPTIMAL
+Solving the planning problem required 0.11402106285095215 seconds
+k = 22      LB = 1.2788255158748335e8     UB = 1.7415741811390653e8       Gap = 0.36185441995006606       CPU Time = 1497.4500532150269
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 1.2253351428306685e8
+8.379267613707005e-6
+Updating the planning problem....done (it took 0.00022101402282714844 s).
+OPTIMAL
+Solving the planning problem required 0.12683415412902832 seconds
+k = 23      LB = 1.279252483369628e8     UB = 1.7415741811390653e8       Gap = 0.3613998829626299       CPU Time = 1561.998496055603
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 4.243842956697305e7
+3.5406519572058493e-6
+Updating the planning problem....done (it took 0.0002200603485107422 s).
+OPTIMAL
+Solving the planning problem required 0.07237696647644043 seconds
+k = 24      LB = 1.2792525409388201e8     UB = 1.7036367790393585e8       Gap = 0.33174390866489156       CPU Time = 1626.7697110176086
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 4.2438428322436765e7
+1.7650031989039679e-9
+Updating the planning problem....done (it took 0.00021910667419433594 s).
+OPTIMAL
+Solving the planning problem required 0.08405685424804688 seconds
+k = 25      LB = 1.2845432052803087e8     UB = 1.7036367790393585e8       Gap = 0.32625883818956214       CPU Time = 1693.739012002945
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 1.4879402231786934e8
+4.033332549345241e-7
+Updating the planning problem....done (it took 0.00023698806762695312 s).
+OPTIMAL
+Solving the planning problem required 0.20953106880187988 seconds
+k = 26      LB = 1.28479860324848e8     UB = 1.7036367790393585e8       Gap = 0.32599519857189263       CPU Time = 1760.511752128601
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 7.807451491679804e8
+3.576013747511451e-8
+Updating the planning problem....done (it took 0.0002319812774658203 s).
+OPTIMAL
+Solving the planning problem required 0.1426379680633545 seconds
+k = 27      LB = 1.2848264217716886e8     UB = 1.7036367790393585e8       Gap = 0.3259664886795827       CPU Time = 1826.6016061306
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 1.8923129607543314e8
+1.0338507104947215e-6
+Updating the planning problem....done (it took 0.00022602081298828125 s).
+OPTIMAL
+Solving the planning problem required 0.16446685791015625 seconds
+k = 28      LB = 1.2849701727751032e8     UB = 1.7036367790393585e8       Gap = 0.32581815137395476       CPU Time = 1892.0477089881897
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 6.036656137859459e7
+3.6105437655577414e-9
+Updating the planning problem....done (it took 0.0002391338348388672 s).
+OPTIMAL
+Solving the planning problem required 0.10169410705566406 seconds
+k = 29      LB = 1.285253368637658e8     UB = 1.7036367790393585e8       Gap = 0.325526017368216       CPU Time = 1958.1120221614838
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 4.060212480188145e7
+1.0914790038894688e-7
+Updating the planning problem....done (it took 0.00020003318786621094 s).
+OPTIMAL
+Solving the planning problem required 0.1328568458557129 seconds
+k = 30      LB = 1.2852534285532387e8     UB = 1.6912746166564724e8       Gap = 0.31590749270381363       CPU Time = 2020.188395023346
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 4.0602123077712536e7
+5.749645422732968e-6
+Updating the planning problem....done (it took 0.00021505355834960938 s).
+OPTIMAL
+Solving the planning problem required 0.12587618827819824 seconds
+k = 31      LB = 1.3358213014212841e8     UB = 1.6912746166564724e8       Gap = 0.2660934623942543       CPU Time = 2087.1660661697388
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 1.8843056225084454e8
+1.2268447699110203e-6
+Updating the planning problem....done (it took 0.00021409988403320312 s).
+OPTIMAL
+Solving the planning problem required 0.05990314483642578 seconds
+k = 32      LB = 1.3358213014212841e8     UB = 1.6912746166564724e8       Gap = 0.2660934623942543       CPU Time = 2151.2799441814423
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 1.8843056216213226e8
+9.397105854524064e-9
+Updating the planning problem....done (it took 0.00021600723266601562 s).
+OPTIMAL
+Solving the planning problem required 0.13477611541748047 seconds
+k = 33      LB = 1.3936599728221947e8     UB = 1.6912746166564724e8       Gap = 0.21354896433711942       CPU Time = 2214.1038711071014
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 1.6616739612572604e8
+4.403366821747872e-8
+Updating the planning problem....done (it took 0.00021696090698242188 s).
+OPTIMAL
+Solving the planning problem required 0.040390968322753906 seconds
+k = 34      LB = 1.5084359718557203e8     UB = 1.6912746166564724e8       Gap = 0.12121074292322721       CPU Time = 2279.511437177658
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 2.845629130394555e9
+1.8155785806564006e-5
+Updating the planning problem....done (it took 0.00021004676818847656 s).
+OPTIMAL
+Solving the planning problem required 0.16576695442199707 seconds
+k = 35      LB = 1.5090669099509683e8     UB = 1.6912746166564724e8       Gap = 0.1207419667769564       CPU Time = 2344.194384098053
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 1.8170728867245007e9
+4.568719719504209e-5
+Updating the planning problem....done (it took 0.0002448558807373047 s).
+OPTIMAL
+Solving the planning problem required 0.11242985725402832 seconds
+k = 36      LB = 1.509549416764235e8     UB = 1.6912746166564724e8       Gap = 0.12038373694434659       CPU Time = 2411.0277740955353
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 9.083248160242474e8
+13835.898238082807
+Updating the planning problem....done (it took 0.00022602081298828125 s).
+OPTIMAL
+Solving the planning problem required 0.14290213584899902 seconds
+k = 37      LB = 1.5107568319918123e8     UB = 1.6912746166564724e8       Gap = 0.11948831264040144       CPU Time = 2481.666941165924
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 6.373316887986367e8
+14938.849013291923
+Updating the planning problem....done (it took 0.00022792816162109375 s).
+OPTIMAL
+Solving the planning problem required 0.13846397399902344 seconds
+k = 38      LB = 1.511170685153552e8     UB = 1.6912746166564724e8       Gap = 0.11918172663905255       CPU Time = 2553.269755125046
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 5.1495750708766544e8
+7.709922750238194
+Updating the planning problem....done (it took 0.00022101402282714844 s).
+OPTIMAL
+Solving the planning problem required 0.13193392753601074 seconds
+k = 39      LB = 1.5114521653057003e8     UB = 1.6912746166564724e8       Gap = 0.118973299637572       CPU Time = 2622.7720460891724
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 1.0793825655062318e9
+5233.143532071858
+Updating the planning problem....done (it took 0.0002129077911376953 s).
+OPTIMAL
+Solving the planning problem required 0.14374399185180664 seconds
+k = 40      LB = 1.5115977799486673e8     UB = 1.6912746166564724e8       Gap = 0.1188655071416596       CPU Time = 2692.442335128784
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 1.79089926576046e8
+3141.041801791236
+Updating the planning problem....done (it took 0.00024700164794921875 s).
+OPTIMAL
+Solving the planning problem required 0.12493300437927246 seconds
+k = 41      LB = 1.5127149925514296e8     UB = 1.6912746166564724e8       Gap = 0.11803917128095238       CPU Time = 2758.3146600723267
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 6.051539418193613e8
+18783.323514555686
+Updating the planning problem....done (it took 0.0002231597900390625 s).
+OPTIMAL
+Solving the planning problem required 0.11521100997924805 seconds
+k = 42      LB = 1.5132750587072653e8     UB = 1.6912746166564724e8       Gap = 0.11762538272537548       CPU Time = 2826.901038169861
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 1.4824468982592487e8
+1415.4106963698932
+Updating the planning problem....done (it took 0.00021886825561523438 s).
+OPTIMAL
+Solving the planning problem required 0.21112608909606934 seconds
+k = 43      LB = 1.5137021535023803e8     UB = 1.6912746166564724e8       Gap = 0.11731004196778591       CPU Time = 2894.1006541252136
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 1.3084084429581764e8
+316.43121360321874
+Updating the planning problem....done (it took 0.00022101402282714844 s).
+OPTIMAL
+Solving the planning problem required 0.15755891799926758 seconds
+k = 44      LB = 1.5222810266197532e8     UB = 1.6912746166564724e8       Gap = 0.11101339836834978       CPU Time = 2969.156677007675
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+[ Info: Solving the subproblems required 59.93029499053955 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0156978888539413e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 3.9883291157325976e7
+[ Info: Solving the subproblems required 63.35913419723511 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0157459098096046e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 3.8926767975472465e7
+[ Info: Solving the subproblems required 63.79813003540039 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0208618909616594e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 6.26370115924606e7
+[ Info: Solving the subproblems required 59.73832297325134 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0216190473013312e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 3.5697392605745375e7
+[ Info: Solving the subproblems required 61.03294515609741 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0216190542672503e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 3.569739235661759e7
+[ Info: Solving the subproblems required 63.22163796424866 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0216207216980213e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.058195746685444e8
+[ Info: Solving the subproblems required 61.58741903305054 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0225289706218494e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 9.486433101338883e7
+[ Info: Solving the subproblems required 67.5171549320221 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0228846605247214e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.149820974548077e8
+[ Info: Solving the subproblems required 67.41748380661011 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0232807457498308e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 4.63625232737584e7
+[ Info: Solving the subproblems required 68.27903509140015 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.023327187626338e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 5.181821150290542e7
+[ Info: Solving the subproblems required 68.83383297920227 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0234236140087967e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 4.118696816098793e7
+[ Info: Solving the subproblems required 65.00553703308105 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0239377037010072e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 2.458963502905568e9
+[ Info: Solving the subproblems required 65.33735585212708 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0247961966376792e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.3721186706374245e9
+[ Info: Solving the subproblems required 69.21936702728271 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0254602544838724e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 3.750836536882351e7
+[ Info: Solving the subproblems required 65.58061099052429 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0255390664483453e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 5.110725972571249e7
+[ Info: Solving the subproblems required 69.90069580078125 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0264609343687057e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.5594894020754045e8
+[ Info: Solving the subproblems required 68.84331178665161 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0269593820389174e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 3.270584685674112e7
+[ Info: Solving the subproblems required 66.00750207901001 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0274693901920131e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 3.1174068707231198e7
+[ Info: Solving the subproblems required 64.63746500015259 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0300459824590981e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 2.591539095922643e8
+[ Info: Solving the subproblems required 60.004305839538574 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0308427792666705e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.3992414348463333e9
+[ Info: Solving the subproblems required 62.53201508522034 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0316978411965442e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 9.176670866355252e7
+[ Info: Solving the subproblems required 61.66808295249939 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0322245968844603e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 7.895423879557094e7
+[ Info: Solving the subproblems required 59.077621936798096 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0323642320304964e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 8.933352652720325e8
+[ Info: Solving the subproblems required 56.52440309524536 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0324080441919172e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 4.5163763238794106e8
+[ Info: Solving the subproblems required 58.08783197402954 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0325902550981016e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.0060523322054856e9
+[ Info: Solving the subproblems required 59.55264210700989 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0329916692422605e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 5.3662059306615096e8
+[ Info: Solving the subproblems required 62.903043031692505 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0332453861309862e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 3.752516961427584e7
+[ Info: Solving the subproblems required 61.476953983306885 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0332455385285053e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 3.75254071760623e7
+[ Info: Solving the subproblems required 55.59185004234314 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0333209679583885e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.0085253259519064e9
+[ Info: Solving the subproblems required 56.169487953186035 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0335189071386412e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 6.788898063406873e8
+[ Info: Solving the subproblems required 58.90311884880066 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0335581058211024e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 4.282302325207441e8
+[ Info: Solving the subproblems required 60.76416516304016 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.033693117477334e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 5.126961232032932e8
+[ Info: Solving the subproblems required 60.063859939575195 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0337696798463663e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 6.07302644155841e8
+[ Info: Solving the subproblems required 63.73628783226013 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0338595449888928e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 3.2806383170739688e7
+[ Info: Solving the subproblems required 61.12069010734558 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0338596930159302e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 3.2806604400825053e7
+[ Info: Solving the subproblems required 57.00779104232788 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0351526446596117e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 6.870513842493079e8
+[ Info: Solving the subproblems required 60.91020202636719 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0352797817026629e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 8.59266713513711e7
+[ Info: Solving the subproblems required 61.00151586532593 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0365563518997292e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 2.1870440593317008e8
+[ Info: Solving the subproblems required 60.17584419250488 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0372960333539388e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 8.830634706663933e7
+[ Info: Solving the subproblems required 52.52654719352722 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.037383583080482e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 2.9945002485959206e7
+[ Info: Solving the subproblems required 60.95414996147156 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0813177822882736e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 4.1278859586922467e8
+[ Info: Solving the subproblems required 58.66744518280029 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0821469856468388e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 4.5104126303670794e8
+[ Info: Solving the subproblems required 59.79394888877869 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0824861546837732e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.0051848161699293e9
+[ Info: Solving the subproblems required 65.16808986663818 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0838236817584822e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 3.40019348601505e8
+[ Info: Solving the subproblems required 61.371482133865356 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0841367495838873e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.852494135708847e8
+[ Info: Solving the subproblems required 60.74066781997681 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0849676752385962e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 2.676371619283245e8
+[ Info: Solving the subproblems required 60.39782404899597 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0850518338394597e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.4320263060339913e8
+[ Info: Solving the subproblems required 57.54394602775574 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0907579393584847e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 7.930247960884476e9
+[ Info: Solving the subproblems required 61.21084403991699 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0914771529781832e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.9209180136446115e8
+[ Info: Solving the subproblems required 58.06136202812195 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.1043645494791989e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.2918199823838025e8
+[ Info: Solving the subproblems required 63.293190002441406 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.1579249065355738e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.479136503232882e8
+[ Info: Solving the subproblems required 57.36137104034424 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.1586183528923668e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.0782054311973138e8
+[ Info: Solving the subproblems required 60.73587894439697 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0422222380921882e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 8.590654535688385e7
+[ Info: Solving the subproblems required 62.15896701812744 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0455989622991714e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 8.85463256829481e7
+[ Info: Solving the subproblems required 61.126904010772705 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0469524066746129e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 2.3460514843533367e8
+[ Info: Solving the subproblems required 60.618711948394775 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0467894394267644e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 6.634607339540005e7
+[ Info: Solving the subproblems required 56.42074489593506 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0467533430119348e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 6.085140293880377e7
+[ Info: Solving the subproblems required 59.44014000892639 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.057723684809781e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 3.4062526045385647e8
+[ Info: Solving the subproblems required 57.41566610336304 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0544670453519656e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 6.164475619494073e7
+[ Info: Solving the subproblems required 61.369738817214966 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0591350463790591e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 6.1305789888399184e7
+[ Info: Solving the subproblems required 58.940818071365356 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0332648536560413e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 4.353418199142362e7
+[ Info: Solving the subproblems required 59.29093408584595 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0332475622333671e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 4.355780345522001e7
+[ Info: Solving the subproblems required 60.969172954559326 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0483903729131025e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 8.110683340707344e7
+[ Info: Solving the subproblems required 65.26659107208252 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0638461388707508e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.5135596452178335e8
+[ Info: Solving the subproblems required 56.96995782852173 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0485925585182594e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 3.2712397557134616e8
+[ Info: Solving the subproblems required 58.85747194290161 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0468115019968088e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 4.2272553530349076e7
+[ Info: Solving the subproblems required 60.22180199623108 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0232312168364614e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 3.814956050287962e7
+[ Info: Solving the subproblems required 59.14491891860962 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0232312919942558e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 3.815010463764362e7
+[ Info: Solving the subproblems required 59.15344595909119 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0300762662373185e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 3.642483730777715e7
+[ Info: Solving the subproblems required 58.94922709465027 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.030076646501699e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 3.642541018286084e7
+[ Info: Solving the subproblems required 59.09270000457764 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0300766641310334e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 3.642545887111944e7
+[ Info: Solving the subproblems required 59.39843797683716 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.017297174903386e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 9.888377608902535e7
+[ Info: Solving the subproblems required 58.786131143569946 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0185476779590827e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 7.571863449539609e7
+[ Info: Solving the subproblems required 67.99754500389099 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0201204265830676e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 5.769108438478887e7
+[ Info: Solving the subproblems required 58.08540391921997 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.019342531120357e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 6.450391087963582e7
+[ Info: Solving the subproblems required 60.48127102851868 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0193817107566316e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 3.048895835997331e7
+[ Info: Solving the subproblems required 62.71282696723938 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0193817196431126e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 3.0488970218547948e7
+[ Info: Solving the subproblems required 61.104804039001465 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0195254153946386e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 3.0363207396700762e7
+[ Info: Solving the subproblems required 61.829862117767334 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0196748598790461e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 3.0332411212620735e7
+[ Info: Solving the subproblems required 60.5215790271759 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0196748539718513e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 3.0332426860365037e7
+[ Info: Solving the subproblems required 59.387601137161255 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0195976781698471e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 3.0238755100640435e7
+┌ Info: Lines built: 
+└   build_indices = Int64[]
+┌ Info: Number of lines built: 
+└   length(build_indices) = 0
+┌ Info: Theta: 
+│   Vector(value.(planning_problem[:vTHETA])) =
+│    1-element Vector{Float64}:
+└     3.0189846180480752e7
+┌ Info: vCAP Builds: 
+│   cap_builds =
+│    2-element Vector{Int64}:
+│      7
+└     10
+[ Info: Solving the subproblems required 70.77853202819824 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 0.0
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 3.33976670186005e11
+[ Info: Solving the subproblems required 72.87313604354858 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 2.2284894680296898e7
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 8.554796924782185e10
+[ Info: Solving the subproblems required 68.2279999256134 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 3.438155646042864e7
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 2.606758286808158e10
+[ Info: Solving the subproblems required 58.9343318939209 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 4.4893962997388005e7
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.8534979624947643e10
+[ Info: Solving the subproblems required 63.649067878723145 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0737739668888238e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 6.566204526656972e9
+[ Info: Solving the subproblems required 61.820616006851196 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0777078279877362e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 6.528315644292227e9
+[ Info: Solving the subproblems required 63.73095893859863 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.090687996801735e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 7.043063531873213e9
+[ Info: Solving the subproblems required 65.41408896446228 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.0946218579006475e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 6.960458300440866e9
+[ Info: Solving the subproblems required 64.13701391220093 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.1180479496588832e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 5.233941694543743e9
+[ Info: Solving the subproblems required 60.94423794746399 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.121981810757792e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 2.5625248120593953e9
+[ Info: Solving the subproblems required 66.63996195793152 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.1946469563985932e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 2.465067290626534e9
+[ Info: Solving the subproblems required 63.51119780540466 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.1980160740084109e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.4864405273855753e9
+[ Info: Solving the subproblems required 65.92845416069031 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.2425754674916294e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 5.2859778446947926e8
+[ Info: Solving the subproblems required 66.19948387145996 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.2430358031293194e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 2.8114229579472804e8
+[ Info: Solving the subproblems required 64.13405108451843 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.2442769165961766e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.7194936701519203e8
+[ Info: Solving the subproblems required 60.84029293060303 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.2447039540402316e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 9.89006335448691e7
+[ Info: Solving the subproblems required 65.71445798873901 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.2456350665721545e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 4.875725514106484e9
+[ Info: Solving the subproblems required 66.62564611434937 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.247427329894921e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 5.433766319242285e7
+[ Info: Solving the subproblems required 64.45559906959534 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.2475746006464665e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 3.9608388112031803e9
+[ Info: Solving the subproblems required 64.65185403823853 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.2488286085722385e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 3.9511578399595537e9
+[ Info: Solving the subproblems required 65.0410590171814 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.2493761899960808e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.664713456857758e9
+[ Info: Solving the subproblems required 66.244961977005 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.2498466373904563e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 4.91727543748609e7
+[ Info: Solving the subproblems required 65.19274520874023 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.2771572536212282e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 3.2842617344975305e8
+[ Info: Solving the subproblems required 64.41940498352051 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.2788255158748333e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.2253351428306685e8
+[ Info: Solving the subproblems required 64.69701480865479 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.2792524833696279e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 4.243842956697305e7
+[ Info: Solving the subproblems required 66.88429594039917 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.27925254093882e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 4.2438428322436765e7
+[ Info: Solving the subproblems required 66.56221604347229 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.2845432052803086e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.4879402231786934e8
+[ Info: Solving the subproblems required 65.94588994979858 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.2847986032484798e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 7.807451491679804e8
+[ Info: Solving the subproblems required 65.2806830406189 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.2848264217716885e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.8923129607543314e8
+[ Info: Solving the subproblems required 65.96186208724976 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.284970172775103e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 6.036656137859459e7
+[ Info: Solving the subproblems required 61.942553997039795 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.2852533686376579e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 4.060212480188145e7
+[ Info: Solving the subproblems required 66.850830078125 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.2852534285532385e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 4.0602123077712536e7
+[ Info: Solving the subproblems required 64.0530219078064 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.335821301421284e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.8843056225084454e8
+[ Info: Solving the subproblems required 62.68831706047058 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.335821301421284e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.8843056216213226e8
+[ Info: Solving the subproblems required 65.36617112159729 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.3936599728221947e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.6616739612572604e8
+[ Info: Solving the subproblems required 64.51626515388489 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.393548959413657e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 2.845629130394555e9
+[ Info: Solving the subproblems required 66.71997904777527 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.3937894088425326e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.8170728867245007e9
+[ Info: Solving the subproblems required 70.4955141544342 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.4075130660486892e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 9.083248160242474e8
+[ Info: Solving the subproblems required 71.46337103843689 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.399843958113604e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 6.373316887986367e8
+[ Info: Solving the subproblems required 69.36936902999878 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.3965595652823615e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 5.1495750708766544e8
+[ Info: Solving the subproblems required 69.52527904510498 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.405648443494025e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.0793825655062318e9
+[ Info: Solving the subproblems required 65.74639511108398 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.3998975774958023e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.79089926576046e8
+[ Info: Solving the subproblems required 68.47014999389648 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.4083649805516556e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 6.051539418193613e8
+[ Info: Solving the subproblems required 66.9875340461731 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.401814890439129e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.4824468982592487e8
+[ Info: Solving the subproblems required 74.89738583564758 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.4051529026525697e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.3084084429581764e8
+OBJECTIVE OF SUBPROBLEM IS : 2.981060304892295e9
+4.39442386823115e-5
+Updating the planning problem....done (it took 0.0002391338348388672 s).
+OPTIMAL
+Solving the planning problem required 0.1258258819580078 seconds
+k = 45      LB = 1.5251087448163387e8     UB = 1.6912746166564724e8       Gap = 0.1089534581746459       CPU Time = 3034.442594051361
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 1.4953044257696428e9
+2.8356556019226176e-5
+Updating the planning problem....done (it took 0.0002219676971435547 s).
+OPTIMAL
+Solving the planning problem required 0.10882997512817383 seconds
+k = 46      LB = 1.5262237534962922e8     UB = 1.6912746166564724e8       Gap = 0.10814329339461504       CPU Time = 3104.2471380233765
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 1.4747443710208712e9
+1.9878406599223297e-5
+Updating the planning problem....done (it took 0.00021696090698242188 s).
+OPTIMAL
+Solving the planning problem required 0.11849498748779297 seconds
+k = 47      LB = 1.5307849181764013e8     UB = 1.6912746166564724e8       Gap = 0.10484144217416243       CPU Time = 3169.096650123596
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 7.283711706109074e8
+7.808412163339054e-6
+Updating the planning problem....done (it took 0.0002269744873046875 s).
+OPTIMAL
+Solving the planning problem required 0.13004279136657715 seconds
+k = 48      LB = 1.5313128211512032e8     UB = 1.6912746166564724e8       Gap = 0.10446056043925359       CPU Time = 3237.8779010772705
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 6.496346562679772e8
+7.2214957052466156e-6
+Updating the planning problem....done (it took 0.00024890899658203125 s).
+OPTIMAL
+Solving the planning problem required 0.09870386123657227 seconds
+k = 49      LB = 1.5362788007208353e8     UB = 1.6912746166564724e8       Gap = 0.10089042162328327       CPU Time = 3305.5978100299835
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 4.1795540135793185e8
+21361.47138536291
+Updating the planning problem....done (it took 0.00023698806762695312 s).
+OPTIMAL
+Solving the planning problem required 0.03308701515197754 seconds
+k = 50      LB = 1.542561034022223e8     UB = 1.6912746166564724e8       Gap = 0.09640693583869361       CPU Time = 3372.9929661750793
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 6.069654415189695e8
+82.38487782755922
+Updating the planning problem....done (it took 0.00023603439331054688 s).
+OPTIMAL
+Solving the planning problem required 0.08194589614868164 seconds
+k = 51      LB = 1.5430006802250615e8     UB = 1.6912746166564724e8       Gap = 0.09609453730751676       CPU Time = 3438.927719116211
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 1.1626233867532451e8
+1.6004463803296755e-6
+Updating the planning problem....done (it took 0.00021505355834960938 s).
+OPTIMAL
+Solving the planning problem required 0.13533592224121094 seconds
+k = 52      LB = 1.5665543388651714e8     UB = 1.6912746166564724e8       Gap = 0.0796143961923783       CPU Time = 3505.0968492031097
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 1.363292209725567e8
+9.177205944570209e-6
+Updating the planning problem....done (it took 0.000225067138671875 s).
+OPTIMAL
+Solving the planning problem required 0.2029569149017334 seconds
+k = 53      LB = 1.5680497309644687e8     UB = 1.6912746166564724e8       Gap = 0.07858480713887249       CPU Time = 3581.703318119049
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 8.832561445950764e7
+6.193968462291718e-8
+Updating the planning problem....done (it took 0.00023508071899414062 s).
+OPTIMAL
+Solving the planning problem required 0.12576794624328613 seconds
+k = 54      LB = 1.598416073898908e8     UB = 1.6912746166564724e8       Gap = 0.05809409969899824       CPU Time = 3648.573072195053
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 7.25645557063201e7
+1.3858031207176409e-6
+Updating the planning problem....done (it took 0.00021195411682128906 s).
+OPTIMAL
+Solving the planning problem required 0.12810897827148438 seconds
+k = 55      LB = 1.5984160828489682e8     UB = 1.6912746166564724e8       Gap = 0.058094093774379414       CPU Time = 3712.561422109604
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 7.256455477323443e7
+6.7242549069301636e-9
+Updating the planning problem....done (it took 0.00023698806762695312 s).
+OPTIMAL
+Solving the planning problem required 0.12265801429748535 seconds
+k = 56      LB = 1.6251983685060784e8     UB = 1.6912746166564724e8       Gap = 0.04065734339318396       CPU Time = 3777.657912015915
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 7.3811464147277e7
+237.82481223277014
+Updating the planning problem....done (it took 0.0002281665802001953 s).
+OPTIMAL
+Solving the planning problem required 0.028554201126098633 seconds
+k = 57      LB = 1.6251983798791745e8     UB = 1.6912746166564724e8       Gap = 0.04065733611069087       CPU Time = 3847.8425130844116
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 7.381146349518135e7
+237.8248233181658
+Updating the planning problem....done (it took 0.0002238750457763672 s).
+OPTIMAL
+Solving the planning problem required 0.1396009922027588 seconds
+k = 58      LB = 1.6257358083789665e8     UB = 1.6912746166564724e8       Gap = 0.04031332024534489       CPU Time = 3923.245862007141
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 1.8727716429115683e8
+4.250855130686273e-6
+Updating the planning problem....done (it took 0.00021910667419433594 s).
+OPTIMAL
+Solving the planning problem required 0.21473288536071777 seconds
+k = 59      LB = 1.6279224475661588e8     UB = 1.6912746166564724e8       Gap = 0.03891596260315035       CPU Time = 3990.6473541259766
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 7.932603235317245e7
+9.130018767874725
+Updating the planning problem....done (it took 0.0002319812774658203 s).
+OPTIMAL
+Solving the planning problem required 0.030752897262573242 seconds
+k = 60      LB = 1.6279224579836324e8     UB = 1.6912746166564724e8       Gap = 0.038915955954873224       CPU Time = 4056.615108013153
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 7.932603124159837e7
+9.130028220238847
+Updating the planning problem....done (it took 0.0002357959747314453 s).
+OPTIMAL
+Solving the planning problem required 0.1257781982421875 seconds
+k = 61      LB = 1.634356573627542e8     UB = 1.6912746166564724e8       Gap = 0.03482596389758312       CPU Time = 4122.150062084198
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 8.422111637343332e7
+1616.8177406577624
+Updating the planning problem....done (it took 0.00021696090698242188 s).
+OPTIMAL
+Solving the planning problem required 0.03505206108093262 seconds
+k = 62      LB = 1.6349828819084814e8     UB = 1.6912746166564724e8       Gap = 0.034429556034423305       CPU Time = 4188.46707701683
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 1.8757312587906116e8
+3578.9614440299106
+Updating the planning problem....done (it took 0.00021719932556152344 s).
+OPTIMAL
+Solving the planning problem required 0.11670708656311035 seconds
+k = 63      LB = 1.6350490281151706e8     UB = 1.6912746166564724e8       Gap = 0.034387707998038905       CPU Time = 4256.252565145493
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 6.558810053982732e7
+2.8280343218858747e-6
+Updating the planning problem....done (it took 0.00022101402282714844 s).
+OPTIMAL
+Solving the planning problem required 0.13408708572387695 seconds
+k = 64      LB = 1.6350490281151706e8     UB = 1.6912746166564724e8       Gap = 0.034387707998038905       CPU Time = 4320.905769109726
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 6.877974895760415e8
+2.384947269421096e-6
+Updating the planning problem....done (it took 0.000225067138671875 s).
+OPTIMAL
+Solving the planning problem required 0.15902400016784668 seconds
+k = 65      LB = 1.63504904266537e8     UB = 1.6912746166564724e8       Gap = 0.03438769879308717       CPU Time = 4391.4023361206055
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 6.55880961380249e7
+8.324013884903164e-7
+Updating the planning problem....done (it took 0.0002200603485107422 s).
+OPTIMAL
+Solving the planning problem required 0.07074403762817383 seconds
+k = 66      LB = 1.6376649339739233e8     UB = 1.6912746166564724e8       Gap = 0.03273544030307893       CPU Time = 4456.75582408905
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 1.4735922324312562e8
+798.1394322032761
+Updating the planning problem....done (it took 0.0002281665802001953 s).
+OPTIMAL
+Solving the planning problem required 0.11007285118103027 seconds
+k = 67      LB = 1.6383600353107175e8     UB = 1.6912746166564724e8       Gap = 0.03229728521528513       CPU Time = 4532.021597146988
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 7.1045691524847e7
+4.2325924992788755
+Updating the planning problem....done (it took 0.00022912025451660156 s).
+OPTIMAL
+Solving the planning problem required 0.10474300384521484 seconds
+k = 68      LB = 1.639686750006628e8     UB = 1.6912746166564724e8       Gap = 0.03146202568852607       CPU Time = 4601.708086013794
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 3.682951234696245e8
+1.7417844679381544e-5
+Updating the planning problem....done (it took 0.0002219676971435547 s).
+OPTIMAL
+Solving the planning problem required 0.11746096611022949 seconds
+k = 69      LB = 1.6414396549470994e8     UB = 1.6912746166564724e8       Gap = 0.03036052014411647       CPU Time = 4670.434447050095
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 7.200432788160197e7
+9.32236450297267e-5
+Updating the planning problem....done (it took 0.0002498626708984375 s).
+OPTIMAL
+Solving the planning problem required 0.13323092460632324 seconds
+k = 70      LB = 1.649086351499809e8     UB = 1.6912746166564724e8       Gap = 0.025582811426638773       CPU Time = 4737.613737106323
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 5.5771203403840154e7
+4.136772531010252e-7
+Updating the planning problem....done (it took 0.0002300739288330078 s).
+OPTIMAL
+Solving the planning problem required 0.1274118423461914 seconds
+k = 71      LB = 1.6519256574839166e8     UB = 1.6912746166564724e8       Gap = 0.02382005448870444       CPU Time = 4807.046983003616
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 6.325523784625998e7
+476.89049523536755
+Updating the planning problem....done (it took 0.00023794174194335938 s).
+OPTIMAL
+Solving the planning problem required 0.09413313865661621 seconds
+k = 72      LB = 1.6659844043118185e8     UB = 1.6912746166564724e8       Gap = 0.01518034159215358       CPU Time = 4886.1482582092285
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 4.4246385161321595e7
+6.240255137559341e-7
+Updating the planning problem....done (it took 0.000247955322265625 s).
+OPTIMAL
+Solving the planning problem required 0.09124517440795898 seconds
+k = 73      LB = 1.6659844123559558e8     UB = 1.6912746166564724e8       Gap = 0.015180336690396966       CPU Time = 4959.213561058044
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 4.424638180444753e7
+5.426469918663602e-7
+Updating the planning problem....done (it took 0.0002460479736328125 s).
+OPTIMAL
+Solving the planning problem required 0.15241122245788574 seconds
+k = 74      LB = 1.666941695604383e8     UB = 1.6912746166564724e8       Gap = 0.014597343816075671       CPU Time = 5030.376165151596
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 4.276565462066144e7
+5.330468100332539e-9
+Updating the planning problem....done (it took 0.00021696090698242188 s).
+OPTIMAL
+Solving the planning problem required 0.1197659969329834 seconds
+k = 75      LB = 1.6669416986522463e8     UB = 1.6850721263949525e8       Gap = 0.010876461820689368       CPU Time = 5099.927489995956
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 4.276565534928225e7
+9.863556730025685e-8
+Updating the planning problem....done (it took 0.00023984909057617188 s).
+OPTIMAL
+Solving the planning problem required 0.12106513977050781 seconds
+k = 76      LB = 1.667553718887113e8     UB = 1.6850721263949525e8       Gap = 0.010505453173365164       CPU Time = 5169.7506630420685
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 4.2325288419662654e7
+1.191486627736215e-6
+Updating the planning problem....done (it took 0.00022983551025390625 s).
+OPTIMAL
+Solving the planning problem required 0.028390884399414062 seconds
+k = 77      LB = 1.6704241122655368e8     UB = 1.6820857890388852e8       Gap = 0.006981267025373654       CPU Time = 5242.053549051285
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 4.178991092668068e7
+4.905768783620793e-6
+Updating the planning problem....done (it took 0.0002429485321044922 s).
+OPTIMAL
+Solving the planning problem required 0.028776884078979492 seconds
+k = 78      LB = 1.6704267799792594e8     UB = 1.6752487354475883e8       Gap = 0.002886660778025101       CPU Time = 5317.932687044144
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 4.178981098807328e7
+5.49024305820809e-9
+Updating the planning problem....done (it took 0.00022101402282714844 s).
+OPTIMAL
+Solving the planning problem required 0.030019044876098633 seconds
+k = 79      LB = 1.670794327025832e8     UB = 1.6752470859370896e8       Gap = 0.0026650550814258543       CPU Time = 5393.6071519851685
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 4.160525399401534e7
+6.129258821884879e-7
+Updating the planning problem....done (it took 0.00022482872009277344 s).
+OPTIMAL
+Solving the planning problem required 0.03008413314819336 seconds
+k = 80      LB = 1.6707966489734614e8     UB = 1.67497454830834e8       Gap = 0.0025005432812218818       CPU Time = 5469.655651092529
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 4.160515989400226e7
+1.2889262604435118e-6
+Updating the planning problem....done (it took 0.0002219676971435547 s).
+OPTIMAL
+Solving the planning problem required 0.03269791603088379 seconds
+k = 81      LB = 1.6725379093374056e8     UB = 1.6749730289942104e8       Gap = 0.0014559428777130077       CPU Time = 5544.9947872161865
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 4.160480142281553e7
+1.1498565193201013e-6
+Updating the planning problem....done (it took 0.0002357959747314453 s).
+OPTIMAL
+Solving the planning problem required 0.03606081008911133 seconds
+k = 82      LB = 1.6725401714098933e8     UB = 1.6749730289942104e8       Gap = 0.0014545884313595973       CPU Time = 5619.000286102295
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 4.16047081754465e7
+4.090856580515569e-8
+Updating the planning problem....done (it took 0.00024199485778808594 s).
+OPTIMAL
+Solving the planning problem required 0.060704946517944336 seconds
+k = 83      LB = 1.6728740139400503e8     UB = 1.6749730289942104e8       Gap = 0.0012547358836762226       CPU Time = 5695.691670179367
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 4.167784783294323e7
+5.269475769776986e-6
+Updating the planning problem....done (it took 0.0002391338348388672 s).
+OPTIMAL
+Solving the planning problem required 0.03525590896606445 seconds
+k = 84      LB = 1.6730201117435992e8     UB = 1.6749730289942104e8       Gap = 0.0011673005225118793       CPU Time = 5767.686391115189
+Set parameter Method to value 2
+Set parameter Crossover to value 1
+Set parameter MIPGap to value 0.001
+Set parameter Threads to value 20
+Set parameter ScaleFlag to value 2
+Set parameter ObjScale to value 10000
+Set parameter BarConvTol to value 1e-08
+Set parameter QCPDual to value 1
+OBJECTIVE OF SUBPROBLEM IS : 4.165551852312708e7
+4.819729712046933e-7
+Updating the planning problem....done (it took 0.0003819465637207031 s).
+OPTIMAL
+Solving the planning problem required 0.03888416290283203 seconds
+k = 85      LB = 1.6736710730324805e8     UB = 1.6749730289942104e8       Gap = 0.0007779043222458906       CPU Time = 5848.189419031143
+Gurobi Optimizer version 12.0.3 build v12.0.3rc0 (linux64 - "Red Hat Enterprise Linux 9.6 (Plow)")
+
+CPU model: AMD EPYC 9654 96-Core Processor, instruction set [SSE2|AVX|AVX2|AVX512]
+Thread count: 192 physical cores, 192 logical processors, using up to 32 threads
+
+Non-default parameters:
+TimeLimit  600
+MIPGap  0.001
+
+Optimize a model with 2103285 rows, 974143 columns and 6106764 nonzeros
+Model fingerprint: 0x44b6f436
+Variable types: 974075 continuous, 68 integer (68 binary)
+Coefficient statistics:
+  Matrix range     [1e-04, 5e+03]
+  Objective range  [8e-01, 3e+06]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e-03, 1e+08]
+
+Loaded MIP start from previous solve with objective 1.62568e+12
+
+Presolve removed 1591793 rows and 565475 columns (presolve time = 5s)...
+Presolve removed 1706277 rows and 636282 columns
+Presolve time: 7.50s
+Presolved: 397008 rows, 337861 columns, 1867121 nonzeros
+Variable types: 337861 continuous, 0 integer (0 binary)
+Performing another presolve...
+Presolve removed 0 rows and 649 columns
+Presolve time: 1.27s
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Ordering time: 3.28s
+
+Barrier statistics:
+ Dense cols : 7
+ AA' NZ     : 3.565e+06
+ Factor NZ  : 3.676e+07 (roughly 600 MB of memory)
+ Factor Ops : 3.243e+10 (less than 1 second per iteration)
+ Threads    : 30
+
+                  Objective                Residual
+Iter       Primal          Dual         Primal    Dual     Compl     Time
+   0   8.92802157e+16 -4.28433696e+17  4.85e+07 6.45e+04  8.30e+12    16s
+   1   4.86848449e+16 -2.04518148e+17  2.52e+07 1.07e+06  3.68e+12    16s
+   2   3.96719378e+16 -1.00461573e+17  2.03e+07 1.41e+05  2.83e+12    17s
+   3   9.21505614e+15 -3.42935683e+16  4.33e+06 1.51e+06  6.28e+11    17s
+   4   6.75517307e+14 -7.51668693e+15  1.66e+04 3.46e+06  1.05e+10    18s
+   5   2.78664781e+14 -1.48660840e+15  8.62e+02 7.05e+05  1.91e+09    18s
+   6   7.70673320e+13 -3.13602373e+14  9.97e+01 1.58e+05  4.09e+08    19s
+   7   2.67982443e+13 -1.58623934e+14  1.59e+01 7.98e+04  1.91e+08    19s
+   8   1.22275217e+13 -1.95582661e+13  4.05e+00 8.67e+03  3.36e+07    19s
+   9   3.19370740e+12 -5.63527449e+12  3.68e-01 2.12e+03  9.06e+06    20s
+  10   3.83748275e+11 -5.75954607e+11  9.01e-02 7.00e+01  9.76e+05    20s
+  11   2.00117272e+11 -2.19160249e+11  4.63e-02 1.09e+00  4.26e+05    20s
+  12   1.02309531e+11 -9.28464897e+10  2.34e-02 4.15e-01  1.98e+05    21s
+  13   3.91359754e+10 -3.49084588e+10  8.76e-03 1.76e-01  7.51e+04    21s
+  14   7.29536188e+09 -7.68050049e+09  1.75e-03 1.61e-01  1.52e+04    22s
+  15   2.41209279e+09 -2.61410867e+09  1.01e-03 6.25e-02  5.10e+03    23s
+  16   1.30807822e+09 -1.91155011e+09  5.98e-04 4.57e-02  3.27e+03    24s
+  17   8.94198793e+08 -1.30080743e+09  3.80e-04 3.15e-02  2.23e+03    24s
+  18   6.14528327e+08 -6.89671538e+08  2.26e-04 1.83e-02  1.32e+03    25s
+  19   3.58908944e+08 -3.19821305e+08  9.17e-05 1.03e-02  6.89e+02    25s
+  20   3.08047673e+08 -1.94459661e+08  6.63e-05 7.64e-03  5.10e+02    25s
+  21   2.71665837e+08 -4.25267260e+07  5.00e-05 4.49e-03  3.19e+02    26s
+  22   2.52259909e+08 -7.76024867e+06  4.04e-05 3.71e-03  2.64e+02    26s
+  23   2.32026583e+08  1.18908211e+07  3.15e-05 3.29e-03  2.23e+02    26s
+  24   2.14543674e+08  8.40951047e+07  2.36e-05 1.78e-03  1.32e+02    27s
+  25   2.01791295e+08  1.03024956e+08  1.78e-05 1.36e-03  1.00e+02    28s
+  26   1.91001271e+08  1.17922015e+08  1.27e-05 1.04e-03  7.41e+01    28s
+  27   1.84906099e+08  1.34446821e+08  9.60e-06 6.76e-04  5.12e+01    29s
+  28   1.80556006e+08  1.44566857e+08  7.32e-06 4.59e-04  3.65e+01    30s
+  29   1.76820276e+08  1.51028516e+08  5.39e-06 3.22e-04  2.62e+01    30s
+  30   1.74641353e+08  1.53926600e+08  4.28e-06 2.63e-04  2.10e+01    31s
+  31   1.72734094e+08  1.59010808e+08  3.22e-06 1.60e-04  1.39e+01    32s
+  32   1.70580074e+08  1.61362396e+08  1.97e-06 1.10e-04  9.35e+00    32s
+  33   1.69579149e+08  1.63476327e+08  1.42e-06 6.82e-05  6.19e+00    33s
+  34   1.68413486e+08  1.64446876e+08  1.88e-05 4.78e-05  4.02e+00    34s
+  35   1.68347314e+08  1.64696865e+08  1.99e-05 4.27e-05  3.70e+00    35s
+  36   1.68072835e+08  1.65003249e+08  2.45e-05 3.67e-05  3.11e+00    36s
+  37   1.67989479e+08  1.65223536e+08  3.20e-05 3.24e-05  2.81e+00    38s
+  38   1.67734267e+08  1.65414733e+08  2.09e-04 2.88e-05  2.35e+00    41s
+  39   1.67439035e+08  1.65762246e+08  1.35e-03 2.25e-05  1.70e+00    43s
+
+Barrier performed 39 iterations in 42.73 seconds (33.17 work units)
+Barrier solve interrupted - model solved by another algorithm
+
+Concurrent spin time: 0.90s
+
+Solved with dual simplex
+
+Root simplex log...
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+  298950    1.6700741e+08   0.000000e+00   0.000000e+00     43s
+
+Root relaxation: objective 1.670074e+08, 298950 iterations, 32.11 seconds (20.93 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+*    0     0               0    1.670074e+08 1.6701e+08  0.00%     -   42s
+
+Explored 1 nodes (298950 simplex iterations) in 43.14 seconds (32.13 work units)
+Thread count was 32 (of 192 available processors)
+
+Solution count 2: 1.67007e+08 1.67007e+08 
+
+Optimal solution found (tolerance 1.00e-03)
+Best objective 1.670074126984e+08, best bound 1.670074126984e+08, gap 0.0000%
+
+User-callback calls 4898, time in user-callback 0.01 sec
+Gurobi Optimizer version 12.0.3 build v12.0.3rc0 (linux64 - "Red Hat Enterprise Linux 9.6 (Plow)")
+
+CPU model: AMD EPYC 9654 96-Core Processor, instruction set [SSE2|AVX|AVX2|AVX512]
+Thread count: 192 physical cores, 192 logical processors, using up to 32 threads
+
+Non-default parameters:
+TimeLimit  600
+MIPGap  0.001
+
+Optimize a model with 2037746 rows, 843103 columns and 5809740 nonzeros
+Model fingerprint: 0xa41a304d
+Variable types: 843035 continuous, 68 integer (68 binary)
+Coefficient statistics:
+  Matrix range     [1e-04, 5e+03]
+  Objective range  [8e-01, 3e+06]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e-03, 1e+08]
+
+MIP start from previous solve did not produce a new incumbent solution
+
+Presolve removed 1540772 rows and 449335 columns (presolve time = 5s)...
+Presolve removed 1631232 rows and 509222 columns
+Presolve time: 9.59s
+Presolved: 406514 rows, 333881 columns, 1713646 nonzeros
+Variable types: 333881 continuous, 0 integer (0 binary)
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Ordering time: 3.10s
+
+Barrier statistics:
+ Dense cols : 7
+ AA' NZ     : 3.094e+06
+ Factor NZ  : 2.642e+07 (roughly 500 MB of memory)
+ Factor Ops : 1.445e+10 (less than 1 second per iteration)
+ Threads    : 30
+
+                  Objective                Residual
+Iter       Primal          Dual         Primal    Dual     Compl     Time
+   0   1.16099395e+19 -8.27074604e+18  6.42e+09 5.65e+04  1.03e+15    15s
+   1   7.11702634e+18 -5.01199452e+18  3.82e+09 1.02e+06  5.55e+14    16s
+   2   5.02347031e+18 -4.56134659e+18  2.67e+09 3.99e+03  4.04e+14    16s
+   3   8.09180207e+16 -3.66010593e+18  3.82e+07 6.37e-03  9.33e+12    17s
+   4   9.99124981e+15 -3.02224276e+17  1.03e+06 3.89e-03  4.53e+11    17s
+   5   6.90818453e+15 -3.49844821e+16  1.14e+04 5.46e-04  4.39e+10    17s
+   6   2.99165244e+15 -1.47636864e+16  1.64e+03 2.29e-04  1.83e+10    18s
+   7   1.16521337e+15 -4.08236614e+15  3.55e+02 6.35e-05  5.44e+09    18s
+   8   2.07356751e+14 -2.26940462e+14  2.09e+01 3.88e-06  4.49e+08    19s
+   9   8.88101472e+13 -1.73676750e+14  9.23e-01 3.23e-06  2.66e+08    19s
+  10   7.45143626e+13 -8.91046898e+13  5.57e-01 1.90e-06  1.66e+08    20s
+  11   4.69260137e+13 -5.55790215e+13  2.14e-01 1.28e-06  1.04e+08    20s
+  12   1.84123705e+13 -3.21122341e+13  9.42e-02 8.07e-07  5.12e+07    21s
+  13   1.00186992e+12 -1.15094616e+12  4.82e-03 6.71e-07  2.18e+06    21s
+  14   4.55913106e+11 -3.02002293e+11  2.13e-03 4.23e-07  7.67e+05    21s
+  15   1.60408430e+11 -1.22107341e+11  7.39e-04 1.84e-07  2.86e+05    22s
+  16   2.43463398e+10 -1.05372387e+10  1.06e-04 6.51e-08  3.53e+04    22s
+  17   6.55783757e+09 -4.29618101e+09  2.76e-05 5.02e-08  1.10e+04    22s
+  18   2.24766576e+09 -1.40043587e+09  9.04e-06 2.41e-08  3.69e+03    23s
+  19   8.66219030e+08 -5.60803191e+08  3.20e-06 1.48e-08  1.44e+03    23s
+  20   4.16238676e+08 -1.42180668e+08  1.17e-06 2.14e-08  5.65e+02    24s
+  21   2.62708368e+08 -2.59892161e+07  5.34e-07 1.86e-08  2.92e+02    24s
+  22   2.28456244e+08  6.04177498e+07  3.98e-07 5.59e-09  1.70e+02    25s
+  23   2.02232794e+08  9.89402717e+07  2.91e-07 1.96e-08  1.05e+02    25s
+  24   1.82155422e+08  1.09454179e+08  2.10e-07 7.45e-09  7.36e+01    26s
+  25   1.58704339e+08  1.12523010e+08  1.12e-07 8.85e-09  4.67e+01    26s
+  26   1.56012343e+08  1.22061424e+08  1.02e-07 9.31e-09  3.44e+01    26s
+  27   1.45282373e+08  1.27791472e+08  5.96e-08 1.40e-08  1.77e+01    27s
+  28   1.44356119e+08  1.28994473e+08  5.96e-08 8.38e-09  1.55e+01    28s
+  29   1.43105791e+08  1.29274224e+08  5.96e-08 9.31e-09  1.40e+01    28s
+  30   1.42638557e+08  1.29511349e+08  1.19e-07 3.73e-09  1.33e+01    28s
+  31   1.42500536e+08  1.29616437e+08  1.19e-07 1.68e-08  1.30e+01    28s
+  32   1.41953012e+08  1.30143602e+08  1.19e-07 6.52e-09  1.20e+01    29s
+  33   1.40539815e+08  1.30410709e+08  1.19e-07 8.38e-09  1.03e+01    30s
+  34   1.38901671e+08  1.30766074e+08  1.19e-07 5.12e-09  8.23e+00    30s
+  35   1.38377786e+08  1.30879938e+08  1.19e-07 7.92e-09  7.59e+00    31s
+  36   1.37341538e+08  1.30931061e+08  1.19e-07 4.66e-09  6.49e+00    31s
+  37   1.37149739e+08  1.30979630e+08  1.19e-07 7.45e-09  6.24e+00    32s
+  38   1.36760167e+08  1.31017388e+08  1.19e-07 4.19e-09  5.81e+00    32s
+  39   1.36386568e+08  1.31079215e+08  1.19e-07 5.59e-09  5.37e+00    34s
+  40   1.36117027e+08  1.31102837e+08  1.19e-07 1.86e-08  5.07e+00    35s
+  41   1.35975104e+08  1.31128375e+08  1.19e-07 5.59e-09  4.91e+00    38s
+  42   1.35893958e+08  1.31140779e+08  1.53e-07 1.30e-08  4.81e+00    39s
+  43   1.35872619e+08  1.31150405e+08  1.68e-07 1.21e-08  4.78e+00    41s
+  44   1.35778104e+08  1.31176784e+08  2.43e-07 6.05e-09  4.66e+00    43s
+
+Barrier performed 44 iterations in 43.05 seconds (31.64 work units)
+Barrier solve interrupted - model solved by another algorithm
+
+Concurrent spin time: 3.22s (can be avoided by choosing Method=3)
+
+Solved with dual simplex
+
+Root simplex log...
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+  271130    1.3218605e+08   0.000000e+00   0.000000e+00     43s
+
+Root relaxation: objective 1.321860e+08, 271130 iterations, 32.52 seconds (21.18 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+*    0     0               0    1.321860e+08 1.3219e+08  0.00%     -   43s
+
+Explored 1 nodes (271130 simplex iterations) in 44.12 seconds (31.35 work units)
+Thread count was 32 (of 192 available processors)
+
+Solution count 2: 1.32186e+08 1.32186e+08 
+
+Optimal solution found (tolerance 1.00e-03)
+Best objective 1.321860453268e+08, best bound 1.321860453268e+08, gap 0.0000%
+
+User-callback calls 4255, time in user-callback 0.01 sec
+Gurobi Optimizer version 12.0.3 build v12.0.3rc0 (linux64 - "Red Hat Enterprise Linux 9.6 (Plow)")
+
+CPU model: AMD EPYC 9654 96-Core Processor, instruction set [SSE2|AVX|AVX2|AVX512]
+Thread count: 192 physical cores, 192 logical processors, using up to 32 threads
+
+Non-default parameters:
+TimeLimit  600
+MIPGap  0.001
+
+Optimize a model with 2238716 rows, 1120473 columns and 6065270 nonzeros
+Model fingerprint: 0x033661ce
+Variable types: 1120403 continuous, 70 integer (70 binary)
+Coefficient statistics:
+  Matrix range     [1e-04, 7e+03]
+  Objective range  [8e-01, 4e+06]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e-03, 1e+08]
+
+Loaded MIP start from previous solve with objective 9.35715e+11
+
+Presolve removed 1706131 rows and 695263 columns (presolve time = 5s)...
+Presolve removed 1820616 rows and 770439 columns
+Presolve time: 6.85s
+Presolved: 418100 rows, 350034 columns, 1563819 nonzeros
+Variable types: 350034 continuous, 0 integer (0 binary)
+Performing another presolve...
+Presolve removed 0 rows and 3458 columns
+Presolve time: 1.72s
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Ordering time: 5.44s
+
+Barrier statistics:
+ Dense cols : 7
+ AA' NZ     : 2.562e+06
+ Factor NZ  : 2.190e+07 (roughly 500 MB of memory)
+ Factor Ops : 7.395e+09 (less than 1 second per iteration)
+ Threads    : 30
+
+                  Objective                Residual
+Iter       Primal          Dual         Primal    Dual     Compl     Time
+   0   2.82557395e+16 -4.84592663e+17  9.47e+06 1.02e+05  1.51e+13    18s
+   1   1.64744499e+16 -2.95258071e+17  5.08e+06 2.04e+06  7.21e+12    18s
+   2   1.38427740e+16 -1.92692724e+17  4.21e+06 5.26e+05  5.86e+12    18s
+   3   3.55906877e+15 -9.64670539e+16  9.16e+05 3.74e-05  1.34e+12    19s
+   4   4.12436476e+14 -1.68837726e+16  2.26e+04 1.99e-03  4.69e+10    19s
+   5   2.54980278e+14 -2.97743269e+15  5.76e+02 6.08e-04  3.91e+09    19s
+   6   8.24208375e+13 -4.68280212e+14  3.27e+01 9.48e-05  5.75e+08    20s
+   7   2.09929659e+13 -1.86212116e+14  3.65e+00 3.75e-05  2.06e+08    20s
+   8   7.61999749e+12 -4.18623700e+13  4.11e-01 7.78e-06  4.88e+07    20s
+   9   4.37569647e+12 -1.88757778e+13  6.52e-02 3.69e-06  2.28e+07    21s
+  10   3.37951069e+12 -1.36310371e+13  1.43e-02 2.75e-06  1.66e+07    21s
+  11   1.74309477e+12 -1.76009225e+12  3.93e-03 3.03e-07  3.42e+06    22s
+  12   6.30195459e+11 -4.23166134e+11  1.33e-03 4.23e-07  1.03e+06    22s
+  13   3.09098055e+11 -2.01063844e+11  6.34e-04 3.03e-07  4.97e+05    22s
+  14   1.23511679e+11 -8.36325063e+10  2.48e-04 1.84e-07  2.02e+05    22s
+  15   4.54927728e+10 -3.28820953e+10  8.99e-05 9.49e-08  7.64e+04    23s
+  16   1.56963220e+10 -1.21904998e+10  3.00e-05 6.51e-08  2.72e+04    23s
+  17   5.38101268e+09 -5.31704477e+09  1.00e-05 2.78e-08  1.04e+04    23s
+  18   1.71644798e+09 -2.57650928e+09  3.01e-06 2.04e-08  4.19e+03    24s
+  19   7.76121463e+08 -1.39604513e+09  1.21e-06 1.29e-08  2.12e+03    24s
+  20   3.89277159e+08 -3.43772938e+08  3.88e-07 8.38e-09  7.15e+02    24s
+  21   2.42707740e+08  1.14804232e+08  1.24e-07 2.28e-08  1.25e+02    24s
+  22   2.11921817e+08  1.40679448e+08  7.47e-08 7.45e-09  6.95e+01    25s
+  23   2.06903870e+08  1.47371945e+08  6.64e-08 1.40e-08  5.80e+01    25s
+  24   1.91694813e+08  1.50716989e+08  4.13e-08 7.45e-09  4.00e+01    25s
+  25   1.79864481e+08  1.57187146e+08  2.19e-08 7.45e-09  2.21e+01    26s
+  26   1.75546589e+08  1.61451759e+08  1.49e-08 7.45e-09  1.37e+01    26s
+  27   1.74023753e+08  1.62356185e+08  1.25e-08 7.45e-09  1.14e+01    26s
+  28   1.73485257e+08  1.62909378e+08  1.16e-08 7.45e-09  1.03e+01    27s
+  29   1.73519734e+08  1.63431110e+08  1.13e-08 1.30e-08  9.84e+00    27s
+  30   1.72795041e+08  1.63797966e+08  9.82e-09 7.45e-09  8.77e+00    28s
+  31   1.72479433e+08  1.63872898e+08  6.03e-05 7.45e-09  8.39e+00    29s
+  32   1.72174634e+08  1.63985992e+08  5.56e-05 7.45e-09  7.98e+00    30s
+  33   1.71933604e+08  1.64693819e+08  6.53e-05 7.45e-09  7.06e+00    32s
+  34   1.71511908e+08  1.65197204e+08  6.02e-05 7.45e-09  6.16e+00    33s
+  35   1.70953552e+08  1.65450461e+08  1.06e-05 7.45e-09  5.37e+00    35s
+  36   1.70705648e+08  1.65813890e+08  1.52e-05 7.45e-09  4.77e+00    36s
+  37   1.70512646e+08  1.66266133e+08  1.18e-05 7.45e-09  4.14e+00    37s
+
+Barrier performed 37 iterations in 37.38 seconds (27.48 work units)
+Barrier solve interrupted - model solved by another algorithm
+
+Concurrent spin time: 10.08s (can be avoided by choosing Method=3)
+
+Solved with dual simplex
+
+Root simplex log...
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+  217683    1.6742549e+08   0.000000e+00   0.000000e+00     37s
+
+Root relaxation: objective 1.674255e+08, 217683 iterations, 27.09 seconds (17.36 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+*    0     0               0    1.674255e+08 1.6743e+08  0.00%     -   37s
+
+Explored 1 nodes (217683 simplex iterations) in 37.88 seconds (27.61 work units)
+Thread count was 32 (of 192 available processors)
+
+Solution count 2: 1.67425e+08 1.67425e+08 
+
+Optimal solution found (tolerance 1.00e-03)
+Best objective 1.674254927985e+08, best bound 1.674254927980e+08, gap 0.0000%
+
+User-callback calls 3867, time in user-callback 0.01 sec
+[ Info: Solving the subproblems required 65.15873384475708 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.4275249998397467e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 2.981060304892295e9
+[ Info: Solving the subproblems required 69.69502186775208 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.426156523357942e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.4953044257696428e9
+[ Info: Solving the subproblems required 64.73009395599365 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.4253516664903045e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.4747443710208712e9
+[ Info: Solving the subproblems required 68.65027689933777 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.432175698813979e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 7.283711706109074e8
+[ Info: Solving the subproblems required 67.6201810836792 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.420697449022236e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 6.496346562679772e8
+[ Info: Solving the subproblems required 67.36105799674988 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.4349839689396417e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 4.1795540135793185e8
+[ Info: Solving the subproblems required 65.85177803039551 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.403043382307499e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 6.069654415189695e8
+[ Info: Solving the subproblems required 66.03283500671387 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.3975482129532605e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.1626233867532451e8
+[ Info: Solving the subproblems required 76.40241312980652 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.3137789604978581e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.363292209725567e8
+[ Info: Solving the subproblems required 66.74304294586182 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.3071273435305464e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 8.832561445950764e7
+[ Info: Solving the subproblems required 63.85951805114746 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.3391373292212473e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 7.25645557063201e7
+[ Info: Solving the subproblems required 64.97289609909058 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.3391373502490886e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 7.256455477323443e7
+[ Info: Solving the subproblems required 70.15504503250122 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.359910759940318e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 7.3811464147277e7
+[ Info: Solving the subproblems required 75.26288199424744 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.359910781529836e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 7.381146349518135e7
+[ Info: Solving the subproblems required 67.18587112426758 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.4015189952108732e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.8727716429115683e8
+[ Info: Solving the subproblems required 65.93605303764343 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.4034815985330257e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 7.932603235317245e7
+[ Info: Solving the subproblems required 65.40822196006775 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.4034816239242542e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 7.932603124159837e7
+[ Info: Solving the subproblems required 66.28093981742859 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.3440422588760018e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 8.422111637343332e7
+[ Info: Solving the subproblems required 67.66786789894104 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.3457098229620165e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.8757312587906116e8
+[ Info: Solving the subproblems required 64.51811790466309 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.343396084283964e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 6.558810053982732e7
+[ Info: Solving the subproblems required 70.33658909797668 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.3865797502931044e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 6.877974895760415e8
+[ Info: Solving the subproblems required 65.28160500526428 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.343396091543593e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 6.55880961380249e7
+[ Info: Solving the subproblems required 75.15463280677795 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.374970587759405e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 1.4735922324312562e8
+[ Info: Solving the subproblems required 69.58080887794495 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.3749892593764856e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 7.1045691524847e7
+[ Info: Solving the subproblems required 68.60792088508606 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.3824561557415602e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 3.682951234696245e8
+[ Info: Solving the subproblems required 67.04518699645996 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.384358782686436e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 7.200432788160197e7
+[ Info: Solving the subproblems required 69.30498099327087 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.3112524172004884e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 5.5771203403840154e7
+[ Info: Solving the subproblems required 79.00603485107422 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.323799774797341e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 6.325523784625998e7
+[ Info: Solving the subproblems required 72.9729437828064 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.2552542393857479e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 4.4246385161321595e7
+[ Info: Solving the subproblems required 71.00914907455444 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.2552542443407719e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 4.424638180444753e7
+[ Info: Solving the subproblems required 69.43047094345093 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.257415580188338e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 4.276565462066144e7
+[ Info: Solving the subproblems required 69.70108795166016 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.257415579469304e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 4.276565534928225e7
+[ Info: Solving the subproblems required 72.2734169960022 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.2588329048422587e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 4.2325288419662654e7
+[ Info: Solving the subproblems required 75.84930801391602 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.2573496261807816e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 4.178991092668068e7
+[ Info: Solving the subproblems required 75.64335107803345 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.2573489760563567e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 4.178981098807328e7
+[ Info: Solving the subproblems required 76.01731300354004 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.2589220083681865e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 4.160525399401534e7
+[ Info: Solving the subproblems required 75.30518078804016 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.2589214300541878e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 4.160515989400226e7
+[ Info: Solving the subproblems required 73.9684669971466 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.2605553716323379e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 4.160480142281553e7
+[ Info: Solving the subproblems required 76.62955594062805 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.2605548082310925e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 4.16047081754465e7
+[ Info: Solving the subproblems required 71.95842504501343 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.2589307167209539e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 4.167784783294323e7
+[ Info: Solving the subproblems required 80.46257710456848 seconds
+┌ Info: Investment Cost: 
+└   planning_sol.inv_cost = 1.2587681065175802e8
+┌ Info: Operational Cost: 
+└   sum(((subop_sol[w]).op_cost for w = keys(subop_sol))) = 4.165551852312708e7
+┌ Info: Lines built: 
+└   build_indices = Int64[]
+┌ Info: Number of lines built: 
+└   length(build_indices) = 0
+┌ Info: Theta: 
+│   Vector(value.(planning_problem[:vTHETA])) =
+│    1-element Vector{Float64}:
+└     4.156108357625352e7
+┌ Info: vCAP Builds: 
+│   cap_builds =
+│    2-element Vector{Int64}:
+│     8
+└     9
+BENDERS SOLUTION 3: [6.0]
+OBJECTIVE OF BENDERS WAS: 1.6749730289942104e8
+OBJECTIVE OF NODAL MONOLITHIC WAS: 9.357095589850845e11
+Zonal objective is : 4.453357008114532e8
+Nodal objective is : 4.666189508237761e8
+TOTAL vNSE NODAL = 325.83700757005647
+TOTAL vNSE ZONAL = 302.0122339999102
+TOTAL overproduction NODAL = 0.0
+TOTAL overproduction ZONAL = 0.0
+TOTAL vCAP NODAL = 4538.231911999968
+TOTAL vCAP ZONAL = 4538.314711999998
+[2.9383259712121575e6, 2.182745893987488e6, 2.9664228690620544e6]
+[2.938349012457136e6, 2.182745893987516e6, 2.9664236525906445e6]
+MODEL 1
+3   vNEW_TRANS_CAP_DECISION_INT[2,1]   1.0
+4   vNEW_TRANS_CAP_DECISION_INT[2,2]   1.0
+31   vNEW_TRANS_CAP_DECISION_INT[16,1]   1.0
+32   vNEW_TRANS_CAP_DECISION_INT[16,2]   1.0
+33   vNEW_TRANS_CAP_DECISION_INT[17,1]   1.0
+34   vNEW_TRANS_CAP_DECISION_INT[17,2]   1.0
+41   vNEW_TRANS_CAP_DECISION_INT[21,1]   1.0
+42   vNEW_TRANS_CAP_DECISION_INT[21,2]   1.0
+45   vNEW_TRANS_CAP_DECISION_INT[23,1]   1.0
+46   vNEW_TRANS_CAP_DECISION_INT[23,2]   1.0
+49   vNEW_TRANS_CAP_DECISION_INT[25,1]   1.0
+50   vNEW_TRANS_CAP_DECISION_INT[25,2]   1.0
+53   vNEW_TRANS_CAP_DECISION_INT[27,1]   1.0
+63   vNEW_TRANS_CAP_DECISION_INT[32,1]   1.0
+64   vNEW_TRANS_CAP_DECISION_INT[32,2]   1.0
+65   vNEW_TRANS_CAP_DECISION_INT[33,1]   1.0
+66   vNEW_TRANS_CAP_DECISION_INT[33,2]   1.0
+9   vCAP[53]   802.6776749000147
+10   vCAP[55]   802.6776749000147
+
+MODEL 2
+1   vNEW_TRANS_CAP_DECISION_INT[1,1]   1.0
+2   vNEW_TRANS_CAP_DECISION_INT[1,2]   1.0
+15   vNEW_TRANS_CAP_DECISION_INT[8,1]   1.0
+16   vNEW_TRANS_CAP_DECISION_INT[8,2]   1.0
+17   vNEW_TRANS_CAP_DECISION_INT[9,1]   1.0
+18   vNEW_TRANS_CAP_DECISION_INT[9,2]   1.0
+35   vNEW_TRANS_CAP_DECISION_INT[18,1]   1.0
+36   vNEW_TRANS_CAP_DECISION_INT[18,2]   1.0
+37   vNEW_TRANS_CAP_DECISION_INT[19,1]   1.0
+38   vNEW_TRANS_CAP_DECISION_INT[19,2]   1.0
+61   vNEW_TRANS_CAP_DECISION_INT[31,1]   1.0
+7   vCAP[16]   646.8617864999862
+10   vCAP[28]   646.8617864999862
+
+MODEL 3
+9   vNEW_TRANS_CAP_DECISION_INT[5,1]   1.0
+10   vNEW_TRANS_CAP_DECISION_INT[5,2]   1.0
+11   vNEW_TRANS_CAP_DECISION_INT[6,1]   1.0
+13   vNEW_TRANS_CAP_DECISION_INT[7,1]   1.0
+35   vNEW_TRANS_CAP_DECISION_INT[18,1]   1.0
+53   vNEW_TRANS_CAP_DECISION_INT[27,1]   1.0
+6   vCAP[47]   819.576494599983
+8   vCAP[55]   819.576494599983

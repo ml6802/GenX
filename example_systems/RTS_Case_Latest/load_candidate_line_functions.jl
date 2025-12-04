@@ -136,7 +136,7 @@ function load_no_candidates(myinputs, T=168; demand_scale = 2)
     myinputs["hours_per_subperiod"] = T
     myinputs["INTERIOR_SUBPERIODS"] = [i for i in 2:myinputs["hours_per_subperiod"]]
     myinputs["T"] = T
-    myinputs["pD"] .*= 2
+    myinputs["pD"] .*= demand_scale
 end
 
 vom_dict = Dict("CC" => 2.12, "CT" => 2.12, "STEAM" => 9.18, "NUCLEAR" => 2.8, "PV" => 0, "CSP" => 3.8, "WIND" => 0)

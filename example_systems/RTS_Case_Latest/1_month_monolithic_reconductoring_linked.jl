@@ -32,6 +32,7 @@ p.internal.ext["Rep_Periods"] = rep_periods
 p.internal.ext["Timesteps_per_Rep_Period"] = 672
 p.internal.ext["sub_weights"] = [8784 for i in 1:rep_periods]
 p.internal.ext["hours_per_subperiod"] = 672
+add_om_costs(p)
 
 buses = collect(get_components(Bus, p.base_system))
 zones = []

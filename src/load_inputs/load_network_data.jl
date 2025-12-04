@@ -382,10 +382,10 @@ function load_network_data!(setup::Dict, p::Portfolio, inputs::Dict)
         println("ENTERING DCOPF")
         ## Inputs for the DC-OPF
         if setup["DC_OPF"] == 1
-            if setup["NetworkExpansion"] == 1
-                @warn("Because the DC_OPF flag is active, GenX will not allow any transmission capacity expansion. Set the DC_OPF flag to 0 if you want to optimize tranmission capacity expansion.")
-                setup["NetworkExpansion"] = 0
-            end
+            #if setup["NetworkExpansion"] == 1
+            #    @warn("Because the DC_OPF flag is active, GenX will not allow any transmission capacity expansion. Set the DC_OPF flag to 0 if you want to optimize tranmission capacity expansion.")
+            #    setup["NetworkExpansion"] = 0
+            #end
             println("Reading DC-OPF values...")
             # Transmission line voltage (in kV)
             sys = p.base_system

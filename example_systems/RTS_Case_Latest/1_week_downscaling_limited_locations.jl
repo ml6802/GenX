@@ -34,6 +34,23 @@ p.internal.ext["hours_per_subperiod"] = 168
 p.internal.ext["sub_weights"] = [8784 for i in 1:p.internal.ext["Rep_Periods"]] 
 add_om_costs(p)
 
+techs = collect(get_technologies(SupplyTechnology, p))
+# for (i, t) in enumerate(techs)
+#     # if isa(t.operation_costs.variable, FuelCurve)
+#     #     if t.operation_costs.fixed > 0#vom_cost.function_data.proportional_term == 0
+#     #         #println(t.operation_costs.fixed, "   ", has_supplemental_attributes(ExistingCapacity, t))
+#     #     end
+#     # else 
+#     #     if !has_supplemental_attributes(ExistingCapacity, t)
+#     #         println(i, "  ", t.name)
+#     #     end
+#     # end
+#     if !has_supplemental_attributes(ExistingCapacity, t)
+#             println(i, "  ", t.name)
+#         end
+# end
+
+
 # Build map of buses to zones; used in downscaling
 buses = collect(get_components(Bus, p.base_system))
 zones = []
@@ -113,9 +130,14 @@ myinputs = GenX.load_inputs(mysetup, case, p)
 
 optimizer = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 300, "MIPGap" => 1e-3)
 
+
+
 # Add expected candidate line data
 # also scales demands up by 4x
-load_candidates_base(myinputs, 168)
+load_candidates_base(myinputs, 8784)
+# myinputs["pD"][1, :] .+= 0.01
+cluster_inputs(case, settings_path, mysetup; inputs = myinputs)
+
 
 GenX.expand_new_cap_resources_to_nodal!(myinputs, mysetup, p, "")
 GenX.load_generators_variability!(mysetup, p, myinputs)
@@ -204,6 +226,7 @@ add_interzonal_data!(z_inputs, n_inputs)
 println("RUNNING MODEL 1")
 nodal_setup["bilinear"] = 0
 nodal_setup["unfix_slacks"] = 0
+nodal_setup["ptdf"] = 0
 # solve nodal models
 # m1 = GenX.generate_model(nodal_setup, n_inputs[1], optimizer)
 m1 = build_nodal_resolution_model(nodal_setup, n_inputs[1], optimizer)
@@ -211,23 +234,87 @@ m1 = build_nodal_resolution_model(nodal_setup, n_inputs[1], optimizer)
 set_nodal_capacity_builds(n_inputs[1], m1)
 
 optimize!(m1)
+println(objective_value(m1))
+for v in m1[:vNEW_TRANS_CAP_DECISION_INT]
+    if value(v) > 0
+        println(v, "   ", value(v))
+    end
+end
+
+for v in m1[:vCAP]
+    if value(v) > 0
+        println(v, "  ", value(v))
+    end
+end
+
+for i in n_inputs[1]["CAN_RETIRE_LINES"]
+    println(n_inputs[1]["existing_to_cand_map"][i])
+end
+
+nodal_setup["ptdf"] = 1
+# solve nodal models
+# m1 = GenX.generate_model(nodal_setup, n_inputs[1], optimizer)
+m1pb = build_nodal_resolution_model(nodal_setup, n_inputs[1], optimizer)
+
+for i in n_inputs[1]["NEW_CAP"]
+    fix(m1p[:vCAP][i], value(m1[:vCAP][i]), force = true)
+end
+
+for i in n_inputs[1]["CANDIDATE_LINES"]
+    fix(m1p[:vNEW_TRANS_CAP_DECISION_INT][i], value(m1[:vNEW_TRANS_CAP_DECISION_INT][i]), force = true)
+end
+for i in 1:86
+    for j in 1:168
+        fix(m1p[:vP][i, j], value(m1[:vP][i, j]), force = true)
+    end
+end
+
+set_nodal_capacity_builds(n_inputs[1], m1p)
+
+optimize!(m1p)
+println(objective_value(m1p))
+for v in m1p[:vNEW_TRANS_CAP_DECISION_INT]
+    if value(v) > 0
+        println(v, "   ", value(v))
+    end
+end
+
+for v in m1p[:vCAP]
+    if value(v) > 0
+        println(v, "  ", value(v))
+    end
+end
+
+nodal_setup["bilinear"] = 1
+m1pb = build_nodal_resolution_model(nodal_setup, n_inputs[1], optimizer)
+
+for i in n_inputs[1]["NEW_CAP"]
+    fix(m1pb[:vCAP][i], value(m1[:vCAP][i]), force = true)
+end
+
+for i in n_inputs[1]["CANDIDATE_LINES"]
+    fix(m1pb[:vNEW_TRANS_CAP_DECISION_INT][i], value(m1[:vNEW_TRANS_CAP_DECISION_INT][i]), force = true)
+end
+
+optimize!(m1pb)
+
+benders_settings_path = GenX.get_settings_path(case, "benders_settings.yml")
+mysetup_benders = GenX.configure_benders(benders_settings_path) 
+nodal_setup = merge(mysetup_benders, nodal_setup)
+
+nodal_setup["Benders"] = 1
+nodal_setup["bilinear"] = 1
+nodal_setup["ptdf"] = 1
+myinputs_decomp = GenX.separate_inputs_subperiods(n_inputs[1]);
+benders_inputs = GenX.generate_benders_inputs(nodal_setup,n_inputs[1],myinputs_decomp)
+planning_problem1, planning_sol1, operational_sol1, LB_hist1,UB_hist1, cpu_time,feasibility_hist1, build_decisions1  = GenX.benders(benders_inputs,nodal_setup,myinputs);
 
 
-
-# benders_settings_path = GenX.get_settings_path(case, "benders_settings.yml")
-# mysetup_benders = GenX.configure_benders(benders_settings_path) 
-# nodal_setup = merge(mysetup_benders, nodal_setup)
-
-# nodal_setup["Benders"] = 1
-# nodal_setup["bilinear"] = 1
-# myinputs_decomp = GenX.separate_inputs_subperiods(n_inputs[1]);
-# benders_inputs = GenX.generate_benders_inputs(nodal_setup,n_inputs[1],myinputs_decomp)
-# planning_problem1, planning_sol1, operational_sol1, LB_hist1,UB_hist1, cpu_time,feasibility_hist1, build_decisions1  = GenX.benders(benders_inputs,nodal_setup,myinputs);
+mysetup["bilinear"] = 1
+optimizer = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 300, "MIPGap" => 1e-4)
+mb = GenX.generate_model(mysetup, myinputs, optimizer)
 
 
-# mysetup["bilinear"] = 1
-# optimizer = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 300, "MIPGap" => 1e-4)
-# mb = GenX.generate_model(mysetup, myinputs, optimizer)
 
 
 

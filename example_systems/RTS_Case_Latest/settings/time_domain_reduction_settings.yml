@@ -85,7 +85,7 @@ ClusterFuelPrices: 1
   #   outliers (by performance or demand/resource extreme) as their own representative periods.
   #   This setting automatically includes the periods with maximum demand, minimum solar cf and
   #   minimum wind cf as extreme periods.
-UseExtremePeriods: 1
+UseExtremePeriods: 0
 
   #   - MultiStageConcatenate
   #   (Only considered if MultiStage = 1 in genx_settings.yml)

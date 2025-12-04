@@ -284,7 +284,7 @@ Function to load and scale the dataframe of a given resource.
 function load_resource_df(path::AbstractString, scale_factor::Float64, resource_type::Type)
     resource_in = load_dataframe(path)
     # rename columns lowercase for internal consistency
-    rename!(resource_in, lowercase.(names(resource_in)))
+    DataFrames.rename!(resource_in, lowercase.(names(resource_in)))
     scale_resources_data!(resource_in, scale_factor)
     # scale vre_stor columns if necessary
     resource_type == VreStorage && scale_vre_stor_data!(resource_in, scale_factor)
@@ -955,7 +955,7 @@ Adds the data contained in a `DataFrame` to a vector of resources. Each row in t
 """
 function add_df_to_resources!(resources::Vector{<:AbstractResource}, module_in::DataFrame)
     # rename columns lowercase to ensure consistency with resources
-    rename!(module_in, lowercase.(names(module_in)))
+    DataFrames.rename!(module_in, lowercase.(names(module_in)))
     # extract columns of module. They will be added as new attributes to resources
     new_sym = Symbol.(filter(x -> x ≠ "resource", names(module_in)))
     # loop oper rows of module and add new attributes to resources

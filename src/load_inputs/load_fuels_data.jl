@@ -89,19 +89,24 @@ function collect_unique_fuels(p::Portfolio, T::Int, scale_factor::Number, inputs
     rid_fuel_name_map = Dict{Int, String}()
     fuel_costs_dict = Dict{String, Any}()
     fuel_CO2_dict = Dict{String, Float64}()
-    seen_fuel_costs = Set{Union{Float64, IS.TimeSeriesKey}}()
-    unique_fuel_count = 0
+    seen_fuel_costs = Vector{Float64}()#Set{Union{Float64, IS.TimeSeriesKey}}()
+    unique_fuel_count = 1
 
     thermal_techs = [i for i in get_technologies(SupplyTechnology{PSY.ThermalStandard}, p) if !(occursin("SYNC_COND", i.name))]
     for tech in thermal_techs
         tech_fuel_cost = fuel_costs(tech)
-        fuel_data = create_fuel_entry(tech, unique_fuel_count, T, scale_factor)
+        if tech_fuel_cost in seen_fuel_costs
+            idx = findfirst(isequal(tech_fuel_cost), seen_fuel_costs)
+            fuel_data = create_fuel_entry(tech, idx, T, scale_factor)
+        else
+            fuel_data = create_fuel_entry(tech, unique_fuel_count, T, scale_factor)
+        end
         rid_fuel_name_map[resource_id(tech)] = fuel_data.name
         fuel_costs_dict[fuel_data.name] = fuel_data.cost
         fuel_CO2_dict[fuel_data.name] = fuel_data.co2_content
         if tech_fuel_cost ∉ seen_fuel_costs
-            unique_fuel_count += 1
             fuel_data = create_fuel_entry(tech, unique_fuel_count, T, scale_factor)
+            #println(seen_fuel_costs, "   ", tech_fuel_cost)
             push!(seen_fuel_costs, tech_fuel_cost)
             
             # Update all dictionaries
@@ -109,6 +114,7 @@ function collect_unique_fuels(p::Portfolio, T::Int, scale_factor::Number, inputs
             #rid_fuel_name_map[tech_to_index[resource_id(tech)]] = fuel_data.name
             fuel_costs_dict[fuel_data.name] = fuel_data.cost
             fuel_CO2_dict[fuel_data.name] = fuel_data.co2_content
+            unique_fuel_count += 1
         end
     end
     
@@ -138,7 +144,6 @@ function create_fuel_entry(tech, idx::Int, T::Int, scale_factor::Number)
     fuel_base_name = fuel(tech)[1]
     fuel_name = string(fuel_base_name) * "_" * string(idx)  #FIXME: this doesn't work for multi-fuel resources    
     fuel_cost = expand_ts(fuel_costs(tech), T) / scale_factor
-
     co2 = haskey(co2_content(tech), fuel_base_name) ? co2_content(tech)[fuel_base_name] : 0.0
 
     FuelData(

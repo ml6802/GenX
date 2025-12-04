@@ -153,6 +153,50 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
             eNet_Export_Cand_Flows[z = 1:Z, t = 1:T],
             sum(inputs["pNet_Map"][l, z] * EP[:vCANDFLOW][l, t] for l in CANDIDATE_LINES))
 
+#     elseif setup["ptdf"] == 1 && setup["bilinear"] == 0 #PTDF constraints
+#             ### DC-OPF variables ###
+#         # Note, these are definable without overwriting the existing variables in the model because transmission.jl is not called when this file is called.
+#         # Power flow on each existing transmission line "l" at hour "t"
+#         @variable(EP, vFLOW[l = 1:L_exist, t = 1:T])
+
+
+#         ptdf_by_line = calculate_ptdf_matrices(inputs) #TODO: Add slack bus to inputs if we go this route of doing ptdf
+#         inputs["ptdf_by_line"] = ptdf_by_line
+        
+#         @variable(EP, p_bus[1:Z, 1:T])
+#         @constraint(EP, cBUS_INJECTION[z = 1:Z, t = 1:T], p_bus[z, t] == EP[:eGenerationByZone][z, t] + sum(EP[:vNSE][:, t, z]) - inputs["pD"][t, z])
+# #
+#         @constraint(EP, SYSTEM_BALANCE[t = 1:T], sum(p_bus[z, t] for z in 1:Z) == 0)
+
+#         CAN_RETIRE_LINES = inputs["CAN_RETIRE_LINES"]
+#         existing_to_cand_map = inputs["existing_to_cand_map"]
+#         line_map = inputs["Line_Map"]
+
+#         # The following constraints assume CANDIDATE_LINES == existing lines
+#         @expression(EP, 
+#             eFLOW_LINES[l in 1:L_exist, t in 1:T],
+#             sum(get_ptdf_vector(ptdf_by_line, l, line_map)[z] * p_bus[z, t] for z in 1:Z)
+#         )
+#         F_existing = inputs["pTrans_Max"]
+#         @constraints(EP,
+#         begin
+#             cMaxFlow_out_existing[l = 1:L_exist, t = 1:T], eFLOW_LINES[l, t] <= EP[:eAvail_Trans_Cap][l]
+#             cMaxFlow_in_existing[l = 1:L_exist, t = 1:T], eFLOW_LINES[l, t] >= -EP[:eAvail_Trans_Cap][l]
+#         end
+#         )
+
+
+#         @constraint(EP, [l in 1:L_exist, t in 1:T],
+#             EP[:vFLOW][l, t] == eFLOW_LINES[l, t]
+#         )
+
+#         @expression(EP,
+#         eCand_Flow[l in CANDIDATE_LINES, t = 1:T], 0.0)
+
+#         @expression(EP,
+#             eNet_Export_Cand_Flows[z = 1:Z, t = 1:T],
+#             sum(inputs["pNet_Map"][l, z] * EP[:vCANDFLOW][l, t] for l in CANDIDATE_LINES))
+
     elseif setup["ptdf"] == 1 && setup["bilinear"] == 0 #PTDF constraints
             ### DC-OPF variables ###
         # Note, these are definable without overwriting the existing variables in the model because transmission.jl is not called when this file is called.
@@ -164,21 +208,41 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
 
         ptdf_by_line = calculate_ptdf_matrices(inputs) #TODO: Add slack bus to inputs if we go this route of doing ptdf
         inputs["ptdf_by_line"] = ptdf_by_line
-        
+        create_empty_expression!(EP, :eInterzonalFlows, (Z, T))
+
+        if haskey(inputs, "node_to_timeseries")
+            scale_factor = setup["ParameterScale"] == 1 ? ModelScalingFactor : 1
+            node_to_timeseries = inputs["node_to_timeseries"]
+            connected_nodes = sort(collect(keys(node_to_timeseries)))
+            voll = inputs["Voll"][1]
+            @variable(EP, vINTERZONAL_SLACK_UP[1:length(connected_nodes), 1:T] >= 0)
+            @variable(EP, vINTERZONAL_SLACK_DOWN[1:length(connected_nodes), 1:T] >= 0)
+
+            #create empty expression for interzonal; add to cBUS_INJECTION
+
+            for (i, k) in enumerate(connected_nodes)
+                for t in 1:T
+                    add_to_expression!(EP[:eInterzonalFlows][k, t], node_to_timeseries[k][t])
+                    add_to_expression!(EP[:eInterzonalFlows][k, t], vINTERZONAL_SLACK_UP[i, t] - vINTERZONAL_SLACK_DOWN[i,t])
+                    add_to_expression!(EP[:eObj], voll * 1e2 * (vINTERZONAL_SLACK_UP[i, t] + vINTERZONAL_SLACK_DOWN[i,t]))
+                end
+            end
+        end
+
         @variable(EP, p_bus[1:Z, 1:T])
-        @constraint(EP, cBUS_INJECTION[z = 1:Z, t = 1:T], p_bus[z, t] == EP[:eGenerationByZone][z, t] + sum(EP[:vNSE][:, t, z]) - inputs["pD"][t, z])
+        @constraint(EP, cBUS_INJECTION[z = 1:Z, t = 1:T], p_bus[z, t] == EP[:eGenerationByZone][z, t] + EP[:eInterzonalFlows][z, t] + sum(EP[:vNSE][:, t, z]) - inputs["pD"][t, z])
 #
+
         @constraint(EP, SYSTEM_BALANCE[t = 1:T], sum(p_bus[z, t] for z in 1:Z) == 0)
 
-        #TODO: currently, there is no support for candidate lines in corridors where there is not an existing line
         CAN_RETIRE_LINES = inputs["CAN_RETIRE_LINES"]
+        CANNOT_RETIRE_LINES = inputs["CANNOT_RETIRE_LINES"]
         existing_to_cand_map = inputs["existing_to_cand_map"]
         line_map = inputs["Line_Map"]
 
         PVIRTUAL_LINES = union(CAN_RETIRE_LINES, CANDIDATE_LINES)
         @variable(EP, p_virtual[l in PVIRTUAL_LINES, t in 1:T])
 
-        # The following constraints assume CANDIDATE_LINES == existing lines
         @expression(EP, 
             eFLOW_LINES[l in 1:L_exist, t in 1:T],
             sum(get_ptdf_vector(ptdf_by_line, l, line_map)[z] * p_bus[z, t] for z in 1:Z) + 
@@ -187,6 +251,13 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
                 for ll in PVIRTUAL_LINES
             )
         )
+
+        for l in CAN_RETIRE_LINES
+            for t in 1:T
+                add_to_expression!(eFLOW_LINES[l, t], - p_virtual[l, t])
+            end
+        end
+
         F_existing = inputs["pTrans_Max"]
         @constraints(EP,
         begin
@@ -215,7 +286,7 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
             eCAND_FLOW_LINES[l, t] <= F_cand[l] * EP[:vNEW_TRANS_CAP_DECISION_INT][l]
         ) # 19 for existing lines in paper https://ietresearch.onlinelibrary.wiley.com/doi/epdf/10.1049/iet-gtd.2015.1573
         
-        M = 10 .* F_cand
+        M = 4 .* F_cand
         @constraint(EP, 
             cBIGM_PTDF_LOWER[l in CANDIDATE_LINES, t in 1:T],
             p_virtual[l, t] >= -M[l] * (1 - EP[:vNEW_TRANS_CAP_DECISION_INT][l])
@@ -239,7 +310,7 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
             eFLOW_LINES[l, t] <= F_exist[l] * (1-EP[:vNEW_TRANS_CAP_DECISION_INT][existing_to_cand_map[l]])
         ) # 19 for existing lines in paper https://ietresearch.onlinelibrary.wiley.com/doi/epdf/10.1049/iet-gtd.2015.1573
         
-        M = 10 .* F_exist
+        M = 4 .* F_exist
         @constraint(EP, 
             cBIGM_PTDF_LOWER_RETIRE[l in CAN_RETIRE_LINES, t in 1:T],
             p_virtual[l, t] >= -M[l] * (EP[:vNEW_TRANS_CAP_DECISION_INT][existing_to_cand_map[l]])
@@ -247,7 +318,7 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
 
         @constraint(EP, 
             cBIGM_PTDF_UPPER_RETIRE[l in CAN_RETIRE_LINES, t in 1:T],
-            p_virtual[l, t] <= M[l] * (1 - EP[:vNEW_TRANS_CAP_DECISION_INT][existing_to_cand_map[l]])
+            p_virtual[l, t] <= M[l] * (EP[:vNEW_TRANS_CAP_DECISION_INT][existing_to_cand_map[l]])
         ) # 20 for existing lines in paper https://ietresearch.onlinelibrary.wiley.com/doi/epdf/10.1049/iet-gtd.2015.1573
 
 
@@ -258,9 +329,19 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
         #TODO: Add EP[:eAvail_Trans_Cap][l] upper and loewr limits on lines like Btheta
 
         @constraint(EP, [l in CANDIDATE_LINES, t in 1:T],
-            EP[:vCANDFLOW][l, t] == sum(get_ptdf_vector(ptdf_by_line, l, line_map)[z] * p_bus[z, t] for z in 1:Z) + 
-            sum(get_ptdf_line_diff(ptdf_by_line, l, ll, line_map) * p_virtual[ll, t] for ll in CANDIDATE_LINES)
+            EP[:vCANDFLOW][l, t] == -p_virtual[l, t] + sum(get_ptdf_vector(ptdf_by_line, l, line_map)[z] * p_bus[z, t] for z in 1:Z) + 
+            sum(get_ptdf_line_diff(ptdf_by_line, l, ll, line_map) * p_virtual[ll, t] for ll in PVIRTUAL_LINES)
         )
+
+        # @constraint(EP, 
+        #     cCAND_LINES_LOWER[l in CANDIDATE_LINES, t in 1:T],
+        #     EP[:vCANDFLOW][l, t] >= -F_cand[l] * (EP[:vNEW_TRANS_CAP_DECISION_INT][l])
+        # )
+
+        # @constraint(EP, 
+        #     cCAND_LINES_UPPER[l in CANDIDATE_LINES, t in 1:T],
+        #     EP[:vCANDFLOW][l, t] <= F_cand[l] * (EP[:vNEW_TRANS_CAP_DECISION_INT][l])
+        # )
 
         @expression(EP,
         eCand_Flow[l in CANDIDATE_LINES, t = 1:T], EP[:vCANDFLOW][l, t])
@@ -275,76 +356,139 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
         @variable(EP, vFLOW[l = 1:L_exist, t = 1:T])
 
         # Power flow on each candidate transmission line "l" at hour "t"
-        @variable(EP, vCANDFLOW[l = 1:L_cand, t = 1:T])
+        @variable(EP, vCANDFLOW[l in CANDIDATE_LINES, t = 1:T])
 
-        ptdf_nodal, ptdf_by_line = calculate_ptdf_matrices(inputs) #TODO: Add slack bus to inputs if we go this route of doing ptdf
+        ptdf_by_line = calculate_ptdf_matrices(inputs) #TODO: Add slack bus to inputs if we go this route of doing ptdf
         inputs["ptdf_by_line"] = ptdf_by_line
+        create_empty_expression!(EP, :eInterzonalFlows, (Z, T))
         
+        if haskey(inputs, "node_to_timeseries")
+            scale_factor = setup["ParameterScale"] == 1 ? ModelScalingFactor : 1
+            node_to_timeseries = inputs["node_to_timeseries"]
+            connected_nodes = sort(collect(keys(node_to_timeseries)))
+            voll = inputs["Voll"][1]
+            @variable(EP, vINTERZONAL_SLACK_UP[1:length(connected_nodes), 1:T] >= 0)
+            @variable(EP, vINTERZONAL_SLACK_DOWN[1:length(connected_nodes), 1:T] >= 0)
+
+            #create empty expression for interzonal; add to cBUS_INJECTION
+
+            for (i, k) in enumerate(connected_nodes)
+                for t in 1:T
+                    add_to_expression!(EP[:eInterzonalFlows][k, t], node_to_timeseries[k][t])
+                    add_to_expression!(EP[:eInterzonalFlows][k, t], vINTERZONAL_SLACK_UP[i, t] - vINTERZONAL_SLACK_DOWN[i,t])
+                    add_to_expression!(EP[:eObj], voll * 1e2 * (vINTERZONAL_SLACK_UP[i, t] + vINTERZONAL_SLACK_DOWN[i,t]))
+                end
+            end
+        end
+
         @variable(EP, p_bus[1:Z, 1:T])
-        @constraint(EP, cBUS_INJECTION[z = 1:Z, t = 1:T], p_bus[z, t] == EP[:eGenerationByZone][z, t] + sum(EP[:vNSE][:, t, z]) - inputs["pD"][t, z])
+        @constraint(EP, cBUS_INJECTION[z = 1:Z, t = 1:T], p_bus[z, t] == EP[:eGenerationByZone][z, t] + EP[:eInterzonalFlows][z, t] + sum(EP[:vNSE][:, t, z]) - inputs["pD"][t, z])
 #
         @constraint(EP, SYSTEM_BALANCE[t = 1:T], sum(p_bus[z, t] for z in 1:Z) == 0)
         
-        #TODO: currently, there is no support for candidate lines in corridors where there is not an existing line
-
+        CAN_RETIRE_LINES = inputs["CAN_RETIRE_LINES"]
+        CANNOT_RETIRE_LINES = inputs["CANNOT_RETIRE_LINES"]
+        existing_to_cand_map = inputs["existing_to_cand_map"]
         line_map = inputs["Line_Map"]
-        cand_line_map = inputs["Cand_Line_Map"]
-        @variable(EP, p_virtual[l in CANDIDATE_LINES, i in 1:(inputs["Max_Trans_Cap"][l]), t in 1:T])
 
-        @expression(EP, ePTDF_BILINEAR[l in CANDIDATE_LINES, i in 1:(inputs["Max_Trans_Cap"][l]), t in 1:T], EP[:vNEW_TRANS_CAP_DECISION_INT][l, i] * p_virtual[l, i, t])
+        
+        PVIRTUAL_LINES = union(CAN_RETIRE_LINES, CANDIDATE_LINES)
+        @variable(EP, p_virtual[l in PVIRTUAL_LINES, t in 1:T])
+        @variable(EP, vPTDF_BILINEAR[l in PVIRTUAL_LINES, t in 1:T])
+
+        @constraint(EP, cPTDF_BILINEAR_CANDIDATES[l in CANDIDATE_LINES, t in 1:T],
+                (1 - EP[:vNEW_TRANS_CAP_DECISION_INT][l]) * p_virtual[l, t] == vPTDF_BILINEAR[l, t]
+        )
+        @constraint(EP, cPTDF_BILINEAR_CAN_RETIRE[l in CAN_RETIRE_LINES, t in 1:T],
+                (EP[:vNEW_TRANS_CAP_DECISION_INT][existing_to_cand_map[l]]) * p_virtual[l, t] == vPTDF_BILINEAR[l, t]
+        )
+
+                
 
         # The following constraints assume CANDIDATE_LINES == existing lines
         @expression(EP, 
             eFLOW_LINES[l in 1:L_exist, t in 1:T],
-            sum(get_ptdf_vector(ptdf_by_line, l, 0, line_map)[z] * p_bus[z, t] for z in 1:Z) + 
+            sum(get_ptdf_vector(ptdf_by_line, l, line_map)[z] * p_bus[z, t] for z in 1:Z) + 
             sum(
-                (get_ptdf_line_diff(ptdf_by_line, l, 0, ll, line_map)) * ePTDF_BILINEAR[ll, i, t] 
-                for ll in CANDIDATE_LINES, i in 1:(inputs["Max_Trans_Cap"][ll])
+                (get_ptdf_line_diff(ptdf_by_line, l, ll, line_map)) * vPTDF_BILINEAR[ll, t] for ll in PVIRTUAL_LINES 
             )
         )
-        F_existing = inputs["pTrans_Max"]
-        @constraint(EP, 
-            cEXISTING_LINE_FLOWS[l in l in 1:L_exist, t in 1:T],
-            -F_existing[l] <= eFLOW_LINES[l, t] <= F_existing[l]
-        ) # 18 for existing lines in paper https://ietresearch.onlinelibrary.wiley.com/doi/epdf/10.1049/iet-gtd.2015.1573
 
-        @expression(EP, 
-            eCAND_FLOW_LINES[l in CANDIDATE_LINES, i in 1:(inputs["Max_Trans_Cap"][l]), t in 1:T],
-            p_virtual[l, i, t] -
-            sum(get_ptdf_vector(ptdf_by_line, l, i, cand_line_map)[z] * p_bus[z, t] for z in 1:Z) - 
-            sum(get_ptdf_line_diff(ptdf_by_line, l, i, ll, cand_line_map) * ePTDF_BILINEAR[ll, ii, t] for ll in CANDIDATE_LINES, ii in 1:(inputs["Max_Trans_Cap"][ll]))
+        for l in CAN_RETIRE_LINES
+            for t in 1:T
+                add_to_expression!(eFLOW_LINES[l, t], - vPTDF_BILINEAR[l, t])
+            end
+        end
+
+        F_existing = inputs["pTrans_Max"]
+       @constraints(EP,
+        begin
+            cMaxFlow_out_existing[l = 1:L_exist, t = 1:T], eFLOW_LINES[l, t] <= EP[:eAvail_Trans_Cap][l]
+            cMaxFlow_in_existing[l = 1:L_exist, t = 1:T], eFLOW_LINES[l, t] >= -EP[:eAvail_Trans_Cap][l]
+        end
         )
 
+        @expression(EP, 
+            eCAND_FLOW_LINES[l in CANDIDATE_LINES, t in 1:T],
+            vPTDF_BILINEAR[l, t] -
+            sum(get_ptdf_vector(ptdf_by_line, l, line_map)[z] * p_bus[z, t] for z in 1:Z) - 
+            sum(get_ptdf_line_diff(ptdf_by_line, l, ll, line_map) * vPTDF_BILINEAR[ll, t] for ll in PVIRTUAL_LINES)
+        )
+
+        # Candidate lines
         F_cand = inputs["Line_Reinforcement_Cap_Size"]
         @constraint(EP, 
-            cCAND_LINE_FLOWS_LOWER[l in CANDIDATE_LINES, i in 1:(inputs["Max_Trans_Cap"][l]), t in 1:T],
-            eCAND_FLOW_LINES[l, i, t] >= -F_cand[l] * EP[:vNEW_TRANS_CAP_DECISION_INT][l, i]
+            cCAND_LINE_FLOWS_LOWER[l in CANDIDATE_LINES, t in 1:T],
+            eCAND_FLOW_LINES[l, t] >= -F_cand[l] * EP[:vNEW_TRANS_CAP_DECISION_INT][l]
         ) # 19 for existing lines in paper https://ietresearch.onlinelibrary.wiley.com/doi/epdf/10.1049/iet-gtd.2015.1573
 
         @constraint(EP, 
-            cCAND_LINE_FLOWS_UPPER[l in CANDIDATE_LINES, i in 1:(inputs["Max_Trans_Cap"][l]), t in 1:T],
-            eCAND_FLOW_LINES[l, i, t] <= F_cand[l] * EP[:vNEW_TRANS_CAP_DECISION_INT][l, i]
+            cCAND_LINE_FLOWS_UPPER[l in CANDIDATE_LINES, t in 1:T],
+            eCAND_FLOW_LINES[l, t] <= F_cand[l] * EP[:vNEW_TRANS_CAP_DECISION_INT][l]
         ) # 19 for existing lines in paper https://ietresearch.onlinelibrary.wiley.com/doi/epdf/10.1049/iet-gtd.2015.1573
         
-        # M = 10 .* F_cand
-        # @constraint(EP, 
-        #     cBIGM_PTDF_LOWER[l in CANDIDATE_LINES, i in 1:(inputs["Max_Trans_Cap"][l]), t in 1:T],
-        #     p_virtual[l, i, t] >= -M[l] * (1 - EP[:vNEW_TRANS_CAP_DECISION_INT][l, i])
-        # ) # 20 for existing lines in paper https://ietresearch.onlinelibrary.wiley.com/doi/epdf/10.1049/iet-gtd.2015.1573
+        M = 4 .* F_cand
+        @constraint(EP, 
+            cBIGM_PTDF_LOWER[l in CANDIDATE_LINES, t in 1:T],
+            p_virtual[l, t] >= -M[l] * (1 - EP[:vNEW_TRANS_CAP_DECISION_INT][l])
+        ) # 20 for existing lines in paper https://ietresearch.onlinelibrary.wiley.com/doi/epdf/10.1049/iet-gtd.2015.1573
 
-        # @constraint(EP, 
-        #     cBIGM_PTDF_UPPER[l in CANDIDATE_LINES, i in 1:(inputs["Max_Trans_Cap"][l]), t in 1:T],
-        #     p_virtual[l, i, t] <= M[l] * (1 - EP[:vNEW_TRANS_CAP_DECISION_INT][l, i])
-        # ) # 20 for existing lines in paper https://ietresearch.onlinelibrary.wiley.com/doi/epdf/10.1049/iet-gtd.2015.1573
+        @constraint(EP, 
+            cBIGM_PTDF_UPPER[l in CANDIDATE_LINES, t in 1:T],
+            p_virtual[l, t] <= M[l] * (1 - EP[:vNEW_TRANS_CAP_DECISION_INT][l])
+        ) # 20 for existing lines in paper https://ietresearch.onlinelibrary.wiley.com/doi/epdf/10.1049/iet-gtd.2015.1573
 
+
+        # Retirement Lines
+        F_exist = inputs["pTrans_Max"]
+        @constraint(EP, 
+            cEXIST_LINE_FLOWS_LOWER[l in CAN_RETIRE_LINES, t in 1:T],
+            eFLOW_LINES[l, t] >= -F_exist[l] * (1-EP[:vNEW_TRANS_CAP_DECISION_INT][existing_to_cand_map[l]])
+        ) # 19 for existing lines in paper https://ietresearch.onlinelibrary.wiley.com/doi/epdf/10.1049/iet-gtd.2015.1573
+
+        @constraint(EP, 
+            cEXIST_LINE_FLOWS_UPPER[l in CAN_RETIRE_LINES, t in 1:T],
+            eFLOW_LINES[l, t] <= F_exist[l] * (1-EP[:vNEW_TRANS_CAP_DECISION_INT][existing_to_cand_map[l]])
+        ) # 19 for existing lines in paper https://ietresearch.onlinelibrary.wiley.com/doi/epdf/10.1049/iet-gtd.2015.1573
+        
+        M = 4 .* F_exist
+        @constraint(EP, 
+            cBIGM_PTDF_LOWER_RETIRE[l in CAN_RETIRE_LINES, t in 1:T],
+            p_virtual[l, t] >= -M[l] * (EP[:vNEW_TRANS_CAP_DECISION_INT][existing_to_cand_map[l]])
+        ) # 20 for existing lines in paper https://ietresearch.onlinelibrary.wiley.com/doi/epdf/10.1049/iet-gtd.2015.1573
+
+        @constraint(EP, 
+            cBIGM_PTDF_UPPER_RETIRE[l in CAN_RETIRE_LINES, t in 1:T],
+            p_virtual[l, t] <= M[l] * (EP[:vNEW_TRANS_CAP_DECISION_INT][existing_to_cand_map[l]])
+        ) # 20 for existing lines in paper https://ietresearch.onlinelibrary.wiley.com/doi/epdf/10.1049/iet-gtd.2015.1573
 
         @constraint(EP, [l in 1:L_exist, t in 1:T],
             EP[:vFLOW][l, t] == eFLOW_LINES[l, t]   
         )
 
         @constraint(EP, [l in CANDIDATE_LINES, t in 1:T],
-            EP[:vCANDFLOW][l, t] == sum(sum(get_ptdf_vector(ptdf_by_line, l, i, cand_line_map)[z] * p_bus[z, t] for z in 1:Z) + 
-            sum(get_ptdf_line_diff(ptdf_by_line, l, i, ll, cand_line_map) * p_virtual[ll, ii, t] for ll in CANDIDATE_LINES, ii in 1:(inputs["Max_Trans_Cap"][ll])) for i in 1:(inputs["Max_Trans_Cap"][l]))
+            EP[:vCANDFLOW][l, t] == -vPTDF_BILINEAR[l, t] + sum(get_ptdf_vector(ptdf_by_line, l, line_map)[z] * p_bus[z, t] for z in 1:Z) + 
+            sum(get_ptdf_line_diff(ptdf_by_line, l, ll, line_map) * vPTDF_BILINEAR[ll, t] for ll in PVIRTUAL_LINES)
         )
 
         @expression(EP,

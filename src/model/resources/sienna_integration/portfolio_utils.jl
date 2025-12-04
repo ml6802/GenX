@@ -51,6 +51,7 @@ function expand_new_cap_resources_to_nodal!(inputs::Dict, setup::Dict, p::Portfo
     new_cap = inputs["NEW_CAP"]
     zonal_to_nodal_new_cap = Dict{String, Vector{Int}}()
     new_cap_names = String[]
+    pP_Max = inputs["pP_Max"]
     for i in new_cap
         old_resource = resources[i]
         resource_name = parent(old_resource)[:resource]
@@ -62,6 +63,8 @@ function expand_new_cap_resources_to_nodal!(inputs::Dict, setup::Dict, p::Portfo
         tech = techs[1]
         regions = GenX.region(tech) #vector of nodes
         new_id_set = Int[i]
+        resource_variability = zeros(1, size(pP_Max)[2])
+        resource_variability[1, :] .= pP_Max[i, :]
         for j in 2:length(regions)
             new_resource = translate_resource_dict(p, tech, j)
             scale_resources_data!(new_resource, scale_factor)
@@ -77,6 +80,7 @@ function expand_new_cap_resources_to_nodal!(inputs::Dict, setup::Dict, p::Portfo
             push!(new_id_set, new_resource_id)
             push!(new_cap_resources, new_resource)
             index_to_technology[length(new_cap_resources) + length(resources)] = tech.id
+            pP_Max = vcat(pP_Max, resource_variability)
         end
         zonal_to_nodal_new_cap[resource_name] = new_id_set
     end
@@ -87,6 +91,7 @@ function expand_new_cap_resources_to_nodal!(inputs::Dict, setup::Dict, p::Portfo
     inputs["index_to_technology"] = index_to_technology
     add_resources_to_input_data!(inputs, setup, case_path, inputs["RESOURCES"])
     inputs["zonal_to_nodal_new_cap"] = zonal_to_nodal_new_cap
+    inputs["pP_Max"] = pP_Max
     # len_new_cap_resources = length(new_cap_resources)
     # len_resources = length(resources)
     # new_cap_resources_set = [i for i in (1 + len_resources):(len_resources + len_new_cap_resources)]

@@ -28,6 +28,10 @@ var_om_cost_per_mwh(t::SupplyTechnology) = IS.get_proportional_term(IS.get_vom_c
 PSY.get_fixed(c::PSY.RenewableGenerationCost) = c.variable.value_curve.function_data.constant_term
 """Get [`SupplyTechnology`](@ref) `fixed_om_cost_per_mwhyr`."""
 fixed_om_cost_per_mwyr(t::SupplyTechnology) = PSY.get_fixed(get_operation_costs(t))
+# fixed_om_cost_per_mwyr(t::SupplyTechnology{PSY.ThermalStandard}) = PSY.get_fixed(get_operation_costs(t))
+# function fixed_om_cost_per_mwyr(t::SupplyTechnology{T}) where {T <: Union{PSY.RenewableDispatch, PSY.RenewableNonDispatch}}
+#    return IS.get_proportional_term(get_capital_costs(t))
+# end
 """Get [`SupplyTechnology`](@ref) `fuel`."""
 fuel(t::SupplyTechnology) = get_fuel(t)
 """Get [`SupplyTechnology`](@ref) `cofire_start_limits`."""

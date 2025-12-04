@@ -335,3 +335,117 @@ function run_genx_case_preset_mga!(case,mysetup)
     write_benders_mga_results!(dfResults, results, case, setup, inputs, inputs_decomp, sumtime_df)
 
 end
+
+
+function get_settings_path(case::AbstractString)
+    return joinpath(case, "settings")
+end
+
+function get_settings_path(case::AbstractString, filename::AbstractString)
+    return joinpath(get_settings_path(case), filename)
+end
+
+function get_default_output_folder(case::AbstractString)
+    return joinpath(case, "results")
+end
+
+@doc raw"""
+    run_genx_case!(case::AbstractString, optimizer::Any=HiGHS.Optimizer)
+
+Run a GenX case with the specified optimizer. The optimizer can be any solver supported by MathOptInterface.
+
+# Arguments
+- `case::AbstractString`: the path to the case folder
+- `optimizer::Any`: the optimizer instance to be used in the optimization model
+
+# Example
+```julia
+run_genx_case!("path/to/case", HiGHS.Optimizer)
+```
+
+```julia
+run_genx_case!("path/to/case", Gurobi.Optimizer)
+```
+"""
+function run_genx_case!(case::AbstractString, optimizer::Any = HiGHS.Optimizer)
+    genx_settings = get_settings_path(case, "genx_settings.yml") # Settings YAML file path
+    writeoutput_settings = get_settings_path(case, "output_settings.yml") # Write-output settings YAML file path
+    mysetup = configure_settings(genx_settings, writeoutput_settings) # mysetup dictionary stores settings and GenX-specific parameters
+
+    if mysetup["MultiStage"] == 0
+        if mysetup["Benders"] == 0
+            run_genx_case_simple!(case, mysetup, optimizer)
+        #elseif mysetup["PresetMGA"] == 1
+         #   benders_settings_path = get_settings_path(case, "benders_settings.yml")
+          #  mysetup_benders = configure_benders(benders_settings_path) 
+           # mysetup = merge(mysetup,mysetup_benders);
+
+            #run_genx_case_preset_mga!(case,mysetup)
+        else
+            benders_settings_path = get_settings_path(case, "benders_settings.yml")
+            mysetup_benders = configure_benders(benders_settings_path) 
+            mysetup = merge(mysetup,mysetup_benders);
+
+            run_genx_case_benders!(case, mysetup)
+        end
+    else
+        run_genx_case_multistage!(case, mysetup, optimizer)
+    end
+end
+
+function run_genx_case_simple!(case::AbstractString, mysetup::Dict, optimizer::Any)
+    settings_path = get_settings_path(case)
+
+    ### Cluster time series inputs if necessary and if specified by the user
+    if mysetup["TimeDomainReduction"] == 1
+        TDRpath = joinpath(case, mysetup["TimeDomainReductionFolder"])
+        system_path = joinpath(case, mysetup["SystemFolder"])
+        prevent_doubled_timedomainreduction(system_path)
+        if !time_domain_reduced_files_exist(TDRpath)
+            println("Clustering Time Series Data (Grouped)...")
+            cluster_inputs(case, settings_path, mysetup)
+        else
+            println("Time Series Data Already Clustered.")
+        end
+    end
+
+    ### Configure solver
+    println("Configuring Solver")
+    OPTIMIZER = configure_solver(settings_path, optimizer)
+
+    #### Running a case
+
+    ### Load inputs
+    println("Loading Inputs")
+    myinputs = load_inputs(mysetup, case)
+
+    println("Generating the Optimization Model")
+    time_elapsed = @elapsed EP = generate_model(mysetup, myinputs, OPTIMIZER)
+    println("Time elapsed for model building is")
+    println(time_elapsed)
+
+    println("Solving Model")
+    EP, solve_time = solve_model(EP, mysetup)
+    myinputs["solve_time"] = solve_time # Store the model solve time in myinputs
+
+    # Run MGA if the MGA flag is set to 1 else only save the least cost solution
+    if has_values(EP)
+        println("Writing Output")
+        outputs_path = get_default_output_folder(case)
+        elapsed_time = @elapsed outputs_path = write_outputs(EP,
+            outputs_path,
+            mysetup,
+            myinputs)
+        println("Time elapsed for writing is")
+        println(elapsed_time)
+        if mysetup["ModelingToGenerateAlternatives"] == 1
+            println("Starting Model to Generate Alternatives (MGA) Iterations")
+            mga(EP, case, mysetup, myinputs)
+        end
+
+        if mysetup["MethodofMorris"] == 1
+            println("Starting Global sensitivity analysis with Method of Morris")
+            morris(EP, case, mysetup, myinputs, outputs_path, OPTIMIZER)
+        end
+    end
+end

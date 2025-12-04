@@ -19,7 +19,6 @@ import Pkg
 using Distributed, ClusterManagers
 using Random
 
-
 # Load in portfolio
 include((@__DIR__)*"/load_portfolio.jl")
 # Load in functions for downscaling
