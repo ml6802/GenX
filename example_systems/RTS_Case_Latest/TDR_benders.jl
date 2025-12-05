@@ -55,6 +55,23 @@ for i in 1:length(buses)
     end
 end
 
+cpus_per_task = parse(Int, ENV["SLURM_CPUS_PER_TASK"]);
+addprocs(cpus_per_task)
+println("Adding processors")
+@everywhere begin
+    import Pkg
+    Pkg.activate("/scratch/gpfs/JENKINS/dc0173/git/forked/reconductoring/GenX")
+end
+
+println("Number of procs: ", nprocs())
+println("Number of workers: ", nworkers())
+for i in workers()
+    id, pid, host = fetch(@spawnat i (myid(), getpid(), gethostname()))
+    println(id, " " , pid, " ", host)
+end
+@everywhere using GenX, Distributed
+
+
 # Load in settings
 genx_settings = GenX.get_settings_path(case, "genx_settings.yml") # Settings YAML file path
 writeoutput_settings = GenX.get_settings_path(case, "output_settings.yml") # Write-output settings YAML file path
@@ -138,6 +155,28 @@ if haskey(mysetup, "IntegerInvestments")
     end
 end
 
-m = GenX.generate_model(mysetup, myinputs, optimizer)
+benders_settings_path = GenX.get_settings_path(case, "benders_settings.yml")
+mysetup_benders = GenX.configure_benders(benders_settings_path) 
+mysetup = merge(mysetup,mysetup_benders);
 
-optimize!(m)
+
+mysetup["NetworkExpansion"] = 1
+mysetup["Benders"] = 1
+mysetup["bilinear"] = 1
+mysetup["DC_OPF"] = 1
+mysetup["IntegerInvestments"] = 1
+
+myinputs_decomp = GenX.separate_inputs_subperiods(myinputs);
+benders_inputs = GenX.generate_benders_inputs(mysetup,myinputs,myinputs_decomp)
+
+planning_problem1, planning_sol1, operational_sol1, LB_hist1,UB_hist1, cpu_time1,feasibility_hist1, build_decisions1  = GenX.benders(benders_inputs,mysetup,myinputs);
+
+
+println("RUNNING 1 Month")
+# println(operational_sol1.summation_map)
+
+for i in keys(planning_sol1.values)
+    if planning_sol1.values[i] != 0
+        println(i, " = ", planning_sol1.values[i])
+    end
+end

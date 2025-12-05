@@ -44,11 +44,11 @@ end
 	if integer_routine_flag# && stab_method != "off"
 		all_planning_variables = all_variables(planning_problem);
 		integer_variables = all_planning_variables[is_integer.(all_planning_variables)];
-		#binary_variables = all_planning_variables[is_binary.(all_planning_variables)]; #APPEND
+		binary_variables = all_planning_variables[is_binary.(all_planning_variables)]; #APPEND
 		unset_integer.(integer_variables)
-		#unset_binary.(binary_variables)
-		#set_upper_bound.(binary_variables, 1)
-		#set_lower_bound.(binary_variables, 0)
+		unset_binary.(binary_variables)
+		set_upper_bound.(binary_variables, 1)
+		set_lower_bound.(binary_variables, 0)
 		integer_routine_flag = true;
 	end
 
@@ -166,18 +166,18 @@ end
 				println()
 				println()
 				UB = Inf;
-				#set_integer.(integer_variables)
-				#set_binary.(binary_variables)
+				set_integer.(integer_variables)
+				set_binary.(binary_variables)
 				planning_sol = solve_planning_problem(planning_problem,planning_variables,inputs);
-				if haskey(setup, "print_sols")
+				#if haskey(setup, "print_sols")
 				    for var in all_variables(planning_problem)
 				        if value(var) > 0
 				            println(var, "   ", value(var))
 				        end
 				    end
 				    return nothing
-				end
-				set_integer.(planning_problem[:vCAP]) #APPENDED AFTER
+				#end
+				#set_integer.(planning_problem[:vCAP]) #APPENDED AFTER
 				LB = planning_sol.LB;
 				planning_sol_best = deepcopy(planning_sol);
 				integer_routine_flag = false;
