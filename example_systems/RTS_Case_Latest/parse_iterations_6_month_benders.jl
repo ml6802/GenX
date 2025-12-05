@@ -121,10 +121,10 @@ include((@__DIR__)*"/parse_gurobi.jl")
 
 # Parse the data
 println("Parsing iteration data from test_output_parsing.txt...")
-data = parse_iteration_data((@__DIR__)*"/6_month_multicut_results_reconductor_full.txt")
+data = parse_iteration_data((@__DIR__)*"/6_month_benders_results.txt")
 #data2 = parse_iteration_data((@__DIR__)*"/6_month_benders_initialize.txt")
 #data2 = parse_iteration_data((@__DIR__)*"/6_month_multicut_fixedmustruns.txt")
-data2 = parse_gurobi_data((@__DIR__)*"/6_month_monolithic_reconductor_full.txt")
+#data2 = parse_gurobi_data((@__DIR__)*"/6_month_monolithic_reconductor_full.txt")
 #data4 = parse_iteration_data((@__DIR__)*"/6_month_multicut_results_warmstart.txt")
 # Display the results
 println("\nParsed Data:")
@@ -151,7 +151,7 @@ println("Subproblem Time (s) = ", data.subproblem_time)
 #data2.cpu_time .+= 4800
 using Plots
 cputimes = data.cpu_time ./ 3600
-cputimes2 = data2.time ./ 3600
+# cputimes2 = data2.time ./ 3600
 
 
 plot([],[], yaxis = :log, color = "black", label="Genearlized Benders", linewidth = 2)
