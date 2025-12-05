@@ -130,17 +130,11 @@ myinputs = GenX.load_inputs(mysetup, case, p)
 
 optimizer = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 300, "MIPGap" => 1e-3)
 
-
-
 # Add expected candidate line data
 # also scales demands up by 4x
 load_candidates_base(myinputs, 8784)
-# myinputs["pD"][1, :] .+= 0.01
-cluster_inputs(case, settings_path, mysetup; inputs = myinputs)
-
 
 GenX.expand_new_cap_resources_to_nodal!(myinputs, mysetup, p, "")
-GenX.load_generators_variability!(mysetup, p, myinputs)
 
 # Set additional inputs so it only solves for one week
 myinputs["hours_per_subperiod"] = 168

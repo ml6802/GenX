@@ -2,7 +2,7 @@ using JuMP, Gurobi
 
 m = read_from_file((@__DIR__)*"/subproblem__6.0.lp")
 
-solver = optimizer_with_attributes(Gurobi.Optimizer, "QCPDual" => 1, "Method" => 2, "MIPGap" => 1e-3, "BarConvTol" => 1e-8, "Crossover" => 1, "ObjScale" => 1e8, "ScaleFlag" => 2)
+solver = optimizer_with_attributes(Gurobi.Optimizer, "QCPDual" => 1, "Method" => 2, "MIPGap" => 1e-3, "BarConvTol" => 1e-8, "Crossover" => 1, "ObjScale" => 1e-3, "ScaleFlag" => 2)
 
 set_optimizer(m, solver)
 
