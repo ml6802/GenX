@@ -1536,12 +1536,16 @@ function cluster_inputs(inpath,
             inputs["INTERIOR_SUBPERIODS"] = [i for i in 2:myinputs["hours_per_subperiod"]]
             #total length = 8784
 
+            new_weights = Float64[]
             for w in 1:inputs["REP_PERIOD"]
                 for h in 1:inputs["H"]
                     t = inputs["H"] * (w - 1) + h
                     inputs["omega"][t] = Nhours / inputs["H"] / total_subperiods * W[w]  #inputs["Weights"][w] / inputs["H"]
                 end
+                new_weight = Nhours / total_subperiods * W[w]
+                push!(new_weights, new_weight)
             end
+            inputs["Weights"] = new_weights
 
             # Update demand data in inputs dictionary
             inputs["pD"] = inputs["pD"][1:size(DMOutputData)[1], :]
