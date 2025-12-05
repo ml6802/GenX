@@ -94,7 +94,7 @@ function build_zonal_inputs(inputs::Dict, node_to_zone_map::Dict, num_zones::Int
     zonal_inputs["adj_list"] = adj_list
     zonal_inputs["internal_zone_map"] = internal_zone_map
     
-    line_keys = [ "pPercent_Loss", "pTrans_Loss_Coeff", "pTrans_Max", "pDC_OPF_coeff", "Line_Angle_Limit", "pDC_OPF_coeff_cand", "Line_Angle_Limit_cand", "pMax_Line_Reinforcement", "Line_Reinforcement_Cap_Size", "pC_Line_Reinforcement", "Max_Trans_Cap"] # "pTrans_Max_Possible",
+    line_keys = [ "pPercent_Loss", "pTrans_Loss_Coeff", "pTrans_Max", "pDC_OPF_coeff", "Line_Angle_Limit", "pDC_OPF_coeff_cand", "Line_Angle_Limit_cand", "Line_Reinforcement_Cap_Size", "pC_Line_Reinforcement", "Max_Trans_Cap"] # "pTrans_Max_Possible",
 
     for key in line_keys
         if haskey(inputs, key)
@@ -306,7 +306,7 @@ function build_single_nodal_input(inputs::Dict, node_to_zone_map::Dict, zone::In
     nodal_inputs["l2l_map"] = l2l_map
     nodal_inputs["L"] = length(new_adj_list)
     
-    line_keys = [ "pPercent_Loss", "pTrans_Loss_Coeff", "pTrans_Max", "pDC_OPF_coeff", "Line_Angle_Limit", "pDC_OPF_coeff_cand", "Line_Angle_Limit_cand", "pMax_Line_Reinforcement", "Line_Reinforcement_Cap_Size", "pC_Line_Reinforcement", "Max_Trans_Cap"] # "pTrans_Max_Possible",
+    line_keys = [ "pPercent_Loss", "pTrans_Loss_Coeff", "pTrans_Max", "pDC_OPF_coeff", "Line_Angle_Limit", "pDC_OPF_coeff_cand", "Line_Angle_Limit_cand", "Line_Reinforcement_Cap_Size", "pC_Line_Reinforcement", "Max_Trans_Cap"] # "pTrans_Max_Possible",
 
     for key in line_keys
         if haskey(inputs, key)

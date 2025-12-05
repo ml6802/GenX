@@ -64,6 +64,7 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 		set_lower_bound.(binary_variables, 0)
 		integer_routine_flag = true;
 	elseif cap_integer_routine
+		all_planning_variables = all_variables(planning_problem);
 		integer_variables = all_planning_variables[is_integer.(all_planning_variables)];
 		unset_integer.(integer_variables)
 	end
