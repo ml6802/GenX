@@ -149,13 +149,13 @@ mysetup["ptdf"] = 1
 mptdf = GenX.generate_model(mysetup, myinputs, optimizer)
 
 
-# for i in myinputs["NEW_CAP"]
-#     fix(mptdf[:vCAP][i], value(m[:vCAP][i]), force = true)
-# end
+for i in myinputs["NEW_CAP"]
+    fix(mptdf[:vCAP][i], value(m[:vCAP][i]), force = true)
+end
 
-# # for i in myinputs["CANDIDATE_LINES"]
-# #     fix(mptdf[:vNEW_TRANS_CAP_DECISION_INT][i], value(m[:vNEW_TRANS_CAP_DECISION_INT][i]), force = true)
-# # end
+for i in myinputs["CANDIDATE_LINES"]
+    fix(mptdf[:vNEW_TRANS_CAP_DECISION_INT][i], value(m[:vNEW_TRANS_CAP_DECISION_INT][i]), force = true)
+end
 # for i in 1:258
 #     for j in 1:6
 #         fix(mptdf[:vP][i, j], value(m[:vP][i, j]), force = true)
@@ -164,6 +164,20 @@ mptdf = GenX.generate_model(mysetup, myinputs, optimizer)
 
 
 optimize!(mptdf)
+
+
+for v in m[:vNEW_TRANS_CAP_DECISION_INT]
+    if value(v) > 0
+        println(v)
+    end
+end
+
+
+for v in mptdf[:vNEW_TRANS_CAP_DECISION_INT]
+    if value(v) > 0
+        println(v)
+    end
+end
 
 
 

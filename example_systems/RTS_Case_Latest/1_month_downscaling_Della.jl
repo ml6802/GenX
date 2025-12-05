@@ -19,6 +19,7 @@ import Pkg
 using Distributed, ClusterManagers
 using Random
 
+
 # Load in portfolio
 include((@__DIR__)*"/load_portfolio.jl")
 # Load in functions for downscaling
@@ -329,5 +330,4 @@ for i in 1:num_zones
 end
 new_gen_cap_df[!, "NEW_CAP"] = new_cap_results
 
-CSV.write((@__DIR__)*"/new_cap_downscaling_results.csv", new_transmission_builds_df)
-
+CSV.write((@__DIR__)*"/new_cap_downscaling_results.csv", new_gen_cap_df)

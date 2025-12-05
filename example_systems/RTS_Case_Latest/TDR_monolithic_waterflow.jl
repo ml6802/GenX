@@ -128,6 +128,7 @@ GenX.expand_new_cap_resources_to_nodal!(myinputs, mysetup, p, "")
 mysetup["IntegerInvestments"] = 1
 mysetup["DC_OPF"] = 1
 mysetup["NetworkExpansion"] = 1
+mysetup["unfix_slacks"] = 1
 
 if haskey(mysetup, "IntegerInvestments")
     if mysetup["IntegerInvestments"] == 1

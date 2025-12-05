@@ -31,14 +31,23 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 		integer_routine_flag = false
 	end
 
-if !haskey(setup, "BD_warmstart_bilinear")
-	setup["BD_warmstart_bilinear"] = 0
-	warmstart_bilinear_routine = false
-elseif setup["BD_warmstart_bilinear"] == 1
-	warmstart_bilinear_routine = true
-else
-	warmstart_bilinear_routine = false
-end
+	if !haskey(setup, "BD_warmstart_bilinear")
+		setup["BD_warmstart_bilinear"] = 0
+		warmstart_bilinear_routine = false
+	elseif setup["BD_warmstart_bilinear"] == 1
+		warmstart_bilinear_routine = true
+	else
+		warmstart_bilinear_routine = false
+	end
+
+	#if !haskey(setup, "BD_warmstart_bilinear")
+	#	setup["BD_warmstart_bilinear"] = 0
+	#	warmstart_bilinear_routine = false
+	#elseif setup["BD_warmstart_bilinear"] == 1
+	#	warmstart_bilinear_routine = true
+	#else
+	#	warmstart_bilinear_routine = false
+	#end
 
 	#integer_routine_flag = false
 	if integer_routine_flag# && stab_method != "off"
