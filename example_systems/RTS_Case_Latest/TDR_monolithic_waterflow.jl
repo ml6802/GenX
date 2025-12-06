@@ -141,6 +141,8 @@ end
 
 m = GenX.generate_model(mysetup, myinputs, optimizer)
 
+JuMP.relax_integrality(m)
+
 optimize!(m)
 
 for v in m[:vNEW_TRANS_CAP_DECISION_INT]
