@@ -645,7 +645,8 @@ function cluster_inputs(inpath,
         stage_id = -99,
         v = false;
         random = true,
-        inputs = nothing)
+        inputs = nothing, 
+        minmaxperiods = DataFrames.NOTHING_IDX_AGG)
     if v
         println(now())
     end
@@ -656,6 +657,11 @@ function cluster_inputs(inpath,
     myTDRsetup = YAML.load(open(joinpath(settings_path,
         "time_domain_reduction_settings.yml")))
     update_deprecated_tdr_inputs!(myTDRsetup)
+
+    if !isnothing(minmaxperiods)
+        myTDRsetup["MinPeriods"] = minmaxperiods[1]
+        myTDRsetup["MaxPeriods"] = minmaxperiods[2]
+    end
 
     # Accept model parameters from the settings file time_domain_reduction_settings.yml
     TimestepsPerRepPeriod = myTDRsetup["TimestepsPerRepPeriod"]
