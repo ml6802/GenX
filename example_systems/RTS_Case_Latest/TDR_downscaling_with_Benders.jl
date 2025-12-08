@@ -254,7 +254,7 @@ mysetup["settings_path"] = settings_path;
 mysetup["NetworkExpansion"] = 1
 mysetup["Benders"] = 1
 mysetup["BD_integer_routine"] = 0
-mysetup["BD_MaxCpuTime"] = 21600
+mysetup["BD_MaxCpuTime"] = 12600
 
 
 myinputs_decomp = GenX.separate_inputs_subperiods(n_inputs[1]);
