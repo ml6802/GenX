@@ -271,7 +271,7 @@ for k in keys(planning_sol1.values)
 end
 println("BENDERS SOLUTION 1: ", vals)
 println("OBJECTIVE OF BENDERS WAS: ", UB_hist1[end])
-println("OBJECTIVE OF NODAL MONOLITHIC WAS: ", objective_value(m1))
+# println("OBJECTIVE OF NODAL MONOLITHIC WAS: ", objective_value(m1))
 
 myinputs_decomp = GenX.separate_inputs_subperiods(n_inputs[2]);
 benders_inputs = GenX.generate_benders_inputs(mysetup,n_inputs[2],myinputs_decomp)
@@ -286,7 +286,7 @@ for k in keys(planning_sol2.values)
 end
 println("BENDERS SOLUTION 2: ", vals)
 println("OBJECTIVE OF BENDERS WAS: ", UB_hist2[end])
-println("OBJECTIVE OF NODAL MONOLITHIC WAS: ", objective_value(m2))
+# println("OBJECTIVE OF NODAL MONOLITHIC WAS: ", objective_value(m2))
 
 
 myinputs_decomp = GenX.separate_inputs_subperiods(n_inputs[3]);
@@ -301,7 +301,7 @@ for k in keys(planning_sol3.values)
 end
 println("BENDERS SOLUTION 3: ", vals)
 println("OBJECTIVE OF BENDERS WAS: ", UB_hist3[end])
-println("OBJECTIVE OF NODAL MONOLITHIC WAS: ", objective_value(m3))
+# println("OBJECTIVE OF NODAL MONOLITHIC WAS: ", objective_value(m3))
 
 println("SETTING SOLUTION TO BENDERS ON MODEL 1")
 l2l_map = n_inputs[1]["l2l_map_cand"]
