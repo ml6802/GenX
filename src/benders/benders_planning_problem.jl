@@ -44,7 +44,7 @@ function init_planning_problem(setup::Dict,inputs::Dict)
 	if haskey(inputs, "Zonal_Capacity_Results")
 		for i in keys(inputs["Zonal_Capacity_Results"])
 			if i in inputs["RESOURCE_NAMES"]
-				new_cap_ids = GenX.get_resource_ids_by_name(n_inputs, i)
+				new_cap_ids = GenX.get_resource_ids_by_name(inputs, i)
 				@constraint(EP, sum(EP[:vCAP][j] for j in new_cap_ids) == inputs["Zonal_Capacity_Results"][i])
 			end
 		end
