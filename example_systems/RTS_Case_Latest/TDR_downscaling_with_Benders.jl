@@ -135,6 +135,8 @@ optimizer = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 3600, "MI
 # also scales demands up by 4x
 load_candidates_base(myinputs, 8784)
 
+cluster_inputs(case, settings_path, mysetup; inputs = myinputs)
+
 GenX.expand_new_cap_resources_to_nodal!(myinputs, mysetup, p, "")
 
 

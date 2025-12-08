@@ -54,6 +54,15 @@ mysetup["SOS1"] = 0
 
 #JLD2.save((@__DIR__)*"/inputs_and_settings.jld2", "inputs", myinputs, "setup", mysetup)
 
+# using JLD2
+
+# for r in myinputs["RESOURCES"]
+#     parent(r)[:region] = nothing
+# end
+
+# using JLD2
+# JLD2.save((@__DIR__)*"/inputs_dict_RTS_v2.jld2", "inputs", myinputs )
+
 
 
 # rs = myinputs["RESOURCES"]
