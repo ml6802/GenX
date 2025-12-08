@@ -253,6 +253,7 @@ settings_path = GenX.get_settings_path(case)
 mysetup["settings_path"] = settings_path;
 mysetup["NetworkExpansion"] = 1
 mysetup["Benders"] = 1
+mysetup["BD_integer_routine"] = 0
 
 
 myinputs_decomp = GenX.separate_inputs_subperiods(n_inputs[1]);

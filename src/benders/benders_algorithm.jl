@@ -186,12 +186,12 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 				
 				planning_sol = solve_planning_problem(planning_problem,planning_variables,inputs);
 				#if haskey(setup, "print_sols")
-				    for var in all_variables(planning_problem)
-				        if value(var) > 0
-				            println(var, "   ", value(var))
-				        end
-				    end
-				    return nothing
+				    # for var in all_variables(planning_problem)
+				    #     if value(var) > 0
+				    #         println(var, "   ", value(var))
+				    #     end
+				    # end
+				    # return nothing
 				#end
 				#set_integer.(planning_problem[:vCAP]) #APPENDED after
 				set_integer.(integer_variables)
@@ -215,12 +215,12 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 				UB = Inf;
 				planning_sol = solve_planning_problem(planning_problem,planning_variables,inputs);
 				#if haskey(setup, "print_sols")
-				    for var in all_variables(planning_problem)
-				        if value(var) > 0
-				            println(var, "   ", value(var))
-				        end
-				    end
-				    return nothing
+				    # for var in all_variables(planning_problem)
+				    #     if value(var) > 0
+				    #         println(var, "   ", value(var))
+				    #     end
+				    # end
+				    # return nothing
 				#end
 				#set_integer.(planning_problem[:vCAP]) #APPENDED AFTER
 				set_integer.(integer_variables)

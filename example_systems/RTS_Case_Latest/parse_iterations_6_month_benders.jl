@@ -154,15 +154,15 @@ cputimes = data.cpu_time ./ 3600
 # cputimes2 = data2.time ./ 3600
 
 
-plot([],[], yaxis = :log, color = "black", label="Genearlized Benders", linewidth = 2)
+plot([],[], yaxis = :log, color = "black", label="Generalized Benders UB", linewidth = 2)
 # plot!([], [], yaxis = :log, color = "orange", label = "Benders Multicut, warmstart", linewidth = 2)
-plot!([],[], yaxis = :log, color = "blue", label="Monolithic (Gurobi)", linewidth = 2)
-plot!([],[], yaxis = :log, color = "grey", label="Upper Bound", linewidth = 2)
-plot!([],[], yaxis = :log, color = "grey", label="Lower Bound", linewidth = 2, linestyle = :dash)
-plot!([],[], yaxis = :log, color = "red", label="Waterflow Objective", linewidth = 2)
+#plot!([],[], yaxis = :log, color = "blue", label="Monolithic (Gurobi)", linewidth = 2)
+#plot!([],[], yaxis = :log, color = "grey", label="Upper Bound", linewidth = 2)
+plot!([],[], yaxis = :log, color = "black", label="Generalized Benders LB", linewidth = 2, linestyle = :dash)
+plot!([],[], yaxis = :log, color = "red", label="Lower Bound from Gurobi", linewidth = 1, linestyle = :dash)
 plot!(cputimes, data.UB, color = "black", label = :none, linewidth = 2)
 plot!(cputimes, data.LB, color = "black", label = :none, linewidth = 2, linestyle = :dash)
-plot!([cputimes2[1], cputimes2[end]], [7.476e8, 7.476e8], color = "red", label = :none, linewidth = 3, linestyle = :dash)
+plot!([cputimes[1], cputimes[end]], [1.3674e9, 1.3674e9], color = "red", label = :none, linewidth = 1, linestyle = :dash)
 plot!(cputimes2, data2.UB, yaxis = :log, color = "blue", label = :none, linewidth = 2)
 plot!(cputimes2, data2.LB, yaxis = :log, color = "blue", label = :none, linewidth = 2)
 # plot!(cputimes3, data3.UB, yaxis = :log, color = "blue", label = :none, linewidth = 2)
