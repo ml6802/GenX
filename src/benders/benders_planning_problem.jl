@@ -41,6 +41,15 @@ function init_planning_problem(setup::Dict,inputs::Dict)
 
     EP =  generate_planning_problem(setup, inputs, OPTIMIZER);
 
+	if haskey(inputs, "Zonal_Capacity_Results")
+		for i in keys(inputs["Zonal_Capacity_Results"])
+			if i in inputs["RESOURCE_NAMES"]
+				new_cap_ids = GenX.get_resource_ids_by_name(n_inputs, i)
+				@constraint(EP, sum(EP[:vCAP][j] for j in new_cap_ids) == inputs["Zonal_Capacity_Results"][i])
+			end
+		end
+	end
+
 	varnames = name.(setdiff(all_variables(EP),[EP[:vZERO];EP[:vTHETA]]));
 
 	set_silent(EP);

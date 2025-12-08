@@ -129,7 +129,7 @@ end
 
 myinputs = GenX.load_inputs(mysetup, case, p)
 
-optimizer = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 2400, "MIPGap" => 1e-3)
+optimizer = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 3600, "MIPGap" => 1e-3)
 
 # Add expected candidate line data
 # also scales demands up by 4x
@@ -185,7 +185,7 @@ end
 
 println("TOTAL NEW THERMAL = ", new_thermal[1])
 println("TOTAL NEW VRE = ", new_vre[1])
-
+flush(stdout)
 
 GenX.save_zonal_capacity_results!(mz, myinputs, z_inputs)
 
@@ -222,22 +222,24 @@ m1 = build_nodal_resolution_model(nodal_setup, n_inputs[1], optimizer)
 
 set_nodal_capacity_builds(n_inputs[1], m1)
 
-optimize!(m1)
+#optimize!(m1)
 
 m2 = build_nodal_resolution_model(nodal_setup, n_inputs[2], optimizer)
 
 set_nodal_capacity_builds(n_inputs[2], m2)
 
-optimize!(m2)
+#optimize!(m2)
 
 m3 = build_nodal_resolution_model(nodal_setup, n_inputs[3], optimizer)
 
 set_nodal_capacity_builds(n_inputs[3], m3)
 
-optimize!(m3)
+#optimize!(m3)
 
 
 # Run Benders
+benders_settings_path = GenX.get_settings_path(case, "benders_settings.yml")
+mysetup_benders = GenX.configure_benders(benders_settings_path) 
 
 mysetup["DC_OPF"] = 1
 mysetup["ptdf"] = 0
@@ -297,52 +299,47 @@ println("BENDERS SOLUTION 3: ", vals)
 println("OBJECTIVE OF BENDERS WAS: ", UB_hist3[end])
 println("OBJECTIVE OF NODAL MONOLITHIC WAS: ", objective_value(m3))
 
+println("SETTING SOLUTION TO BENDERS ON MODEL 1")
+l2l_map = n_inputs[1]["l2l_map_cand"]
+for k in keys(l2l_map)
+    old_line = k
+    new_line = l2l_map[k]
+    val1 = planning_sol1.values["vNEW_TRANS_CAP_DECISION_INT[$new_line]"]
+    fix(m1[:vNEW_TRANS_CAP_DECISION_INT][new_line], val1, force = true)
+end
+for k in n_inputs[1]["NEW_CAP"]
+    val1 = planning_sol1.values["vCAP[$k]"]
+    fix(m1[:vCAP][k], val1, force = true)
+end
+optimize!(m1)
 
-if UB_hist1[end] < objective_value(m1)
-    println("MODEL 1: BENDERS SOLUTION WAS BETTER")
-    l2l_map = n_inputs[1]["l2l_map_cand"]
-    for k in keys(l2l_map)
-        old_line = k
-        new_line = l2l_map[k]
-        val1 = planning_sol1.values["vNEW_TRANS_CAP_DECISION_INT[$new_line]"]
-        fix(m1[:vNEW_TRANS_CAP_DECISION_INT][new_line], val1, force = true)
-    end
-    for k in n_inputs[1]["NEW_CAP"]
-        val1 = planning_sol1.values["vCAP[$k]"]
-        fix(m1[:vCAP][k], val1, force = true)
-    end
-    optimize!(m1)
+println("SETTING SOLUTION TO BENDERS ON MODEL 2")
+l2l_map = n_inputs[2]["l2l_map_cand"]
+for k in keys(l2l_map)
+    old_line = k
+    new_line = l2l_map[k]
+    val = planning_sol2.values["vNEW_TRANS_CAP_DECISION_INT[$new_line]"]
+    fix(m2[:vNEW_TRANS_CAP_DECISION_INT][new_line], val, force = true)
 end
-if UB_hist2[end] < objective_value(m2)
-    println("MODEL 2: BENDERS SOLUTION WAS BETTER")
-    l2l_map = n_inputs[2]["l2l_map_cand"]
-    for k in keys(l2l_map)
-        old_line = k
-        new_line = l2l_map[k]
-        val = planning_sol2.values["vNEW_TRANS_CAP_DECISION_INT[$new_line]"]
-        fix(m2[:vNEW_TRANS_CAP_DECISION_INT][new_line], val, force = true)
-    end
-    for k in n_inputs[2]["NEW_CAP"]
-        val2 = planning_sol2.values["vCAP[$k]"]
-        fix(m2[:vCAP][k], val2, force = true)
-    end
-    optimize!(m2)
+for k in n_inputs[2]["NEW_CAP"]
+    val2 = planning_sol2.values["vCAP[$k]"]
+    fix(m2[:vCAP][k], val2, force = true)
 end
-if UB_hist3[end] < objective_value(m3)
-    println("MODEL 3: BENDERS SOLUTION WAS BETTER")
-    l2l_map = n_inputs[3]["l2l_map_cand"]
-    for k in keys(l2l_map)
-        old_line = k
-        new_line = l2l_map[k]
-        val = planning_sol3.values["vNEW_TRANS_CAP_DECISION_INT[$new_line]"]
-        fix(m3[:vNEW_TRANS_CAP_DECISION_INT][new_line], val, force = true)
-    end
-    for k in n_inputs[3]["NEW_CAP"]
-        val3 = planning_sol3.values["vCAP[$k]"]
-        fix(m3[:vCAP][k], val3, force = true)
-    end
-    optimize!(m3)
+optimize!(m2)
+
+println("SETTING SOLUTION TO BENDERS ON MODEL 3")
+l2l_map = n_inputs[3]["l2l_map_cand"]
+for k in keys(l2l_map)
+    old_line = k
+    new_line = l2l_map[k]
+    val = planning_sol3.values["vNEW_TRANS_CAP_DECISION_INT[$new_line]"]
+    fix(m3[:vNEW_TRANS_CAP_DECISION_INT][new_line], val, force = true)
 end
+for k in n_inputs[3]["NEW_CAP"]
+    val3 = planning_sol3.values["vCAP[$k]"]
+    fix(m3[:vCAP][k], val3, force = true)
+end
+optimize!(m3)
 
 
 
