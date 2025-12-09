@@ -153,6 +153,8 @@ mz = run_zonal_model!(z_inputs, zonal_setup, optimizer)
 
 new_vre = [0.]
 new_thermal = [0.]
+new_vre_cap = []
+new_thermal_cap = []
 for i in z_inputs["NEW_CAP"]
     resource = z_inputs["RESOURCES"][i]
     # if isa(resource, GenX.Vre)
@@ -161,15 +163,21 @@ for i in z_inputs["NEW_CAP"]
     val = value(mz[:vCAP][i])
     if isa(resource, GenX.Thermal)
         new_thermal[1] += val
+        push!(new_thermal_cap, i)
     elseif isa(resource, GenX.Vre)
         new_vre[1] += val
+        push!(new_vre_cap, i)
     else
         println("RESOURCES IS OF TYPE $(typeof(resource))")
     end
 end
 
+@constraint(mz, sum(mz[:vCAP][i] for i in new_vre_cap) >= sum(mz[:vCAP][i] for i in new_thermal_cap))
+
 println("TOTAL NEW THERMAL = ", new_thermal[1])
 println("TOTAL NEW VRE = ", new_vre[1])
+
+optimize!(mz)
 
 outputs_path = GenX.get_default_output_folder(case)
 elapsed_time = @elapsed outputs_path = GenX.write_outputs(EP,
