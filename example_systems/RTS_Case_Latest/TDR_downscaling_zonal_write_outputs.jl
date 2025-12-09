@@ -172,7 +172,7 @@ for i in z_inputs["NEW_CAP"]
     end
 end
 
-@constraint(mz, sum(mz[:vCAP][i] for i in new_vre_cap) >= sum(mz[:vCAP][i] for i in new_thermal_cap))
+#@constraint(mz, sum(mz[:vCAP][i] for i in new_vre_cap) >= sum(mz[:vCAP][i] for i in new_thermal_cap))
 
 println("TOTAL NEW THERMAL = ", new_thermal[1])
 println("TOTAL NEW VRE = ", new_vre[1])
@@ -180,7 +180,7 @@ println("TOTAL NEW VRE = ", new_vre[1])
 optimize!(mz)
 
 outputs_path = GenX.get_default_output_folder(case)
-elapsed_time = @elapsed outputs_path = GenX.write_outputs(EP,
+elapsed_time = @elapsed outputs_path = GenX.write_outputs(mz,
     outputs_path,
     mysetup,
     myinputs
