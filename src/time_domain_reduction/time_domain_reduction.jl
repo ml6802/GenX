@@ -646,7 +646,7 @@ function cluster_inputs(inpath,
         v = false;
         random = true,
         inputs = nothing, 
-        minmaxperiods = DataFrames.NOTHING_IDX_AGG)
+        minmaxperiods = nothing)
     if v
         println(now())
     end
