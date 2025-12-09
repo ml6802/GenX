@@ -156,6 +156,8 @@ function filter_candidate_lines(inputs, lines_to_keep)
     
     CANDIDATE_LINES = inputs["CANDIDATE_LINES"]
     EXISTING_LINES = inputs["EXISTING_LINES"]
+    CAN_RETIRE_LINES = inputs["CAN_RETIRE_LINES"]
+    CANNOT_RETIRE_LINES = inputs["CANNOT_RETIRE_LINES"]
     @assert all(x -> x in CANDIDATE_LINES, lines_to_keep)
 
     pnet_map = inputs["pNet_Map"]
@@ -171,22 +173,49 @@ function filter_candidate_lines(inputs, lines_to_keep)
     inputs["L_cand"] = length(lines_to_keep)
     inputs["L"] = length(all_lines)
 
-    for (i, l) in enumerate(lines_to_keep)
-        break
-    end
-    #cand_to_existing_map
-    # if cand not in lines_to_keep
-        # check if line is in CAN_RETIRE;
-        # if it is, move it to CANNOT_RETIRE
-        # delete existing_to_cand_map
-    # else
-        # check if it is in CAN_RETIRE
-        # set new index
-        # reset existing_to_cand_map
-    # build map of old line idx to new line idx
-    # new line idx to old line idx
+    L_exist = inputs["L_exist"]
+    L_cand = inputs["L_cand"]
 
-    # sort CAN_RETIRE, CANNOT_RETIRE
+    existing_to_cand_map = inputs["existing_to_cand_map"]
+    cand_new_idx = Dict(l => i + L_exist for (i, l) in enumerate(lines_to_keep))
+    cand_to_existing_map = Dict(existing_to_cand_map[l] => l for l in keys(existing_to_cand_map))
+
+    for l in CANDIDATE_LINES
+        if haskey(cand_to_existing_map, l)
+            existing_line = cand_to_existing_map[l]
+            if existing_line in CAN_RETIRE_LINES 
+                if (l in lines_to_keep) # if it is in the lines_to_keep
+                    existing_to_cand_map[existing_line] = cand_new_idx[l]
+                else # if it is in the lines_to_keep
+                    idx = findfirst(==(existing_line), CAN_RETIRE_LINES)
+                    deleteat!(CAN_RETIRE_LINES, idx)
+                    delete!(existing_to_cand_map, existing_line)
+                    push!(CANNOT_RETIRE_LINES, existing_line)
+                end
+            end
+        end
+    end
+
+
+    sort!(CANNOT_RETIRE_LINES)
+    inputs["CAN_RETIRE_LINES"] = CAN_RETIRE_LINES
+    inputs["CANNOT_RETIRE_LINES"] = CANNOT_RETIRE_LINES
+    inputs["existing_to_cand_map"] = existing_to_cand_map
+    inputs["CANDIDATE_LINES"] = [i for i in (L_exist + 1):(L_exist + L_cand)]
+
+    if haskey(inputs, "Line_Map")
+        new_line_map = Dict()
+        old_line_map = inputs["Line_Map"]
+        for l in EXISTING_LINES
+            new_lines_map[l] = old_line_map[l]
+        end
+        for (i, l) in enumerate(lines_to_keep)
+            new_lines_map[i + L_exist] = old_line_map[l]
+        end
+        myinputs["Line_Map"] = new_lines_map
+    end
+
+
 end
 
 # load in inputs
