@@ -172,6 +172,8 @@ println("TOTAL NEW THERMAL = ", new_thermal[1])
 println("TOTAL NEW VRE = ", new_vre[1])
 
 
+myinputs = GenX.load_inputs(mysetup, case, p)
+
 # Add expected candidate line data
 # also scales demands up by 4x
 load_candidates_base(myinputs, 8784)
@@ -231,6 +233,7 @@ println("TOTAL NEW THERMAL = ", new_thermal[1])
 println("TOTAL NEW VRE = ", new_vre[1])
 
 
+myinputs = GenX.load_inputs(mysetup, case, p)
 
 
 # Add expected candidate line data
