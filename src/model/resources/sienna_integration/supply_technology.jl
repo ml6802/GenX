@@ -1,5 +1,5 @@
 can_retire(t::ResourceTechnology) = IS.has_supplemental_attributes(RetirementPotential, t)
-IS.get_proportional_term(c::IS.PiecewiseIncrementalCurve) = first(c.initial_input)
+IS.get_proportional_term(c::IS.PiecewiseIncrementalCurve) = first(c.function_data.y_coords)
 """Get [`SupplyTechnology`](@ref) `heat_rate_mmbtu_per_mwh`."""
 heat_rate_mmbtu_per_mwh(t::SupplyTechnology) = IS.get_proportional_term(IS.get_value_curve(PSY.get_variable(get_operation_costs(t))))
 """Get [`SupplyTechnology`](@ref) `capital_costs`."""

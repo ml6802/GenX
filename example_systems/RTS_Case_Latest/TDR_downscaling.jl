@@ -122,6 +122,22 @@ cluster_inputs(case, settings_path, mysetup; inputs = myinputs)
 GenX.expand_new_cap_resources_to_nodal!(myinputs, mysetup, p, "")
 
 
+
+myinputsb = GenX.load_inputs(mysetup, case, p)
+
+
+# Add expected candidate line data
+# also scales demands up by 4x
+load_candidates_base(myinputsb, 8784)
+
+r_names = [GenX.resource_name(myinputs["RESOURCES"][i]) for i in 1:168]
+pv_rs = [i for i in 1:168 if occursin("PV", GenX.resource_name(myinputs["RESOURCES"][i])) || occursin("CSP", GenX.resource_name(myinputs["RESOURCES"][i]))]
+wind_rs = [i for i in 1:168 if occursin("WIND", GenX.resource_name(myinputs["RESOURCES"][i]))]
+
+pv_rsb = [i for i in 1:168 if occursin("PV", GenX.resource_name(myinputsb["RESOURCES"][i])) || occursin("CSP", GenX.resource_name(myinputsb["RESOURCES"][i]))]
+wind_rsb = [i for i in 1:168 if occursin("WIND", GenX.resource_name(myinputsb["RESOURCES"][i]))]
+
+
 mysetup["IntegerInvestments"] = 1
 mysetup["DC_OPF"] = 1
 mysetup["NetworkExpansion"] = 1

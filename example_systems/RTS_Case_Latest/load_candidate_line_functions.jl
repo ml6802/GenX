@@ -139,9 +139,10 @@ function load_no_candidates(myinputs, T=168; demand_scale = 2)
     myinputs["pD"] .*= demand_scale
 end
 
-vom_dict = Dict("CC" => 2.12, "CT" => 2.12, "STEAM" => 9.18, "NUCLEAR" => 2.8, "PV" => 0, "CSP" => 3.8, "WIND" => 0)
+vom_dict = Dict("CC" => 2.12, "CT" => 6.94, "STEAM" => 9.18, "NUCLEAR" => 2.8, "PV" => 0, "CSP" => 3.8, "WIND" => 0)
 
-fom_dict = Dict("CC" => 33500, "CT" => 33500, "STEAM" => 33500, "NUCLEAR" => 175000, "PV" => 22000, "CSP" => 74000, "WIND" => 31000)
+#fom_dict = Dict("CC" => 33500, "CT" => 33500, "STEAM" => 33500, "NUCLEAR" => 175000, "PV" => 22000, "CSP" => 74000, "WIND" => 31000)
+fom_dict = Dict("CC" => 33500, "CT" => 26000, "STEAM" => 33500, "NUCLEAR" => 175000, "PV" => 22000, "CSP" => 74000, "WIND" => 31000)
 
 function add_om_costs(p)
     techs = collect(get_technologies(ResourceTechnology, p))

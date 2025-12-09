@@ -117,7 +117,7 @@ optimizer = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 7200, "MI
 load_candidates_base(myinputs, 8784, demand_scale = 4)
 
 GenX.expand_new_cap_resources_to_nodal!(myinputs, mysetup, p, "")
-GenX.load_generators_variability!(mysetup, p, myinputs)
+#GenX.load_generators_variability!(mysetup, p, myinputs)
 
 # Set additional inputs so it only solves for one week
 myinputs["hours_per_subperiod"] = 6
@@ -137,9 +137,12 @@ myinputs["T"] = 6
 #         end
 #     end
 # end
+#myinputs["CAN_RETIRE_LINES"] = []
+#myinputs["CANNOT_RETIRE_LINES"] = [i for i in 1:120]
+#myinputs["RECONDUCTOR_LINES"] = []
 myinputs["IntegerInvestments"] = 1
 mysetup["ptdf"] = 0
-optimizer = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 180, "MIPGap" => 1e-4)
+optimizer = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 60, "MIPGap" => 1e-4)
 m = GenX.generate_model(mysetup, myinputs, optimizer)
 
 optimize!(m)

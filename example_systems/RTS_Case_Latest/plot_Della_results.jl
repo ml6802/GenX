@@ -200,14 +200,16 @@ for k in 1:size(df_lines, 1)
         add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], 5, "linewidth")
         add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], "red", "status")
         add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], 5, "linewidth_status")
-        if df_lines[k, "RECONDUCTOR_LOW"] > 0.1
-            add_edge_data!(dg, src, dst, "orange", "status_reconductor")
-            #add_edge_data!(dg, src, dst, 2, "linewidth_status")
+        if get_edge_data(dg, fadjlist[k][1], fadjlist[k][2], "status_reconductor") == "teal"
+            add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], "orange", "status_reconductor")
+        else
+            add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], "red", "status_reconductor")
+
         end
     elseif df_lines[k, "RECONDUCTOR_LOW"] > 0.1
         add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], "teal", "status")
         add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], 5, "linewidth_status")
-        add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], "teal", "status_recondcutor")
+        add_edge_data!(dg, fadjlist[k][1], fadjlist[k][2], "teal", "status_reconductor")
     end
 end
 
@@ -243,6 +245,6 @@ end
 
 
 
-plot_graph(dg, nodecolor = get_node_data(dg, "nodecolor"), nodesize = get_node_data(dg, "nodesize"), xdim = 500, ydim = 500, linewidth = get_edge_data(dg, "linewidth_status"), linecolor = get_edge_data(dg, "status"), save_fig = false, fig_name = (@__DIR__)*"/zonal_nodal_builds_RTS_repweek_benders.png")
+plot_graph(dg, nodecolor = get_node_data(dg, "nodecolor"), nodesize = get_node_data(dg, "nodesize"), xdim = 500, ydim = 500, linewidth = get_edge_data(dg, "linewidth_status"), linecolor = get_edge_data(dg, "status_reconductor"), save_fig = false, fig_name = (@__DIR__)*"/zonal_nodal_builds_RTS_repweek_benders.png")
 
 # plot_graph(dg, nodecolor = get_node_data(dg, "nodecolor"), nodesize = 6, xdim = 500, ydim = 500, linewidth = get_edge_data(dg, "linewidth_status"), linecolor = get_edge_data(dg, "status"), save_fig = false, fig_name = (@__DIR__)*"/zonal_nodal_builds_RTS_repweek_benders.png")

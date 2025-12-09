@@ -151,6 +151,43 @@ function get_resource_ids_by_name(inputs::Dict, name::String)
     end
 end
 
+function filter_candidate_lines(inputs, lines_to_keep)
+    sort!(lines_to_keep)
+    
+    CANDIDATE_LINES = inputs["CANDIDATE_LINES"]
+    EXISTING_LINES = inputs["EXISTING_LINES"]
+    @assert all(x -> x in CANDIDATE_LINES, lines_to_keep)
+
+    pnet_map = inputs["pNet_Map"]
+    all_lines = vcat(EXISTING_LINES, lines_to_keep)
+    inputs["pNet_Map"] = pnet_map[all_lines, :]
+    line_keys = [ "pPercent_Loss", "pTrans_Loss_Coeff", "pTrans_Max", "pDC_OPF_coeff", "Line_Angle_Limit", "pDC_OPF_coeff_cand", "Line_Angle_Limit_cand", "Line_Reinforcement_Cap_Size", "pC_Line_Reinforcement", "Max_Trans_Cap"] # "pTrans_Max_Possible",
+
+    for key in line_keys
+        if haskey(inputs, key)
+            inputs[key] = inputs[key][all_lines]
+        end
+    end
+    inputs["L_cand"] = length(lines_to_keep)
+    inputs["L"] = length(all_lines)
+
+    for (i, l) in enumerate(lines_to_keep)
+        break
+    end
+    #cand_to_existing_map
+    # if cand not in lines_to_keep
+        # check if line is in CAN_RETIRE;
+        # if it is, move it to CANNOT_RETIRE
+        # delete existing_to_cand_map
+    # else
+        # check if it is in CAN_RETIRE
+        # set new index
+        # reset existing_to_cand_map
+    # build map of old line idx to new line idx
+    # new line idx to old line idx
+
+    # sort CAN_RETIRE, CANNOT_RETIRE
+end
 
 # load in inputs
 # build zonal inputs

@@ -1,5 +1,7 @@
 ENV["GENX_PRECOMPILE"] = "false"
 
+import Pkg
+
 using Revise
 using JuMP
 using GenX
@@ -15,10 +17,7 @@ const PSIP = PowerSystemsInvestmentsPortfolios
 const IS = InfrastructureSystems
 const PSY = PowerSystems
 using Plots
-import Pkg
-using Distributed, ClusterManagers
 using Random
-
 
 # Load in portfolio
 include((@__DIR__)*"/load_portfolio.jl")
@@ -27,16 +26,14 @@ include((@__DIR__)*"/../convert_input_dict_reconductoring.jl")
 # Load in functions for adding candidate lines
 include((@__DIR__)*"/load_candidate_line_functions.jl")
 
-# Set internal portfolio data for use in GenX
-p.internal.ext["Rep_Periods"] = 1
+
+rep_periods = 1
+p.internal.ext["Rep_Periods"] = rep_periods
 p.internal.ext["Timesteps_per_Rep_Period"] = 168
+p.internal.ext["sub_weights"] = [8784 for i in 1:rep_periods]
 p.internal.ext["hours_per_subperiod"] = 168
-p.internal.ext["sub_weights"] = [8784 for i in 1:p.internal.ext["Rep_Periods"]] 
 add_om_costs(p)
 
-techs = collect(get_technologies(SupplyTechnology, p))
-
-# Build map of buses to zones; used in downscaling
 buses = collect(get_components(Bus, p.base_system))
 zones = []
 zone_map = Dict{Int, Int}()
@@ -55,6 +52,9 @@ for i in 1:length(buses)
     end
 end
 
+
+
+
 # Load in settings
 genx_settings = GenX.get_settings_path(case, "genx_settings.yml") # Settings YAML file path
 writeoutput_settings = GenX.get_settings_path(case, "output_settings.yml") # Write-output settings YAML file path
@@ -71,7 +71,8 @@ mysetup["SOS1"] = 0
 settings_path = GenX.get_settings_path(case)    
 mysetup["settings_path"] = settings_path;
 mysetup["NetworkExpansion"] = 1
-mysetup["Benders"] = 0
+mysetup["IntegerInvestments"] = 1
+mysetup["run_old_formulation"] = 1
 
 node_names = ["Carew", "Chase", "Carrel", "Carter", "Cabot", "Bajer", "Baker", "Baffin", "Cabell", "Caine", "Camus", "Bach", "Bain", "Barlow", "Banks", "Balch", "Alger", "Alber", "Alder", "Avery", "Aiken"]
 
@@ -113,24 +114,21 @@ end
 
 myinputs = GenX.load_inputs(mysetup, case, p)
 
-optimizer = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 40000, "MIPGap" => 1e-3)
-
+optimizer = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 7200, "MIPGap" => 1e-3)
 
 # Add expected candidate line data
-# also scales demands up by 2x
+# also scales demands up by 4x
 load_candidates_base(myinputs, 8784)
 
-using JLD2
-
-# Run TDR
-cluster_inputs(case, settings_path, mysetup; inputs = myinputs)
-
 GenX.expand_new_cap_resources_to_nodal!(myinputs, mysetup, p, "")
+GenX.load_generators_variability!(mysetup, p, myinputs)
 
-mysetup["IntegerInvestments"] = 1
-mysetup["DC_OPF"] = 1
-mysetup["NetworkExpansion"] = 1
-mysetup["unfix_slacks"] = 0
+# Set additional inputs so it only solves for one week
+hours_per_subperiod = 168
+myinputs["hours_per_subperiod"] = hours_per_subperiod
+myinputs["T"] = 168
+myinputs["START_SUBPERIODS"] = 1:hours_per_subperiod:myinputs["T"]
+myinputs["INTERIOR_SUBPERIODS"] = setdiff(1:myinputs["T"], myinputs["START_SUBPERIODS"])
 
 if haskey(mysetup, "IntegerInvestments")
     if mysetup["IntegerInvestments"] == 1
@@ -141,18 +139,17 @@ if haskey(mysetup, "IntegerInvestments")
     end
 end
 
+
+mysetup["NetworkExpansion"] = 1
+mysetup["Benders"] = 0
+mysetup["bilinear"] = 0
+mysetup["DC_OPF"] = 1
+mysetup["IntegerInvestments"] = 1
+mysetup["ptdf"] = 1
+
 m = GenX.generate_model(mysetup, myinputs, optimizer)
 
-line_options = [122,126,164,197,209,212,231]
-
-for l in myinputs["CANDIDATE_LINES"]
-    if !(l in line_options)
-        fix(m[:vNEW_TRANS_CAP_DECISION_INT][l], 0, force = true)
-    end
-end
-
 optimize!(m)
-
 for v in m[:vNEW_TRANS_CAP_DECISION_INT]
     println(v, "   ", value(v))
 end
