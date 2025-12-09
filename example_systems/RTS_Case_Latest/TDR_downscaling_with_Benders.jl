@@ -304,10 +304,7 @@ println("OBJECTIVE OF BENDERS WAS: ", UB_hist3[end])
 # println("OBJECTIVE OF NODAL MONOLITHIC WAS: ", objective_value(m3))
 
 println("SETTING SOLUTION TO BENDERS ON MODEL 1")
-l2l_map = n_inputs[1]["l2l_map_cand"]
-for k in keys(l2l_map)
-    old_line = k
-    new_line = l2l_map[k]
+for new_line in n_inputs[1]["CANDIDATE_LINES"]
     val1 = planning_sol1.values["vNEW_TRANS_CAP_DECISION_INT[$new_line]"]
     fix(m1[:vNEW_TRANS_CAP_DECISION_INT][new_line], val1, force = true)
 end
@@ -318,10 +315,7 @@ end
 optimize!(m1)
 
 println("SETTING SOLUTION TO BENDERS ON MODEL 2")
-l2l_map = n_inputs[2]["l2l_map_cand"]
-for k in keys(l2l_map)
-    old_line = k
-    new_line = l2l_map[k]
+for new_line in n_inputs[2]["CANDIDATE_LINES"]
     val = planning_sol2.values["vNEW_TRANS_CAP_DECISION_INT[$new_line]"]
     fix(m2[:vNEW_TRANS_CAP_DECISION_INT][new_line], val, force = true)
 end
@@ -332,10 +326,7 @@ end
 optimize!(m2)
 
 println("SETTING SOLUTION TO BENDERS ON MODEL 3")
-l2l_map = n_inputs[3]["l2l_map_cand"]
-for k in keys(l2l_map)
-    old_line = k
-    new_line = l2l_map[k]
+for new_line in n_inputs[3]["CANDIDATE_LINES"]
     val = planning_sol3.values["vNEW_TRANS_CAP_DECISION_INT[$new_line]"]
     fix(m3[:vNEW_TRANS_CAP_DECISION_INT][new_line], val, force = true)
 end
