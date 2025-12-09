@@ -150,6 +150,12 @@ zonal_setup["DC_OPF"] = 0
 
 # Solve zonal model
 mz = run_zonal_model!(z_inputs, zonal_setup, optimizer)
+outputs_path = GenX.get_default_output_folder(case)
+elapsed_time = @elapsed outputs_path = GenX.write_outputs(mz,
+    outputs_path,
+    mysetup,
+    myinputs
+)
 
 new_vre = [0.]
 new_thermal = [0.]
