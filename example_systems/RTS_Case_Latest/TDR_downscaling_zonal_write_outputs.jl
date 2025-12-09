@@ -149,7 +149,8 @@ zonal_setup["IntegerInvestments"] = 1
 zonal_setup["DC_OPF"] = 0
 
 # Solve zonal model
-mz = run_zonal_model!(z_inputs, zonal_setup, optimizer)
+t = @elapsed mz = run_zonal_model!(z_inputs, zonal_setup, optimizer)
+myinputs["solve_time"] = t
 outputs_path = GenX.get_default_output_folder(case)
 elapsed_time = @elapsed outputs_path = GenX.write_outputs(mz,
     outputs_path,
