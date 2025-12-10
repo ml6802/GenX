@@ -137,6 +137,10 @@ optimizer = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 64800, "M
 # also scales demands up by 2x
 load_candidates_base(myinputs, 8784)
 
+lines_to_keep = [122,125,126,134,138,143,150,151,159,162,164,174,183,184,195,197,205,209,212,224,231,234]
+
+GenX.filter_candidate_lines(myinputs, lines_to_keep)
+
 # Run TDR
 cluster_inputs(case, settings_path, mysetup; inputs = myinputs)
 
@@ -172,14 +176,14 @@ mysetup["BD_MaxCpuTime"] = 39600
 myinputs_decomp = GenX.separate_inputs_subperiods(myinputs);
 benders_inputs = GenX.generate_benders_inputs(mysetup,myinputs,myinputs_decomp)
 
-EP = benders_inputs["planning_problem"]
-lines_to_keep = [122,125,126,134,138,143,150,151,159,162,164,174,183,184,195,197,205,209,212,224,231,234]
+# EP = benders_inputs["planning_problem"]
+# lines_to_keep = [122,125,126,134,138,143,150,151,159,162,164,174,183,184,195,197,205,209,212,224,231,234]
 
-for l in myinputs["CANDIDATE_LINES"]
-    if !(l in lines_to_keep)
-        fix(EP[:vNEW_TRANS_CAP_DECISION_INT], 0, force = true)
-    end
-end
+# for l in myinputs["CANDIDATE_LINES"]
+#     if !(l in lines_to_keep)
+#         fix(EP[:vNEW_TRANS_CAP_DECISION_INT], 0, force = true)
+#     end
+# end
 
 planning_problem1, planning_sol1, operational_sol1, LB_hist1,UB_hist1, cpu_time1,feasibility_hist1, build_decisions1  = GenX.benders(benders_inputs,mysetup,myinputs);
 
