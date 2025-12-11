@@ -186,6 +186,17 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
                 p_virtual[l, t] <= M[l] * (EP[:vNEW_TRANS_CAP_DECISION_INT][existing_to_cand_map[l]])
             ) # 20 for existing lines in paper https://ietresearch.onlinelibrary.wiley.com/doi/epdf/10.1049/iet-gtd.2015.1573
 
+            M = 10 .* F_existing
+            @constraint(EP, 
+                cBIGM_PTDF_LOWER_RETIRE_FLOW[l in CAN_RETIRE_LINES, t in 1:T],
+                vFLOW[l, t] >= -M[l] * (1 - EP[:vNEW_TRANS_CAP_DECISION_INT][existing_to_cand_map[l]])
+            ) # 20 for existing lines in paper https://ietresearch.onlinelibrary.wiley.com/doi/epdf/10.1049/iet-gtd.2015.1573
+
+            @constraint(EP, 
+                cBIGM_PTDF_UPPER_RETIRE_FLOW[l in CAN_RETIRE_LINES, t in 1:T],
+                vFLOW[l, t] <= M[l] * (1 - EP[:vNEW_TRANS_CAP_DECISION_INT][existing_to_cand_map[l]])
+            ) # 20 for existing lines in paper https://ietresearch.onlinelibrary.wiley.com/doi/epdf/10.1049/iet-gtd.2015.1573
+
 
 
             # Candidate lines
@@ -210,27 +221,6 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
                 cBIGM_PTDF_UPPER[l in CANDIDATE_LINES, t in 1:T],
                 p_virtual[l, t] <= M[l] * (1 - EP[:vNEW_TRANS_CAP_DECISION_INT][l])
             ) # 20 for existing lines in paper https://ietresearch.onlinelibrary.wiley.com/doi/epdf/10.1049/iet-gtd.2015.1573
-
-
-
-            # @constraint(EP, [l in 1:L_exist, t in 1:T],
-            #     EP[:vFLOW][l, t] == eFLOW_LINES[l, t]
-            # )
-
-            # @constraint(EP, [l in CANDIDATE_LINES, t in 1:T],
-            #     EP[:vCANDFLOW][l, t] == -p_virtual[l, t] + sum(get_ptdf_vector(ptdf_by_line, l, line_map)[z] * p_bus[z, t] for z in 1:Z) + 
-            #     sum(get_ptdf_line_diff(ptdf_by_line, l, ll, line_map) * p_virtual[ll, t] for ll in PVIRTUAL_LINES)
-            # )
-
-            # @constraint(EP, 
-            #     cCAND_LINES_LOWER[l in CANDIDATE_LINES, t in 1:T],
-            #     EP[:vCANDFLOW][l, t] >= -F_cand[l] * (EP[:vNEW_TRANS_CAP_DECISION_INT][l])
-            # )
-
-            # @constraint(EP, 
-            #     cCAND_LINES_UPPER[l in CANDIDATE_LINES, t in 1:T],
-            #     EP[:vCANDFLOW][l, t] <= F_cand[l] * (EP[:vNEW_TRANS_CAP_DECISION_INT][l])
-            # )
 
             @expression(EP,
             eCand_Flow[l in CANDIDATE_LINES, t = 1:T], EP[:vCANDFLOW][l, t])
@@ -445,93 +435,64 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
                 (EP[:vNEW_TRANS_CAP_DECISION_INT][existing_to_cand_map[l]]) * p_virtual[l, t] == vPTDF_BILINEAR[l, t]
         )
 
-                
-
-        # The following constraints assume CANDIDATE_LINES == existing lines
-        @expression(EP, 
-            eFLOW_LINES[l in 1:L_exist, t in 1:T],
-            sum(get_ptdf_vector(ptdf_by_line, l, line_map)[z] * p_bus[z, t] for z in 1:Z) + 
+        @constraint(EP, 
+            cFLOW_LINES_CANNOT_RETIRE[l in CANNOT_RETIRE_LINES, t in 1:T],
+            vFLOW[l, t] == sum(get_ptdf_vector(ptdf_by_line, l, line_map)[z] * p_bus[z, t] for z in 1:Z) + 
             sum(
-                (get_ptdf_line_diff(ptdf_by_line, l, ll, line_map)) * vPTDF_BILINEAR[ll, t] for ll in PVIRTUAL_LINES 
+                (get_ptdf_line_diff(ptdf_by_line, l, ll, line_map)) * vPTDF_BILINEAR[ll, t] 
+                for ll in PVIRTUAL_LINES
             )
         )
 
-        for l in CAN_RETIRE_LINES
-            for t in 1:T
-                add_to_expression!(eFLOW_LINES[l, t], - vPTDF_BILINEAR[l, t])
-            end
-        end
-
-        F_existing = inputs["pTrans_Max"]
-       @constraints(EP,
-        begin
-            cMaxFlow_out_existing[l = 1:L_exist, t = 1:T], eFLOW_LINES[l, t] <= EP[:eAvail_Trans_Cap][l]
-            cMaxFlow_in_existing[l = 1:L_exist, t = 1:T], eFLOW_LINES[l, t] >= -EP[:eAvail_Trans_Cap][l]
-        end
+        @constraint(EP, 
+            cFLOW_LINES_CAN_RETIRE[l in CAN_RETIRE_LINES, t in 1:T],
+            vFLOW[l, t] + vPTDF_BILINEAR[l, t] == sum(get_ptdf_vector(ptdf_by_line, l, line_map)[z] * p_bus[z, t] for z in 1:Z) + 
+            sum(
+                (get_ptdf_line_diff(ptdf_by_line, l, ll, line_map)) * vPTDF_BILINEAR[ll, t] 
+                for ll in PVIRTUAL_LINES
+            )
         )
 
-        @expression(EP, 
-            eCAND_FLOW_LINES[l in CANDIDATE_LINES, t in 1:T],
-            vPTDF_BILINEAR[l, t] -
-            sum(get_ptdf_vector(ptdf_by_line, l, line_map)[z] * p_bus[z, t] for z in 1:Z) - 
-            sum(get_ptdf_line_diff(ptdf_by_line, l, ll, line_map) * vPTDF_BILINEAR[ll, t] for ll in PVIRTUAL_LINES)
+        @constraint(EP, 
+            cCANDFLOW_LINES[l in CANDIDATE_LINES, t in 1:T],
+            vCANDFLOW[l, t] == sum(get_ptdf_vector(ptdf_by_line, l, line_map)[z] * p_bus[z, t] for z in 1:Z) + 
+            sum(
+                (get_ptdf_line_diff(ptdf_by_line, l, ll, line_map)) * vPTDF_BILINEAR[ll, t] 
+                for ll in PVIRTUAL_LINES
+            )
+        )
+
+        F_existing = inputs["pTrans_Max"]
+        @constraints(EP,
+            begin
+                cMaxFlow_out_existing[l = 1:L_exist, t = 1:T], vFLOW[l, t] <= EP[:eAvail_Trans_Cap][l]
+                cMaxFlow_in_existing[l = 1:L_exist, t = 1:T], vFLOW[l, t] >= -EP[:eAvail_Trans_Cap][l]
+            end
         )
 
         # Candidate lines
         F_cand = inputs["Line_Reinforcement_Cap_Size"]
         @constraint(EP, 
             cCAND_LINE_FLOWS_LOWER[l in CANDIDATE_LINES, t in 1:T],
-            eCAND_FLOW_LINES[l, t] >= -F_cand[l] * EP[:vNEW_TRANS_CAP_DECISION_INT][l]
-        ) # 19 for existing lines in paper https://ietresearch.onlinelibrary.wiley.com/doi/epdf/10.1049/iet-gtd.2015.1573
+            vPTDF_BILINEAR[l, t] - vCANDFLOW[l, t] >= -F_cand[l] * EP[:vNEW_TRANS_CAP_DECISION_INT][l]
+        )
 
         @constraint(EP, 
             cCAND_LINE_FLOWS_UPPER[l in CANDIDATE_LINES, t in 1:T],
-            eCAND_FLOW_LINES[l, t] <= F_cand[l] * EP[:vNEW_TRANS_CAP_DECISION_INT][l]
-        ) # 19 for existing lines in paper https://ietresearch.onlinelibrary.wiley.com/doi/epdf/10.1049/iet-gtd.2015.1573
-        
-        M = 4 .* F_cand
+            vPTDF_BILINEAR[l, t] - vCANDFLOW[l, t] <= F_cand[l] * EP[:vNEW_TRANS_CAP_DECISION_INT][l]
+        ) 
+    
+        M = 10 .* F_existing
         @constraint(EP, 
-            cBIGM_PTDF_LOWER[l in CANDIDATE_LINES, t in 1:T],
-            p_virtual[l, t] >= -M[l] * (1 - EP[:vNEW_TRANS_CAP_DECISION_INT][l])
-        ) # 20 for existing lines in paper https://ietresearch.onlinelibrary.wiley.com/doi/epdf/10.1049/iet-gtd.2015.1573
+            cBIGM_PTDF_LOWER_RETIRE_FLOW[l in CAN_RETIRE_LINES, t in 1:T],
+            vFLOW[l, t] >= -M[l] * (1 - EP[:vNEW_TRANS_CAP_DECISION_INT][existing_to_cand_map[l]])
+        ) 
 
         @constraint(EP, 
-            cBIGM_PTDF_UPPER[l in CANDIDATE_LINES, t in 1:T],
-            p_virtual[l, t] <= M[l] * (1 - EP[:vNEW_TRANS_CAP_DECISION_INT][l])
-        ) # 20 for existing lines in paper https://ietresearch.onlinelibrary.wiley.com/doi/epdf/10.1049/iet-gtd.2015.1573
-
-
-        # Retirement Lines
-        F_exist = inputs["pTrans_Max"]
-        @constraint(EP, 
-            cEXIST_LINE_FLOWS_LOWER[l in CAN_RETIRE_LINES, t in 1:T],
-            eFLOW_LINES[l, t] >= -F_exist[l] * (1-EP[:vNEW_TRANS_CAP_DECISION_INT][existing_to_cand_map[l]])
-        ) # 19 for existing lines in paper https://ietresearch.onlinelibrary.wiley.com/doi/epdf/10.1049/iet-gtd.2015.1573
-
-        @constraint(EP, 
-            cEXIST_LINE_FLOWS_UPPER[l in CAN_RETIRE_LINES, t in 1:T],
-            eFLOW_LINES[l, t] <= F_exist[l] * (1-EP[:vNEW_TRANS_CAP_DECISION_INT][existing_to_cand_map[l]])
-        ) # 19 for existing lines in paper https://ietresearch.onlinelibrary.wiley.com/doi/epdf/10.1049/iet-gtd.2015.1573
-        
-        M = 4 .* F_exist
-        @constraint(EP, 
-            cBIGM_PTDF_LOWER_RETIRE[l in CAN_RETIRE_LINES, t in 1:T],
-            p_virtual[l, t] >= -M[l] * (EP[:vNEW_TRANS_CAP_DECISION_INT][existing_to_cand_map[l]])
-        ) # 20 for existing lines in paper https://ietresearch.onlinelibrary.wiley.com/doi/epdf/10.1049/iet-gtd.2015.1573
-
-        @constraint(EP, 
-            cBIGM_PTDF_UPPER_RETIRE[l in CAN_RETIRE_LINES, t in 1:T],
-            p_virtual[l, t] <= M[l] * (EP[:vNEW_TRANS_CAP_DECISION_INT][existing_to_cand_map[l]])
-        ) # 20 for existing lines in paper https://ietresearch.onlinelibrary.wiley.com/doi/epdf/10.1049/iet-gtd.2015.1573
-
-        @constraint(EP, [l in 1:L_exist, t in 1:T],
-            EP[:vFLOW][l, t] == eFLOW_LINES[l, t]   
+            cBIGM_PTDF_UPPER_RETIRE_FLOW[l in CAN_RETIRE_LINES, t in 1:T],
+            vFLOW[l, t] <= M[l] * (1 - EP[:vNEW_TRANS_CAP_DECISION_INT][existing_to_cand_map[l]])
         )
-
-        @constraint(EP, [l in CANDIDATE_LINES, t in 1:T],
-            EP[:vCANDFLOW][l, t] == -vPTDF_BILINEAR[l, t] + sum(get_ptdf_vector(ptdf_by_line, l, line_map)[z] * p_bus[z, t] for z in 1:Z) + 
-            sum(get_ptdf_line_diff(ptdf_by_line, l, ll, line_map) * vPTDF_BILINEAR[ll, t] for ll in PVIRTUAL_LINES)
-        )
+        
 
         @expression(EP,
         eCand_Flow[l in CANDIDATE_LINES, t = 1:T], EP[:vCANDFLOW][l, t])
@@ -548,34 +509,27 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
 
         existing_to_cand_map = inputs["existing_to_cand_map"]
 
-
         @variable(EP, vFLOW[l = EXISTING_LINES, t = 1:T])
         @variable(EP, vCANDFLOW[l in CANDIDATE_LINES, t = 1:T])
         
         # Voltage angle variables of each zone "z" at hour "t" 
         @variable(EP, -0.785 <= vANGLE[z = 1:Z, t = 1:T] <= 0.785)
 
-
         @constraint(EP,
             cPOWER_FLOW_OPF_NONRETIRE[l in CANNOT_RETIRE_LINES, t = 1:T],
             EP[:vFLOW][l, t]==inputs["pDC_OPF_coeff"][l] *
                     sum(inputs["pNet_Map"][l, z] * vANGLE[z, t] for z in 1:Z))
-
-
 
         @constraint(EP,
             cPOWER_FLOW_OPF_RETIRE[l in CAN_RETIRE_LINES, t = 1:T],
             EP[:vFLOW][l, t]==inputs["pDC_OPF_coeff"][l] *
                     sum(inputs["pNet_Map"][l, z] * vANGLE[z, t] for z in 1:Z) * (1 - EP[:vNEW_TRANS_CAP_DECISION_INT][existing_to_cand_map[l]]))
 
-
         @constraint(EP,
             cCANDFLOW[l in CANDIDATE_LINES, t = 1:T],
             vCANDFLOW[l, t] == inputs["pDC_OPF_coeff"][l] *
                         sum(inputs["pNet_Map"][l, z] * vANGLE[z, t] for z in 1:Z) * EP[:vNEW_TRANS_CAP_DECISION_INT][l]
         )
-
-
 
         @constraints(EP,
         begin
@@ -594,7 +548,6 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
         @expression(EP,
             eNet_Export_Cand_Flows[z = 1:Z, t = 1:T],
             sum(inputs["pNet_Map"][l, z] * EP[:eCand_Flow][l, t] for l in CANDIDATE_LINES))
-
 
 
         @constraints(EP,
@@ -728,4 +681,132 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
 
     add_similar_to_expression!(EP[:ePowerBalance], ePowerBalanceCandExportFlows)
     add_similar_to_expression!(EP[:ePowerBalance], ePowerBalanceNetExportFlows)
+end
+
+function build_PTDF_linear_model(EP, myinputs, mysetup)
+
+end
+
+function build_PTDF_bilinear_model(EP, myinputs, mysetup)
+
+end
+
+function build_PTDF_linear_model_legacy(EP, myinputs, mysetup)
+
+end
+
+function build_Btheta_linear_model(EP, myinputs, mysetup)
+    ### DC-OPF variables ###
+    # Note, these are definable without overwriting the existing variables in the model because transmission.jl is not called when this file is called.
+    # Power flow on each existing transmission line "l" at hour "t"
+    CANDIDATE_LINES = inputs["CANDIDATE_LINES"]
+    EXISTING_LINES = inputs["EXISTING_LINES"]
+    CAN_RETIRE_LINES = inputs["CAN_RETIRE_LINES"]
+    CANNOT_RETIRE_LINES = inputs["CANNOT_RETIRE_LINES"]
+
+    existing_to_cand_map = inputs["existing_to_cand_map"]
+
+
+    @variable(EP, vFLOW[l in EXISTING_LINES, t = 1:T])
+    # Power flow on each candidate transmission line "l" at hour "t"
+    @variable(EP, vCANDFLOW[l in CANDIDATE_LINES, t = 1:T])
+
+    # Voltage angle variables of each zone "z" at hour "t" 
+    #@variable(EP, vANGLE[z = 1:Z, t = 1:T])
+    @variable(EP, -0.785 <= vANGLE[z = 1:Z, t = 1:T] <= 0.785)
+
+    @variable(EP, slack_vFLOW[l in CANNOT_RETIRE_LINES, t = 1:T])
+    @variable(EP, slackup_vFLOW[l in CAN_RETIRE_LINES, t = 1:T])
+    @variable(EP, slackdown_vFLOW[l in CAN_RETIRE_LINES, t = 1:T])
+    @variable(EP, slackup_vCANDFLOW[l in CANDIDATE_LINES, t = 1:T])
+    @variable(EP, slackdown_vCANDFLOW[l in CANDIDATE_LINES, t = 1:T])
+
+    if haskey(setup, "unfix_slacks")
+        if setup["unfix_slacks"] == 0
+            for var in EP[:slack_vFLOW]
+                fix(var, 0, force = true)
+            end
+            for var in EP[:slackup_vFLOW]
+                fix(var, 0, force = true)
+            end
+            for var in EP[:slackdown_vFLOW]
+                fix(var, 0, force = true)
+            end
+            for var in EP[:slackup_vCANDFLOW]
+                fix(var, 0, force = true)
+            end
+            for var in EP[:slackdown_vCANDFLOW]
+                fix(var, 0, force = true)
+            end
+        end
+    end
+
+    ### DC-OPF constraints ###
+
+    # Power flow constraint existing lines:: vFLOW = DC_OPF_coeff * (vANGLE[START_ZONE] - vANGLE[END_ZONE])
+    @constraint(EP,
+        cPOWER_FLOW_OPF_NONRETIRE[l in CANNOT_RETIRE_LINES, t = 1:T],
+        EP[:vFLOW][l,
+            t]==inputs["pDC_OPF_coeff"][l] *
+                sum(inputs["pNet_Map"][l, z] * vANGLE[z, t] for z in 1:Z) + slack_vFLOW[l, t])
+
+
+    @constraint(EP,
+        cPOWER_FLOW_OPF_RETIRE_FORWARD[l in CAN_RETIRE_LINES, t = 1:T],
+        EP[:vFLOW][l, t] - inputs["pDC_OPF_coeff"][l] * sum(inputs["pNet_Map"][l, z] * vANGLE[z, t] for z in 1:Z) + slackup_vFLOW[l,t] <= BigM[l] * (EP[:vNEW_TRANS_CAP_DECISION_INT][existing_to_cand_map[l]]))
+
+    @constraint(EP,
+        cPOWER_FLOW_OPF_RETIRE_REVERSE[l in CAN_RETIRE_LINES, t = 1:T],
+        EP[:vFLOW][l, t] - inputs["pDC_OPF_coeff"][l] * sum(inputs["pNet_Map"][l, z] * vANGLE[z, t] for z in 1:Z) + slackdown_vFLOW[l,t] >= -BigM[l] * (EP[:vNEW_TRANS_CAP_DECISION_INT][existing_to_cand_map[l]]))
+
+
+
+    #Power Flow in the candidate expansion lines
+    @constraint(EP,
+        cPOWER_FLOW_OPF_EXPANSION_FORWARD[l in CANDIDATE_LINES, t = 1:T],
+            EP[:vCANDFLOW][l,t]-inputs["pDC_OPF_coeff"][l] *
+                    sum(inputs["pNet_Map"][l, z] * vANGLE[z, t] for z in 1:Z) + slackup_vCANDFLOW[l,t] <= BigM[l]*(1-EP[:vNEW_TRANS_CAP_DECISION_INT][l]))
+    @constraint(EP,
+        cPOWER_FLOW_OPF_EXPANSION_REVERSE[l in CANDIDATE_LINES, t = 1:T],
+            EP[:vCANDFLOW][l,t]-inputs["pDC_OPF_coeff"][l] *
+                    sum(inputs["pNet_Map"][l, z] * vANGLE[z, t] for z in 1:Z) + slackdown_vCANDFLOW[l,t] >= -BigM[l]*(1-EP[:vNEW_TRANS_CAP_DECISION_INT][l]))
+
+
+
+    @constraints(EP,
+    begin
+        cMaxFlow_out_existing[l = 1:L_exist, t = 1:T], EP[:vFLOW][l, t] <= EP[:eAvail_Trans_Cap][l]
+        cMaxFlow_in_existing[l = 1:L_exist, t = 1:T], EP[:vFLOW][l, t] >= -EP[:eAvail_Trans_Cap][l]
+    end)
+
+
+    # Slack Bus angle limit
+    @constraint(EP, cANGLE_SLACK[t = 1:T], vANGLE[1, t]==0)
+
+    @expression(EP,
+    eCand_Flow[l in CANDIDATE_LINES, t = 1:T],
+    EP[:vCANDFLOW][l,t])
+
+    @expression(EP,
+        eNet_Export_Cand_Flows[z = 1:Z, t = 1:T],
+        sum(inputs["pNet_Map"][l, z] * EP[:eCand_Flow][l, t] for l in CANDIDATE_LINES))
+
+    @constraints(EP,
+    begin
+        cMaxFlow_out_candidate[l in CANDIDATE_LINES, t = 1:T], EP[:vCANDFLOW][l, t] <= EP[:vNEW_TRANS_CAP_DECISION_INT][l]*inputs["Line_Reinforcement_Cap_Size"][l]
+        cMaxFlow_in_candidate[l in CANDIDATE_LINES, t = 1:T], EP[:vCANDFLOW][l, t] >= -EP[:vNEW_TRANS_CAP_DECISION_INT][l]*inputs["Line_Reinforcement_Cap_Size"][l]
+    end)
+
+    
+    @constraint(EP, 
+        cCAN_RETIRE_UPPER_LIMIT[l in CAN_RETIRE_LINES, t = 1:T], EP[:vFLOW][l, t] <= inputs["pTrans_Max"][l] * 2 * (1 - EP[:vNEW_TRANS_CAP_DECISION_INT][existing_to_cand_map[l]])
+    )
+
+    @constraint(EP, 
+        cCAN_RETIRE_LOWER_LIMIT[l in CAN_RETIRE_LINES, t = 1:T], EP[:vFLOW][l, t] >= -inputs["pTrans_Max"][l] * 2 * (1 - EP[:vNEW_TRANS_CAP_DECISION_INT][existing_to_cand_map[l]])
+    )
+end
+
+function build_Btheta_bilienar_model(EP, myinputs, mysetup)
+    
 end
