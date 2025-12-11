@@ -336,8 +336,17 @@ for k in n_inputs[3]["NEW_CAP"]
 end
 optimize!(m3)
 
-
-
+println()
+println()
+println("Objective of JuMP model 1 = ", objective_value(m1))
+println("Objective of Benders = ", UB_hist1[end])
+println("Objective of JuMP model 2 = ", objective_value(m2))
+println("Objective of Benders = ", UB_hist2[end])
+println("Objective of JuMP model 3 = ", objective_value(m3))
+println("Objective of Benders = ", UB_hist3[end])
+println()
+println()
+flush(stdout)
 
 zonal_objective = objective_value(mz)
 nodal_objective = objective_value(m1) + objective_value(m2) + objective_value(m3)
