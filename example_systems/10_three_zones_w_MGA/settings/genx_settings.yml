@@ -21,3 +21,4 @@ MultiStage: 0
 MGAMethod: 2
 ClusterMGAVecs: 0
 RelaxBudget: 0.05
+WriteOutputs: annual

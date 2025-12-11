@@ -177,7 +177,7 @@ function configure_writeoutput(output_settings_path::String, settings::Dict)
         writeoutput["WriteReserveMargin"] = false
         writeoutput["WriteReserveMarginWithWeights"] = false
         writeoutput["WriteAngles"] = false
-        writeoutput["WriteTransmissionFlows"] = false
+        #writeoutput["WriteTransmissionFlows"] = false
     end
 
     # read in YAML file if provided

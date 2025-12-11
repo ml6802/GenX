@@ -142,6 +142,51 @@ function make_power_df(inputs::Dict, inputs_decomp::Dict,subop_sol::Dict, setup:
 	return dfPower
 end
 
+
+function get_zonal_nse(inputs::Dict, inputs_decomp::Dict, subop_sol::Dict)
+	T = inputs["T"]     # Number of time steps
+    Z = inputs["Z"]     # Number of zones
+    SEG = inputs["SEG"] # Number of demand curtailment segments
+	divs = length(keys(subop_sol))
+	l_subperiod = T/divs
+
+	nse = zeros(SEG * Z, T)
+    scale_factor = 10^3
+
+	for k in eachindex(subop_sol)
+		for z in 1:Z
+        	nse[((z - 1) * SEG + 1):(z * SEG), Int((k-1)*l_subperiod+1):Int(k*l_subperiod)] = subop_sol[k].nse[:, :, z] * scale_factor
+    	end
+	end
+	annual_sum = zeros(SEG * Z)
+    annual_sum .= nse * inputs["omega"]
+	names = ["Zone_$(z)_Seg_$(s)" for z in 1:Z for s in 1:SEG]
+	df_nse = DataFrame(annual_sum', names)
+	df_nse.Total = [sum(annual_sum)]
+	
+	return df_nse
+end
+
+function get_trans_flows(inputs::Dict, inputs_decomp::Dict, subop_sol::Dict)
+	ModelScalingFactor = 10^3
+	# Transmission related values
+    T = inputs["T"]     # Number of time steps (hours)
+    L = inputs["L"]     # Number of transmission lines
+    # Power flows on transmission lines at each time step
+    
+	flow = Array{Float64,2}(undef,(0,L))
+	for k in eachindex(subop_sol)
+		temp_flow = subop_sol[k].flow' .* inputs_decomp[k]["omega"];
+		flow = vcat(flow,temp_flow)
+	end
+
+	annual_flow = sum(flow[i,:] for i in 1:size(flow,1))* ModelScalingFactor
+	names = "Line_" .* string.(1:L)
+	dfFlow = DataFrame(annual_flow', names)
+
+    return dfFlow
+end
+
 function add_types(inputs::Dict, cap_mat)
 	resource_type = inputs["RESOURCES"].resource_type
 	type_vec=Vector{String}(undef,length(resource_type))
@@ -255,27 +300,33 @@ function make_benders_results_df(master_sol::NamedTuple, subop_sol::Dict, path::
 	dfResults[!,:TotalCost] .= dfResults.FixedCost[1]+dfResults.OpCost[1]
 
 	dfCosts = breakout_costs(master_sol, subop_sol)
+	dfNse = get_zonal_nse(inputs, inputs_decomp, subop_sol)
+	dfFlow = get_trans_flows(inputs, inputs_decomp, subop_sol)
 
 	add_zone_costs!(costs, dfResults)
 	total_ems, zonal_ems = gather_emissions(inputs_decomp,subop_sol)
 	dfResults[!,:TotalEmissions] .= total_ems*ModelScalingFactor
 	add_zone_ems!(zonal_ems.*ModelScalingFactor, dfResults)
-	return dfResults, dfCosts
+	return dfResults, dfCosts, dfNse, dfFlow
 end
 
-function write_benders_mga_results!(Results_df::DataFrame, Costs_df::DataFrame, power_df::DataFrame, results::AbstractArray, path::AbstractString, setup::Dict, inputs::Dict, inputs_decomp::Dict, sumtime_df::DataFrame)
+function write_benders_mga_results!(Results_df::DataFrame, Costs_df::DataFrame, NSE_df::DataFrame, flow_df::DataFrame, power_df::DataFrame, results::AbstractArray, path::AbstractString, setup::Dict, inputs::Dict, inputs_decomp::Dict, sumtime_df::DataFrame)
 	num_its = 2*setup["ModelingToGenerateAlternativeIterations"]
 	for i in 1:num_its
-		temp_df, temp_costs = make_benders_results_df(results[i,1],results[i,2],path,setup,inputs,inputs_decomp)
+		temp_df, temp_costs, temp_nse, temp_flow = make_benders_results_df(results[i,1],results[i,2],path,setup,inputs,inputs_decomp)
 		temp_power_df = make_power_df(inputs,inputs_decomp,results[i,2], setup)
 		append!(Results_df,temp_df)
 		append!(power_df,temp_power_df)
 		append!(Costs_df,temp_costs)
+		append!(NSE_df,temp_nse)
+		append!(flow_df,temp_flow)
 	end
 	iterations = collect(0:num_its)
 	Results_df[!,:MGAIteration] .= iterations
 	power_df[!,:MGAIteration] .= iterations
 	Costs_df[!,:MGAIteration] .= iterations
+	NSE_df[!,:MGAIteration] .= iterations
+	flow_df[!,:MGAIteration] .= iterations
 	outpath = joinpath(path,"Outputs")
 	if setup["OverwriteResults"] == 1
 		# Overwrite existing results if dir exists
@@ -292,6 +343,9 @@ function write_benders_mga_results!(Results_df::DataFrame, Costs_df::DataFrame, 
     CSV.write(joinpath(outpath, "SummaryMGATimes.csv"),sumtime_df)
 	CSV.write(joinpath(outpath, "AnnualPowerByGen.csv"),power_df)
 	CSV.write(joinpath(outpath, "FullCostsMGA.csv"),Costs_df)
+	CSV.write(joinpath(outpath, "ZonalNSEMGA.csv"),NSE_df)
+	CSV.write(joinpath(outpath, "AnnualTransmissionFlowsMGA.csv"),flow_df)
+	return
 end
 
 function splitfun(x)
@@ -331,7 +385,7 @@ function make_benders_zonal_invcost(inputs::Dict,EP::Model)
 end
 
 function make_benders_zonal_opcost(inputs::Dict,EP::Model)
-	println("Running make_benders_zonal_opcost")
+
 	Resources = inputs["RESOURCES"]
 	SEG = inputs["SEG"]  # Number of lines
 	Z = inputs["Z"]     # Number of zones
@@ -442,3 +496,4 @@ function make_benders_zonal_opcost(inputs::Dict,EP::Model)
 	end
 	return (CTotal = CTotal, CFix = CFix, CVar = CVar, CFuel = CFuel, CNSE = CNSE, CStart = CStart, COpTot =COpTot)
 end
+

@@ -167,6 +167,8 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
         zone_cost = make_benders_zonal_opcost(inputs,EP)
 		emissions = value.(EP[:eEmissionsByZone])
         power = value.(EP[:vP])
+        nse = value.(EP[:vNSE])
+        flow = value.(EP[:vFLOW])
 		lambda = [dual(FixRef(variable_by_name(EP,y))) for y in planning_variables_sub];
 		theta_coeff = 1;
 		if haskey(EP,:eObjSlack)
@@ -190,13 +192,15 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
         zone_cost = make_benders_zonal_opcost(inputs,EP)
 		emissions = value.(EP[:eEmissionsByZone])
         power = value.(EP[:vP])
+        nse = value.(EP[:vNSE])
+        flow = value.(EP[:vFLOW])
 		lambda = zeros(length(planning_variables_sub));
 		theta_coeff = 0;
 		feasibility_slack = 0;
 		@warn "The subproblem solution failed. This should not happen, double check the input files"
 	end
     
-	return (op_cost=op_cost,zone_cost = zone_cost, emissions = emissions, power = power, lambda = lambda,theta_coeff=theta_coeff,feasibility_slack=feasibility_slack)
+	return (op_cost=op_cost,zone_cost = zone_cost, emissions = emissions, power = power, nse = nse, flow=flow, lambda = lambda,theta_coeff=theta_coeff,feasibility_slack=feasibility_slack)
 
 end
 
