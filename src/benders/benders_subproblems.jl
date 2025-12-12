@@ -30,6 +30,7 @@ function init_subproblem(setup::Dict, inputs::Dict, OPTIMIZER::MOI.OptimizerWith
     EP = generate_operation_subproblem(setup, inputs, OPTIMIZER)
     EP.ext[:solver] = OPTIMIZER
     set_silent(EP)
+    unset_silent(EP)
 
     planning_variables_sub = intersect(name.(all_variables(EP)),planning_variables);
 
@@ -184,6 +185,7 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
             original_obj_scale = get_attribute(EP, "ObjScale")
             @warn "Dual Status not computed; trying to decrease ObjScale"
             set_optimizer_attribute(EP, "ObjScale", original_obj_scale / 1000000)
+            set_optimizer_attribute(EP, "BarIterLimit", 10000)
             optimize!(EP)
             if dual_status(EP) == MOI.NO_SOLUTION
                 println("DUAL STATUS NOT COMPUTED; TRYING TO INCREASE OBJSCALE")
