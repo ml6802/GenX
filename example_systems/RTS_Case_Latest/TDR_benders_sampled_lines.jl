@@ -141,6 +141,7 @@ using StatsBase, Random
 Random.seed!(123)
 CANDIDATE_LINES = myinputs["CANDIDATE_LINES"]
 lines_to_keep = sample(CANDIDATE_LINES, 40, replace=false, ordered=true)
+GenX.filter_candidate_lines(myinputs, lines_to_keep)
 
 # Run TDR
 cluster_inputs(case, settings_path, mysetup; inputs = myinputs)
