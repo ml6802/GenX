@@ -1588,6 +1588,8 @@ function cluster_inputs(inpath,
             end
 
             myinputs["T"] = total_tdr_length
+            inputs["omega"] = inputs["omega"][1:total_tdr_length]
+
             return nothing# GVOutputData, GVColMap,  PeriodMap, FPOutputData, DMOutputData, DemandCols
         else
             if v

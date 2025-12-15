@@ -66,10 +66,10 @@ function expand_new_cap_resources_to_nodal!(inputs::Dict, setup::Dict, p::Portfo
         resource_variability = zeros(1, size(pP_Max)[2])
         resource_variability[1, :] .= pP_Max[i, :]
         for j in 2:length(regions)
-            new_resource = translate_resource_dict(p, tech, j)
-            scale_resources_data!(new_resource, scale_factor)
-            genx_type = get_genx_type(tech)
-            new_resource = genx_type(new_resource)
+            new_resource = deepcopy(old_resource)#translate_resource_dict(p, tech, j)
+            #scale_resources_data!(new_resource, scale_factor)
+            # genx_type = get_genx_type(tech)
+            # new_resource = genx_type(new_resource)
             new_region = regions[j]
             new_region_id = zone_id(new_region)
             new_zone_id = region_to_index[new_region_id]

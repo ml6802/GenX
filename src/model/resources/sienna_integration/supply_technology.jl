@@ -46,6 +46,7 @@ ramp_up_fraction(t::SupplyTechnology) = get_ramp_limits(t).up
 cap_size(t::SupplyTechnology) = 1#get_unit_size(t)
 """Get [`SupplyTechnology`](@ref) `min_generation_percentage`."""
 min_power(t::SupplyTechnology) = get_min_generation_fraction(t)
+get_start_up(operation_costs::PSY.ThermalGenerationCost) = operation_costs.start_up
 """Get [`SupplyTechnology`](@ref) `start_cost_per_mw`."""
 start_cost_per_mw(t::SupplyTechnology) = get_start_up(get_operation_costs(t))
 """Get [`SupplyTechnology`](@ref) `capacity_limits`."""

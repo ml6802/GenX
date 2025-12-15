@@ -389,7 +389,8 @@ function translate_resource_dict(p::Portfolio, t::SupplyTechnology{PSY.ThermalSt
             :up_time => up_time(t),
             :down_time => down_time(t),
             :start_fuel_mmbtu_per_mw => start_fuel_mmbtu_per_mw(t),
-            :fuel_costs => fuel_costs(t)
+            :fuel_costs => fuel_costs(t),
+            :start_cost_per_mw => start_cost_per_mw(t)
         )
     )
 end

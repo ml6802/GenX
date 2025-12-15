@@ -192,24 +192,46 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
                 set_optimizer_attribute(EP, "ObjScale", original_obj_scale * 100000)
                 optimize!(EP)
                 if has_values(EP) && dual_status(EP) == MOI.NO_SOLUTION
-                    println("NO SOLUTION WITH GUROBI; TRYING IPOPT")
-                    flush(stdout)
-                    @warn "No solution with Gurobi; trying Ipopt"
-                    set_optimizer(EP, Ipopt.Optimizer)
-                    set_attribute(EP, "hsllib", HSL_jll.libhsl_path)
-                    set_attribute(EP, "linear_solver", "ma57")
-                    set_attribute(EP, "max_cpu_time", 8000.)
-                    set_attribute(EP, "print_level", 5)
+                    # println("NO SOLUTION WITH GUROBI; TRYING IPOPT")
+                    # flush(stdout)
+                    @warn "No solution with Gurobi; trying to skip this cut"
+                    # set_optimizer(EP, Ipopt.Optimizer)
+                    # set_attribute(EP, "hsllib", HSL_jll.libhsl_path)
+                    # set_attribute(EP, "linear_solver", "ma57")
+                    # set_attribute(EP, "max_cpu_time", 8000.)
+                    # set_attribute(EP, "print_level", 5)
                     vars = all_variables(EP)
                     idx = EP.ext[:idx][1]
                     EP.ext[:idx][1] += 1
                     JuMP.write_to_file(EP, "/scratch/gpfs/JENKINS/dc0173/git/forked/subproblem__$idx.lp")
-                    for (i, v) in enumerate(vars)
-                        if !(is_parameter(v))
-                            set_start_value(vars[i], sols[i])
-                        end
+                    # for (i, v) in enumerate(vars)
+                    #     if !(is_parameter(v))
+                    #         set_start_value(vars[i], sols[i])
+                    #     end
+                    # end
+                    # optimize!(EP)
+
+                    for y in planning_variables_sub
+                        push!(lambda, 0.)#dual(FixRef(vy)))
                     end
-                    optimize!(EP)
+                    theta_coeff = 1;
+                    if haskey(EP,:eObjSlack)
+                        feasibility_slack = value(EP[:eObjSlack]);
+                    else
+                        feasibility_slack = 0.0;
+                    end
+                    summation_sol_map = Dict{String, Float64}()
+                    summation_sol_map["vNSE"] = sum(value.(EP[:vNSE]))
+                    summation_sol_map["vP"] = sum(value.(EP[:vP]))
+                    summation_sol_map["OverProduction"] = sum(value.(EP[:vOverProduction]))
+                    avs = all_variables(EP)
+                    vals = value.(avs)
+                    sol_map = Dict{String, Float64}()
+                    for (i, var) in enumerate(avs)
+                        sol_map[name(var)] = vals[i]
+                    end
+                    op_cost = 0.
+	                return (op_cost=op_cost,zone_cost = zone_cost, emissions = emissions,lambda = lambda,theta_coeff=theta_coeff,feasibility_slack=feasibility_slack, solution_map=sol_map, summation_map=summation_sol_map)
                 elseif !has_values(EP)
                     error("NO SOLUTIONS COMPUTED!")
                 end
