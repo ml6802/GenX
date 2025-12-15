@@ -115,6 +115,7 @@ function load_candidates_base(myinputs, T=168; demand_scale = 2, add_new_corrido
                     push!(myinputs["Line_Angle_Limit"], 6.282)
                     push!(myinputs["Max_Trans_Cap"], 1)
                     push!(myinputs["Line_Reinforcement_Cap_Size"], 500)
+                    push!(myinputs["CANDIDATE_LINES"], myinputs["L_exist"] + length(myinputs["CANDIDATE_LINES"]) + 1)
 
                     if lines_added[1] == 1
                         distance = 50 + rand() * 20
@@ -131,12 +132,14 @@ function load_candidates_base(myinputs, T=168; demand_scale = 2, add_new_corrido
                 next_index[1] += 1
             end
         end
+        myinputs["pNet_Map"] = pNet_Map
     end
 
     myinputs["CAN_RETIRE_LINES"] = CAN_RETIRE_LINES
     myinputs["CANNOT_RETIRE_LINES"] = CANNOT_RETIRE_LINES
     myinputs["RECONDUCTOR_LINES"] = RECONDUCTOR_LINES
     myinputs["existing_to_cand_map"] = existing_to_cand_map
+    myinputs["L_cand"] = length(myinputs["CANDIDATE_LINES"])
 
     myinputs["hours_per_subperiod"] = T
     myinputs["INTERIOR_SUBPERIODS"] = [i for i in 2:myinputs["hours_per_subperiod"]]
