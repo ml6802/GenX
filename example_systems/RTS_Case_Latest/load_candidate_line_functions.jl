@@ -139,10 +139,10 @@ function load_no_candidates(myinputs, T=168; demand_scale = 2)
     myinputs["pD"] .*= demand_scale
 end
 
-vom_dict = Dict("CC" => 2.12, "CT" => 6.94, "STEAM" => 9.18, "NUCLEAR" => 2.8, "PV" => 0, "CSP" => 3.8, "WIND" => 0)
-
+vom_dict = Dict("CC" => 2.12, "CT" => 6.94, "STEAM" => 9.18, "NUCLEAR" => 2.8, "PV" => 0, "CSP" => 3.0, "WIND" => 0)
 #fom_dict = Dict("CC" => 33500, "CT" => 33500, "STEAM" => 33500, "NUCLEAR" => 175000, "PV" => 22000, "CSP" => 74000, "WIND" => 31000)
-fom_dict = Dict("CC" => 33500, "CT" => 26000, "STEAM" => 33500, "NUCLEAR" => 175000, "PV" => 22000, "CSP" => 74000, "WIND" => 31000)
+fom_dict = Dict("CC" => 33500, "CT" => 26000, "STEAM" => 33500, "NUCLEAR" => 175000, "PV" => 22000, "CSP" => 55000, "WIND" => 31000)
+startup_dict = Dict("CC" => 92, "CT" => 119, "STEAM" => 124, "NUCLEAR" => 248, "PV" => 0, "CSP" => 0, "WIND" => 0)
 
 function add_om_costs(p)
     techs = collect(get_technologies(ResourceTechnology, p))
@@ -165,6 +165,7 @@ function add_om_costs(p)
         end
         vom_val = vom_dict[key_val[1]]
         fom_val = fom_dict[key_val[1]]
+        startup_val = startup_dict[key_val[1]]
         if isa(op_cost, CostCurve)
             new_cc = CostCurve(LinearCurve(LinearFunctionData(0, fom_val)), op_cost.power_units, LinearCurve(LinearFunctionData(vom_val, 0)))
             t.operation_costs.variable = new_cc
@@ -172,8 +173,52 @@ function add_om_costs(p)
             new_fc = FuelCurve(op_cost.value_curve, op_cost.power_units, op_cost.fuel_cost, op_cost.startup_fuel_offtake, LinearCurve(LinearFunctionData(vom_val, 0)))
             t.operation_costs.variable = new_fc
             t.operation_costs.fixed = fom_val
+            t.operation_costs.start_up = Float64(startup_val)
         else
             error("Variable Costs are of type , ", typeof(op_cost))
+        end
+    end
+end
+
+# inv_cost_dict = Dict("CC" => 144000, "CT" => 130000, "STEAM" => 441000, "NUCLEAR" => 830000, "PV" => 120000, "CSP" => 347000, "WIND" => 160000)
+inv_cost_dict = Dict("CC" => 144000, "CT" => 130000, "STEAM" => 441000, "NUCLEAR" => 830000, "PV" => 84000, "CSP" => 347000, "WIND" => 160000)
+
+function update_fuel_and_investment_costs(myinputs)
+    myinputs["fuel_costs"]
+
+    for k in keys(myinputs["fuel_costs"])
+        if occursin("NATURAL_GAS", k)
+            myinputs["fuel_costs"][k] .= 3.88722
+        elseif occursin("NUCLEAR", k)
+            myinputs["fuel_costs"][k] .= 0.810
+        elseif occursin("COAL", k)
+            myinputs["fuel_costs"][k] .= 2.11399
+        elseif occursin("DISTILLATE", k)
+            myinputs["fuel_costs"][k] .= 10.3494
+        end
+    end
+
+    for (i, r) in enumerate(myinputs["RESOURCES"])
+        if isa(r, GenX.Storage)
+            continue
+        end
+
+        key_val = [""]
+        for key in keys(inv_cost_dict)
+            if occursin(key, GenX.resource_name(r))
+                key_val[1] = key
+                break
+            end
+        end
+        if key_val[1] == ""
+            error("Technology of name $(GenX.resource_name(r)) does not have a corresponding dictionary pairing")
+        end
+        inv_cost = inv_cost_dict[key_val[1]]
+        parent(r)[:inv_cost_per_mwyr] = inv_cost
+
+        if isa(r, GenX.Thermal)
+            fuel = GenX.fuel(r)
+            parent(r)[:fuel_costs] = myinputs["fuel_costs"][fuel][1]
         end
     end
 end
