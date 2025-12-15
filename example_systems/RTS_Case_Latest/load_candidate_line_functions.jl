@@ -1,4 +1,4 @@
-function load_candidates_base(myinputs, T=168; demand_scale = 2)
+function load_candidates_base(myinputs, T=168; demand_scale = 2, add_new_corridors = false)
     # myinputs["pTrans_Max"] .*= 2
     #myinputs["pD"] .*= 1
     # myinputs["Voll"] .*= 10
@@ -62,12 +62,76 @@ function load_candidates_base(myinputs, T=168; demand_scale = 2)
             push!(CAN_RETIRE_LINES, i)
             existing_to_cand_map[i] = L_exist + i
             myinputs["Line_Reinforcement_Cap_Size"][L_exist + i] *= 2.5
-            #myinputs["pDC_OPF_coeff"][L_exist + i] *= 2.5
+            myinputs["pDC_OPF_coeff"][L_exist + i] *= 2.5
         end
     end
 
-    #myinputs["pDC_OPF_coeff"] .*= 2000 #2000
-    # myinputs["pDC_OPF_coeff"] .*= 100 #2000
+    if add_new_corridors
+        pD = myinputs["pD"]
+        pD_by_node = sum(pD, dims = 1)[:]
+        zone_idx_set = Dict(1 => [], 2 => [], 3 => [])
+        for i in 1:length(buses)
+            push!(zone_idx_set[zone_map[i]], i)
+        end
+
+        generating_cap = zeros(length(buses))
+        for (i, r) in enumerate(myinputs["RESOURCES"])
+            if !(GenX.new_build(r))
+                node_id = GenX.zone_id(r)
+                generating_cap[node_id] = GenX.existing_cap_mw(r)
+            end
+        end
+
+        adj_list = build_network_adjacency_list(myinputs["pNet_Map"])
+        pNet_Map = myinputs["pNet_Map"]
+
+        Random.seed!(12345)
+        for i in 1:3
+            nodes = zone_idx_set[i]
+            pD_in_zone = pD_by_node[nodes]
+            generating_cap_in_zone = generating_cap[nodes]
+
+            zone_max_demand = argmax(pD_in_zone)
+            overall_demand_node = nodes[zone_max_demand]
+
+            max_generation = sortperm(generating_cap_in_zone, rev = true)
+
+            lines_added = [0.]
+            next_index = [1]
+            while lines_added[1] < 2
+                next_node = max_generation[next_index[1]]
+                overall_next_node = nodes[next_node]
+                if !([overall_demand_node, overall_next_node] in adj_list) && !([overall_next_node, overall_demand_node] in adj_list)
+                    new_line = zeros(1, 73)
+                    new_line[overall_next_node] = -1
+                    new_line[overall_demand_node] = 1
+                    pNet_Map = vcat(pNet_Map, new_line)
+                    lines_added[1] += 1
+
+                    # Add data...
+                    push!(myinputs["pPercent_Loss"], 0)
+                    push!(myinputs["pTrans_Max"], 0)
+                    push!(myinputs["pDC_OPF_coeff"], 2040.8)
+                    push!(myinputs["Line_Angle_Limit"], 6.282)
+                    push!(myinputs["Max_Trans_Cap"], 1)
+                    push!(myinputs["Line_Reinforcement_Cap_Size"], 500)
+
+                    if lines_added[1] == 1
+                        distance = 50 + rand() * 20
+                        cap_val = distance * 1500
+                        annuitized_cost = cap_val * (0.044) / (1 - (1 + 0.044)^(-60))
+                        push!(myinputs["pC_Line_Reinforcement"], annuitized_cost)
+                    else
+                        distance = 30 + rand() * 10 
+                        cap_val = distance * 1500
+                        annuitized_cost = cap_val * (0.044) / (1 - (1 + 0.044)^(-60))
+                        push!(myinputs["pC_Line_Reinforcement"], annuitized_cost)
+                    end
+                end
+                next_index[1] += 1
+            end
+        end
+    end
 
     myinputs["CAN_RETIRE_LINES"] = CAN_RETIRE_LINES
     myinputs["CANNOT_RETIRE_LINES"] = CANNOT_RETIRE_LINES

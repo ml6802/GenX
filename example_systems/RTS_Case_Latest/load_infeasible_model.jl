@@ -1,12 +1,27 @@
 using JuMP, Gurobi
 
-m = read_from_file((@__DIR__)*"/subproblem__6.0.lp")
+m = read_from_file((@__DIR__)*"/../../subproblem__3.0.lp")
 
-solver = optimizer_with_attributes(Gurobi.Optimizer, "QCPDual" => 1, "Method" => 2, "MIPGap" => 1e-3, "BarConvTol" => 1e-8, "Crossover" => 1, "ObjScale" => 1e-3, "ScaleFlag" => 2)
+solve_times = []
+got_duals = []
+obj_scales = [1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1e1, 1e3, 1e5, 1e7, 1e8]
 
-set_optimizer(m, solver)
+for obj_scale in obj_scales
+    println("RUNNING $obj_scale")
+    solver = optimizer_with_attributes(Gurobi.Optimizer, "QCPDual" => 1, "Method" => 2, "MIPGap" => 1e-3, "BarConvTol" => 1e-8, "Crossover" => 1, "ObjScale" => obj_scale, "ScaleFlag" => 2, "TimeLimit" => 160)
 
-optimize!(m)
+    set_optimizer(m, solver)
+
+    t = @elapsed optimize!(m)
+
+    if dual_status(m) == MOI.NO_SOLUTION
+        push!(got_duals, 0)
+    else
+        push!(got_duals, 1)
+    end
+
+    push!(solve_times, t)
+end
 
 
 
