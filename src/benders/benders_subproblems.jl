@@ -29,6 +29,13 @@ function init_subproblem(setup::Dict, inputs::Dict, OPTIMIZER::MOI.OptimizerWith
 
     EP = generate_operation_subproblem(setup, inputs, OPTIMIZER)
     EP.ext[:solver] = OPTIMIZER
+    if haskey(setup, "ptdf")
+        if setup["ptdf"] == 1
+            if get_optimizer_attribute(OPTIMIZER, "ObjScale") > 1e3
+                set_optimizer_attribute(OPTIMIZER, "ObjScale", 1e-1)
+            end
+        end
+    end
     set_silent(EP)
 
     planning_variables_sub = intersect(name.(all_variables(EP)),planning_variables);
@@ -183,13 +190,29 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
             sols = value.(all_variables(EP))
             original_obj_scale = get_attribute(EP, "ObjScale")
             @warn "Dual Status not computed; trying to decrease ObjScale"
-            set_optimizer_attribute(EP, "ObjScale", original_obj_scale / 1000000)
+            if haskey(setup, "ptdf")
+                if setup["ptdf"] == 1
+                    set_optimizer_attribute(EP, "ObjScale", original_obj_scale / 100)
+                else
+                    set_optimizer_attribute(EP, "ObjScale", original_obj_scale / 1000000)
+                end
+            else
+                set_optimizer_attribute(EP, "ObjScale", original_obj_scale / 1000000)
+            end
             optimize!(EP)
             if dual_status(EP) == MOI.NO_SOLUTION
                 println("DUAL STATUS NOT COMPUTED; TRYING TO INCREASE OBJSCALE")
                 flush(stdout)
                 @warn "Dual Status not computed; trying to increase ObjScale"
-                set_optimizer_attribute(EP, "ObjScale", original_obj_scale * 100000)
+                if haskey(setup, "ptdf")
+                    if setup["ptdf"] == 1
+                        set_optimizer_attribute(EP, "ObjScale", original_obj_scale * 100)
+                    else
+                        set_optimizer_attribute(EP, "ObjScale", original_obj_scale * 100000)
+                    end
+                else
+                    set_optimizer_attribute(EP, "ObjScale", original_obj_scale * 100000)
+                end
                 optimize!(EP)
                 if has_values(EP) && dual_status(EP) == MOI.NO_SOLUTION
                     # println("NO SOLUTION WITH GUROBI; TRYING IPOPT")
