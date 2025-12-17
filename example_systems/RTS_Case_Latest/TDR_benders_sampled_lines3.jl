@@ -185,6 +185,7 @@ mysetup["bilinear"] = 1
 mysetup["DC_OPF"] = 1
 mysetup["IntegerInvestments"] = 1
 mysetup["BD_integer_routine"] = 0
+mysetup["BD_cap_integer_routine"] = 1
 
 myinputs_decomp = GenX.separate_inputs_subperiods(myinputs);
 benders_inputs = GenX.generate_benders_inputs(mysetup,myinputs,myinputs_decomp)

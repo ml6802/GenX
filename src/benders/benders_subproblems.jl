@@ -190,12 +190,8 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
             sols = value.(all_variables(EP))
             original_obj_scale = get_attribute(EP, "ObjScale")
             @warn "Dual Status not computed; trying to decrease ObjScale"
-            if haskey(setup, "ptdf")
-                if setup["ptdf"] == 1
-                    set_optimizer_attribute(EP, "ObjScale", original_obj_scale / 100)
-                else
-                    set_optimizer_attribute(EP, "ObjScale", original_obj_scale / 1000000)
-                end
+            if !(haskey(EP, :vANGLE))
+                set_optimizer_attribute(EP, "ObjScale", original_obj_scale / 100)
             else
                 set_optimizer_attribute(EP, "ObjScale", original_obj_scale / 1000000)
             end
@@ -204,12 +200,8 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
                 println("DUAL STATUS NOT COMPUTED; TRYING TO INCREASE OBJSCALE")
                 flush(stdout)
                 @warn "Dual Status not computed; trying to increase ObjScale"
-                if haskey(setup, "ptdf")
-                    if setup["ptdf"] == 1
-                        set_optimizer_attribute(EP, "ObjScale", original_obj_scale * 100)
-                    else
-                        set_optimizer_attribute(EP, "ObjScale", original_obj_scale * 100000)
-                    end
+                if !(haskey(EP, :vANGLE))
+                    set_optimizer_attribute(EP, "ObjScale", original_obj_scale * 100)
                 else
                     set_optimizer_attribute(EP, "ObjScale", original_obj_scale * 100000)
                 end
