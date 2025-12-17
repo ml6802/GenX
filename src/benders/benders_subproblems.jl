@@ -167,7 +167,9 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
 	fix_planning_variables!(EP,planning_sol,planning_variables_sub)
 
     new_optimizer = EP.ext[:solver]
-    set_optimizer(EP, new_optimizer)
+    if get_optimizer_attribute(new_optimizer, "ObjScale") != get_optimizer_attribute(EP, "ObjScale")
+        set_optimizer(EP, new_optimizer)
+    end
 
 	t = @elapsed optimize!(EP)
 	println("Time for solving subproblem was ", t/60, " minutes")
@@ -178,13 +180,13 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
     end
 	
 	if has_values(EP)
-        println("OBJECTIVE OF SUBPROBLEM IS : ", objective_value(EP))
-        println(sum(value.(EP[:vOverProduction])))
+        #println("OBJECTIVE OF SUBPROBLEM IS : ", objective_value(EP))
+        #println(sum(value.(EP[:vOverProduction])))
 		op_cost = objective_value(EP);
         zone_cost = 0#make_benders_zonal_opcost(inputs,EP)
 		emissions = value.(EP[:eEmissionsByZone])
         original_obj_scale = get_attribute(EP, "ObjScale")
-        println("ORIGINAL OBJ SCALE IS ", original_obj_scale)
+        #println("ORIGINAL OBJ SCALE IS ", original_obj_scale)
         lambda=[]
         if dual_status(EP) == MOI.NO_SOLUTION
             sols = value.(all_variables(EP))
