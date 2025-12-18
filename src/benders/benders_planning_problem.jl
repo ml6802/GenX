@@ -52,7 +52,7 @@ function init_planning_problem(setup::Dict,inputs::Dict)
 
 	varnames = name.(setdiff(all_variables(EP),[EP[:vZERO];EP[:vTHETA]]));
 
-	unset_silent(EP);
+	set_silent(EP);
 
     return EP, varnames
 

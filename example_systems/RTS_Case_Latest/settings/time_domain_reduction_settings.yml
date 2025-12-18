@@ -70,7 +70,7 @@ DemandWeight: 1
 
   #   - WeightTotal
   #   Default 8760, the sum to which the relative weights of representative periods will be scaled.
-WeightTotal: 8760
+WeightTotal: 8784
 
   #   - ClusterFuelPrices
   #   Either 1 (yes) or 0 (no), this indicates whether or not to use the fuel price

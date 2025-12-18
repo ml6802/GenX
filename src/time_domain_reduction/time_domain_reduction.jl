@@ -646,7 +646,7 @@ function cluster_inputs(inpath,
         v = false;
         random = true,
         inputs = nothing, 
-        minmaxperiods = nothing)
+        TDR_params = Dict())
     if v
         println(now())
     end
@@ -658,21 +658,16 @@ function cluster_inputs(inpath,
         "time_domain_reduction_settings.yml")))
     update_deprecated_tdr_inputs!(myTDRsetup)
 
-    if !isnothing(minmaxperiods)
-        myTDRsetup["MinPeriods"] = minmaxperiods[1]
-        myTDRsetup["MaxPeriods"] = minmaxperiods[2]
-    end
-
     # Accept model parameters from the settings file time_domain_reduction_settings.yml
-    TimestepsPerRepPeriod = myTDRsetup["TimestepsPerRepPeriod"]
-    ClusterMethod = myTDRsetup["ClusterMethod"]
-    ScalingMethod = myTDRsetup["ScalingMethod"]
-    MinPeriods = myTDRsetup["MinPeriods"]
-    MaxPeriods = myTDRsetup["MaxPeriods"]
-    UseExtremePeriods = myTDRsetup["UseExtremePeriods"]
-    ExtPeriodSelections = myTDRsetup["ExtremePeriods"]
-    Iterate = myTDRsetup["IterativelyAddPeriods"]
-    IterateMethod = myTDRsetup["IterateMethod"]
+    TimestepsPerRepPeriod = haskey(TDR_params, "TimeStepsPerRepPeriod") ? TDR_params["TimeStepsPerRepPeriod"] : myTDRsetup["TimestepsPerRepPeriod"]
+    ClusterMethod = haskey(TDR_params, "ClusterMethod") ? TDR_params["ClusterMethod"] : myTDRsetup["ClusterMethod"]
+    ScalingMethod = haskey(TDR_params, "ScalingMethod") ? TDR_params["ScalingMethod"] : myTDRsetup["ScalingMethod"]
+    MinPeriods = haskey(TDR_params, "MinPeriods") ? TDR_params["MinPeriods"] : myTDRsetup["MinPeriods"]
+    MaxPeriods = haskey(TDR_params, "MaxPeriods") ? TDR_params["MaxPeriods"] : myTDRsetup["MaxPeriods"]
+    UseExtremePeriods = haskey(TDR_params, "UseExtremePeriods") ? TDR_params["UseExtremePeriods"] : myTDRsetup["UseExtremePeriods"]
+    ExtPeriodSelections = haskey(TDR_params, "ExtremePeriods") ? TDR_params["ExtremePeriods"] : myTDRsetup["ExtremePeriods"]
+    Iterate = haskey(TDR_params, "IterativelyAddPeriods") ? TDR_params["IterativelyAddPeriods"] : myTDRsetup["IterativelyAddPeriods"]
+    IterateMethod = haskey(TDR_params, "IterateMethod") ? TDR_params["IterateMethod"] : myTDRsetup["IterateMethod"]
     Threshold = myTDRsetup["Threshold"]
     nReps = myTDRsetup["nReps"]
     DemandWeight = myTDRsetup["DemandWeight"]
