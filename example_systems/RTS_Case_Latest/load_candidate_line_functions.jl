@@ -320,3 +320,69 @@ end
         
 #     end
 # end
+columns_to_scale = [:existing_charge_cap_mw,        # to GW
+        :existing_cap_mwh,              # to GWh
+        :existing_cap_mw,               # to GW
+        :cap_size,                      # to GW
+        :min_cap_mw,                    # to GW
+        :min_cap_mwh,                   # to GWh
+        :min_charge_cap_mw,             # to GWh
+        :max_cap_mw,                    # to GW
+        :max_cap_mwh,                   # to GWh
+        :max_charge_cap_mw,             # to GW
+        :inv_cost_per_mwyr,             # to $M/GW/yr
+        :inv_cost_per_mwhyr,            # to $M/GWh/yr
+        :inv_cost_charge_per_mwyr,      # to $M/GW/yr
+        :fixed_om_cost_per_mwyr,        # to $M/GW/yr
+        :fixed_om_cost_per_mwhyr,       # to $M/GWh/yr
+        :fixed_om_cost_charge_per_mwyr, # to $M/GW/yr
+        :var_om_cost_per_mwh,           # to $M/GWh
+        :var_om_cost_per_mwh_in,        # to $M/GWh
+        :reg_cost,                      # to $M/GW
+        :rsv_cost,                      # to $M/GW
+        :min_retired_cap_mw,            # to GW
+        :min_retired_charge_cap_mw,     # to GW
+        :min_retired_energy_cap_mw,     # to GW
+        :start_cost_per_mw,             # to $M/GW
+        :ccs_disposal_cost_per_metric_ton, :hydrogen_mwh_per_tonne       # to GWh/t
+    ]
+function scale_resource(resource, scale_factor)
+    
+    resource_dict = parent(resource)
+    for col in columns_to_scale
+        if haskey(resource_dict, col)
+            resource_dict[col] /= scale_factor
+        end
+    end
+end
+
+
+function scale_inputs(inputs::Dict, scale_factor = GenX.ModelScalingFactor)
+    keys_to_scale = ["pD", "pC_D_curtail", "pTrans_Max_Possible", "pMax_Line_Reinforcement", "pMax_D_Curtail", "pC_Line_Reconductor_High", "pC_Line_Reconductor_Low", "pC_Line_Reinforcement", "Line_Reinforcement_Cap_Size", "pTrans_Max"]
+    
+    for k in keys_to_scale
+        if haskey(inputs, k)
+            inputs[k] ./= scale_factor
+        end
+    end
+
+    for k in keys(inputs["fuel_costs"])
+        inputs["fuel_costs"][k] ./= scale_factor
+    end
+
+    for r in inputs["RESOURCES"]
+        scale_resource(r, scale_factor)
+    end
+    # "pC_D_Curtail"
+# "pTrans_Max_Possible" #only used for losses and multistage; not necessary for now; not loaded properly for now
+# "pMax_Line_Reinforcement" # only used for the non DCOPF, integer case
+# "pMax_D_Curtail" - I don't think we need this one, but probably should check its role
+# "MinCapReq
+# "pC_Line_Reconductor_High"
+# "pC_Line_Reconductor_Low"
+# "fuel_costs"
+# "pC_Line_Reinforcement"
+# "Line_Reinforcement_Cap_Size
+# "pTrans_Max"
+# "RESOURCES"
+end

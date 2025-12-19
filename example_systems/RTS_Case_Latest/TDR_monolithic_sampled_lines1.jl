@@ -151,6 +151,7 @@ if haskey(mysetup, "IntegerInvestments")
         end
     end
 end
+scale_inputs(myinputs)
 
 m = GenX.generate_model(mysetup, myinputs, optimizer)
 
