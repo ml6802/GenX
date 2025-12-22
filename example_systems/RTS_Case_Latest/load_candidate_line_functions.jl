@@ -101,7 +101,10 @@ function load_candidates_base(myinputs, T=168; demand_scale = 2, add_new_corrido
             while lines_added[1] < 2
                 next_node = max_generation[next_index[1]]
                 overall_next_node = nodes[next_node]
-                if !([overall_demand_node, overall_next_node] in adj_list) && !([overall_next_node, overall_demand_node] in adj_list)
+                if overall_next_node == overall_demand_node
+                    println("nodes are the same")
+                end
+                if !([overall_demand_node, overall_next_node] in adj_list) && !([overall_next_node, overall_demand_node] in adj_list) && overall_next_node != overall_demand_node
                     new_line = zeros(1, 73)
                     new_line[overall_next_node] = -1
                     new_line[overall_demand_node] = 1

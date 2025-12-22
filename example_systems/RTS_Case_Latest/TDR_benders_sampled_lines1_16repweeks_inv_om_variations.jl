@@ -143,9 +143,12 @@ CANDIDATE_LINES = myinputs["CANDIDATE_LINES"]
 RECONDUCTOR_LINES = myinputs["RECONDUCTOR_LINES"]
 lines_to_keep = sample(CANDIDATE_LINES, 40, replace=false, ordered=true)
 for i in [241, 242, 243, 244, 245, 246]
-    push!(lines_to_keep, i)
+    if !(i in lines_to_keep)
+        push!(lines_to_keep, i)
+    end
 end
 println("LINES TO KEEP ARE: ")
+sort!(lines_to_keep)
 println(lines_to_keep)
 
 lines_to_keep_reconductor = sample(RECONDUCTOR_LINES, 25, replace=false, ordered=true)
