@@ -247,8 +247,8 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
                     for (i, var) in enumerate(avs)
                         sol_map[name(var)] = vals[i]
                     end
-                    op_cost = 0.
-	                return (op_cost=op_cost,zone_cost = zone_cost, emissions = emissions,lambda = lambda,theta_coeff=theta_coeff,feasibility_slack=feasibility_slack, solution_map=sol_map, summation_map=summation_sol_map)
+                    op_cost = objective_value(EP)
+	                return (op_cost=op_cost,zone_cost = zone_cost, emissions = emissions,lambda = lambda,theta_coeff=theta_coeff,feasibility_slack=feasibility_slack, solution_map=sol_map, summation_map=summation_sol_map, has_duals = false, cut_value = 0.)
                 elseif !has_values(EP)
                     error("NO SOLUTIONS COMPUTED!")
                 end
@@ -308,7 +308,7 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
         sol_map[name(var)] = vals[i]
     end
     
-	return (op_cost=op_cost,zone_cost = zone_cost, emissions = emissions,lambda = lambda,theta_coeff=theta_coeff,feasibility_slack=feasibility_slack, solution_map=sol_map, summation_map=summation_sol_map)
+	return (op_cost=op_cost,zone_cost = zone_cost, emissions = emissions,lambda = lambda,theta_coeff=theta_coeff,feasibility_slack=feasibility_slack, solution_map=sol_map, summation_map=summation_sol_map, has_duals=true, cut_value = op_cost)
 
 end
 

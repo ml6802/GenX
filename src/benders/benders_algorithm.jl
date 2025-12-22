@@ -89,7 +89,7 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 	feasibility_hist = Float64[];
 
 	planning_sol_best = deepcopy(planning_sol);
-	build_decisions = zeros(length(planning_problem[:vNEW_TRANS_CAP_DECISION_INT]))
+	# build_decisions = zeros(length(planning_problem[:vNEW_TRANS_CAP_DECISION_INT]))
 
     #### Run Benders iterations
     for k = 0:MaxIter
@@ -296,28 +296,28 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 
     end
     
-    build_indices = findall(x -> x > 0.5, build_decisions)
-	@info "Lines built: " build_indices
-	@info "Number of lines built: " length(build_indices)
+    #build_indices = findall(x -> x > 0.5, build_decisions)
+	#@info "Lines built: " build_indices
+	#@info "Number of lines built: " length(build_indices)
 
 	#@info "Theta: " Vector(value.(planning_problem[:vTHETA]))
 
 	#cap_builds = findall(x -> x > 0.1, Vector(value.(planning_problem[:vCAP])))
 	#@info "vCAP Builds: " cap_builds
 
-	return (planning_problem=planning_problem,planning_sol = planning_sol_best,operational_sol = subop_sol,LB_hist = LB_hist,UB_hist = UB_hist,cpu_time = cpu_time,feasibility_hist = feasibility_hist, build_decisions = build_decisions)
+	return (planning_problem=planning_problem,planning_sol = planning_sol_best,operational_sol = subop_sol,LB_hist = LB_hist,UB_hist = UB_hist,cpu_time = cpu_time,feasibility_hist = feasibility_hist)#, build_decisions = build_decisions)
 end
 
 function update_planning_problem_multi_cuts!(EP::Model,subop_sol::Dict,planning_sol::NamedTuple,planning_variables_sub::Dict)
     
 	W = keys(subop_sol);
 
-    @constraint(EP,[w in W],subop_sol[w].theta_coeff*EP[:vTHETA][w] >= subop_sol[w].op_cost + sum(subop_sol[w].lambda[i]*(variable_by_name(EP,planning_variables_sub[w][i]) - planning_sol.values[planning_variables_sub[w][i]]) for i in 1:length(planning_variables_sub[w])));
+    @constraint(EP,[w in W],subop_sol[w].theta_coeff*EP[:vTHETA][w] >= subop_sol[w].cut_value + sum(subop_sol[w].lambda[i]*(variable_by_name(EP,planning_variables_sub[w][i]) - planning_sol.values[planning_variables_sub[w][i]]) for i in 1:length(planning_variables_sub[w])));
 end
 
 function update_planning_problem_aggregated_cuts!(EP::Model,subop_sol::Dict,planning_sol::NamedTuple,planning_variables_sub::Dict)
     
 	W = keys(subop_sol);
 
-    @constraint(EP,subop_sol[1].theta_coeff*EP[:vTHETA][1] >= sum(subop_sol[w].op_cost + sum(subop_sol[w].lambda[i]*(variable_by_name(EP,planning_variables_sub[w][i]) - planning_sol.values[planning_variables_sub[w][i]]) for i in 1:length(planning_variables_sub[w])) for w in W));
+    @constraint(EP,subop_sol[1].theta_coeff*EP[:vTHETA][1] >= sum(subop_sol[w].cut_value + sum(subop_sol[w].lambda[i]*(variable_by_name(EP,planning_variables_sub[w][i]) - planning_sol.values[planning_variables_sub[w][i]]) for i in 1:length(planning_variables_sub[w])) for w in W));
 end
