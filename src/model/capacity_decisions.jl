@@ -176,7 +176,7 @@ function transmission_capacity_decisions!(EP, inputs::Dict, setup::Dict)
     if NetworkExpansion == 1
         if setup["IntegerInvestments"] == 1 && setup["DC_OPF"] == 0
             # Transmission network capacity reinforcements per line, integer
-            @variable(EP, vNEW_TRANS_LINES[l in CANDIDATE_LINES] in Int, lower_bound=0)
+            @variable(EP, vNEW_TRANS_LINES[l in CANDIDATE_LINES], Int, lower_bound=0)
         elseif setup["DC_OPF"] == 1
             if setup["SOS1"] == 1
                 @variable(EP, vZ_SOS1_VAR[l in CANDIDATE_LINES, i in 1:(1+inputs["Max_Trans_Cap"][l])] in Parameter(0)) #SOS1 variable
