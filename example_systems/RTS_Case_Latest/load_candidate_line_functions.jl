@@ -247,8 +247,8 @@ function add_om_costs(p)
     end
 end
 
-# inv_cost_dict = Dict("CC" => 144000, "CT" => 130000, "STEAM" => 441000, "NUCLEAR" => 830000, "PV" => 120000, "CSP" => 347000, "WIND" => 160000)
-inv_cost_dict = Dict("CC" => 144000, "CT" => 130000, "STEAM" => 441000, "NUCLEAR" => 830000, "PV" => 84000, "CSP" => 347000, "WIND" => 160000)
+inv_cost_dict = Dict("CC" => 144000, "CT" => 130000, "STEAM" => 441000, "NUCLEAR" => 830000, "PV" => 120000, "CSP" => 347000, "WIND" => 160000)
+# inv_cost_dict = Dict("CC" => 144000, "CT" => 130000, "STEAM" => 441000, "NUCLEAR" => 830000, "PV" => 84000, "CSP" => 347000, "WIND" => 160000)
 
 function update_fuel_and_investment_costs(myinputs)
     myinputs["fuel_costs"]
