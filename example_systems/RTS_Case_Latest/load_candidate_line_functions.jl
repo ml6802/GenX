@@ -358,7 +358,7 @@ end
 
 
 function scale_inputs(inputs::Dict, scale_factor = GenX.ModelScalingFactor)
-    keys_to_scale = ["pD", "pC_D_curtail", "pTrans_Max_Possible", "pMax_Line_Reinforcement", "pMax_D_Curtail", "pC_Line_Reconductor_High", "pC_Line_Reconductor_Low", "pC_Line_Reinforcement", "Line_Reinforcement_Cap_Size", "pTrans_Max"]
+    keys_to_scale = ["pD", "pC_D_curtail", "pTrans_Max_Possible", "pMax_Line_Reinforcement", "pMax_D_Curtail", "pC_Line_Reconductor_High", "pC_Line_Reconductor_Low", "pC_Line_Reinforcement", "Line_Reinforcement_Cap_Size", "pTrans_Max", "C_Start"]
     
     for k in keys_to_scale
         if haskey(inputs, k)
