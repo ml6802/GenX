@@ -112,7 +112,7 @@ function reset_subproblem_to_bilinear(EP::Model, inputs::Dict)
 
     CANNOT_RETIRE_LINES = inputs["CANNOT_RETIRE_LINES"]
     CAN_RETIRE_LINES = inputs["CAN_RETIRE_LINES"]
-    
+    CANDIDATE_LINES = inputs["CANDIDATE_LINES"]
     existing_to_cand_map = inputs["existing_to_cand_map"]
     T = inputs["H"]
     Z = inputs["Z"]
