@@ -169,7 +169,7 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 
         flush(stdout)
 		
-        if (UB-LB)/abs(LB) <= ConvTol || (integer_routine_flag && k == 250) || (warmstart_bilinear_routine && k == 10)
+        if (UB-LB)/abs(LB) <= ConvTol || (integer_routine_flag && k == 250) || (warmstart_bilinear_routine && k == 100)
 			if integer_routine_flag
 				println()
 				println()
