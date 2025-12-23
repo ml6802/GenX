@@ -185,7 +185,7 @@ mysetup = merge(mysetup,mysetup_benders);
 
 mysetup["NetworkExpansion"] = 1
 mysetup["Benders"] = 1
-mysetup["bilinear"] = 1
+mysetup["bilinear"] = 0
 mysetup["DC_OPF"] = 1
 mysetup["IntegerInvestments"] = 1
 mysetup["BD_integer_routine"] = 0
