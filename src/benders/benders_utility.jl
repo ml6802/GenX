@@ -112,14 +112,19 @@ function reset_subproblem_to_bilinear(EP::Model, inputs::Dict)
 
     CANNOT_RETIRE_LINES = inputs["CANNOT_RETIRE_LINES"]
     CAN_RETIRE_LINES = inputs["CAN_RETIRE_LINES"]
-    EXPANSION_LINES = inputs["EXPANSION_LINES"]
+    
     existing_to_cand_map = inputs["existing_to_cand_map"]
     T = inputs["T"]
     Z = inputs["Z"]
     L = inputs["L"]
+    
+    println("NUMBER OF TIME STEPS = ", T)
+    println(EP[:vFLOW])
+    println(EP[:vANGLE])
+    flush(stdout)
 
     println("ADDING CONSTRAINTS")
-    @constraint(EP, #ADD
+    @constraint(EP,
             cPOWER_FLOW_OPF_NONRETIRE_BILINEAR[l in CANNOT_RETIRE_LINES, t = 1:T],
             EP[:vFLOW][l,t]
             ==inputs["pDC_OPF_coeff"][l] *
@@ -127,18 +132,18 @@ function reset_subproblem_to_bilinear(EP::Model, inputs::Dict)
     )
     println("ADDED NONRETIRE CONSTRAINT")
 
-    @constraint(EP, #ADD
+    @constraint(EP,
         cPOWER_FLOW_OPF_RETIRE_BILINEAR[l in CAN_RETIRE_LINES, t = 1:T],
         EP[:vFLOW][l,
             t]==inputs["pDC_OPF_coeff"][l] *
-                sum(inputs["pNet_Map"][l, z] * EP[:vANGLE][z, t] for z in 1:Z) * (1 - EP[:vNEW_TRANS_CAP_DECISION_INT][existing_to_cand_map[l]-L, 1])
+                sum(inputs["pNet_Map"][l, z] * EP[:vANGLE][z, t] for z in 1:Z) * (1 - EP[:vNEW_TRANS_CAP_DECISION_INT][existing_to_cand_map[l]])
     )
     println("ADDED RETIRE CONSTRAINT")
 
-    @constraint(EP,#ADD
-        cCANDFLOW_BILINEAR[l in EXPANSION_LINES, t = 1:T, i in 1:inputs["Max_Trans_Cap"][l]],
-        EP[:vCANDFLOW][l, t, i] == inputs["pDC_OPF_coeff_cand"][l] *
-                    sum(inputs["pNet_Map_cand"][l, z] * EP[:vANGLE][z, t] for z in 1:Z) * EP[:vNEW_TRANS_CAP_DECISION_INT][l, i]
+    @constraint(EP,
+        cCANDFLOW_BILINEAR[l in CANDIDATE_LINES, t = 1:T],
+        EP[:vCANDFLOW][l, t] == inputs["pDC_OPF_coeff_cand"][l] *
+                    sum(inputs["pNet_Map_cand"][l, z] * EP[:vANGLE][z, t] for z in 1:Z) * EP[:vNEW_TRANS_CAP_DECISION_INT][l]
     )
     println("ADDED CANDFLOW CONSTRAINT")
 end
