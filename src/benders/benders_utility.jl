@@ -114,14 +114,9 @@ function reset_subproblem_to_bilinear(EP::Model, inputs::Dict)
     CAN_RETIRE_LINES = inputs["CAN_RETIRE_LINES"]
     
     existing_to_cand_map = inputs["existing_to_cand_map"]
-    T = inputs["T"]
+    T = inputs["H"]
     Z = inputs["Z"]
     L = inputs["L"]
-    
-    println("NUMBER OF TIME STEPS = ", T)
-    println(EP[:vFLOW])
-    println(EP[:vANGLE])
-    flush(stdout)
 
     println("ADDING CONSTRAINTS")
     @constraint(EP,
