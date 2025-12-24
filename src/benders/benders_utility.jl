@@ -137,8 +137,8 @@ function reset_subproblem_to_bilinear(EP::Model, inputs::Dict)
 
     @constraint(EP,
         cCANDFLOW_BILINEAR[l in CANDIDATE_LINES, t = 1:T],
-        EP[:vCANDFLOW][l, t] == inputs["pDC_OPF_coeff_cand"][l] *
-                    sum(inputs["pNet_Map_cand"][l, z] * EP[:vANGLE][z, t] for z in 1:Z) * EP[:vNEW_TRANS_CAP_DECISION_INT][l]
+        EP[:vCANDFLOW][l, t] == inputs["pDC_OPF_coeff"][l] *
+                    sum(inputs["pNet_Map"][l, z] * EP[:vANGLE][z, t] for z in 1:Z) * EP[:vNEW_TRANS_CAP_DECISION_INT][l]
     )
     println("ADDED CANDFLOW CONSTRAINT")
 end
