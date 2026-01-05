@@ -240,7 +240,16 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 				println()
 				println()
 				println()
-				# go through the bilinear problem and 
+
+				println("BEST SOLUTIONS OF THE WATERFLOW MODEL ARE: ")
+
+				for k in keys(planning_sol_best.values)
+					if planning_sol_best.values[k] != 0
+						println(k, "    ", planning_sol_best.values[k])
+					end
+				end
+
+				# go through the bilinear problem and remove slacks and add bilinear variables
 				p_id = workers();
     			np_id = length(p_id);
 				t = @elapsed begin

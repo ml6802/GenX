@@ -119,7 +119,7 @@ load_candidates_base(myinputs, 8784, add_new_corridors = true)
 update_fuel_and_investment_costs(myinputs)
 
 using StatsBase, Random
-Random.seed!(123)
+Random.seed!(234)
 CANDIDATE_LINES = myinputs["CANDIDATE_LINES"]
 RECONDUCTOR_LINES = myinputs["RECONDUCTOR_LINES"]
 lines_to_keep = sample(CANDIDATE_LINES, 40, replace=false, ordered=true)

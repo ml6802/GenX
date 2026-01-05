@@ -55,6 +55,23 @@ for i in 1:length(buses)
     end
 end
 
+cpus_per_task = parse(Int, ENV["SLURM_CPUS_PER_TASK"]);
+addprocs(cpus_per_task)
+println("Adding processors")
+@everywhere begin
+    import Pkg
+    Pkg.activate("/scratch/gpfs/JENKINS/dc0173/git/forked/reconductoring/GenX")
+end
+
+println("Number of procs: ", nprocs())
+println("Number of workers: ", nworkers())
+for i in workers()
+    id, pid, host = fetch(@spawnat i (myid(), getpid(), gethostname()))
+    println(id, " " , pid, " ", host)
+end
+@everywhere using GenX, Distributed
+
+
 # Load in settings
 genx_settings = GenX.get_settings_path(case, "genx_settings.yml") # Settings YAML file path
 writeoutput_settings = GenX.get_settings_path(case, "output_settings.yml") # Write-output settings YAML file path
@@ -115,11 +132,13 @@ myinputs = GenX.load_inputs(mysetup, case, p)
 
 optimizer = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 64800, "MIPGap" => 1e-3)
 
+# Add expected candidate line data
+# also scales demands up by 2x
 load_candidates_base(myinputs, 8784, add_new_corridors = true)
 update_fuel_and_investment_costs(myinputs)
 
 using StatsBase, Random
-Random.seed!(123)
+Random.seed!(456)
 CANDIDATE_LINES = myinputs["CANDIDATE_LINES"]
 RECONDUCTOR_LINES = myinputs["RECONDUCTOR_LINES"]
 lines_to_keep = sample(CANDIDATE_LINES, 40, replace=false, ordered=true)
@@ -136,7 +155,9 @@ lines_to_keep_reconductor = sample(RECONDUCTOR_LINES, 25, replace=false, ordered
 myinputs["RECONDUCTOR_LINES"] = lines_to_keep_reconductor
 
 GenX.filter_candidate_lines(myinputs, lines_to_keep)
+
 println("NUMBER OF POSSIBLE LINE RETIREMENTS: ", length(myinputs["CAN_RETIRE_LINES"]))
+
 
 # Run TDR
 TDR_params = Dict("MinPeriods" => 16, "MaxPeriods" => 16, "UseExtremePeriods" => 1)
@@ -145,7 +166,7 @@ cluster_inputs(case, settings_path, mysetup; inputs = myinputs, TDR_params = TDR
 GenX.expand_new_cap_resources_to_nodal!(myinputs, mysetup, p, "")
 
 mysetup["IntegerInvestments"] = 1
-mysetup["DC_OPF"] = 1
+mysetup["DC_OPF"] = 0
 mysetup["NetworkExpansion"] = 1
 
 if haskey(mysetup, "IntegerInvestments")
@@ -157,14 +178,33 @@ if haskey(mysetup, "IntegerInvestments")
     end
 end
 
-m = GenX.generate_model(mysetup, myinputs, optimizer)
+benders_settings_path = GenX.get_settings_path(case, "benders_settings.yml")
+mysetup_benders = GenX.configure_benders(benders_settings_path) 
+mysetup = merge(mysetup,mysetup_benders);
 
-optimize!(m)
 
-for v in m[:vNEW_TRANS_CAP_DECISION_INT]
-    println(v, "   ", value(v))
-end
+mysetup["NetworkExpansion"] = 1
+mysetup["Benders"] = 1
+mysetup["bilinear"] = 0
+mysetup["DC_OPF"] = 1
+mysetup["IntegerInvestments"] = 1
+mysetup["BD_integer_routine"] = 0
+mysetup["BD_cap_integer_routine"] = 0
+mysetup["BD_warmstart_bilinear"] = 1
+mysetup["unfix_slacks"] = 1
 
-for v in m[:vCAP]
-    println(v, "   ", value(v))
+
+myinputs_decomp = GenX.separate_inputs_subperiods(myinputs);
+benders_inputs = GenX.generate_benders_inputs(mysetup,myinputs,myinputs_decomp)
+
+planning_problem1, planning_sol1, operational_sol1, LB_hist1,UB_hist1, cpu_time1,feasibility_hist1 = GenX.benders(benders_inputs,mysetup,myinputs);
+
+
+println("RUNNING 1 Month")
+# println(operational_sol1.summation_map)
+
+for i in keys(planning_sol1.values)
+    if planning_sol1.values[i] != 0
+        println(i, " = ", planning_sol1.values[i])
+    end
 end
