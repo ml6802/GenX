@@ -300,20 +300,18 @@ for (i, idx) in enumerate(new_cap)
     fix(m[:vCAP][idx], new_cap_sizes[i], force = true)
 end
 
-for i in myinputs["RECONDUCTOR_LINES"]
-    if !(i in r_low)
-        fix(m[:vRECONDUCTOR_SLACK_LOW][i], 0, force = true)
-    end
-    if !(i in r_high)
-        fix(m[:vRECONDUCTOR_SLACK_HIGH][i], 0, force = true)
-    end
+for var in m[:vRECONDUCTOR_SLACK_LOW]
+    fix(var, 0, force = true)
+end
+for var in m[:vRECONDUCTOR_SLACK_HIGH]
+    fix(var, 0, force = true)
 end
 
-for (i, idx) in r_low
+for (i, idx) in enumerate(r_low)
     fix(m[:vRECONDUCTOR_SLACK_LOW][idx], r_low_sizes[i], force = true)
 end
 
-for (i, idx) in r_high
+for (i, idx) in enumerate(r_high)
     fix(m[:vRECONDUCTOR_SLACK_HIGH][idx], r_high_sizes[i], force = true)
 end
 
@@ -355,20 +353,18 @@ for (i, idx) in enumerate(new_cap)
     fix(m[:vCAP][idx], new_cap_sizes[i], force = true)
 end
 
-for i in myinputs["RECONDUCTOR_LINES"]
-    if !(i in r_low)
-        fix(m[:vRECONDUCTOR_SLACK_LOW][i], 0, force = true)
-    end
-    if !(i in r_high)
-        fix(m[:vRECONDUCTOR_SLACK_HIGH][i], 0, force = true)
-    end
+for var in m[:vRECONDUCTOR_SLACK_LOW]
+    fix(var, 0, force = true)
+end
+for var in m[:vRECONDUCTOR_SLACK_HIGH]
+    fix(var, 0, force = true)
 end
 
-for (i, idx) in r_low
+for (i, idx) in enumerate(r_low)
     fix(m[:vRECONDUCTOR_SLACK_LOW][idx], r_low_sizes[i], force = true)
 end
 
-for (i, idx) in r_high
+for (i, idx) in enumerate(r_high)
     fix(m[:vRECONDUCTOR_SLACK_HIGH][idx], r_high_sizes[i], force = true)
 end
 
@@ -411,20 +407,18 @@ for (i, idx) in enumerate(new_cap)
     fix(m[:vCAP][idx], new_cap_sizes[i], force = true)
 end
 
-for i in myinputs["RECONDUCTOR_LINES"]
-    if !(i in r_low)
-        fix(m[:vRECONDUCTOR_SLACK_LOW][i], 0, force = true)
-    end
-    if !(i in r_high)
-        fix(m[:vRECONDUCTOR_SLACK_HIGH][i], 0, force = true)
-    end
+for var in m[:vRECONDUCTOR_SLACK_LOW]
+    fix(var, 0, force = true)
+end
+for var in m[:vRECONDUCTOR_SLACK_HIGH]
+    fix(var, 0, force = true)
 end
 
-for (i, idx) in r_low
+for (i, idx) in enumerate(r_low)
     fix(m[:vRECONDUCTOR_SLACK_LOW][idx], r_low_sizes[i], force = true)
 end
 
-for (i, idx) in r_high
+for (i, idx) in enumerate(r_high)
     fix(m[:vRECONDUCTOR_SLACK_HIGH][idx], r_high_sizes[i], force = true)
 end
 
@@ -466,20 +460,19 @@ for (i, idx) in enumerate(new_cap)
     fix(m[:vCAP][idx], new_cap_sizes[i], force = true)
 end
 
-for i in myinputs["RECONDUCTOR_LINES"]
-    if !(i in r_low)
-        fix(m[:vRECONDUCTOR_SLACK_LOW][i], 0, force = true)
-    end
-    if !(i in r_high)
-        fix(m[:vRECONDUCTOR_SLACK_HIGH][i], 0, force = true)
-    end
+
+for var in m[:vRECONDUCTOR_SLACK_LOW]
+    fix(var, 0, force = true)
+end
+for var in m[:vRECONDUCTOR_SLACK_HIGH]
+    fix(var, 0, force = true)
 end
 
-for (i, idx) in r_low
+for (i, idx) in enumerate(r_low)
     fix(m[:vRECONDUCTOR_SLACK_LOW][idx], r_low_sizes[i], force = true)
 end
 
-for (i, idx) in r_high
+for (i, idx) in enumerate(r_high)
     fix(m[:vRECONDUCTOR_SLACK_HIGH][idx], r_high_sizes[i], force = true)
 end
 
@@ -524,20 +517,19 @@ for (i, idx) in enumerate(new_cap)
     fix(m[:vCAP][idx], new_cap_sizes[i], force = true)
 end
 
-for i in myinputs["RECONDUCTOR_LINES"]
-    if !(i in r_low)
-        fix(m[:vRECONDUCTOR_SLACK_LOW][i], 0, force = true)
-    end
-    if !(i in r_high)
-        fix(m[:vRECONDUCTOR_SLACK_HIGH][i], 0, force = true)
-    end
+
+for var in m[:vRECONDUCTOR_SLACK_LOW]
+    fix(var, 0, force = true)
+end
+for var in m[:vRECONDUCTOR_SLACK_HIGH]
+    fix(var, 0, force = true)
 end
 
-for (i, idx) in r_low
+for (i, idx) in enumerate(r_low)
     fix(m[:vRECONDUCTOR_SLACK_LOW][idx], r_low_sizes[i], force = true)
 end
 
-for (i, idx) in r_high
+for (i, idx) in enumerate(r_high)
     fix(m[:vRECONDUCTOR_SLACK_HIGH][idx], r_high_sizes[i], force = true)
 end
 
@@ -580,20 +572,19 @@ for (i, idx) in enumerate(new_cap)
     fix(m[:vCAP][idx], new_cap_sizes[i], force = true)
 end
 
-for i in myinputs["RECONDUCTOR_LINES"]
-    if !(i in r_low)
-        fix(m[:vRECONDUCTOR_SLACK_LOW][i], 0, force = true)
-    end
-    if !(i in r_high)
-        fix(m[:vRECONDUCTOR_SLACK_HIGH][i], 0, force = true)
-    end
+
+for var in m[:vRECONDUCTOR_SLACK_LOW]
+    fix(var, 0, force = true)
+end
+for var in m[:vRECONDUCTOR_SLACK_HIGH]
+    fix(var, 0, force = true)
 end
 
-for (i, idx) in r_low
+for (i, idx) in enumerate(r_low)
     fix(m[:vRECONDUCTOR_SLACK_LOW][idx], r_low_sizes[i], force = true)
 end
 
-for (i, idx) in r_high
+for (i, idx) in enumerate(r_high)
     fix(m[:vRECONDUCTOR_SLACK_HIGH][idx], r_high_sizes[i], force = true)
 end
 
@@ -638,20 +629,19 @@ for (i, idx) in enumerate(new_cap)
     fix(m[:vCAP][idx], new_cap_sizes[i], force = true)
 end
 
-for i in myinputs["RECONDUCTOR_LINES"]
-    if !(i in r_low)
-        fix(m[:vRECONDUCTOR_SLACK_LOW][i], 0, force = true)
-    end
-    if !(i in r_high)
-        fix(m[:vRECONDUCTOR_SLACK_HIGH][i], 0, force = true)
-    end
+
+for var in m[:vRECONDUCTOR_SLACK_LOW]
+    fix(var, 0, force = true)
+end
+for var in m[:vRECONDUCTOR_SLACK_HIGH]
+    fix(var, 0, force = true)
 end
 
-for (i, idx) in r_low
+for (i, idx) in enumerate(r_low)
     fix(m[:vRECONDUCTOR_SLACK_LOW][idx], r_low_sizes[i], force = true)
 end
 
-for (i, idx) in r_high
+for (i, idx) in enumerate(r_high)
     fix(m[:vRECONDUCTOR_SLACK_HIGH][idx], r_high_sizes[i], force = true)
 end
 
@@ -695,20 +685,19 @@ for (i, idx) in enumerate(new_cap)
     fix(m[:vCAP][idx], new_cap_sizes[i], force = true)
 end
 
-for i in myinputs["RECONDUCTOR_LINES"]
-    if !(i in r_low)
-        fix(m[:vRECONDUCTOR_SLACK_LOW][i], 0, force = true)
-    end
-    if !(i in r_high)
-        fix(m[:vRECONDUCTOR_SLACK_HIGH][i], 0, force = true)
-    end
+
+for var in m[:vRECONDUCTOR_SLACK_LOW]
+    fix(var, 0, force = true)
+end
+for var in m[:vRECONDUCTOR_SLACK_HIGH]
+    fix(var, 0, force = true)
 end
 
-for (i, idx) in r_low
+for (i, idx) in enumerate(r_low)
     fix(m[:vRECONDUCTOR_SLACK_LOW][idx], r_low_sizes[i], force = true)
 end
 
-for (i, idx) in r_high
+for (i, idx) in enumerate(r_high)
     fix(m[:vRECONDUCTOR_SLACK_HIGH][idx], r_high_sizes[i], force = true)
 end
 
