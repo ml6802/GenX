@@ -151,7 +151,7 @@ cluster_inputs(case, settings_path, mysetup; inputs = myinputs, TDR_params = TDR
 GenX.expand_new_cap_resources_to_nodal!(myinputs, mysetup, p, "")
 
 mysetup["IntegerInvestments"] = 1
-mysetup["DC_OPF"] = 0
+mysetup["DC_OPF"] = 1
 mysetup["NetworkExpansion"] = 1
 
 if haskey(mysetup, "IntegerInvestments")
