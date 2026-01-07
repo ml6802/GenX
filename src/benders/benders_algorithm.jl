@@ -169,14 +169,14 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 
         flush(stdout)
 		
-        if (UB-LB)/abs(LB) <= ConvTol || (integer_routine_flag && k == 250) || (warmstart_bilinear_routine && k == 100)
+        if (UB-LB)/abs(LB) <= ConvTol || (integer_routine_flag && k == 250) || (warmstart_bilinear_routine && k == 200)
 			if integer_routine_flag
 				println()
 				println()
 				println()
 				println()
 				println()
-				println("*** Switching on integer constraints *** ")
+				println("*** Switching on integer constra	ints *** ")
 				println()
 				println()  
 				println()
@@ -226,7 +226,7 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 				set_integer.(integer_variables)
 				LB = planning_sol.LB;
 				planning_sol_best = deepcopy(planning_sol);
-				integer_routine_flag = false;
+				cap_integer_routine = false;
 				#return (planning_problem=planning_problem,planning_sol = planning_sol_best,operational_sol = subop_sol,LB_hist = LB_hist,UB_hist = UB_hist,cpu_time = cpu_time,feasibility_hist = feasibility_hist, build_decisions = build_decisions)
 			elseif warmstart_bilinear_routine
 				println()
