@@ -62,6 +62,25 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 		cap_integer_routine = false
 	end
 
+	if haskey(setup, "BD_warmstart_bigM_maxiter")
+		BD_warmstart_bigM_maxiter = setup["BD_warmstart_bigM_maxiter"]
+	else
+		BD_warmstart_bigM_maxiter = 200
+	end
+
+	if haskey(setup, "BD_warmstart_bilinear_maxiter")
+		BD_warmstart_bilinear_maxiter = setup["BD_warmstart_bilinear_maxiter"]
+	else
+		BD_warmstart_bilinear_maxiter = 200
+	end
+
+	if haskey(setup, "BD_integer_routine_maxiter")
+		BD_integer_routine_maxiter = setup["BD_integer_routine_maxiter"]
+	else
+		BD_integer_routine_maxiter = 250
+	end
+
+
 	#integer_routine_flag = false
 	if integer_routine_flag# && stab_method != "off"
 		all_planning_variables = all_variables(planning_problem);
@@ -178,7 +197,7 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 
         flush(stdout)
 		
-        if (UB-LB)/abs(LB) <= ConvTol || (integer_routine_flag && k == 250) || (warmstart_bilinear_routine && k == 200) || (warmstart_linear_routine && k == 200)
+        if (UB-LB)/abs(LB) <= ConvTol || (integer_routine_flag && k == BD_integer_routine_maxiter) || (warmstart_bilinear_routine && k == BD_warmstart_bilinear_maxiter) || (warmstart_linear_routine && k == BD_warmstart_bigM_maxiter)
 			if integer_routine_flag
 				println()
 				println()

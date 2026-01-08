@@ -188,13 +188,14 @@ mysetup["Benders"] = 1
 mysetup["bilinear"] = 0
 mysetup["DC_OPF"] = 1
 mysetup["IntegerInvestments"] = 1
-mysetup["BD_integer_routine"] = 0
+mysetup["BD_integer_routine"] = 1
 mysetup["BD_cap_integer_routine"] = 0
 mysetup["BD_warmstart_bilinear"] = 0
 mysetup["BD_warmstart_bigM"] = 1
-mysetup["unfix_slacks"] = 1
-mysetup["BD_MaxIter"] = 600
-
+mysetup["unfix_slacks"] = 1 
+mysetup["BD_MaxIter"] = 1000
+mysetup["BD_warmstart_bigM_maxiter"] = 700
+mysetup["BD_integer_routine_maxiter"] = 500
 
 myinputs_decomp = GenX.separate_inputs_subperiods(myinputs);
 benders_inputs = GenX.generate_benders_inputs(mysetup,myinputs,myinputs_decomp)
