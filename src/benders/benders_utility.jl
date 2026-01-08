@@ -142,3 +142,30 @@ function reset_subproblem_to_bilinear(EP::Model, inputs::Dict)
     )
     println("ADDED CANDFLOW CONSTRAINT")
 end
+
+function reset_subproblem_vector_to_linear(subproblems::Vector{Dict{Any,Any}}, inputs)
+    for m in subproblems
+        EP = m["Model"]
+        reset_subproblem_to_linear(EP, inputs)
+    end
+end
+
+function reset_subproblem_to_linear(EP::Model, inputs::Dict)
+    #syms_to_delete = [:slack_vFLOW, :slackup_vFLOW, :slackdown_vFLOW, :slackup_vCANDFLOW, :slackdown_vCANDFLOW, :cPOWER_FLOW_OPF_NONRETIRE, :cPOWER_FLOW_OPF_RETIRE_FORWARD, :cPOWER_FLOW_OPF_RETIRE_REVERSE, :cPOWER_FLOW_OPF_EXPANSION_FORWARD, :cPOWER_FLOW_OPF_EXPANSION_REVERSE, :cCAN_RETIRE_UPPER_LIMIT, :cCAN_RETIRE_LOWER_LIMIT]
+    
+    for var in EP[:slack_vFLOW]
+        fix(var, 0, force = true)
+    end
+    for var in EP[:slackup_vFLOW]
+        fix(var, 0, force = true)
+    end
+    for var in EP[:slackdown_vFLOW]
+        fix(var, 0, force = true)
+    end
+    for var in EP[:slackup_vCANDFLOW]
+        fix(var, 0, force = true)
+    end
+    for var in EP[:slackdown_vCANDFLOW]
+        fix(var, 0, force = true)
+    end
+end

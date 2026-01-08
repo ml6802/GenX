@@ -40,6 +40,15 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 		warmstart_bilinear_routine = false
 	end
 
+	if !haskey(setup, "BD_warmstart_bigM")
+		setup["BD_warmstart_bigM"] = 0
+		warmstart_linear_routine = false
+	elseif setup["BD_warmstart_bigM"] == 1
+		warmstart_linear_routine = true
+	else
+		warmstart_linear_routine = false
+	end
+
 	if !haskey(setup, "BD_cap_integer_routine")
 		setup["BD_cap_integer_routine"] = 0
 		cap_integer_routine = false
@@ -169,7 +178,7 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 
         flush(stdout)
 		
-        if (UB-LB)/abs(LB) <= ConvTol || (integer_routine_flag && k == 250) || (warmstart_bilinear_routine && k == 200)
+        if (UB-LB)/abs(LB) <= ConvTol || (integer_routine_flag && k == 250) || (warmstart_bilinear_routine && k == 200) || (warmstart_linear_routine && k == 200)
 			if integer_routine_flag
 				println()
 				println()
@@ -261,6 +270,41 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 				solver_start_time = solver_start_time + t
 				UB = Inf
 				warmstart_bilinear_routine = false
+				stab_method = "off"
+
+			elseif warmstart_linear_routine
+				println()
+				println()
+				println()
+				println()
+				println()
+				println("RUNNING LINEAR WARMSTART ROUTINE")
+				println()
+				println()
+				println()
+				println()
+				println()
+
+				println("BEST SOLUTIONS OF THE WATERFLOW MODEL ARE: ")
+
+				for k in keys(planning_sol_best.values)
+					if planning_sol_best.values[k] != 0
+						println(k, "    ", planning_sol_best.values[k])
+					end
+				end
+
+				# go through the bilinear problem and remove slacks and add bilinear variables
+				p_id = workers();
+    			np_id = length(p_id);
+				t = @elapsed begin
+    			@sync for k in 1:np_id
+    			    @async @fetchfrom p_id[k] reset_subproblem_vector_to_linear(localpart(subproblems), inputs) #solve_local_subproblem(localpart(EP_subproblems),planning_sol,inputs); ### This is equivalent to fetch(@spawnat p .....)
+    			end
+				end
+				println("TIME TO RESET SUBPROBLEMS WAS ", t / 60, " MINUTES")
+				solver_start_time = solver_start_time + t
+				UB = Inf
+				warmstart_linear_routine = false
 				stab_method = "off"
 			else
 				break
