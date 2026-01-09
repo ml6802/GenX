@@ -345,6 +345,7 @@ function load_network_data!(setup::Dict, p::Portfolio, inputs::Dict)
         error("No transmission technologies found in portfolio. Check if your portfolio has network data loaded.")
     end
 
+    lines = [l for l in lines if !(occursin("new", l.name))]
     # Number of zones in the network
     Z = length(regions)
     inputs["Z"] = Z
@@ -364,6 +365,7 @@ function load_network_data!(setup::Dict, p::Portfolio, inputs::Dict)
         inputs["region_to_index"] = region_to_index
         inputs["index_to_region"] = index_to_region
         inputs["region_to_area"] = region_to_area
+        inputs["index_to_line"] = Dict([i => lines[i].id for i in 1:length(lines)])
 
         # Transmission capacity of the network (in MW)
         inputs["pTrans_Max"] = [PSIP.get_existing_capacity_mw(p, l) for l in lines] / scale_factor  # convert to GW

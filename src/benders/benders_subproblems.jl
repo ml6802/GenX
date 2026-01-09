@@ -189,8 +189,8 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
                 if has_values(EP) && dual_status(EP) == MOI.NO_SOLUTION
                     @warn "No solution with Gurobi; trying Ipopt"
                     set_optimizer(EP, Ipopt.Optimizer)
-                    set_attribute(EP, "hsllib", HSL_jll.libhsl_path)
-                    set_attribute(EP, "linear_solver", "ma57")
+                    # set_attribute(EP, "hsllib", HSL_jll.libhsl_path)
+                    # set_attribute(EP, "linear_solver", "ma57")
                     set_attribute(EP, "max_cpu_time", 3600.)
                     vars = all_variables(EP)
                     idx = EP.ext[:idx][1]

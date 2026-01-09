@@ -1,4 +1,12 @@
 function load_candidates_base(myinputs, T=168)
+
+    L = 120
+    myinputs["L"] = L
+    myinputs["pNet_Map"] = myinputs["pNet_Map"][1:L, :]
+    myinputs["pDC_OPF_coeff"] = myinputs["pDC_OPF_coeff"][1:L]
+    myinputs["pTrans_Max_Possible"] = myinputs["pTrans_Max_Possible"][1:L]
+    myinputs["pTrans_Max"] = myinputs["pTrans_Max"][1:L]
+
     # myinputs["pTrans_Max"] .*= 2
     #myinputs["pD"] .*= 1
     # myinputs["Voll"] .*= 10
@@ -43,7 +51,8 @@ function load_candidates_base(myinputs, T=168)
     existing_to_cand_map = Dict()
 
     Random.seed!(1)
-    for i in 1:length(lines)
+    println(L)
+    for i in 1:L
         #check for reconductoring; 
 
         distance = 60 * rand()
@@ -56,12 +65,12 @@ function load_candidates_base(myinputs, T=168)
             push!(RECONDUCTOR_LINES, i)
             myinputs["pC_Line_Reconductor_Low"][i] = cost .* 0.3
             myinputs["pC_Line_Reconductor_High"][i] = cost .* 0.7
-            myinputs["Line_Reinforcement_Cap_Size"][L_exist + i] *= 1.5
+            #myinputs["Line_Reinforcement_Cap_Size"][L_exist + i] *= 1.5
             myinputs["pDC_OPF_coeff"][L_exist + i] *= 1.5
         else
             push!(CAN_RETIRE_LINES, i)
             existing_to_cand_map[i] = L_exist + i
-            myinputs["Line_Reinforcement_Cap_Size"][L_exist + i] *= 2.5
+            #myinputs["Line_Reinforcement_Cap_Size"][L_exist + i] *= 2.5
             #myinputs["pDC_OPF_coeff"][L_exist + i] *= 2.5
         end
     end

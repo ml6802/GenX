@@ -47,7 +47,6 @@ using PowerNetworkMatrices
 using SparseArrays
 using Logging
 using Ipopt
-import HSL_jll
 import PowerSystems
 import InfrastructureSystems
 using PowerSystemsInvestmentsPortfolios
