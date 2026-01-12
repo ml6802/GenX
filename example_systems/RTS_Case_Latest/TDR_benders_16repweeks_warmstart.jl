@@ -170,6 +170,8 @@ mysetup["BD_integer_routine"] = 0
 mysetup["BD_cap_integer_routine"] = 0
 mysetup["BD_warmstart_bilinear"] = 1
 mysetup["unfix_slacks"] = 1
+mysetup["BD_MaxIter"] = 3000
+mysetup["BD_MaxCpuTime"] = 39600
 
 myinputs_decomp = GenX.separate_inputs_subperiods(myinputs);
 benders_inputs = GenX.generate_benders_inputs(mysetup,myinputs,myinputs_decomp)
