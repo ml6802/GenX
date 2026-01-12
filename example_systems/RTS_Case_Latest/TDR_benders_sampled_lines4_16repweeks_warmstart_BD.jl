@@ -138,7 +138,7 @@ load_candidates_base(myinputs, 8784, add_new_corridors = true)
 update_fuel_and_investment_costs(myinputs)
 
 using StatsBase, Random
-Random.seed!(123)
+Random.seed!(789)
 CANDIDATE_LINES = myinputs["CANDIDATE_LINES"]
 RECONDUCTOR_LINES = myinputs["RECONDUCTOR_LINES"]
 lines_to_keep = sample(CANDIDATE_LINES, 40, replace=false, ordered=true)
@@ -190,7 +190,8 @@ mysetup["DC_OPF"] = 1
 mysetup["IntegerInvestments"] = 1
 mysetup["BD_integer_routine"] = 0
 mysetup["BD_cap_integer_routine"] = 0
-mysetup["BD_warmstart_bilinear"] = 1
+mysetup["BD_warmstart_bilinear"] = 0
+mysetup["BD_warmstart_bigM"] = 1
 mysetup["unfix_slacks"] = 1
 mysetup["BD_MaxIter"] = 3000
 mysetup["BD_MaxCpuTime"] = 43200
