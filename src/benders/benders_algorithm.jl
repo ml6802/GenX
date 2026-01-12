@@ -7,7 +7,7 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 	### A. Jacobson, F. Pecci, N. Sepulveda, Q. Xu, and J. Jenkins, “A computationally efficient Benders decomposition for energy systems planning problems with detailed operations and time-coupling constraints.” INFORMS Journal on Optimization 6(1):32-45. doi: https://doi.org/10.1287/ijoo.2023.0005
 
 	## Start solver time
-	solver_start_time = time()
+	solver_start_time = [time()]
 
     planning_problem = benders_inputs["planning_problem"];
 	planning_variables = benders_inputs["planning_variables"];
@@ -171,7 +171,7 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 		append!(LB_hist,LB)
         append!(UB_hist,UB)
 		append!(feasibility_hist,sum(subop_sol[w].feasibility_slack for w in keys(subop_sol)))
-        append!(cpu_time,time()-solver_start_time)
+        append!(cpu_time,time()-solver_start_time[1])
 
 		if any(subop_sol[w].theta_coeff==0 for w in keys(subop_sol))
 			println("***k = ", k,"      LB = ", LB,"     UB = ", UB,"       Gap = ", (UB-LB)/abs(LB),"       CPU Time = ",cpu_time[end])
@@ -286,7 +286,7 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
     			end
 				end
 				println("TIME TO RESET SUBPROBLEMS WAS ", t / 60, " MINUTES")
-				solver_start_time = solver_start_time + t
+				solver_start_time[1] = solver_start_time[1] - t
 				UB = Inf
 				warmstart_bilinear_routine = false
 				stab_method = "off"
@@ -321,7 +321,7 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
     			end
 				end
 				println("TIME TO RESET SUBPROBLEMS WAS ", t / 60, " MINUTES")
-				solver_start_time = solver_start_time + t
+				solver_start_time[1] = solver_start_time[1] - t
 				UB = Inf
 				warmstart_linear_routine = false
 				stab_method = "off"
