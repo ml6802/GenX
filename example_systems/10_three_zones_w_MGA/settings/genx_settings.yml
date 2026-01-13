@@ -20,5 +20,5 @@ ModelingToGenerateAlternativeIterations: 1
 MultiStage: 0
 MGAMethod: 2
 ClusterMGAVecs: 0
-RelaxBudget: 0.05
+RelaxBudget: 0.005
 WriteOutputs: annual

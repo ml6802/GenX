@@ -82,9 +82,9 @@ function breakout_costs(master_sol::NamedTuple, subop_sol::Dict)
 			elseif cost_name == "CNetworkExp"
 				cost_mat[i,j] = 0.0
 			elseif cost_name == "CTotal"
-				cost_mat[i,j] = subop_sol[1].zone_cost.CTotal[j] + master_sol.zone_inv_cost[j]
+				cost_mat[i,j] = sum(subop_sol[k].zone_cost.CTotal[j] for k in keys(subop_sol)) + master_sol.zone_inv_cost[j]
 			else
-				cost_mat[i,j] = subop_sol[1].zone_cost[Symbol(cost_name)][j]
+				cost_mat[i,j] = sum(subop_sol[k].zone_cost[Symbol(cost_name)][j] for k in keys(subop_sol))
 			end
 			names[i,j] = cost_name * zone
 		end
@@ -295,6 +295,7 @@ function make_benders_results_df(master_sol::NamedTuple, subop_sol::Dict, path::
 	dfResults = dfResults.*ModelScalingFactor
 	
 	costs = gather_costs(master_sol, subop_sol)
+	println("Gathered Costs: ", costs)
 	dfResults[!,:FixedCost] .= costs.investment_costs*ModelScalingFactor^2
 	dfResults[!,:OpCost] .= costs.annual_op_cost*ModelScalingFactor^2
 	dfResults[!,:TotalCost] .= dfResults.FixedCost[1]+dfResults.OpCost[1]
@@ -302,6 +303,7 @@ function make_benders_results_df(master_sol::NamedTuple, subop_sol::Dict, path::
 	dfCosts = breakout_costs(master_sol, subop_sol)
 	dfNse = get_zonal_nse(inputs, inputs_decomp, subop_sol)
 	dfFlow = get_trans_flows(inputs, inputs_decomp, subop_sol)
+	println("Broken out Costs: ", dfCosts)
 
 	add_zone_costs!(costs, dfResults)
 	total_ems, zonal_ems = gather_emissions(inputs_decomp,subop_sol)
