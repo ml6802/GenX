@@ -257,7 +257,7 @@ for k in key_set
 end
 
 # Run TDR
-TDR_params = Dict("MinPeriods" => 16, "MaxPeriods" => 16, "UseExtremePeriods" => 1, "TimeStepsPerRepPeriod" => 72)
+TDR_params = Dict("MinPeriods" => 16, "MaxPeriods" => 16, "UseExtremePeriods" => 1)
 cluster_inputs(case, settings_path, mysetup; inputs = myinputs_copy, TDR_params = TDR_params, random = false)
 
 
