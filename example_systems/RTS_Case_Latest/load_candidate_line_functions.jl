@@ -1,7 +1,7 @@
 function load_candidates_base(myinputs, T=168; demand_scale = 2, add_new_corridors = false)
     # myinputs["pTrans_Max"] .*= 2
     #myinputs["pD"] .*= 1
-    # myinputs["Voll"] .*= 10
+    # myinputs["Voll"] .*= 10   
     myinputs["pTrans_Max"] .*= 1
     #myinputs["pTrans_Max"][[5,23,24,70,75]] .*= 1/70
     L = myinputs["L"]
@@ -110,6 +110,8 @@ function load_candidates_base(myinputs, T=168; demand_scale = 2, add_new_corrido
                     new_line[overall_demand_node] = 1
                     pNet_Map = vcat(pNet_Map, new_line)
                     lines_added[1] += 1
+                    println(overall_next_node)
+                    println(overall_demand_node)
 
                     # Add data...
                     push!(myinputs["pPercent_Loss"], 0)
@@ -119,6 +121,12 @@ function load_candidates_base(myinputs, T=168; demand_scale = 2, add_new_corrido
                     push!(myinputs["Max_Trans_Cap"], 1)
                     push!(myinputs["Line_Reinforcement_Cap_Size"], 500)
                     push!(myinputs["CANDIDATE_LINES"], myinputs["L_exist"] + length(myinputs["CANDIDATE_LINES"]) + 1)
+                    if haskey(myinputs, "pC_Line_Reconductor_Low")
+                        push!(myinputs["pC_Line_Reconductor_Low"], 0)
+                    end
+                    if haskey(myinputs, "pC_Line_Reconductor_High")
+                        push!(myinputs["pC_Line_Reconductor_High"], 0)
+                    end
 
                     if lines_added[1] == 1
                         distance = 50 + rand() * 20
@@ -148,6 +156,7 @@ function load_candidates_base(myinputs, T=168; demand_scale = 2, add_new_corrido
     myinputs["INTERIOR_SUBPERIODS"] = [i for i in 2:myinputs["hours_per_subperiod"]]
     myinputs["T"] = T
     myinputs["pD"] .*= demand_scale
+    myinputs["L"] = myinputs["L_exist"] + myinputs["L_cand"]
 end
 
 function load_no_candidates(myinputs, T=168; demand_scale = 2)
