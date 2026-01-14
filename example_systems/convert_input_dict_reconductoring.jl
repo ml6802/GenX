@@ -207,6 +207,8 @@ function build_single_nodal_input(inputs::Dict, node_to_zone_map::Dict, zone::In
     gen_to_gen_map = Dict{Int, Int}() # maps original generator id to new generator id
 
     nodal_resource_names = Vector{String}()
+    nodal_resource_zones = Vector{String}()
+    nodal_r_zones = Vector()
     generator_list = zone_to_generator_map[zone]
     nodal_inputs["G"] = length(generator_list)
     pP_Max = inputs["pP_Max"]
@@ -220,7 +222,8 @@ function build_single_nodal_input(inputs::Dict, node_to_zone_map::Dict, zone::In
         original_node = g_dict[:zone]
         original_id = g_dict[:id]
         gen_to_gen_map[original_id] = i
-        g_dict[:zone] = node_to_node_map[original_node]
+        new_zone = node_to_node_map[original_node]
+        g_dict[:zone] = new_zone
         g_dict[:id] = i
 
         new_pP_Max_data[i, :] .= pP_Max[original_id, :]
@@ -228,11 +231,15 @@ function build_single_nodal_input(inputs::Dict, node_to_zone_map::Dict, zone::In
         n2g_map[i] = g_idx
         push!(nodal_resources, next_resource)
         push!(nodal_resource_names, resource_name)
+        push!(nodal_resource_zones, resource_name * "_z" * string(new_zone))
+        push!(nodal_r_zones, new_zone)
     end
     nodal_inputs["g2n_map"] = g2n_map
     nodal_inputs["n2g_map"] = n2g_map
     nodal_inputs["RESOURCES"] = nodal_resources
     nodal_inputs["RESOURCE_NAMES"] = nodal_resource_names
+    nodal_inputs["RESOURCE_ZONES"] = nodal_resource_zones
+    nodal_inputs["R_ZONES"] = nodal_r_zones
     nodal_inputs["Z"] = num_nodes
     nodal_inputs["pP_Max"] = new_pP_Max_data
     old_generator_indices = sort(collect(keys(gen_to_gen_map)))
