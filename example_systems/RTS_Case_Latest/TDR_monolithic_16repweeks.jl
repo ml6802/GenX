@@ -113,49 +113,28 @@ end
 
 myinputs = GenX.load_inputs(mysetup, case, p)
 
-optimizer = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 64800, "MIPGap" => 5e-3)
+optimizer = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 64800, "MIPGap" => 1e-3)
 
+# Add expected candidate line data
+# also scales demands up by 2x
 load_candidates_base(myinputs, 8784, add_new_corridors = true)
 update_fuel_and_investment_costs(myinputs)
 
-GenX.expand_new_cap_resources_to_nodal!(myinputs, mysetup, p, "")
-
-
-mysetup["IntegerInvestments"] = 1
-mysetup["DC_OPF"] = 1
-mysetup["NetworkExpansion"] = 1
-
-if haskey(mysetup, "IntegerInvestments")
-    if mysetup["IntegerInvestments"] == 1
-        for i in myinputs["NEW_CAP"]
-            resource = myinputs["RESOURCES"][i]
-            parent(resource)[:cap_size] = 200
-        end
-    end
-end
-
-
-# Build zonal inputs (this is a downscaling step)
-z_inputs = build_zonal_inputs(myinputs, zone_map, 3)
-
-
-if haskey(mysetup, "IntegerInvestments")
-    if mysetup["IntegerInvestments"] == 1
-        for i in myinputs["NEW_CAP"]
-            resource = myinputs["RESOURCES"][i]
-            parent(resource)[:cap_size] = 200
-        end
-    end
-end
-
-n2z_map = zone_map
-num_zones = 3
-# build the nodal inputs
-n_inputs = build_nodal_inputs(myinputs, n2z_map, num_zones)
-
 # Run TDR
 TDR_params = Dict("MinPeriods" => 16, "MaxPeriods" => 16, "UseExtremePeriods" => 1)
-cluster_inputs(case, settings_path, mysetup; inputs = n_inputs[1], TDR_params = TDR_params, random = false)
+cluster_inputs(case, settings_path, mysetup; inputs = myinputs, TDR_params = TDR_params)
+
+GenX.expand_new_cap_resources_to_nodal!(myinputs, mysetup, p, "")
+
+if haskey(mysetup, "IntegerInvestments")
+    if mysetup["IntegerInvestments"] == 1
+        for i in myinputs["NEW_CAP"]
+            resource = myinputs["RESOURCES"][i]
+            parent(resource)[:cap_size] = 200
+        end
+    end
+end
+
 
 mysetup["IntegerInvestments"] = 1
 mysetup["DC_OPF"] = 1

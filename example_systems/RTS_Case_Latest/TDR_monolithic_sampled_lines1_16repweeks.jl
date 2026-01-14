@@ -115,6 +115,8 @@ myinputs = GenX.load_inputs(mysetup, case, p)
 
 optimizer = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 64800, "MIPGap" => 1e-3)
 
+# Add expected candidate line data
+# also scales demands up by 2x
 load_candidates_base(myinputs, 8784, add_new_corridors = true)
 update_fuel_and_investment_costs(myinputs)
 
@@ -144,6 +146,26 @@ cluster_inputs(case, settings_path, mysetup; inputs = myinputs, TDR_params = TDR
 
 GenX.expand_new_cap_resources_to_nodal!(myinputs, mysetup, p, "")
 
+if length(ARGS) > 0
+    if ARGS[1] == "1"
+        Random.seed!(123)
+        CANDIDATE_LINES = myinputs["CANDIDATE_LINES"]
+        RECONDUCTOR_LINES = myinputs["RECONDUCTOR_LINES"]
+        lines_to_keep = sample(CANDIDATE_LINES, 20, replace=false, ordered=true)
+        println("LINES TO KEEP ARE: ")
+        sort!(lines_to_keep)
+        println(lines_to_keep)
+
+        lines_to_keep_reconductor = sample(RECONDUCTOR_LINES, 10, replace=false, ordered=true)
+        myinputs["RECONDUCTOR_LINES"] = lines_to_keep_reconductor
+
+        GenX.filter_candidate_lines(myinputs, lines_to_keep)
+
+        println("NUMBER OF POSSIBLE LINE RETIREMENTS: ", length(myinputs["CAN_RETIRE_LINES"]))
+    end
+end
+
+
 mysetup["IntegerInvestments"] = 1
 mysetup["DC_OPF"] = 1
 mysetup["NetworkExpansion"] = 1
@@ -156,6 +178,15 @@ if haskey(mysetup, "IntegerInvestments")
         end
     end
 end
+
+
+mysetup["IntegerInvestments"] = 1
+mysetup["DC_OPF"] = 1
+mysetup["NetworkExpansion"] = 1
+mysetup["ptdf"] = 0
+mysetup["bilinear"] = 0
+mysetup["Benders"] = 0
+mysetup["unfix_slacks"] = 0
 
 m = GenX.generate_model(mysetup, myinputs, optimizer)
 
