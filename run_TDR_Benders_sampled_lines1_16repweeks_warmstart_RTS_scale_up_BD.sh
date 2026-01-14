@@ -1,10 +1,10 @@
 #!/bin/bash                                              
-#SBATCH --job-name=RTS_TDR_Benders_16repweeks_warmstart_RTS_scale_up_sampledlines1_BD     # create a short name for your job
+#SBATCH --job-name=RTS_TDR_Benders_16repweeks_warmstart_RTS_scale_up_sampledlines1_BD_integer_routine     # create a short name for your job
 #SBATCH --ntasks=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=32       # cpu-cores per task (>1 if multi-threaded tasks)
 #SBATCH --output=slurm-%j.out
-#SBATCH --mem-per-cpu=8G       # memory per cpu-core
+#SBATCH --mem-per-cpu=6G       # memory per cpu-core
 #SBATCH --time=14:30:00          # total run time limit (HH:MM:SS)
 #SBATCH --mail-type=all          # send email when job ends
 #SBATCH --mail-user=dc0173@princeton.edu
