@@ -277,6 +277,7 @@ mysetup["IntegerInvestments"] = 1
 mysetup["BD_integer_routine"] = 0
 mysetup["BD_cap_integer_routine"] = 0
 mysetup["BD_warmstart_bilinear"] = 1
+mysetup["BD_warmstart_bilinear_maxiter"] = 300
 mysetup["unfix_slacks"] = 1
 mysetup["BD_MaxIter"] = 3000
 mysetup["BD_MaxCpuTime"] = 64800
