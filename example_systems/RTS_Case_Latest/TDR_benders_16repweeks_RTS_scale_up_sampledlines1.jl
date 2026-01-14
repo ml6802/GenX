@@ -55,21 +55,21 @@ for i in 1:length(buses)
     end
 end
 
-# cpus_per_task = parse(Int, ENV["SLURM_CPUS_PER_TASK"]);
-# addprocs(cpus_per_task)
-# println("Adding processors")
-# @everywhere begin
-#     import Pkg
-#     Pkg.activate("/scratch/gpfs/JENKINS/dc0173/git/forked/reconductoring/GenX")
-# end
+cpus_per_task = parse(Int, ENV["SLURM_CPUS_PER_TASK"]);
+addprocs(cpus_per_task)
+println("Adding processors")
+@everywhere begin
+    import Pkg
+    Pkg.activate("/scratch/gpfs/JENKINS/dc0173/git/forked/reconductoring/GenX")
+end
 
-# println("Number of procs: ", nprocs())
-# println("Number of workers: ", nworkers())
-# for i in workers()
-#     id, pid, host = fetch(@spawnat i (myid(), getpid(), gethostname()))
-#     println(id, " " , pid, " ", host)
-# end
-# @everywhere using GenX, Distributed
+println("Number of procs: ", nprocs())
+println("Number of workers: ", nworkers())
+for i in workers()
+    id, pid, host = fetch(@spawnat i (myid(), getpid(), gethostname()))
+    println(id, " " , pid, " ", host)
+end
+@everywhere using GenX, Distributed
 
 
 # Load in settings
