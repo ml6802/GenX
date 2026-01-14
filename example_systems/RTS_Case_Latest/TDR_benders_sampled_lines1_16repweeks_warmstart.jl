@@ -165,6 +165,26 @@ cluster_inputs(case, settings_path, mysetup; inputs = myinputs, TDR_params = TDR
 
 GenX.expand_new_cap_resources_to_nodal!(myinputs, mysetup, p, "")
 
+if length(ARGS) > 0
+    if ARGS[1] == "1"
+        Random.seed!(123)
+        CANDIDATE_LINES = myinputs["CANDIDATE_LINES"]
+        RECONDUCTOR_LINES = myinputs["RECONDUCTOR_LINES"]
+        lines_to_keep = sample(CANDIDATE_LINES, 20, replace=false, ordered=true)
+        println("LINES TO KEEP ARE: ")
+        sort!(lines_to_keep)
+        println(lines_to_keep)
+
+        lines_to_keep_reconductor = sample(RECONDUCTOR_LINES, 10, replace=false, ordered=true)
+        myinputs["RECONDUCTOR_LINES"] = lines_to_keep_reconductor
+
+        GenX.filter_candidate_lines(myinputs, lines_to_keep)
+
+        println("NUMBER OF POSSIBLE LINE RETIREMENTS: ", length(myinputs["CAN_RETIRE_LINES"]))
+    end
+end
+
+
 mysetup["IntegerInvestments"] = 1
 mysetup["DC_OPF"] = 0
 mysetup["NetworkExpansion"] = 1
@@ -194,6 +214,7 @@ mysetup["BD_warmstart_bilinear"] = 1
 mysetup["unfix_slacks"] = 1
 mysetup["BD_MaxIter"] = 3000
 mysetup["BD_MaxCpuTime"] = 43200
+mysetup["BD_ConvTol"] = 1e-3
 
 
 myinputs_decomp = GenX.separate_inputs_subperiods(myinputs);
