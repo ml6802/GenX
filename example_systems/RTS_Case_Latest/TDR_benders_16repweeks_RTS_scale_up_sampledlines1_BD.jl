@@ -164,7 +164,7 @@ myinputs_copy = deepcopy(myinputs)
 using Random
 Random.seed!(1234)
 
-pD_data = myinputs_copy["pD"]
+pD_data = deepcopy(myinputs_copy["pD"])
 pD_noise = (rand(size(pD_data)[1], size(pD_data)[2]) .- 0.5) .* 0.05 .+ 1
 pP_data = deepcopy(myinputs_copy["pP_Max"])
 pP_noise = (rand(size(pP_data)[1], size(pP_data)[2]) .- 0.25) .* 0.05 .+ 1
@@ -173,7 +173,7 @@ pD_data = pD_data .* pD_noise
 pP_data = pP_data .* pP_noise
 pP_data[pP_data .> 1] .= 1
 
-myinputs_copy["pD"] = pD_data
+myinputs_copy["pD"] = hcat(myinputs_copy["pD"], pD_data)
 myinputs_copy["pP_Max"] = vcat(myinputs_copy["pP_Max"], pP_data)
 
 pNet_Map = myinputs_copy["pNet_Map"]
@@ -200,7 +200,7 @@ myinputs_copy["L"] = size(new_pNet_Map, 1)
 myinputs_copy["Z"] = size(new_pNet_Map, 2)
 myinputs_copy["L_exist"] = 245
 myinputs_copy["L_cand"] = 252
-key_set = ["Line_Reinforcement_Cap_Size", "pC_Line_Reinforcement", "pDC_OPF_coeff", "Max_Trans_Cap", "Line_Angle_Limit","pTrans_Max", "pC_Line_Reconductor_Low", "pC_Line_Reconductor_High"]
+key_set = ["Line_Reinforcement_Cap_Size", "pC_Line_Reinforcement", "pDC_OPF_coeff", "Max_Trans_Cap", "Line_Angle_Limit","pTrans_Max", "pC_Line_Reconductor_Low", "pC_Line_Reconductor_High", "pPercent_Loss"]
 
 for k in key_set
     if haskey(myinputs_copy, k)
@@ -217,20 +217,22 @@ myinputs_copy["RECONDUCTOR_LINES"] = vcat(myinputs_copy["RECONDUCTOR_LINES"], my
 myinputs_copy["CANDIDATE_LINES"] = [i for i in 246:497]
 myinputs_copy["EXPANSION_LINES"] = deepcopy(myinputs_copy["CANDIDATE_LINES"])
 
-existing_to_cand_map = myinputs_copy["existing_to_cand_map"]
+existing_to_cand_map = deepcopy(myinputs_copy["existing_to_cand_map"])
 
-for k in keys(existing_to_cand_map)
-    key_val = existing_to_cand_map[k]
+for k in keys(myinputs_copy["existing_to_cand_map"])
+    key_val = myinputs_copy["existing_to_cand_map"][k]
     existing_to_cand_map[k] = key_val + 125
     existing_to_cand_map[k + 120] = key_val + 251
 end
 
+myinputs_copy["existing_to_cand_map"] = existing_to_cand_map
 resource_copy = deepcopy(myinputs_copy["RESOURCES"])
 resource_names = deepcopy(myinputs_copy["RESOURCE_NAMES"])
 
 
 myinputs_copy["RESOURCES"] = vcat(myinputs_copy["RESOURCES"], resource_copy)
 myinputs_copy["RESOURCE_NAMES"] = vcat(myinputs_copy["RESOURCE_NAMES"], resource_names)
+myinputs_copy["C_Start"] = vcat(myinputs_copy["C_Start"], myinputs_copy["C_Start"])
 
 G_original = myinputs["G"]
 myinputs_copy["G"] = length(myinputs_copy["RESOURCES"])
