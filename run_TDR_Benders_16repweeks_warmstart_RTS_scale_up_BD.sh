@@ -12,4 +12,4 @@
 module purge
 module load gurobi/12.0.0
 module load julia/1.10.5
-julia -t 32 --project=./ ./example_systems/RTS_Case_Latest/TDR_benders_16repweeks_RTS_scale_up_BD.jl
+julia -t 32 --project=./ ./example_systems/RTS_Case_Latest/TDR_benders_16repweeks_RTS_scale_up_BD.jl 0
