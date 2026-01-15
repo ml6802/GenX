@@ -62,6 +62,18 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 		cap_integer_routine = false
 	end
 
+	if !haskey(setup, "BD_post_warmstart_integer_routine")
+		setup["BD_post_warmstart_integer_routine"] = 0
+		post_warmstart_integer_routine = false
+	elseif setup["BD_post_warmstart_integer_routine"] == 1
+		post_warmstart_integer_routine = true
+		if !(warmstart_bilinear_routine) && !(warmstart_linear_routine)
+			error("post warmstart routine turned on, but no warmstarting is set")
+		end
+	else
+		post_warmstart_integer_routine = false
+	end
+
 	if haskey(setup, "BD_warmstart_bigM_maxiter")
 		BD_warmstart_bigM_maxiter = setup["BD_warmstart_bigM_maxiter"]
 	else
@@ -80,6 +92,11 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 		BD_integer_routine_maxiter = 250
 	end
 
+	if haskey(setup, "BD_post_warmstart_integer_routine_maxiter")
+		BD_post_warmstart_integer_routine_maxiter = setup["BD_post_warmstart_integer_routine_maxiter"]
+	else
+		BD_post_warmstart_integer_routine_maxiter = 300
+	end
 
 	#integer_routine_flag = false
 	if integer_routine_flag# && stab_method != "off"
@@ -91,12 +108,17 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 		set_upper_bound.(binary_variables, 1)
 		set_lower_bound.(binary_variables, 0)
 		integer_routine_flag = true;
+	elseif post_warmstart_integer_routine
+		all_planning_variables = all_variables(planning_problem);
+		integer_variables = all_planning_variables[is_integer.(all_planning_variables)];
+		binary_variables = all_planning_variables[is_binary.(all_planning_variables)]; #APPEND
 	elseif cap_integer_routine
 		all_planning_variables = all_variables(planning_problem);
 		integer_variables = all_planning_variables[is_integer.(all_planning_variables)];
 		unset_integer.(integer_variables)
 	end
 
+	
 	# all_planning_variables = all_variables(planning_problem);
 		# integer_variables = all_planning_variables[is_integer.(all_planning_variables)];
 		# binary_variables = all_planning_variables[is_binary.(all_planning_variables)];
@@ -197,14 +219,14 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 
         flush(stdout)
 		
-        if (UB-LB)/abs(LB) <= ConvTol || (integer_routine_flag && k == BD_integer_routine_maxiter) || (warmstart_bilinear_routine && k == BD_warmstart_bilinear_maxiter) || (warmstart_linear_routine && k == BD_warmstart_bigM_maxiter)
+        if (UB-LB)/abs(LB) <= ConvTol || (integer_routine_flag && k == BD_integer_routine_maxiter) || (warmstart_bilinear_routine && k == BD_warmstart_bilinear_maxiter) || (warmstart_linear_routine && k == BD_warmstart_bigM_maxiter) || (post_warmstart_integer_routine && k == BD_post_warmstart_integer_routine_maxiter)
 			if integer_routine_flag
 				println()
 				println()
 				println()
 				println()
 				println()
-				println("*** Switching on integer constra	ints *** ")
+				println("*** Switching on integer constraints *** ")
 				println()
 				println()  
 				println()
@@ -289,6 +311,20 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 				solver_start_time[1] = solver_start_time[1] - t
 				UB = Inf
 				warmstart_bilinear_routine = false
+
+				if post_warmstart_integer_routine
+					println()
+					println("WARMSTART INTEGER ROUTINE IS ON - RELAXING INTEGERS")
+					println()
+					unset_integer.(integer_variables)
+					unset_binary.(binary_variables)
+					set_upper_bound.(binary_variables, 1)
+					set_lower_bound.(binary_variables, 0)
+				end
+				planning_sol = solve_planning_problem(planning_problem,planning_variables,inputs);
+				LB = planning_sol.LB;
+				planning_sol_best = deepcopy(planning_sol);
+				
 				stab_method = "off"
 
 			elseif warmstart_linear_routine
@@ -324,7 +360,39 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 				solver_start_time[1] = solver_start_time[1] - t
 				UB = Inf
 				warmstart_linear_routine = false
+				if post_warmstart_integer_routine
+					println()
+					println("WARMSTART INTEGER ROUTINE IS ON - RELAXING INTEGERS")
+					println()
+					unset_integer.(integer_variables)
+					unset_binary.(binary_variables)
+					set_upper_bound.(binary_variables, 1)
+					set_lower_bound.(binary_variables, 0)
+				end
 				stab_method = "off"
+				planning_sol = solve_planning_problem(planning_problem,planning_variables,inputs);
+				LB = planning_sol.LB;
+				planning_sol_best = deepcopy(planning_sol);
+			elseif post_warmstart_integer_routine
+				println()
+				println()
+				println()
+				println()
+				println()
+				println("RESETTING BINARY/INTEGER CONSTRAINTS POST WARMSTART")
+				println()
+				println()
+				println()
+				println()
+				println()
+				set_integer.(integer_variables)
+				set_binary.(binary_variables)
+				LB = planning_sol.LB;
+				post_warmstart_integer_routine = false;
+				UB = Inf
+				planning_sol = solve_planning_problem(planning_problem,planning_variables,inputs);
+				LB = planning_sol.LB;
+				planning_sol_best = deepcopy(planning_sol);
 			else
 				break
 			end
