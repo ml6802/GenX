@@ -49,18 +49,18 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 		warmstart_linear_routine = false
 	end
 
-	if !haskey(setup, "BD_cap_integer_routine")
-		setup["BD_cap_integer_routine"] = 0
-		cap_integer_routine = false
-	elseif setup["BD_cap_integer_routine"] == 1
-		if integer_routine_flag == 1
-			cap_integer_routine = false
-		else
-			cap_integer_routine = true
-		end
-	else
-		cap_integer_routine = false
-	end
+	# if !haskey(setup, "BD_cap_integer_routine")
+	# 	setup["BD_cap_integer_routine"] = 0
+	# 	cap_integer_routine = false
+	# elseif setup["BD_cap_integer_routine"] == 1
+	# 	if integer_routine_flag == 1
+	# 		cap_integer_routine = false
+	# 	else
+	# 		cap_integer_routine = true
+	# 	end
+	# else
+	# 	cap_integer_routine = false
+	# end
 
 	if !haskey(setup, "BD_post_warmstart_integer_routine")
 		setup["BD_post_warmstart_integer_routine"] = 0
@@ -112,10 +112,10 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 		all_planning_variables = all_variables(planning_problem);
 		integer_variables = all_planning_variables[is_integer.(all_planning_variables)];
 		binary_variables = all_planning_variables[is_binary.(all_planning_variables)]; #APPEND
-	elseif cap_integer_routine
-		all_planning_variables = all_variables(planning_problem);
-		integer_variables = all_planning_variables[is_integer.(all_planning_variables)];
-		unset_integer.(integer_variables)
+	# elseif cap_integer_routine
+	# 	all_planning_variables = all_variables(planning_problem);
+	# 	integer_variables = all_planning_variables[is_integer.(all_planning_variables)];
+	# 	unset_integer.(integer_variables)
 	end
 
 	
@@ -234,7 +234,7 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 				println()
 				UB = Inf;
 				
-				planning_sol = solve_planning_problem(planning_problem,planning_variables,inputs);
+				#planning_sol = solve_planning_problem(planning_problem,planning_variables,inputs);
 				#if haskey(setup, "print_sols")
 				    # for var in all_variables(planning_problem)
 				    #     if value(var) > 0
@@ -246,37 +246,10 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 				#set_integer.(planning_problem[:vCAP]) #APPENDED after
 				set_integer.(integer_variables)
 				set_binary.(binary_variables)
+				planning_sol = solve_planning_problem(planning_problem,planning_variables,inputs);
 				LB = planning_sol.LB;
 				planning_sol_best = deepcopy(planning_sol);
 				integer_routine_flag = false;
-				#return (planning_problem=planning_problem,planning_sol = planning_sol_best,operational_sol = subop_sol,LB_hist = LB_hist,UB_hist = UB_hist,cpu_time = cpu_time,feasibility_hist = feasibility_hist, build_decisions = build_decisions)
-			elseif cap_integer_routine
-				println()
-				println()
-				println()
-				println()
-				println()
-				println("*** Switching on integer constraints (no binaries)*** ")
-				println()
-				println()  
-				println()
-				println()
-				println()
-				UB = Inf;
-				planning_sol = solve_planning_problem(planning_problem,planning_variables,inputs);
-				#if haskey(setup, "print_sols")
-				    # for var in all_variables(planning_problem)
-				    #     if value(var) > 0
-				    #         println(var, "   ", value(var))
-				    #     end
-				    # end
-				    # return nothing
-				#end
-				#set_integer.(planning_problem[:vCAP]) #APPENDED AFTER
-				set_integer.(integer_variables)
-				LB = planning_sol.LB;
-				planning_sol_best = deepcopy(planning_sol);
-				cap_integer_routine = false;
 				#return (planning_problem=planning_problem,planning_sol = planning_sol_best,operational_sol = subop_sol,LB_hist = LB_hist,UB_hist = UB_hist,cpu_time = cpu_time,feasibility_hist = feasibility_hist, build_decisions = build_decisions)
 			elseif warmstart_bilinear_routine
 				println()
@@ -403,7 +376,6 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 		else
 			if stab_method == "int_level_set"
 				start_stab_method = time()
-				"""
 				if  integer_investment==1 && integer_routine_flag==false
 					unset_integer.(integer_variables)
 					unset_binary.(binary_variables)
@@ -421,11 +393,10 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 					set_binary.(binary_variables)
 					set_lower_bound.(integer_variables,0.0)
 					set_lower_bound.(binary_variables,0.0)
-					"""
-				#else
+				else
                     println("Solving the interior level set problem with γ = $γ")
 					planning_sol = solve_int_level_set_problem(planning_problem,planning_variables,unst_planning_sol,LB,UB,γ,inputs);
-				#end
+				end
 				cpu_stab_method = time()-start_stab_method;
 				println("Solving the interior level set problem required $cpu_stab_method seconds")
 			else

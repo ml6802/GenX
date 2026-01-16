@@ -163,17 +163,18 @@ mysetup = merge(mysetup,mysetup_benders);
 
 mysetup["NetworkExpansion"] = 1
 mysetup["Benders"] = 1
-mysetup["bilinear"] = 0
+mysetup["bilinear"] = 1
 mysetup["DC_OPF"] = 1
 mysetup["IntegerInvestments"] = 1
 mysetup["BD_integer_routine"] = 1
 mysetup["BD_cap_integer_routine"] = 0
 mysetup["BD_warmstart_bilinear"] = 0
-mysetup["BD_warmstart_bilinear_maxiter"] = 1000
-mysetup["BD_integer_routine_maxiter"] = 800
-mysetup["BD_post_warmstart_integer_routine_maxiter"] = 1200
+mysetup["BD_warmstart_bilinear_maxiter"] = 900
+mysetup["BD_integer_routine_maxiter"] = 700
+mysetup["BD_post_warmstart_integer_routine_maxiter"] = 1100
 #mysetup["BD_post_warmstart_integer_routine"] = parse(Int, ARGS[1])
 mysetup["unfix_slacks"] = 0
+mysetup["BD_Stab_Method"] = "int_level_set"
 mysetup["BD_MaxIter"] = 3000
 mysetup["BD_MaxCpuTime"] = 43200
 
