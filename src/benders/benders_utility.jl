@@ -38,7 +38,11 @@ function separate_inputs_subperiods(inputs::Dict)
 		if haskey(inputs,"Period_Map")
 			inputs_all[w]["SubPeriod_Index"] = inputs["Period_Map"].Rep_Period[findfirst(inputs["Period_Map"].Rep_Period_Index.==w)];
 		end
-
+        if haskey(inputs, "node_to_timeseries")
+            for k in keys(inputs["node_to_timeseries"])
+                inputs_all[w]["node_to_timeseries"][k] = inputs["node_to_timeseries"][k][Tw]
+            end
+        end
     end
 
     return inputs_all
