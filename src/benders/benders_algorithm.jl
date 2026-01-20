@@ -376,27 +376,27 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 		else
 			if stab_method == "int_level_set"
 				start_stab_method = time()
-				if  integer_investment==1 && integer_routine_flag==false
-					unset_integer.(integer_variables)
-					unset_binary.(binary_variables)
-					for v in integer_variables
-						fix(v,unst_planning_sol.values[name(v)];force=true)
-					end
-					for v in binary_variables
-						fix(v,unst_planning_sol.values[name(v)];force=true)
-					end
+				# if  integer_investment==1 && integer_routine_flag==false
+				# 	unset_integer.(integer_variables)
+				# 	unset_binary.(binary_variables)
+				# 	for v in integer_variables
+				# 		fix(v,unst_planning_sol.values[name(v)];force=true)
+				# 	end
+				# 	for v in binary_variables
+				# 		fix(v,unst_planning_sol.values[name(v)];force=true)
+				# 	end
+                #     println("Solving the interior level set problem with γ = $γ")
+				# 	planning_sol = solve_int_level_set_problem(planning_problem,planning_variables,unst_planning_sol,LB,UB,γ,inputs);
+				# 	unfix.(integer_variables)
+				# 	unfix.(binary_variables)
+				# 	set_integer.(integer_variables)
+				# 	set_binary.(binary_variables)
+				# 	set_lower_bound.(integer_variables,0.0)
+				# 	set_lower_bound.(binary_variables,0.0)
+				# else
                     println("Solving the interior level set problem with γ = $γ")
 					planning_sol = solve_int_level_set_problem(planning_problem,planning_variables,unst_planning_sol,LB,UB,γ,inputs);
-					unfix.(integer_variables)
-					unfix.(binary_variables)
-					set_integer.(integer_variables)
-					set_binary.(binary_variables)
-					set_lower_bound.(integer_variables,0.0)
-					set_lower_bound.(binary_variables,0.0)
-				else
-                    println("Solving the interior level set problem with γ = $γ")
-					planning_sol = solve_int_level_set_problem(planning_problem,planning_variables,unst_planning_sol,LB,UB,γ,inputs);
-				end
+				# end
 				cpu_stab_method = time()-start_stab_method;
 				println("Solving the interior level set problem required $cpu_stab_method seconds")
 			else
