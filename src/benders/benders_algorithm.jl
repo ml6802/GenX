@@ -298,7 +298,7 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 				LB = planning_sol.LB;
 				planning_sol_best = deepcopy(planning_sol);
 				
-				stab_method = "off"
+				#stab_method = "off"
 
 			elseif warmstart_linear_routine
 				println()
@@ -342,7 +342,7 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 					set_upper_bound.(binary_variables, 1)
 					set_lower_bound.(binary_variables, 0)
 				end
-				stab_method = "off"
+				#stab_method = "off"
 				planning_sol = solve_planning_problem(planning_problem,planning_variables,inputs);
 				LB = planning_sol.LB;
 				planning_sol_best = deepcopy(planning_sol);
