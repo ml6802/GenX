@@ -319,11 +319,11 @@ function fix_planning_variables!(EP::Model,planning_sol::NamedTuple,planning_var
             if planning_sol.values[y] > 0.1
                 #println("Set parameter "*string(vy)*" to value "*string(planning_sol.values[y]))
             end
-            if occursin("CAP", name(vy))
-                set_parameter_value(vy, planning_sol.values[y])
-            else
-                set_parameter_value(vy,Int(round(planning_sol.values[y])))
-            end
+            #if occursin("CAP", name(vy))
+            #    set_parameter_value(vy, planning_sol.values[y])
+            #else
+                set_parameter_value(vy,planning_sol.values[y])
+            # end
             # println(y, "  before: ", planning_sol.values[y], ", after: ", Int(round(planning_sol.values[y])))
             # set_parameter_value(vy,planning_sol.values[y]; force=true)
         else
