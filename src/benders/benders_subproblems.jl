@@ -162,8 +162,6 @@ function solve_local_subproblem(subproblem_local::Vector{Dict{Any,Any}},planning
 end
 
 function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_sub::Vector{String},inputs)
-    println("TRYING TO SOLVE SUBPROBLEM!")
-    flush(stdout)
 	fix_planning_variables!(EP,planning_sol,planning_variables_sub)
 
     new_optimizer = EP.ext[:solver]
@@ -316,21 +314,32 @@ function fix_planning_variables!(EP::Model,planning_sol::NamedTuple,planning_var
 	for y in planning_variables_sub
 		vy = variable_by_name(EP,y);
         if is_parameter(vy)
-            if planning_sol.values[y] > 0.1
-                #println("Set parameter "*string(vy)*" to value "*string(planning_sol.values[y]))
-            end
+
             #if occursin("CAP", name(vy))
             #    set_parameter_value(vy, planning_sol.values[y])
             #else
+            # vCAP and vNEW_TRANS_CAP cannot be less than 0
+            if occursin("CAP", name(vy)) || occursin("TRANS", name(vy))
+                if planning_sol.values[y] < 0
+                    set_parameter_value(vy, 0)
+                else
+                    set_parameter_value(vy,planning_sol.values[y])
+                end
+            else
                 set_parameter_value(vy,planning_sol.values[y])
-            # end
-            # println(y, "  before: ", planning_sol.values[y], ", after: ", Int(round(planning_sol.values[y])))
-            # set_parameter_value(vy,planning_sol.values[y]; force=true)
-        else
-            if planning_sol.values[y] > 0.1
-                #println("Fixed variable "*string(vy)*" to value "*string(planning_sol.values[y]))
             end
-            fix(vy,planning_sol.values[y];force=true)
+        else
+
+            # vCAP and vNEW_TRANS_CAP cannot be less than 0
+            if occursin("CAP", name(vy)) || occursin("TRANS", name(vy))
+                if planning_sol.values[y] < 0
+                    fix(vy, 0; force = true)
+                else
+                    fix(vy,planning_sol.values[y];force=true)
+                end
+            else
+                fix(vy,planning_sol.values[y];force=true)
+            end
         end
 		if is_integer(vy)
 			unset_integer(vy)
