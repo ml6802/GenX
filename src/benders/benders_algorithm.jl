@@ -30,6 +30,12 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 	else
 		integer_routine_flag = false
 	end
+	if !(haskey(setup), "BD_post_warmstart_ConvTol")
+		post_warmstart_ConvTol = ConvTol
+	else
+		post_warmstart_ConvTol = setup["BD_post_warmstart_ConvTol"]
+	end
+
 
 	if !haskey(setup, "BD_warmstart_bilinear")
 		setup["BD_warmstart_bilinear"] = 0
@@ -293,6 +299,8 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 					unset_binary.(binary_variables)
 					set_upper_bound.(binary_variables, 1)
 					set_lower_bound.(binary_variables, 0)
+				else
+					ConvTol = post_warmstart_ConvTol
 				end
 				planning_sol = solve_planning_problem(planning_problem,planning_variables,inputs);
 				LB = planning_sol.LB;
@@ -341,6 +349,8 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 					unset_binary.(binary_variables)
 					set_upper_bound.(binary_variables, 1)
 					set_lower_bound.(binary_variables, 0)
+				else 
+					ConvTol = post_warmstart_ConvTol
 				end
 				#stab_method = "off"
 				planning_sol = solve_planning_problem(planning_problem,planning_variables,inputs);
@@ -366,6 +376,7 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 				planning_sol = solve_planning_problem(planning_problem,planning_variables,inputs);
 				LB = planning_sol.LB;
 				planning_sol_best = deepcopy(planning_sol);
+				ConvTol = post_warmstart_ConvTol
 			else
 				break
 			end

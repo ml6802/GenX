@@ -193,7 +193,7 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
             if !(haskey(EP, :vANGLE))
                 set_optimizer_attribute(EP, "ObjScale", original_obj_scale / 100)
             else
-                set_optimizer_attribute(EP, "ObjScale", original_obj_scale / 1000000)
+                set_optimizer_attribute(EP, "ObjScale", original_obj_scale / 1000)
             end
             optimize!(EP)
             if dual_status(EP) == MOI.NO_SOLUTION
@@ -203,7 +203,7 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
                 if !(haskey(EP, :vANGLE))
                     set_optimizer_attribute(EP, "ObjScale", original_obj_scale * 100)
                 else
-                    set_optimizer_attribute(EP, "ObjScale", original_obj_scale * 100000)
+                    set_optimizer_attribute(EP, "ObjScale", original_obj_scale * 1000)
                 end
                 optimize!(EP)
                 if has_values(EP) && dual_status(EP) == MOI.NO_SOLUTION
@@ -218,7 +218,9 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
                     vars = all_variables(EP)
                     idx = EP.ext[:idx][1]
                     EP.ext[:idx][1] += 1
-                    JuMP.write_to_file(EP, "/scratch/gpfs/JENKINS/dc0173/git/forked/subproblem__$idx.lp")
+                    if i <100
+                        JuMP.write_to_file(EP, "/scratch/gpfs/JENKINS/dc0173/git/forked/subproblem__$idx.lp")
+                    end
                     # for (i, v) in enumerate(vars)
                     #     if !(is_parameter(v))
                     #         set_start_value(vars[i], sols[i])
