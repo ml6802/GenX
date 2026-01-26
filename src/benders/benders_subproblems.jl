@@ -218,7 +218,7 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
                     vars = all_variables(EP)
                     idx = EP.ext[:idx][1]
                     EP.ext[:idx][1] += 1
-                    if i <100
+                    if idx <100
                         JuMP.write_to_file(EP, "/scratch/gpfs/JENKINS/dc0173/git/forked/subproblem__$idx.lp")
                     end
                     # for (i, v) in enumerate(vars)
