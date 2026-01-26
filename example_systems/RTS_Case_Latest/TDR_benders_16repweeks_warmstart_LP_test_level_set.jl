@@ -175,6 +175,8 @@ mysetup["BD_warmstart_bigM_maxiter"] = 700
 mysetup["BD_MaxIter"] = 3000
 mysetup["BD_MaxCpuTime"] = 79200
 mysetup["BD_ConvTol"] = .001
+mysetup["DC_OPF"] = 1
+
 if level_set_bool == 1
     mysetup["BD_Stab_Method"] = "int_level_set"
 else
@@ -183,7 +185,6 @@ end
 
 if bilinear_bool == 1
     mysetup["BD_warmstart_bilinear"] = 1
-    mysetup["DC_OPF"] = 0
     mysetup["unfix_slacks"] = 1
     mysetup["bilinear"] = 0
     mysetup["BD_integer_routine"] = 1
@@ -191,7 +192,6 @@ if bilinear_bool == 1
 else
     mysetup["bilinear"] = 0
     mysetup["BD_warmstart_bigM"] = 1
-    mysetup["DC_OPF"] = 0
     mysetup["unfix_slacks"] = 1
     mysetup["BD_integer_routine"] = 1
     mysetup["BD_post_warmstart_integer_routine"] = 1
