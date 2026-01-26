@@ -30,7 +30,7 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 	else
 		integer_routine_flag = false
 	end
-	if !(haskey(setup), "BD_post_warmstart_ConvTol")
+	if !(haskey(setup, "BD_post_warmstart_ConvTol"))
 		post_warmstart_ConvTol = ConvTol
 	else
 		post_warmstart_ConvTol = setup["BD_post_warmstart_ConvTol"]
