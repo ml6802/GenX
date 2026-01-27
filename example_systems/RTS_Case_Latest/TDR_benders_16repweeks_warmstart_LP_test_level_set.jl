@@ -189,6 +189,7 @@ if bilinear_bool == 1
     mysetup["bilinear"] = 0
     mysetup["BD_integer_routine"] = 1
     mysetup["BD_post_warmstart_integer_routine"] = 1
+    mysetup["BD_post_warmstart_ConvTol"] = 1e-6
 else
     mysetup["bilinear"] = 0
     mysetup["BD_warmstart_bigM"] = 1

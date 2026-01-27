@@ -180,6 +180,7 @@ if bilinear_bool == 1
     mysetup["BD_warmstart_bilinear"] = 1
     mysetup["unfix_slacks"] = 1
     mysetup["bilinear"] = 0
+    mysetup["BD_post_warmstart_ConvTol"] = 1e-6
     if LP_bool == 1
         mysetup["BD_integer_routine"] = 1
         mysetup["BD_post_warmstart_integer_routine"] = 1

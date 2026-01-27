@@ -181,6 +181,7 @@ mysetup["unfix_slacks"] = 0
 
 if bilinear_bool == 1
     mysetup["bilinear"] = 1
+    mysetup["BD_post_warmstart_ConvTol"] = 1e-6
     if warmstart_bool == 1
         mysetup["BD_warmstart_bilinear"] = 1
         mysetup["unfix_slacks"] = 1

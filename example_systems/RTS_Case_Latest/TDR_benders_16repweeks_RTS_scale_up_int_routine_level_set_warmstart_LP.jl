@@ -284,6 +284,7 @@ mysetup["BD_post_warmstart_integer_routine"] = 1
 mysetup["BD_Stab_Method"] = "int_level_set"
 mysetup["unfix_slacks"] = 1
 mysetup["BD_MaxIter"] = 5000
+mysetup["BD_post_warmstart_ConvTol"] = 1e-6
 mysetup["BD_MaxCpuTime"] = 115200
 
 myinputs_decomp = GenX.separate_inputs_subperiods(myinputs_copy);
