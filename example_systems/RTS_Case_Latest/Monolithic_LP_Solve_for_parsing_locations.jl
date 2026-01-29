@@ -62,7 +62,7 @@ mysetup = GenX.configure_settings(genx_settings, writeoutput_settings) # mysetup
 
 # Make sure certain parameters are set
 mysetup["ParameterScale"] = 0
-mysetup["DC_OPF"] = 0
+mysetup["DC_OPF"] = 1
 mysetup["ptdf"] = 0
 mysetup["bilinear"] = 0
 mysetup["disaggregate"] = 0
