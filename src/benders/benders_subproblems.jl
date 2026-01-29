@@ -195,15 +195,20 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
             else
                 set_optimizer_attribute(EP, "ObjScale", original_obj_scale * 100)
             end
-            optimize!(EP)
+            set_optimizer_attribute(EP, "BarHomogeneous", 1)
+            set_optimizer_attribute(EP, "Presolve", 2)
+
+            t = @elapsed optimize!(EP)
+            println("SOLVING ADDITIONAL PROBLEM TOOK ", t, "  SECONDS")
             if dual_status(EP) == MOI.NO_SOLUTION
                 @warn "Dual Status not computed; trying to decrease ObjScale"
                 if !(haskey(EP, :vANGLE))
                     set_optimizer_attribute(EP, "ObjScale", original_obj_scale / 100)
                 else
-                    set_optimizer_attribute(EP, "ObjScale", original_obj_scale / 100)
+                    set_optimizer_attribute(EP, "ObjScale", original_obj_scale / 50)
                 end
-                optimize!(EP)
+                t = @elapsed optimize!(EP)
+                println("SOLVING ADDITIONAL ADDITIONAL PROBLEM TOOK ", t, "  SECONDS")
                 if has_values(EP) && dual_status(EP) == MOI.NO_SOLUTION
                     println("NO SOLUTION WITH GUROBI; TRYING IPOPT")
                     flush(stdout)
@@ -213,10 +218,9 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
                     # set_attribute(EP, "linear_solver", "ma57")
                     # set_attribute(EP, "max_cpu_time", 8000.)
                     # set_attribute(EP, "print_level", 5)
-                    vars = all_variables(EP)
                     idx = EP.ext[:idx][1]
                     EP.ext[:idx][1] += 1
-                    if idx <100
+                    if idx < 10
                         JuMP.write_to_file(EP, "/scratch/gpfs/JENKINS/dc0173/git/forked/subproblem__$idx.lp")
                     end
                     # for (i, v) in enumerate(vars)
