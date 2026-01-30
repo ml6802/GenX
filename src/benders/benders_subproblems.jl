@@ -139,26 +139,33 @@ function solve_dist_subproblems(EP_subproblems::DArray{Dict{Any, Any}, 1, Vector
     np_id = length(p_id);
 
     sub_results = [Dict() for k in 1:np_id];
+    has_duals_indicator = [true for k in 1:np_id]
 
     @sync for k in 1:np_id
-              @async sub_results[k]= @fetchfrom p_id[k] solve_local_subproblem(localpart(EP_subproblems),planning_sol,inputs); ### This is equivalent to fetch(@spawnat p .....)
+              @async sub_results[k], has_duals_indicator[k] = @fetchfrom p_id[k] solve_local_subproblem(localpart(EP_subproblems),planning_sol,inputs); ### This is equivalent to fetch(@spawnat p .....)
+
     end
 
 	sub_results = merge(sub_results...);
+    has_duals = all(has_duals_indicator)
 
-    return sub_results
+    return sub_results, has_duals
 end
 
 function solve_local_subproblem(subproblem_local::Vector{Dict{Any,Any}},planning_sol::NamedTuple,inputs)
 
     local_sol=Dict();
+    has_duals = [true]
     for m in subproblem_local
         EP = m["Model"];
         planning_variables_sub = m["planning_variables_sub"]
         w = m["SubPeriod"];
 		local_sol[w] = solve_subproblem(EP,planning_sol,planning_variables_sub,inputs);
+        if !(local_sol[w].has_duals)
+            has_duals[1] = false
+        end
     end
-    return local_sol
+    return local_sol, has_duals
 end
 
 function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_sub::Vector{String},inputs)

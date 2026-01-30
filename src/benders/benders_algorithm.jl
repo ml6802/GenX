@@ -153,13 +153,13 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 		start_subop_sol = time();
 
         
-        t1 = @elapsed subop_sol = solve_dist_subproblems(subproblems,planning_sol,inputs);
+        t1 = @elapsed subop_sol, has_duals = solve_dist_subproblems(subproblems,planning_sol,inputs);
         println("Time to run distributed subproblems is ", t1 / 60, " minutes")
         
 		cpu_subop_sol = time()-start_subop_sol;
-		@info "Solving the subproblems required $cpu_subop_sol seconds"
-		@info "Investment Cost: " planning_sol.inv_cost
-		@info "Operational Cost: " sum(subop_sol[w].op_cost for w in keys(subop_sol))
+		# @info "Solving the subproblems required $cpu_subop_sol seconds"
+		# @info "Investment Cost: " planning_sol.inv_cost
+		# @info "Operational Cost: " sum(subop_sol[w].op_cost for w in keys(subop_sol))
 
         t2 = @elapsed begin
 		UBnew = sum((subop_sol[w].theta_coeff==0 ? Inf : subop_sol[w].op_cost) for w in keys(subop_sol))+planning_sol.inv_cost;
@@ -168,9 +168,9 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 			UB = UBnew;
 		end
 		end
-		println("Time to copy planning_sol was ", t2 / 60, " minutes")
+		# println("Time to copy planning_sol was ", t2 / 60, " minutes")
 
-		print("Updating the planning problem....")
+		# print("Updating the planning problem....")
 		time_start_update = time()
 
 		if haskey(setup, "multicuts")
@@ -182,7 +182,42 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 		else
 			update_planning_problem_multi_cuts!(planning_problem,subop_sol,planning_sol,planning_variables_sub)
 		end
-		
+
+		if !(has_duals)
+			println("RUNNING INT_LEVEL_SET DUE TO NO SOLUTIONS RECOVERED")
+			flush(stdout)
+			planning_sol = solve_int_level_set_problem(planning_problem,planning_variables,unst_planning_sol,LB,UB,γ,inputs);
+
+			t1 = @elapsed subop_sol, has_duals = solve_dist_subproblems(subproblems,planning_sol,inputs);
+        	println("Time to run distributed subproblems is ", t1 / 60, " minutes")
+			
+			cpu_subop_sol = time()-start_subop_sol;
+			# @info "Solving the subproblems required $cpu_subop_sol seconds"
+			# @info "Investment Cost: " planning_sol.inv_cost
+			# @info "Operational Cost: " sum(subop_sol[w].op_cost for w in keys(subop_sol))
+
+        	t2 = @elapsed begin
+			UBnew = sum((subop_sol[w].theta_coeff==0 ? Inf : subop_sol[w].op_cost) for w in keys(subop_sol))+planning_sol.inv_cost;
+			if UBnew < UB
+				planning_sol_best = deepcopy(planning_sol);
+				UB = UBnew;
+			end
+			end
+			# println("Time to copy planning_sol was ", t2 / 60, " minutes")
+
+			# print("Updating the planning problem....")
+			time_start_update = time()
+
+			if haskey(setup, "multicuts")
+				if setup["multicuts"] == 1
+					update_planning_problem_multi_cuts!(planning_problem,subop_sol,planning_sol,planning_variables_sub)
+				else
+					update_planning_problem_aggregated_cuts!(planning_problem,subop_sol,planning_sol,planning_variables_sub)
+				end
+			else
+				update_planning_problem_multi_cuts!(planning_problem,subop_sol,planning_sol,planning_variables_sub)
+			end
+		end
 		time_planning_update = time()-time_start_update
 		println("done (it took $time_planning_update s).")
 		
