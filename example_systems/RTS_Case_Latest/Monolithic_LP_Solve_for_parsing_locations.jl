@@ -117,7 +117,8 @@ optimizer = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 64800, "M
 
 # Add expected candidate line data
 # also scales demands up by 2x
-load_candidates_base(myinputs, 8784, add_new_corridors = true)
+# load_candidates_base(myinputs, 8784, add_new_corridors = true)
+load_no_candidates(myinputs, 8784)
 update_fuel_and_investment_costs(myinputs)
 
 # Run TDR
@@ -160,6 +161,6 @@ for v in m[:vCAP]
     println(v, "   ", value(v))
 end
 
-for v in m[:vNEW_TRANS_CAP_DECISION_INT]
+for v in m[:vNEW_TRANS_LINES]
     println(v, "   ", value(v))
 end
