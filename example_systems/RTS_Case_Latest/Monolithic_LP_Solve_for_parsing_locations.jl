@@ -118,7 +118,7 @@ optimizer = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 64800, "M
 # Add expected candidate line data
 # also scales demands up by 2x
 # load_candidates_base(myinputs, 8784, add_new_corridors = true)
-load_no_candidates(myinputs, 8784)
+load_no_candidates(myinputs, 8784, demand_scale=4)
 update_fuel_and_investment_costs(myinputs)
 
 # Run TDR
