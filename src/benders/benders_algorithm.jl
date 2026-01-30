@@ -145,6 +145,7 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 	feasibility_hist = Float64[];
 
 	planning_sol_best = deepcopy(planning_sol);
+	planning_sol_last = [planning_sol]
 	# build_decisions = zeros(length(planning_problem[:vNEW_TRANS_CAP_DECISION_INT]))
 
     #### Run Benders iterations
@@ -186,7 +187,7 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 		if !(has_duals)
 			println("RUNNING INT_LEVEL_SET DUE TO NO SOLUTIONS RECOVERED")
 			flush(stdout)
-			planning_sol = solve_int_level_set_problem(planning_problem,planning_variables,unst_planning_sol,LB,UB,γ,inputs);
+			planning_sol = solve_int_level_set_problem(planning_problem,planning_variables,planning_sol_last[1],LB,UB,γ,inputs);
 
 			t1 = @elapsed subop_sol, has_duals = solve_dist_subproblems(subproblems,planning_sol,inputs);
         	println("Time to run distributed subproblems is ", t1 / 60, " minutes")
@@ -225,6 +226,8 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 		start_planning_sol = time()
 
 		unst_planning_sol = solve_planning_problem(planning_problem,planning_variables,inputs);
+		
+		planning_sol_last[1] = unst_planning_sol
 
 		cpu_planning_sol = time()-start_planning_sol;
 		println("Solving the planning problem required $cpu_planning_sol seconds")
