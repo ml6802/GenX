@@ -165,7 +165,7 @@ function solve_local_subproblem(subproblem_local::Vector{Dict{Any,Any}},planning
             has_duals[1] = false
         end
     end
-    return local_sol, has_duals
+    return local_sol, has_duals[1]
 end
 
 function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_sub::Vector{String},inputs)
