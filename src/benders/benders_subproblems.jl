@@ -194,31 +194,31 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
         #println("ORIGINAL OBJ SCALE IS ", original_obj_scale)
         lambda=[]
         if dual_status(EP) == MOI.NO_SOLUTION
-            sols = value.(all_variables(EP))
-            original_obj_scale = get_attribute(EP, "ObjScale")
-            @warn "Dual Status not computed; trying to increase ObjScale"
-            if !(haskey(EP, :vANGLE))
-                set_optimizer_attribute(EP, "ObjScale", original_obj_scale * 100)
-            else
-                set_optimizer_attribute(EP, "ObjScale", original_obj_scale * 100)
-            end
-            set_optimizer_attribute(EP, "BarHomogeneous", 1)
-            set_optimizer_attribute(EP, "Presolve", 2)
+            # sols = value.(all_variables(EP))
+            # original_obj_scale = get_attribute(EP, "ObjScale")
+            # @warn "Dual Status not computed; trying to increase ObjScale"
+            # if !(haskey(EP, :vANGLE))
+            #     set_optimizer_attribute(EP, "ObjScale", original_obj_scale * 100)
+            # else
+            #     set_optimizer_attribute(EP, "ObjScale", original_obj_scale * 100)
+            # end
+            # set_optimizer_attribute(EP, "BarHomogeneous", 1)
+            # set_optimizer_attribute(EP, "Presolve", 2)
 
-            t = @elapsed optimize!(EP)
-            println("SOLVING ADDITIONAL PROBLEM TOOK ", t, "  SECONDS")
-            if dual_status(EP) == MOI.NO_SOLUTION
-                @warn "Dual Status not computed; trying to decrease ObjScale"
-                if !(haskey(EP, :vANGLE))
-                    set_optimizer_attribute(EP, "ObjScale", original_obj_scale / 100)
-                else
-                    set_optimizer_attribute(EP, "ObjScale", original_obj_scale / 50)
-                end
-                t = @elapsed optimize!(EP)
-                println("SOLVING ADDITIONAL ADDITIONAL PROBLEM TOOK ", t, "  SECONDS")
-                if has_values(EP) && dual_status(EP) == MOI.NO_SOLUTION
-                    println("NO SOLUTION WITH GUROBI; TRYING IPOPT")
-                    flush(stdout)
+            # t = @elapsed optimize!(EP)
+            # println("SOLVING ADDITIONAL PROBLEM TOOK ", t, "  SECONDS")
+            # if dual_status(EP) == MOI.NO_SOLUTION
+            #     @warn "Dual Status not computed; trying to decrease ObjScale"
+            #     if !(haskey(EP, :vANGLE))
+            #         set_optimizer_attribute(EP, "ObjScale", original_obj_scale / 100)
+            #     else
+            #         set_optimizer_attribute(EP, "ObjScale", original_obj_scale / 50)
+            #     end
+            #     t = @elapsed optimize!(EP)
+            #     println("SOLVING ADDITIONAL ADDITIONAL PROBLEM TOOK ", t, "  SECONDS")
+            #     if has_values(EP) && dual_status(EP) == MOI.NO_SOLUTION
+            #         println("NO SOLUTION WITH GUROBI; TRYING IPOPT")
+            #         flush(stdout)
                     @warn "No solution with Gurobi; trying to skip this cut"
                     # set_optimizer(EP, Ipopt.Optimizer)
                     # set_attribute(EP, "hsllib", HSL_jll.libhsl_path)
@@ -258,11 +258,11 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
                     end
                     op_cost = objective_value(EP)
 	                return (op_cost=op_cost,zone_cost = zone_cost, emissions = emissions,lambda = lambda,theta_coeff=theta_coeff,feasibility_slack=feasibility_slack, solution_map=sol_map, summation_map=summation_sol_map, has_duals = false, cut_value = 0.)
-                elseif !has_values(EP)
-                    error("NO SOLUTIONS COMPUTED!")
-                end
-            end
+        elseif !has_values(EP)
+            error("NO SOLUTIONS COMPUTED!")
         end
+        #     end
+        # end
         for y in planning_variables_sub
             vy = variable_by_name(EP,y)
 		    if is_parameter(vy)
@@ -331,7 +331,7 @@ function fix_planning_variables!(EP::Model,planning_sol::NamedTuple,planning_var
             #else
             # vCAP and vNEW_TRANS_CAP cannot be less than 0
             if occursin("CAP", name(vy)) || occursin("TRANS", name(vy))
-                if planning_sol.values[y] < 0
+                if planning_sol.values[y] < 1e-15
                     set_parameter_value(vy, 0)
                 else
                     set_parameter_value(vy,planning_sol.values[y])
