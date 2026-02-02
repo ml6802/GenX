@@ -15,6 +15,13 @@ export simple_operation
 export choose_output_dir
 export restr_casefolder
 export operation_model!
+export get_settings_path
+export prevent_doubled_timedomainreduction
+export time_domain_reduced_files_exist
+export init_planning_problem
+export init_dist_subproblems
+export separate_inputs_subperiods
+export configure_benders
 
 # Multi-stage methods
 export run_ddp

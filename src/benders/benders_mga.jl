@@ -239,7 +239,7 @@ function mga_cutting_plane(EP_master::Model, master_vars::Vector{String},EP_subp
 	γ = 0.0 #setup["BD_MGA_StabParam"];
 	stab_method = "off" #setup["BD_MGA_Stab_Method"];
 
-    TrueSystemCost = 100000000.0
+    TrueSystemCost = Inf;
     ApproxSystemCost = setup["MGABudget"];
 
     ApproxSystemCost_hist = [ApproxSystemCost];
