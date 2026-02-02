@@ -1,5 +1,5 @@
 #!/bin/bash                                              
-#SBATCH --job-name=RTS_TDR_Benders_16repweeks_warmstart_RTS_scale_up_LP_level_set     # create a short name for your job
+#SBATCH --job-name=RTS_TDR_Benders_16repweeks_warmstart_RTS_scale_up_LP_level_set_BD     # create a short name for your job
 #SBATCH --ntasks=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=32       # cpu-cores per task (>1 if multi-threaded tasks)
