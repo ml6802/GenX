@@ -208,6 +208,8 @@ for k in key_set
         myinputs_copy[k] = vcat(data[1:120], data[1:120], data[241:245], data[121:246], data[121:246])
     end
 end 
+myinputs_copy["pTrans_Max"][241:245] .= 500
+myinputs_copy["Line_Reinforcement_Cap_Size"][241:245] .= 0
 
 myinputs_copy["EXISTING_LINES"] = [i for i in 1:245]
 myinputs_copy["CAN_RETIRE_LINES"] = vcat(myinputs_copy["CAN_RETIRE_LINES"], myinputs_copy["CAN_RETIRE_LINES"] .+ 120)
