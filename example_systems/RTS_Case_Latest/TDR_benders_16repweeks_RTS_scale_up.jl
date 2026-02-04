@@ -287,10 +287,10 @@ mysetup["BD_LP_fallback_procedure"] = 1
 mysetup["unfix_slacks"] = 1
 mysetup["BD_MaxIter"] = 3000
 mysetup["BD_MaxCpuTime"] = 115200
-myinputs["inputs_decomp"] = myinputs_decomp
 
 myinputs_decomp = GenX.separate_inputs_subperiods(myinputs_copy);
 benders_inputs = GenX.generate_benders_inputs(mysetup,myinputs_copy,myinputs_decomp)
+myinputs_copy["inputs_decomp"] = myinputs_decomp
 
 planning_problem1, planning_sol1, operational_sol1, LB_hist1,UB_hist1, cpu_time1,feasibility_hist1  = GenX.benders(benders_inputs,mysetup,myinputs_copy);
 
