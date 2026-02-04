@@ -329,10 +329,22 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 				p_id = workers();
     			np_id = length(p_id);
 				t = @elapsed begin
-    			@sync for k in 1:np_id
-    			    @async @fetchfrom p_id[k] reset_subproblem_vector_to_bilinear(localpart(subproblems), inputs) #solve_local_subproblem(localpart(EP_subproblems),planning_sol,inputs); ### This is equivalent to fetch(@spawnat p .....)
-    			end
+					if haskey(inputs, "inputs_decomp")
+						inputs_decomp = inputs["inputs_decomp"]
+						setup["unfix_slacks"] = 0
+						setup["DC_OPF"] = 1
+						setup["bilinear"] = 1
+						planning_variables = benders_inputs["planning_variables"]
+						subproblems_dist,planning_variables_sub = init_dist_subproblems(setup,inputs_decomp,planning_variables);
+						benders_inputs["subproblems"] = subproblems_dist
+						subproblems = subproblems_dist
+					else
+						@sync for k in 1:np_id
+							@async @fetchfrom p_id[k] reset_subproblem_vector_to_bilinear(localpart(subproblems), inputs) #solve_local_subproblem(localpart(EP_subproblems),planning_sol,inputs); ### This is equivalent to fetch(@spawnat p .....)
+						end
+    				end
 				end
+
 				println("TIME TO RESET SUBPROBLEMS WAS ", t / 60, " MINUTES")
 				solver_start_time[1] = solver_start_time[1] - t
 				UB = Inf
