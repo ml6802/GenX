@@ -280,8 +280,8 @@ function mga_cutting_plane(EP_master::Model, master_vars::Vector{String},EP_subp
             if indicator == 0
                 println("Rerunning with crossover on")
                 set_attribute(EP_master, "Crossover", 1)
-                TrueSystemCost = 1000000000.0
-                TrueSystemCostNew = 1000000000.0
+                TrueSystemCost = Inf;
+                TrueSystemCost_new = Inf;
                 indicator = 1
             else
                 set_attribute(EP_master, "Crossover", 0)
