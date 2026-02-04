@@ -3,7 +3,7 @@ Method: 2                   # Algorithm used to solve continuous models (includi
 MIPGap: 1e-3                  # Relative (p.u. of optimal) mixed integer optimality tolerance for MIP problems (ignored otherwise). (Default 1e-4)
 BarConvTol: 1e-8          # Barrier convergence tolerance (determines when barrier terminates). (Default 1e-8)
 Crossover: 1                 # Barrier crossver strategy. -1=automatic, 0=off (Default -1)
-Threads: 2
+Threads: 3
 QCPDual: 1
 ObjScale: 1e4
 ScaleFlag: 2

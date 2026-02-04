@@ -249,7 +249,7 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
                     summation_sol_map = Dict{String, Float64}()
                     summation_sol_map["vNSE"] = sum(value.(EP[:vNSE]))
                     summation_sol_map["vP"] = sum(value.(EP[:vP]))
-                    summation_sol_map["OverProduction"] = sum(value.(EP[:vOverProduction]))
+                    #summation_sol_map["OverProduction"] = sum(value.(EP[:vOverProduction]))
                     avs = all_variables(EP)
                     vals = value.(avs)
                     sol_map = Dict{String, Float64}()
@@ -286,7 +286,7 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
         summation_sol_map = Dict{String, Float64}()
         summation_sol_map["vNSE"] = sum(value.(EP[:vNSE]))
         summation_sol_map["vP"] = sum(value.(EP[:vP]))
-        summation_sol_map["OverProduction"] = sum(value.(EP[:vOverProduction]))
+        #summation_sol_map["OverProduction"] = sum(value.(EP[:vOverProduction]))
 	else
         println("TERMINATION_STATUS = ", termination_status(EP))
         JuMP.write_to_file(EP, (@__DIR__)*"/numerical_error_file.lp")

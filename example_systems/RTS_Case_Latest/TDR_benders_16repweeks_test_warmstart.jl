@@ -90,7 +90,7 @@ mysetup["settings_path"] = settings_path;
 mysetup["NetworkExpansion"] = 1
 mysetup["Benders"] = 0
 
-node_names = ["Carew", "Chase", "Carrel", "Carter", "Cabot", "Bajer", "Baker", "Baffin", "Cabell", "Caine", "Camus", "Bach", "Bain", "Barlow", "Banks", "Balch", "Alger", "Alber", "Alder", "Avery", "Aiken"]
+node_names = ["Abel", "Alber", "Alder", "Alger", "Ali", "Archer", "Arne", "Attar", "Austen", "Bach", "Bailey", "Bain", "Bajer", "Baker", "Balch", "Bardeen", "Barkla", "Barlow", "Caine", "Calvin", "Camus", "Carew", "Carrel", "Carter", "Caxton", "Cecil", "Comte"]#["Carew", "Chase", "Carrel", "Carter", "Cabot", "Bajer", "Baker", "Baffin", "Cabell", "Caine", "Camus", "Bach", "Bain", "Barlow", "Banks", "Balch", "Alger", "Alber", "Alder", "Avery", "Aiken"]
 
 # Split node names by initial letter (A, B, C)
 a_node_names = filter(n -> startswith(n, "A"), node_names)
@@ -99,7 +99,7 @@ c_node_names = filter(n -> startswith(n, "C"), node_names)
 
 # Set a reproducible seed (outside the function)
 function sample_four(names::AbstractVector{<:AbstractString})
-    @assert length(names) >= 3 "Need at least 4 names (got $(length(names)))"
+    @assert length(names) >= 4 "Need at least 4 names (got $(length(names)))"
     idxs = sort(randperm(length(names))[1:4])
     return collect(names[idxs])
 end
@@ -198,6 +198,7 @@ end
 
 myinputs_decomp = GenX.separate_inputs_subperiods(myinputs);
 benders_inputs = GenX.generate_benders_inputs(mysetup,myinputs,myinputs_decomp)
+myinputs["inputs_decomp"] = myinputs_decomp
 
 planning_problem1, planning_sol1, operational_sol1, LB_hist1,UB_hist1, cpu_time1,feasibility_hist1  = GenX.benders(benders_inputs,mysetup,myinputs);
 

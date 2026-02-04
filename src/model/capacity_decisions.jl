@@ -220,7 +220,7 @@ function transmission_capacity_decisions!(EP, inputs::Dict, setup::Dict)
                     EXPANSION_LEVELS[l] = (0:1:MAX_TRANS_EXPANSION_LIMIT[l]) #-Might not need multiplication of this part -->* REINFORCEMENT_CAP_SIZE[l]
                 end
                 inputs["EXPANSION_LEVELS"] = EXPANSION_LEVELS
-                @variable(EP, vNEW_TRANS_CAP[l in CANDIDATE_LINES]>=0)
+                #@variable(EP, vNEW_TRANS_CAP[l in CANDIDATE_LINES]>=0)
 
                 for l in RECONDUCTOR_LINES
                     set_upper_bound(vRECONDUCTOR_SLACK_LOW[l], 0.1 * inputs["pTrans_Max"][l])
