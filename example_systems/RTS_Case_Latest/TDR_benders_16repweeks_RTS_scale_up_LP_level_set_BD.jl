@@ -89,7 +89,7 @@ mysetup["settings_path"] = settings_path;
 mysetup["NetworkExpansion"] = 1
 mysetup["Benders"] = 0
 
-node_names = ["Carew", "Chase", "Carrel", "Carter", "Cabot", "Bajer", "Baker", "Baffin", "Cabell", "Caine", "Camus", "Bach", "Bain", "Barlow", "Banks", "Balch", "Alger", "Alber", "Alder", "Avery", "Aiken"]
+node_names = ["Abel", "Alber", "Alder", "Alger", "Ali", "Archer", "Arne", "Attar", "Austen", "Bach", "Bailey", "Bain", "Bajer", "Baker", "Balch", "Bardeen", "Barkla", "Barlow", "Caine", "Calvin", "Camus", "Carew", "Carrel", "Carter", "Caxton", "Cecil", "Comte"]#["Carew", "Chase", "Carrel", "Carter", "Cabot", "Bajer", "Baker", "Baffin", "Cabell", "Caine", "Camus", "Bach", "Bain", "Barlow", "Banks", "Balch", "Alger", "Alber", "Alder", "Avery", "Aiken"]
 
 # Split node names by initial letter (A, B, C)
 a_node_names = filter(n -> startswith(n, "A"), node_names)
@@ -98,7 +98,7 @@ c_node_names = filter(n -> startswith(n, "C"), node_names)
 
 # Set a reproducible seed (outside the function)
 function sample_four(names::AbstractVector{<:AbstractString})
-    @assert length(names) >= 3 "Need at least 4 names (got $(length(names)))"
+    @assert length(names) >= 4 "Need at least 4 names (got $(length(names)))"
     idxs = sort(randperm(length(names))[1:4])
     return collect(names[idxs])
 end
@@ -213,7 +213,7 @@ myinputs_copy["Line_Reinforcement_Cap_Size"][241:245] .= 0
 
 myinputs_copy["EXISTING_LINES"] = [i for i in 1:245]
 myinputs_copy["CAN_RETIRE_LINES"] = vcat(myinputs_copy["CAN_RETIRE_LINES"], myinputs_copy["CAN_RETIRE_LINES"] .+ 120)
-myinputs_copy["CANNOT_RETIRE_LINES"] = vcat(myinputs_copy["CANNOT_RETIRE_LINES"], myinputs_copy["CANNOT_RETIRE_LINES"] .+ 120)
+myinputs_copy["CANNOT_RETIRE_LINES"] = vcat(myinputs_copy["CANNOT_RETIRE_LINES"], myinputs_copy["CANNOT_RETIRE_LINES"] .+ 120, [241, 242, 243, 244, 245])
 myinputs_copy["RECONDUCTOR_LINES"] = vcat(myinputs_copy["RECONDUCTOR_LINES"], myinputs_copy["RECONDUCTOR_LINES"] .+ 120)
 myinputs_copy["CANDIDATE_LINES"] = [i for i in 246:497]
 myinputs_copy["EXPANSION_LINES"] = deepcopy(myinputs_copy["CANDIDATE_LINES"])
