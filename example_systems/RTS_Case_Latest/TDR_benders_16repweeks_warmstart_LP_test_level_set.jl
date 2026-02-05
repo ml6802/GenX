@@ -90,7 +90,9 @@ mysetup["settings_path"] = settings_path;
 mysetup["NetworkExpansion"] = 1
 mysetup["Benders"] = 0
 
-node_names = ["Abel", "Alber", "Alder", "Alger", "Ali", "Archer", "Arne", "Attar", "Austen", "Bach", "Bailey", "Bain", "Bajer", "Baker", "Balch", "Bardeen", "Barkla", "Barlow", "Caine", "Calvin", "Camus", "Carew", "Carrel", "Carter", "Caxton", "Cecil", "Comte"]#["Carew", "Chase", "Carrel", "Carter", "Cabot", "Bajer", "Baker", "Baffin", "Cabell", "Caine", "Camus", "Bach", "Bain", "Barlow", "Banks", "Balch", "Alger", "Alber", "Alder", "Avery", "Aiken"]
+# node_names = ["Abel", "Alber", "Alder", "Alger", "Ali", "Archer", "Arne", "Attar", "Austen", "Bach", "Bailey", "Bain", "Bajer", "Baker", "Balch", "Bardeen", "Barkla", "Barlow", "Caine", "Calvin", "Camus", "Carew", "Carrel", "Carter", "Caxton", "Cecil", "Comte"]#["Carew", "Chase", "Carrel", "Carter", "Cabot", "Bajer", "Baker", "Baffin", "Cabell", "Caine", "Camus", "Bach", "Bain", "Barlow", "Banks", "Balch", "Alger", "Alber", "Alder", "Avery", "Aiken"]
+node_names = ["Alder", "Alger", "Ali", "Archer", "Austen", "Bach", "Bailey", "Bain", "Bajer", "Baker", "Balch", "Bardeen", "Barkla", "Barlow", "Caine", "Calvin", "Camus", "Carew", "Carrel", "Carter", "Caxton", "Comte"]
+
 
 # Split node names by initial letter (A, B, C)
 a_node_names = filter(n -> startswith(n, "A"), node_names)
@@ -99,8 +101,8 @@ c_node_names = filter(n -> startswith(n, "C"), node_names)
 
 # Set a reproducible seed (outside the function)
 function sample_four(names::AbstractVector{<:AbstractString})
-    @assert length(names) >= 4 "Need at least 4 names (got $(length(names)))"
-    idxs = sort(randperm(length(names))[1:4])
+    @assert length(names) >= 3 "Need at least 3 names (got $(length(names)))"
+    idxs = sort(randperm(length(names))[1:3])
     return collect(names[idxs])
 end
 node_name_dict = Dict('A' => a_node_names, 'B' => b_node_names, 'C' => c_node_names)
