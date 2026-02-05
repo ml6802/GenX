@@ -72,10 +72,6 @@ function run_benders_mga(benders_inputs::Dict{Any,Any},setup::Dict, inputs::Dict
 	        @time EP_master, master_sol_final, subop_sol,ApproxSystemCost_hist, TrueSystemCost_hist, cpu_time = mga_cutting_plane(EP_master,master_vars,EP_subprob, master_vars_sub,setup,inputs,iteration);
 	   # end
         results[iteration,:] = [master_sol_final,subop_sol]
-        println("tot inv cost: ",master_sol_final.inv_cost)
-        println("zone inv cost: ", master_sol_final.zone_inv_cost)
-        println("tot_op_cost ", [subop_sol[w].op_cost for w in keys(subop_sol)])
-        println("zone_op_cost: ", [subop_sol[w].zone_cost for w in keys(subop_sol)])
     
         time_df = DataFrame(:MGA_it => iteration, :Iterations => length(TrueSystemCost_hist), :Iteration_Time => cpu_time[end])
         append!(sumtime_df, time_df)

@@ -46,6 +46,10 @@ function write_benders_output(LB_hist::Vector{Float64},UB_hist::Vector{Float64},
 end
 
 
+#####==================================================####
+# Benders Operational Attribute Gathering Functions
+#####==================================================####
+
 function gather_costs(master_sol::NamedTuple, subop_sol::Dict)
 	investment_costs, zone_inv_cost = get_inv_cost(master_sol)
 	annual_op_cost, zone_op_cost = get_op_cost(subop_sol)
@@ -120,15 +124,12 @@ end
 
 function make_power_df(inputs::Dict, inputs_decomp::Dict,subop_sol::Dict, setup::Dict)
 	power = Array{Float64,2}(undef,(0,inputs["G"]))
-	gen = inputs["RESOURCES"]
-    zones = zone_id.(gen)
+
 	for k in eachindex(subop_sol)
-		temp_power = subop_sol[k].power' .* inputs_decomp[k]["omega"];
+		temp_power = subop_sol[k].power'; 
 		power = vcat(power,temp_power)
 	end
 	
-	
-	G = inputs["G"]     # Number of resources (generators, storage, DR, and DERs)
 
 	ModelScalingFactor = 10^3
 
@@ -136,10 +137,36 @@ function make_power_df(inputs::Dict, inputs_decomp::Dict,subop_sol::Dict, setup:
 		power *= ModelScalingFactor
 	end
 
-	AnnualSum = sum(power[i,:] for i in 1:size(power,1))
+	weighted_power = power .* inputs["omega"]
+	AnnualSum = sum(weighted_power[i,:] for i in 1:size(weighted_power,1)) # Weighted for annual sum
 	dfPower = DataFrame(AnnualSum', inputs["RESOURCE_NAMES"])
+	
+	dfPower_full = DataFrame(power, inputs["RESOURCE_NAMES"]) # Raw for full time series
+	return dfPower, dfPower_full
 
-	return dfPower
+end
+
+function make_charge_df(inputs::Dict, subop_sol::Dict, setup::Dict)
+	gen = inputs["RESOURCES"]
+	G = inputs["G"]     # Number of resources (generators, storage, DR, and DERs)
+	zones = zone_id.(gen)
+	charge = Array{Float64,2}(undef,(0,G))
+
+
+	for k in eachindex(subop_sol)
+		temp_charge = subop_sol[k].charge';
+		charge = vcat(charge,temp_charge)
+	end
+
+	ModelScalingFactor = 10^3
+
+	if setup["ParameterScale"] == 1
+		charge *= ModelScalingFactor
+	end
+
+	dfCharge = DataFrame(charge, inputs["RESOURCE_NAMES"])
+	return dfCharge
+
 end
 
 
@@ -201,6 +228,10 @@ function add_types(inputs::Dict, cap_mat)
 	cap_mat[3,:] = reshape(type_vec,(1,:))
 	return cap_mat
 end
+
+#####=================================================####
+# Benders Capacity Writing Functions
+#####=================================================####
 
 function summarize_type_capacities(inputs::Dict,cap_mat::AbstractArray,types)
 	Resource = inputs["RESOURCES"].resource
@@ -289,13 +320,17 @@ function add_zone_ems!(zonal_ems::Vector, dfResults::DataFrame)
 	end
 end
 
+
+####==================================================####
+# Benders Results Compilation Functions
+####==================================================####
+
 function make_benders_results_df(master_sol::NamedTuple, subop_sol::Dict, path::AbstractString, setup::Dict, inputs::Dict, inputs_decomp::Dict)
 	ModelScalingFactor = 10^3
 	dfResults = write_capacity_benders(inputs, master_sol)
 	dfResults = dfResults.*ModelScalingFactor
 	
 	costs = gather_costs(master_sol, subop_sol)
-	println("Gathered Costs: ", costs)
 	dfResults[!,:FixedCost] .= costs.investment_costs*ModelScalingFactor^2
 	dfResults[!,:OpCost] .= costs.annual_op_cost*ModelScalingFactor^2
 	dfResults[!,:TotalCost] .= dfResults.FixedCost[1]+dfResults.OpCost[1]
@@ -303,7 +338,6 @@ function make_benders_results_df(master_sol::NamedTuple, subop_sol::Dict, path::
 	dfCosts = breakout_costs(master_sol, subop_sol)
 	dfNse = get_zonal_nse(inputs, inputs_decomp, subop_sol)
 	dfFlow = get_trans_flows(inputs, inputs_decomp, subop_sol)
-	println("Broken out Costs: ", dfCosts)
 
 	add_zone_costs!(costs, dfResults)
 	total_ems, zonal_ems = gather_emissions(inputs_decomp,subop_sol)
@@ -314,21 +348,29 @@ end
 
 function write_benders_mga_results!(Results_df::DataFrame, Costs_df::DataFrame, NSE_df::DataFrame, flow_df::DataFrame, power_df::DataFrame, results::AbstractArray, path::AbstractString, setup::Dict, inputs::Dict, inputs_decomp::Dict, sumtime_df::DataFrame)
 	num_its = 2*setup["ModelingToGenerateAlternativeIterations"]
+	full_power = Vector{DataFrame}(undef,num_its)
+	full_charge = Vector{DataFrame}(undef,num_its)
+	
 	for i in 1:num_its
 		temp_df, temp_costs, temp_nse, temp_flow = make_benders_results_df(results[i,1],results[i,2],path,setup,inputs,inputs_decomp)
-		temp_power_df = make_power_df(inputs,inputs_decomp,results[i,2], setup)
+		temp_power_df, temp_power_full_df = make_power_df(inputs,inputs_decomp,results[i,2], setup)
+		temp_charge_df = make_charge_df(inputs,results[i,2], setup)
 		append!(Results_df,temp_df)
-		append!(power_df,temp_power_df)
 		append!(Costs_df,temp_costs)
 		append!(NSE_df,temp_nse)
 		append!(flow_df,temp_flow)
+		append!(power_df,temp_power_df)
+		
+		full_power[i] = temp_power_full_df
+		full_charge[i] = temp_charge_df
+			
 	end
 	iterations = collect(0:num_its)
 	Results_df[!,:MGAIteration] .= iterations
-	power_df[!,:MGAIteration] .= iterations
 	Costs_df[!,:MGAIteration] .= iterations
 	NSE_df[!,:MGAIteration] .= iterations
 	flow_df[!,:MGAIteration] .= iterations
+	power_df[!,:MGAIteration] .= iterations
 	outpath = joinpath(path,"Outputs")
 	if setup["OverwriteResults"] == 1
 		# Overwrite existing results if dir exists
@@ -347,12 +389,28 @@ function write_benders_mga_results!(Results_df::DataFrame, Costs_df::DataFrame, 
 	CSV.write(joinpath(outpath, "FullCostsMGA.csv"),Costs_df)
 	CSV.write(joinpath(outpath, "ZonalNSEMGA.csv"),NSE_df)
 	CSV.write(joinpath(outpath, "AnnualTransmissionFlowsMGA.csv"),flow_df)
+
+	### Write full time series outputs for each MGA iteration
+	mkdir(joinpath(outpath, "PowerTimeSeries"))
+	for i in 1:num_its
+		CSV.write(joinpath(outpath, "PowerTimeSeries", "Power_MGAIteration_"*string(i)*".csv"), full_power[i])
+	end
+	mkdir(joinpath(outpath, "ChargeTimeSeries"))
+	for i in 1:num_its
+		CSV.write(joinpath(outpath, "ChargeTimeSeries", "Charge_MGAIteration_"*string(i)*".csv"), full_charge[i])
+	end
+
 	return
 end
 
 function splitfun(x)
 	return String(split(x,"[")[1])
 end
+
+####==================================================####
+# Benders Extraction Functions
+####==================================================####
+
 
 function make_benders_zonal_invcost(inputs::Dict,EP::Model)
 	Resources = inputs["RESOURCES"]
@@ -499,3 +557,34 @@ function make_benders_zonal_opcost(inputs::Dict,EP::Model)
 	return (CTotal = CTotal, CFix = CFix, CVar = CVar, CFuel = CFuel, CNSE = CNSE, CStart = CStart, COpTot =COpTot)
 end
 
+function make_charge_outputs(inputs::Dict, EP::Model)
+	gen = inputs["RESOURCES"]
+    zones = zone_id.(gen)
+
+    G = inputs["G"]     # Number of resources (generators, storage, DR, and DERs)
+    T = inputs["hours_per_subperiod"]    # Number of time steps per subperiod(hours)
+    STOR_ALL = inputs["STOR_ALL"]
+    FLEX = inputs["FLEX"]
+    ELECTROLYZER = inputs["ELECTROLYZER"]
+    VRE_STOR = inputs["VRE_STOR"]
+    VS_STOR = !isempty(VRE_STOR) ? inputs["VS_STOR"] : []
+
+    # Power withdrawn to charge each resource in each time step
+    charge = zeros(G, T)
+
+    if !isempty(STOR_ALL)
+        charge[STOR_ALL, :] = value.(EP[:vCHARGE][STOR_ALL, :])
+    end
+    if !isempty(FLEX)
+        charge[FLEX, :] = value.(EP[:vCHARGE_FLEX][FLEX, :])
+    end
+    if !isempty(ELECTROLYZER)
+        charge[ELECTROLYZER, :] = value.(EP[:vUSE][ELECTROLYZER, :])	
+    end
+    if !isempty(VS_STOR)
+        charge[VS_STOR, :] = value.(EP[:vCHARGE_VRE_STOR][VS_STOR, :])
+    end
+
+	return charge
+
+end

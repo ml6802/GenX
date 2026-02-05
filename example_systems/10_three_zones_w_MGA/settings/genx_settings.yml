@@ -21,4 +21,4 @@ MultiStage: 0
 MGAMethod: 2
 ClusterMGAVecs: 0
 RelaxBudget: 0.005
-WriteOutputs: annual
+WriteOutputs: full # Output options for Benders and MGA: full = full time series outputs; annual = annual sum outputs

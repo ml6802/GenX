@@ -270,7 +270,7 @@ function run_genx_case_benders!(case::AbstractString, mysetup::Dict)
         set_attribute(planning_problem, "Crossover", 0)
         operational_sol = solve_dist_subproblems(benders_inputs["subproblems"],planning_sol,myinputs);
         dfResults, costs_df, NSE_df, flow_df = make_benders_results_df(planning_sol,operational_sol,case,mysetup,myinputs,myinputs_decomp)
-        power_df = make_power_df(myinputs, myinputs_decomp, operational_sol, mysetup)
+        power_df, power_df_full = make_power_df(myinputs, myinputs_decomp, operational_sol, mysetup)
         println("Running Modelling to Generate Alternatives with Cutting-Plane Algorithm")
         # Run MGA
         benders_inputs["cap_vectors"], benders_inputs["line_vectors"] = generate_vecs(myinputs, mysetup)
