@@ -176,6 +176,10 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
         set_optimizer(EP, new_optimizer)
     end
 
+    if rand() < 0.05
+        println("CANDIDATE FLOW EXPRESSION = ", EP[:cCANDFLOW].data[1,1])
+    end
+
 	t = @elapsed optimize!(EP)
 	println("Time for solving subproblem was ", t/60, " minutes")
 	flush(stdout)
