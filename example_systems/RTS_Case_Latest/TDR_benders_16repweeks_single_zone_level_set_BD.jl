@@ -184,6 +184,7 @@ benders_settings_path = GenX.get_settings_path(case, "benders_settings.yml")
 mysetup_benders = GenX.configure_benders(benders_settings_path) 
 mysetup = merge(mysetup,mysetup_benders);
 
+
 mysetup["NetworkExpansion"] = 1
 mysetup["Benders"] = 1
 mysetup["bilinear"] = 0
@@ -191,22 +192,20 @@ mysetup["DC_OPF"] = 1
 mysetup["IntegerInvestments"] = 1
 mysetup["BD_integer_routine"] = 1
 mysetup["BD_cap_integer_routine"] = 0
-mysetup["BD_warmstart_bilinear"] = 1
+mysetup["BD_warmstart_bilinear"] = 0
+mysetup["BD_warmstart_bigM"] = 1
 mysetup["unfix_slacks"] = 1
 mysetup["BD_MaxIter"] = 3000
 mysetup["BD_MaxCpuTime"] = 39600
 mysetup["BD_ConvTol"] = 1e-3
-mysetup["BD_Stab_Method"] = "off"
-mysetup["BD_warmstart_bilinear"] = 1
+mysetup["BD_Stab_Method"] = "int_level_set"
+mysetup["BD_warmstart_bigM"] = 1
 mysetup["BD_post_warmstart_integer_routine"] = 1
 
 myinputs_decomp = GenX.separate_inputs_subperiods(n_inputs[1]);
 benders_inputs = GenX.generate_benders_inputs(mysetup,n_inputs[1],myinputs_decomp)
-n_inputs[1]["inputs_decomp"] = myinputs_decomp
 
 planning_problem1, planning_sol1, operational_sol1, LB_hist1,UB_hist1, cpu_time1,feasibility_hist1  = GenX.benders(benders_inputs,mysetup,n_inputs[1]);
-
-
 
 for i in keys(planning_sol1.values)
     if planning_sol1.values[i] != 0

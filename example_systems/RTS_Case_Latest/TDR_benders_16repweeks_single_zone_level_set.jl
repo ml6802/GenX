@@ -196,7 +196,7 @@ mysetup["unfix_slacks"] = 1
 mysetup["BD_MaxIter"] = 3000
 mysetup["BD_MaxCpuTime"] = 39600
 mysetup["BD_ConvTol"] = 1e-3
-mysetup["BD_Stab_Method"] = "off"
+mysetup["BD_Stab_Method"] = "int_level_set"
 mysetup["BD_warmstart_bilinear"] = 1
 mysetup["BD_post_warmstart_integer_routine"] = 1
 
