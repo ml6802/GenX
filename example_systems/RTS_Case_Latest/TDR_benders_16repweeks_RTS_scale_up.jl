@@ -135,6 +135,7 @@ myinputs = GenX.load_inputs(mysetup, case, p)
 optimizer = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 64800, "MIPGap" => 5e-3)
 
 load_candidates_base(myinputs, 8784, add_new_corridors = true)
+myinputs["RECONDUCTOR_LINES"] = myinputs["RECONDUCTOR_LINES"][sort(randperm(length(myinputs["RECONDUCTOR_LINES"]))[1:20])]
 update_fuel_and_investment_costs(myinputs)
 
 GenX.expand_new_cap_resources_to_nodal!(myinputs, mysetup, p, "")

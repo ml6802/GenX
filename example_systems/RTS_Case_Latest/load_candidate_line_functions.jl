@@ -47,7 +47,7 @@ function load_candidates_base(myinputs, T=168; demand_scale = 2, add_new_corrido
         #check for reconductoring; 
 
         distance = 60 * rand()
-        cap_val = distance * 1200
+        cap_val = distance * 2000
         cost = cap_val * (0.044) / (1 - (1 + 0.044)^(-60))
         myinputs["pC_Line_Reinforcement"][i + L_exist] = cost
 
