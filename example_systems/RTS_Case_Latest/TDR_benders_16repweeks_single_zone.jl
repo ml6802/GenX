@@ -202,13 +202,11 @@ mysetup["BD_post_warmstart_integer_routine"] = 1
 
 myinputs_decomp = GenX.separate_inputs_subperiods(n_inputs[1]);
 benders_inputs = GenX.generate_benders_inputs(mysetup,n_inputs[1],myinputs_decomp)
-myinputs["inputs_decomp"] = myinputs_decomp
+n_inputs[1]["inputs_decomp"] = myinputs_decomp
 
 planning_problem1, planning_sol1, operational_sol1, LB_hist1,UB_hist1, cpu_time1,feasibility_hist1  = GenX.benders(benders_inputs,mysetup,n_inputs[1]);
 
 
-println("RUNNING 1 Month")
-# println(operational_sol1.summation_map)
 
 for i in keys(planning_sol1.values)
     if planning_sol1.values[i] != 0
