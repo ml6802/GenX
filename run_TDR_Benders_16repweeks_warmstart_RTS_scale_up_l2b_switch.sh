@@ -1,5 +1,5 @@
 #!/bin/bash                                              
-#SBATCH --job-name=RTS_TDR_Benders_16repweeks_warmstart_RTS_scale_up_sampled_lines1_LP     # create a short name for your job
+#SBATCH --job-name=RTS_TDR_Benders_16repweeks_warmstart_RTS_scale_up_l2b_switch     # create a short name for your job
 #SBATCH --ntasks=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=32       # cpu-cores per task (>1 if multi-threaded tasks)
@@ -12,4 +12,4 @@
 module purge
 module load gurobi/12.0.0
 module load julia/1.10.5
-julia -t 32 --project=./ ./example_systems/RTS_Case_Latest/TDR_benders_16repweeks_RTS_scale_up_sampled_lines1.jl 1 
+julia -t 32 --project=./ ./example_systems/RTS_Case_Latest/TDR_benders_16repweeks_RTS_scale_up_l2b_switch.jl 1 
