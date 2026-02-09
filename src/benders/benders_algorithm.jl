@@ -459,6 +459,7 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 					println("TIME TO RESET SUBPROBLEMS WAS ", t / 60, " MINUTES")
 					solver_start_time[1] = solver_start_time[1] - t
 				end
+				stab_method = "off"
 
 				set_integer.(integer_variables)
 				set_binary.(binary_variables)
