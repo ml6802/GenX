@@ -72,6 +72,15 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 	else
 		linear_to_bilinear_switch = false
 	end
+
+	if !haskey(setup, "BD_regularization_switch")
+		setup["BD_regularization_switch"] = 0
+		regularization_switch = false
+	elseif setup["BD_regularization_switch"] == 1
+		regularization_switch = true
+	else
+		regularization_switch = false
+	end
 	
 
 	# if !haskey(setup, "BD_cap_integer_routine")
@@ -459,7 +468,10 @@ function benders(benders_inputs::Dict{Any,Any},setup::Dict,inputs)
 					println("TIME TO RESET SUBPROBLEMS WAS ", t / 60, " MINUTES")
 					solver_start_time[1] = solver_start_time[1] - t
 				end
-				stab_method = "off"
+				if regularization_switch
+					println("Turning off regularzation for post-warmstart integer routine")
+					stab_method = "off"
+				end
 
 				set_integer.(integer_variables)
 				set_binary.(binary_variables)
