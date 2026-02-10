@@ -137,7 +137,7 @@ if haskey(mysetup, "IntegerInvestments")
         end
     end
 end
-
+#=
 m = GenX.generate_model(mysetup, myinputs, optimizer)
 
 
@@ -252,336 +252,219 @@ println("TOTAL UNSERVED ENERGY IS ", sum(value.(m[:vNSE])))
 
 flush(stdout)
 
-#=
-
-# DCOPF Sampled Lines 1
-
-new_cap = [90,18,188,56,172,182,181,219,204,189,222,228,183,174,5,87]
-new_cap_sizes = [1,1,1,1,1,2,1,3,1,1,1,2,2,1,1,2]
-new_reconductor = [5,57]
-new_lines = []
-r_low = [5,57]
-r_high = [57]
-r_low_sizes = [50,50]
-r_high_sizes = [26.956]
-println("SOLVING WITH DCOPF SAMPLED SET 1 SOLUTION")
-for i in myinputs["NEW_CAP"]
-    if !(i in new_cap)
-        fix(m[:vCAP][i], 0, force = true)
-    end
-end
-
-for (i, idx) in enumerate(new_cap)
-    fix(m[:vCAP][idx], new_cap_sizes[i], force = true)
-end
-
-for var in m[:vRECONDUCTOR_SLACK_LOW]
-    fix(var, 0, force = true)
-end
-for var in m[:vRECONDUCTOR_SLACK_HIGH]
-    fix(var, 0, force = true)
-end
-
-for (i, idx) in enumerate(r_low)
-    fix(m[:vRECONDUCTOR_SLACK_LOW][idx], r_low_sizes[i], force = true)
-end
-
-for (i, idx) in enumerate(r_high)
-    fix(m[:vRECONDUCTOR_SLACK_HIGH][idx], r_high_sizes[i], force = true)
-end
-
-for i in myinputs["CANDIDATE_LINES"]
-    if i in new_lines
-        fix(m[:vNEW_TRANS_CAP_DECISION_INT][i], 1, force=true)
-    else
-        fix(m[:vNEW_TRANS_CAP_DECISION_INT][i], 0, force=true)
-    end
-end
-
-optimize!(m)
-
-println("OBJECTIVE VALUE IS ", objective_value(m))
-println("TOTAL UNSERVED ENERGY IS ", sum(value.(m[:vNSE])))
-println("TOTAL OVERPRODUCTION IS ", sum(value.(m[:vOverProduction])))
-
-flush(stdout)
-
-# Waterflow Sampled Lines 1
-new_cap = [18,255,117,56,172,219,203,222,183,174,5,87]
-new_cap_sizes = [1,2,2,2,2,4,2,1,2,2,2,1]
-new_reconductor = [5,57]
-new_lines = [164]#[134]
-r_low = [5,57]
-r_high = []
-r_low_sizes = [50,50]
-r_high_sizes = []
-
-println("SOLVING WITH WATERFLOW SAMPLED SET 1 SOLUTION")
-
-for i in myinputs["NEW_CAP"]
-    if !(i in new_cap)
-        fix(m[:vCAP][i], 0, force = true)
-    end
-end
-
-for (i, idx) in enumerate(new_cap)
-    fix(m[:vCAP][idx], new_cap_sizes[i], force = true)
-end
-
-
-for var in m[:vRECONDUCTOR_SLACK_LOW]
-    fix(var, 0, force = true)
-end
-for var in m[:vRECONDUCTOR_SLACK_HIGH]
-    fix(var, 0, force = true)
-end
-
-for (i, idx) in enumerate(r_low)
-    fix(m[:vRECONDUCTOR_SLACK_LOW][idx], r_low_sizes[i], force = true)
-end
-
-for (i, idx) in enumerate(r_high)
-    fix(m[:vRECONDUCTOR_SLACK_HIGH][idx], r_high_sizes[i], force = true)
-end
-
-for i in myinputs["CANDIDATE_LINES"]
-    if i in new_lines
-        fix(m[:vNEW_TRANS_CAP_DECISION_INT][i], 1, force=true)
-    else
-        fix(m[:vNEW_TRANS_CAP_DECISION_INT][i], 0, force=true)
-    end
-end
-
-optimize!(m)
-
-println("OBJECTIVE VALUE IS ", objective_value(m))
-println("TOTAL UNSERVED ENERGY IS ", sum(value.(m[:vNSE])))
-println("TOTAL OVERPRODUCTION IS ", sum(value.(m[:vOverProduction])))
-
-flush(stdout)
-
-
-
-# DCOPF Sampled Lines 2
-new_cap = [18,117,56,181,219,204,203,189,228,183,217,173,187,202,174,5,87,221]
-new_cap_sizes = [1,1,1,2,2,1,1,1,1,1,2,1,1,1,1,1,2,1]
-new_reconductor = [85,5,75,19]
-new_lines = [134]# [124]
-r_low = [85,5,75,19]
-r_high = [85]
-r_low_sizes = [50,50,50,3.2453]
-r_high_sizes = [75]
-
-
-println("SOLVING WITH DCOPF SAMPLED SET 2 SOLUTION")
-
-for i in myinputs["NEW_CAP"]
-    if !(i in new_cap)
-        fix(m[:vCAP][i], 0, force = true)
-    end
-end
-
-for (i, idx) in enumerate(new_cap)
-    fix(m[:vCAP][idx], new_cap_sizes[i], force = true)
-end
-
-
-for var in m[:vRECONDUCTOR_SLACK_LOW]
-    fix(var, 0, force = true)
-end
-for var in m[:vRECONDUCTOR_SLACK_HIGH]
-    fix(var, 0, force = true)
-end
-
-for (i, idx) in enumerate(r_low)
-    fix(m[:vRECONDUCTOR_SLACK_LOW][idx], r_low_sizes[i], force = true)
-end
-
-for (i, idx) in enumerate(r_high)
-    fix(m[:vRECONDUCTOR_SLACK_HIGH][idx], r_high_sizes[i], force = true)
-end
-
-for i in myinputs["CANDIDATE_LINES"]
-    if i in new_lines
-        fix(m[:vNEW_TRANS_CAP_DECISION_INT][i], 1, force=true)
-    else
-        fix(m[:vNEW_TRANS_CAP_DECISION_INT][i], 0, force=true)
-    end
-end
-
-optimize!(m)
-
-println("OBJECTIVE VALUE IS ", objective_value(m))
-println("TOTAL UNSERVED ENERGY IS ", sum(value.(m[:vNSE])))
-println("TOTAL OVERPRODUCTION IS ", sum(value.(m[:vOverProduction])))
-
-flush(stdout)
-
-# Waterflow Sampled Lines 2
-new_cap = [18,188,172,181,219,203,189,228,217,5]
-new_cap_sizes = [1,2,2,6,4,3,1,1,1,1,]
-new_reconductor = [75,85,49,5,116]
-new_lines = [151,210]#[132,151]
-r_low = [85,49,5,75,116,]
-r_high = [75,5,85,49]
-r_low_sizes = [50,40,50,50,40,]
-r_high_sizes = [75,34.884,75,60]
-
-
-println("SOLVING WITH WATERFLOW SAMPLED SET 2 SOLUTION")
-
-for i in myinputs["NEW_CAP"]
-    if !(i in new_cap)
-        fix(m[:vCAP][i], 0, force = true)
-    end
-end
-
-for (i, idx) in enumerate(new_cap)
-    fix(m[:vCAP][idx], new_cap_sizes[i], force = true)
-end
-
-
-for var in m[:vRECONDUCTOR_SLACK_LOW]
-    fix(var, 0, force = true)
-end
-for var in m[:vRECONDUCTOR_SLACK_HIGH]
-    fix(var, 0, force = true)
-end
-
-for (i, idx) in enumerate(r_low)
-    fix(m[:vRECONDUCTOR_SLACK_LOW][idx], r_low_sizes[i], force = true)
-end
-
-for (i, idx) in enumerate(r_high)
-    fix(m[:vRECONDUCTOR_SLACK_HIGH][idx], r_high_sizes[i], force = true)
-end
-
-for i in myinputs["CANDIDATE_LINES"]
-    if i in new_lines
-        fix(m[:vNEW_TRANS_CAP_DECISION_INT][i], 1, force=true)
-    else
-        fix(m[:vNEW_TRANS_CAP_DECISION_INT][i], 0, force=true)
-    end
-end
-
-optimize!(m)
-
-println("OBJECTIVE VALUE IS ", objective_value(m))
-println("TOTAL UNSERVED ENERGY IS ", sum(value.(m[:vNSE])))
-println("TOTAL OVERPRODUCTION IS ", sum(value.(m[:vOverProduction])))
-
-flush(stdout)
-
-
-
-# DCOPF Sampled Lines 3
-new_cap = [90,18,56,182,181,219,189,222,228,183,217,173,202,5,87,221]
-new_cap_sizes = [1,1,1,1,1,1,1,1,2,3,2,2,1,1,1,2]
-new_reconductor = [75,84,]
-new_lines = [231]#[158]
-r_low = [85,75]
-r_high = [75]
-r_low_sizes = [50,50]
-r_high_sizes = [75]
-
-
-println("SOLVING WITH DCOPF SAMPLED SET 3 SOLUTION")
-
-for i in myinputs["NEW_CAP"]
-    if !(i in new_cap)
-        fix(m[:vCAP][i], 0, force = true)
-    end
-end
-
-for (i, idx) in enumerate(new_cap)
-    fix(m[:vCAP][idx], new_cap_sizes[i], force = true)
-end
-
-
-for var in m[:vRECONDUCTOR_SLACK_LOW]
-    fix(var, 0, force = true)
-end
-for var in m[:vRECONDUCTOR_SLACK_HIGH]
-    fix(var, 0, force = true)
-end
-
-for (i, idx) in enumerate(r_low)
-    fix(m[:vRECONDUCTOR_SLACK_LOW][idx], r_low_sizes[i], force = true)
-end
-
-for (i, idx) in enumerate(r_high)
-    fix(m[:vRECONDUCTOR_SLACK_HIGH][idx], r_high_sizes[i], force = true)
-end
-
-for i in myinputs["CANDIDATE_LINES"]
-    if i in new_lines
-        fix(m[:vNEW_TRANS_CAP_DECISION_INT][i], 1, force=true)
-    else
-        fix(m[:vNEW_TRANS_CAP_DECISION_INT][i], 0, force=true)
-    end
-end
-
-optimize!(m)
-
-println("OBJECTIVE VALUE IS ", objective_value(m))
-println("TOTAL UNSERVED ENERGY IS ", sum(value.(m[:vNSE])))
-println("TOTAL OVERPRODUCTION IS ", sum(value.(m[:vOverProduction])))
-
-flush(stdout)
-
-# Waterflow Sampled Lines 3
-new_cap = [18,188,56,218,181,100,222,217,173,174,87]
-new_cap_sizes = [1,1,3,1,3,1,3,3,1,1,4,]
-new_reconductor = [75,85,26]
-# new_lines = [158,139,162,152,122,128]
-new_lines = [231, 183, 242, 219, 125, 162]
-r_low = [85,75,26]
-r_high = [75,85,26]
-r_low_sizes = [50,50,72.2]
-r_high_sizes = [75,75,37.025]
-
-
-println("SOLVING WITH WATERFLOW SAMPLED SET 3 SOLUTION")
-
-for i in myinputs["NEW_CAP"]
-    if !(i in new_cap)
-        fix(m[:vCAP][i], 0, force = true)
-    end
-end
-
-for (i, idx) in enumerate(new_cap)
-    fix(m[:vCAP][idx], new_cap_sizes[i], force = true)
-end
-
-
-for var in m[:vRECONDUCTOR_SLACK_LOW]
-    fix(var, 0, force = true)
-end
-for var in m[:vRECONDUCTOR_SLACK_HIGH]
-    fix(var, 0, force = true)
-end
-
-for (i, idx) in enumerate(r_low)
-    fix(m[:vRECONDUCTOR_SLACK_LOW][idx], r_low_sizes[i], force = true)
-end
-
-for (i, idx) in enumerate(r_high)
-    fix(m[:vRECONDUCTOR_SLACK_HIGH][idx], r_high_sizes[i], force = true)
-end
-
-for i in myinputs["CANDIDATE_LINES"]
-    if i in new_lines
-        fix(m[:vNEW_TRANS_CAP_DECISION_INT][i], 1, force=true)
-    else
-        fix(m[:vNEW_TRANS_CAP_DECISION_INT][i], 0, force=true)
-    end
-end
-
-optimize!(m)
-
-println("OBJECTIVE VALUE IS ", objective_value(m))
-println("TOTAL UNSERVED ENERGY IS ", sum(value.(m[:vNSE])))
-println("TOTAL OVERPRODUCTION IS ", sum(value.(m[:vOverProduction])))
-
-flush(stdout)
 =#
+
+myinputs_copy = deepcopy(myinputs)
+
+using Random
+Random.seed!(1234)
+
+pD_data = deepcopy(myinputs_copy["pD"])
+pD_noise = (rand(size(pD_data)[1], size(pD_data)[2]) .- 0.5) .* 0.05 .+ 1
+pP_data = deepcopy(myinputs_copy["pP_Max"])
+pP_noise = (rand(size(pP_data)[1], size(pP_data)[2]) .- 0.25) .* 0.05 .+ 1
+
+pD_data = pD_data .* pD_noise
+pP_data = pP_data .* pP_noise
+pP_data[pP_data .> 1] .= 1
+
+myinputs_copy["pD"] = hcat(myinputs_copy["pD"], pD_data)
+myinputs_copy["pP_Max"] = vcat(myinputs_copy["pP_Max"], pP_data)
+
+pNet_Map = myinputs_copy["pNet_Map"]
+new_pNet_Map = zeros(246 * 2 + 5, 73 * 2) # add 4 new lines? 
+new_pNet_Map[1:120, 1:73] .= pNet_Map[1:120, :]
+new_pNet_Map[121:240, 74:146] .= pNet_Map[1:120, :]
+new_pNet_Map[241, 11] = -1
+new_pNet_Map[241, 145] = 1
+new_pNet_Map[242, 6] = -1
+new_pNet_Map[242, 127] = 1
+new_pNet_Map[243, 8] = -1
+new_pNet_Map[243, 124] = 1
+new_pNet_Map[244, 12] = -1
+new_pNet_Map[244, 129] = 1
+new_pNet_Map[245, 2] = -1
+new_pNet_Map[245, 126] = 1
+new_pNet_Map[246:371, 1:73] .= pNet_Map[121:246, :]
+new_pNet_Map[372:497, 74:146] .= pNet_Map[121:246, :]
+
+# CANDIDATE_LINES, L, Line_Reinforcement_Cap_Size, pC_Line_Reinforcement, pTrans_Max_Possible, CANNOT_RETIRE_LINES, CAN_RETIRE_LINES, EXISTING_LINES, L_cand, pDC_OPF_coeff, EXPANSION_LINES, L_exist, Max_Trans_Cap, RECONDUCTOR_LINES, existing_to_cand_map, pC_Line_Reconductor_High, pTrans_Loss_coef, Line_Angle_Limit, NO_EXPANSION_LINES, pC_Line_Reconductor_Low, pMax_Line_Reinforcement, pTrans_Max
+
+myinputs_copy["pNet_Map"] = new_pNet_Map
+myinputs_copy["L"] = size(new_pNet_Map, 1)
+myinputs_copy["Z"] = size(new_pNet_Map, 2)
+myinputs_copy["L_exist"] = 245
+myinputs_copy["L_cand"] = 252
+key_set = ["Line_Reinforcement_Cap_Size", "pC_Line_Reinforcement", "pDC_OPF_coeff", "Max_Trans_Cap", "Line_Angle_Limit","pTrans_Max", "pC_Line_Reconductor_Low", "pC_Line_Reconductor_High", "pPercent_Loss"]
+
+for k in key_set
+    if haskey(myinputs_copy, k)
+        data = myinputs_copy[k]
+
+        myinputs_copy[k] = vcat(data[1:120], data[1:120], data[241:245], data[121:246], data[121:246])
+    end
+end 
+myinputs_copy["pTrans_Max"][241:245] .= 500
+myinputs_copy["Line_Reinforcement_Cap_Size"][241:245] .= 0
+
+myinputs_copy["EXISTING_LINES"] = [i for i in 1:245]
+myinputs_copy["CAN_RETIRE_LINES"] = vcat(myinputs_copy["CAN_RETIRE_LINES"], myinputs_copy["CAN_RETIRE_LINES"] .+ 120)
+myinputs_copy["CANNOT_RETIRE_LINES"] = vcat(myinputs_copy["CANNOT_RETIRE_LINES"], myinputs_copy["CANNOT_RETIRE_LINES"] .+ 120, [241, 242, 243, 244, 245])
+myinputs_copy["RECONDUCTOR_LINES"] = vcat(myinputs_copy["RECONDUCTOR_LINES"], myinputs_copy["RECONDUCTOR_LINES"] .+ 120)
+myinputs_copy["CANDIDATE_LINES"] = [i for i in 246:497]
+myinputs_copy["EXPANSION_LINES"] = deepcopy(myinputs_copy["CANDIDATE_LINES"])
+
+existing_to_cand_map = deepcopy(myinputs_copy["existing_to_cand_map"])
+
+for k in keys(myinputs_copy["existing_to_cand_map"])
+    key_val = myinputs_copy["existing_to_cand_map"][k]
+    existing_to_cand_map[k] = key_val + 125
+    existing_to_cand_map[k + 120] = key_val + 251
+end
+
+myinputs_copy["existing_to_cand_map"] = existing_to_cand_map
+resource_copy = deepcopy(myinputs_copy["RESOURCES"])
+resource_names = deepcopy(myinputs_copy["RESOURCE_NAMES"])
+
+
+myinputs_copy["RESOURCES"] = vcat(myinputs_copy["RESOURCES"], resource_copy)
+myinputs_copy["RESOURCE_NAMES"] = vcat(myinputs_copy["RESOURCE_NAMES"], resource_names)
+myinputs_copy["C_Start"] = vcat(myinputs_copy["C_Start"], myinputs_copy["C_Start"])
+
+G_original = myinputs["G"]
+myinputs_copy["G"] = length(myinputs_copy["RESOURCES"])
+
+# RESET RESOURCE IDX
+for i in 1:G_original
+    r = myinputs_copy["RESOURCES"][i + G_original]
+    id_num = parent(r)[:zone]
+    new_id_num = id_num + 73
+    parent(r)[:zone] = new_id_num
+    parent(r)[:id] = parent(r)[:id] + G_original
+    r_name = GenX.resource_name(r)
+    push!(myinputs_copy["RESOURCE_ZONES"], r_name * "_z" * string(new_id_num))
+    push!(myinputs_copy["R_ZONES"], new_id_num)
+end
+
+key_set = ["HAS_FUEL", "MUST_RUN", "STOR_ASYMMETRIC", "STOR_SYMMETRIC", "THERM_NO_COMMIT", "ELECTROLYZER", "MULTI_FUELS", "NEW_CAP", "RETROFIT_OPTIONS", "STOR_HYDRO_LONG_DURATION", "NEW_CAP_CHARGE", "RET_CAP", "SINGLE_FUEL", "STOR_HYDRO_SHORT_DURATION", "THERM_ALL", "VRE", "CCS", "HYDRO_RES", "NEW_CAP_ENERGY", "QUALIFIED_SUPPLY", "RET_CAP_CHARGE", "STOR_LONG_DURATION", "THERM_COMMIT", "VRE_STOR", "COMMIT", "FLEX", "RETROFIT_CAP", "RET_CAP_ENERGY", "STOR_ALL", "STOR_SHORT_DURATION", "THERM_COMMIT_PWFU"]
+
+for k in key_set
+    if haskey(myinputs_copy, k)
+        myinputs_copy[k] = vcat(myinputs_copy[k], myinputs_copy[k] .+ G_original)
+    else
+        println("Key $k is not found")
+    end
+end
+
+
+
+# Run TDR
+TDR_params = Dict("MinPeriods" => 16, "MaxPeriods" => 16, "UseExtremePeriods" => 1)
+cluster_inputs(case, settings_path, mysetup; inputs = myinputs_copy, TDR_params = TDR_params, random = false)
+
+
+m = GenX.generate_model(mysetup, myinputs_copy, optimizer)
+
+
+# DCOPF Full solution
+println("SOLVING WITH FULL DCOPF SOLUTION, LP BD")
+
+new_cap = [178,18,204,233,431,315,419,5,409,172,201,207,87,400,405,399,284,56,406,171,202]
+new_cap_sizes = [2,2,5,1,4,1,2,3,1,1,4,3,1,2,1,2,2,1,4,1,1]
+new_lines = [330,348,388,385,262,337,334,484,463,474]
+r_low = [155,205,125,169,139]
+r_high = [205]
+r_low_sizes = [50,50,38.91701,31.64534,40,]
+r_high_sizes = [1.4864759]
+
+for i in myinputs["NEW_CAP"]
+    if !(i in new_cap)
+        fix(m[:vCAP][i], 0, force = true)
+    end
+end
+
+for (i, idx) in enumerate(new_cap)
+    fix(m[:vCAP][idx], new_cap_sizes[i], force = true)
+end
+
+for var in m[:vRECONDUCTOR_SLACK_LOW]
+    fix(var, 0, force = true)
+end
+for var in m[:vRECONDUCTOR_SLACK_HIGH]
+    fix(var, 0, force = true)
+end
+
+for (i, idx) in enumerate(r_low)
+    fix(m[:vRECONDUCTOR_SLACK_LOW][idx], r_low_sizes[i], force = true)
+end
+
+for (i, idx) in enumerate(r_high)
+    fix(m[:vRECONDUCTOR_SLACK_HIGH][idx], r_high_sizes[i], force = true)
+end
+
+for i in myinputs["CANDIDATE_LINES"]
+    if i in new_lines
+        fix(m[:vNEW_TRANS_CAP_DECISION_INT][i], 1, force=true)
+    else
+        fix(m[:vNEW_TRANS_CAP_DECISION_INT][i], 0, force=true)
+    end
+end
+
+optimize!(m)
+
+println("OBJECTIVE VALUE IS ", objective_value(m))
+println("TOTAL UNSERVED ENERGY IS ", sum(value.(m[:vNSE])))
+
+flush(stdout)
+
+# DCOPF Full solution
+println("SOLVING WITH FULL DCOPF SOLUTION")
+
+new_cap = [178,90,18,191,233,177,431,218,315,426,419,5,318,409,172,181,201,400,399,284,56,203,406,171,202]
+new_cap_sizes = [4,2,1,1,1,2,1,3,1,2,1,2,1,1,2,1,1,2,2,1,4,1,3,2,2]
+new_lines = [330,337,456,285,356,463]
+r_low = [177,155,5,195,25]
+r_high = [155]
+r_low_sizes = [50,50,50,50,50]
+r_high_sizes = [75]
+
+for i in myinputs["NEW_CAP"]
+    if !(i in new_cap)
+        fix(m[:vCAP][i], 0, force = true)
+    end
+end
+
+for (i, idx) in enumerate(new_cap)
+    fix(m[:vCAP][idx], new_cap_sizes[i], force = true)
+end
+
+for var in m[:vRECONDUCTOR_SLACK_LOW]
+    fix(var, 0, force = true)
+end
+for var in m[:vRECONDUCTOR_SLACK_HIGH]
+    fix(var, 0, force = true)
+end
+
+for (i, idx) in enumerate(r_low)
+    fix(m[:vRECONDUCTOR_SLACK_LOW][idx], r_low_sizes[i], force = true)
+end
+
+for (i, idx) in enumerate(r_high)
+    fix(m[:vRECONDUCTOR_SLACK_HIGH][idx], r_high_sizes[i], force = true)
+end
+
+for i in myinputs["CANDIDATE_LINES"]
+    if i in new_lines
+        fix(m[:vNEW_TRANS_CAP_DECISION_INT][i], 1, force=true)
+    else
+        fix(m[:vNEW_TRANS_CAP_DECISION_INT][i], 0, force=true)
+    end
+end
+
+optimize!(m)
+
+
+println("OBJECTIVE VALUE IS ", objective_value(m))
+println("TOTAL UNSERVED ENERGY IS ", sum(value.(m[:vNSE])))
+
+flush(stdout)

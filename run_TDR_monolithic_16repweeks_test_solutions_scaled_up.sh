@@ -5,7 +5,7 @@
 #SBATCH --cpus-per-task=10       # cpu-cores per task (>1 if multi-threaded tasks)
 #SBATCH --output=slurm-%j.out
 #SBATCH --mem-per-cpu=6G       # memory per cpu-core
-#SBATCH --time=4:00:00          # total run time limit (HH:MM:SS)
+#SBATCH --time=1:00:00          # total run time limit (HH:MM:SS)
 #SBATCH --mail-type=all          # send email when job ends
 #SBATCH --mail-user=dc0173@princeton.edu
 
