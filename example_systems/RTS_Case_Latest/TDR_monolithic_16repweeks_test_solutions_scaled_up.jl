@@ -377,7 +377,7 @@ r_high = [205]
 r_low_sizes = [50,50,38.91701,31.64534,40,]
 r_high_sizes = [1.4864759]
 
-for i in myinputs["NEW_CAP"]
+for i in myinputs_copy["NEW_CAP"]
     if !(i in new_cap)
         fix(m[:vCAP][i], 0, force = true)
     end
@@ -402,7 +402,7 @@ for (i, idx) in enumerate(r_high)
     fix(m[:vRECONDUCTOR_SLACK_HIGH][idx], r_high_sizes[i], force = true)
 end
 
-for i in myinputs["CANDIDATE_LINES"]
+for i in myinputs_copy["CANDIDATE_LINES"]
     if i in new_lines
         fix(m[:vNEW_TRANS_CAP_DECISION_INT][i], 1, force=true)
     else
@@ -428,7 +428,7 @@ r_high = [155]
 r_low_sizes = [50,50,50,50,50]
 r_high_sizes = [75]
 
-for i in myinputs["NEW_CAP"]
+for i in myinputs_copy["NEW_CAP"]
     if !(i in new_cap)
         fix(m[:vCAP][i], 0, force = true)
     end
@@ -453,7 +453,7 @@ for (i, idx) in enumerate(r_high)
     fix(m[:vRECONDUCTOR_SLACK_HIGH][idx], r_high_sizes[i], force = true)
 end
 
-for i in myinputs["CANDIDATE_LINES"]
+for i in myinputs_copy["CANDIDATE_LINES"]
     if i in new_lines
         fix(m[:vNEW_TRANS_CAP_DECISION_INT][i], 1, force=true)
     else
