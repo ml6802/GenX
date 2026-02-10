@@ -1,4 +1,9 @@
-function load_candidates_base(myinputs, T=168; demand_scale = 2, add_new_corridors = false)
+line_data = CSV.read((@__DIR__)*"/edge_map.csv", DataFrame)
+line_names = line_data[!, "Name"]
+line_lengths = line_data[!, "Length_for_multiplier"]
+line_length_mapping = Dict([line_names[i] => line_lengths[i] for i in 1:length(line_names)])
+
+function load_candidates_base(myinputs, T=168; demand_scale = 2, add_new_corridors = false, use_official_lengths = false)
     # myinputs["pTrans_Max"] .*= 2
     #myinputs["pD"] .*= 1
     # myinputs["Voll"] .*= 10   
@@ -43,26 +48,54 @@ function load_candidates_base(myinputs, T=168; demand_scale = 2, add_new_corrido
     existing_to_cand_map = Dict()
 
     Random.seed!(1)
-    for i in 1:length(lines)
-        #check for reconductoring; 
+    if use_official_lengths
+        index_to_line = myinputs["index_to_line"]
+        for i in 1:length(lines)
+            line_name = index_to_line[i]
+            if haskey(line_length_mapping, line_name)
+                distance = line_length_mapping[line_name]
+            else
+                error("Line name ", line_name, " not found in length mapping")
+            end
+            cap_val = distance * 4524 * (1 + 0.2 * (rand() - 0.5))
+            cost = cap_val * (0.044) / (1 - (1 + 0.044)^(-60))
+            myinputs["pC_Line_Reinforcement"][i + L_exist] = cost
+            if get_existing_capacity_mw(p, lines[i]) > 200
+                push!(CANNOT_RETIRE_LINES, i)
+                push!(RECONDUCTOR_LINES, i)
+                myinputs["pC_Line_Reconductor_Low"][i] = cost .* 0.3
+                myinputs["pC_Line_Reconductor_High"][i] = cost .* 0.7
+                myinputs["Line_Reinforcement_Cap_Size"][L_exist + i] *= 1.5
+                myinputs["pDC_OPF_coeff"][L_exist + i] *= 1.5
+            else
+                push!(CAN_RETIRE_LINES, i)
+                existing_to_cand_map[i] = L_exist + i
+                myinputs["Line_Reinforcement_Cap_Size"][L_exist + i] *= 2.5
+                myinputs["pDC_OPF_coeff"][L_exist + i] *= 2.5
+            end
+        end
+    else
+        for i in 1:length(lines)
+            #check for reconductoring; 
 
-        distance = 60 * rand()
-        cap_val = distance * 1200#2000
-        cost = cap_val * (0.044) / (1 - (1 + 0.044)^(-60))
-        myinputs["pC_Line_Reinforcement"][i + L_exist] = cost
+            distance = 60 * rand()
+            cap_val = distance * 1200
+            cost = cap_val * (0.044) / (1 - (1 + 0.044)^(-60))
+            myinputs["pC_Line_Reinforcement"][i + L_exist] = cost
 
-        if get_existing_capacity_mw(p, lines[i]) > 200
-            push!(CANNOT_RETIRE_LINES, i)
-            push!(RECONDUCTOR_LINES, i)
-            myinputs["pC_Line_Reconductor_Low"][i] = cost .* 0.3
-            myinputs["pC_Line_Reconductor_High"][i] = cost .* 0.7
-            myinputs["Line_Reinforcement_Cap_Size"][L_exist + i] *= 1.5
-            myinputs["pDC_OPF_coeff"][L_exist + i] *= 1.5
-        else
-            push!(CAN_RETIRE_LINES, i)
-            existing_to_cand_map[i] = L_exist + i
-            myinputs["Line_Reinforcement_Cap_Size"][L_exist + i] *= 2.5
-            myinputs["pDC_OPF_coeff"][L_exist + i] *= 2.5
+            if get_existing_capacity_mw(p, lines[i]) > 200
+                push!(CANNOT_RETIRE_LINES, i)
+                push!(RECONDUCTOR_LINES, i)
+                myinputs["pC_Line_Reconductor_Low"][i] = cost .* 0.3
+                myinputs["pC_Line_Reconductor_High"][i] = cost .* 0.7
+                myinputs["Line_Reinforcement_Cap_Size"][L_exist + i] *= 1.5
+                myinputs["pDC_OPF_coeff"][L_exist + i] *= 1.5
+            else
+                push!(CAN_RETIRE_LINES, i)
+                existing_to_cand_map[i] = L_exist + i
+                myinputs["Line_Reinforcement_Cap_Size"][L_exist + i] *= 2.5
+                myinputs["pDC_OPF_coeff"][L_exist + i] *= 2.5
+            end
         end
     end
 
@@ -128,16 +161,30 @@ function load_candidates_base(myinputs, T=168; demand_scale = 2, add_new_corrido
                         push!(myinputs["pC_Line_Reconductor_High"], 0)
                     end
 
-                    if lines_added[1] == 1
-                        distance = 50 + rand() * 20
-                        cap_val = distance * 1500
-                        annuitized_cost = cap_val * (0.044) / (1 - (1 + 0.044)^(-60))
-                        push!(myinputs["pC_Line_Reinforcement"], annuitized_cost)
+                    if use_official_lengths
+                        if lines_added[1] == 1
+                            distance = 50 + rand() * 20
+                            cap_val = distance * 4524
+                            annuitized_cost = cap_val * (0.044) / (1 - (1 + 0.044)^(-60))
+                            push!(myinputs["pC_Line_Reinforcement"], annuitized_cost)
+                        else
+                            distance = 35 + rand() * 10 
+                            cap_val = distance * 4524
+                            annuitized_cost = cap_val * (0.044) / (1 - (1 + 0.044)^(-60))
+                            push!(myinputs["pC_Line_Reinforcement"], annuitized_cost)
+                        end
                     else
-                        distance = 30 + rand() * 10 
-                        cap_val = distance * 1500
-                        annuitized_cost = cap_val * (0.044) / (1 - (1 + 0.044)^(-60))
-                        push!(myinputs["pC_Line_Reinforcement"], annuitized_cost)
+                        if lines_added[1] == 1
+                            distance = 50 + rand() * 20
+                            cap_val = distance * 1500
+                            annuitized_cost = cap_val * (0.044) / (1 - (1 + 0.044)^(-60))
+                            push!(myinputs["pC_Line_Reinforcement"], annuitized_cost)
+                        else
+                            distance = 30 + rand() * 10 
+                            cap_val = distance * 1500
+                            annuitized_cost = cap_val * (0.044) / (1 - (1 + 0.044)^(-60))
+                            push!(myinputs["pC_Line_Reinforcement"], annuitized_cost)
+                        end
                     end
                 end
                 next_index[1] += 1

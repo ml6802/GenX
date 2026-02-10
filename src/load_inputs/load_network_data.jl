@@ -360,10 +360,15 @@ function load_network_data!(setup::Dict, p::Portfolio, inputs::Dict)
     if L > 0
         # Topology of the network source-sink matrix
         mat, region_to_index, index_to_region, region_to_area = load_network_map(lines, Z, L, p)
+        index_to_line = Dict{Int, String}()
+        for (i, line) in enumerate(lines)
+            index_to_line[i] = line.name
+        end
         inputs["pNet_Map"] = mat
         inputs["region_to_index"] = region_to_index
         inputs["index_to_region"] = index_to_region
         inputs["region_to_area"] = region_to_area
+        inputs["index_to_line"] = index_to_line
 
         # Transmission capacity of the network (in MW)
         inputs["pTrans_Max"] = [PSIP.get_existing_capacity_mw(p, l) for l in lines] / scale_factor  # convert to GW
