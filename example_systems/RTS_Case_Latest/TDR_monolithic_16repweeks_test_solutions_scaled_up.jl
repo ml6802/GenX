@@ -249,7 +249,6 @@ optimize!(m)
 
 println("OBJECTIVE VALUE IS ", objective_value(m))
 println("TOTAL UNSERVED ENERGY IS ", sum(value.(m[:vNSE])))
-println("TOTAL OVERPRODUCTION IS ", sum(value.(m[:vOverProduction])))
 
 flush(stdout)
 
