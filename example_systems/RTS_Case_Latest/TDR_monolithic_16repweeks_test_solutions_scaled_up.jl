@@ -406,17 +406,17 @@ for i in myinputs_copy["CANDIDATE_LINES"]
     end
 end
 
-optimize!(m)
+# optimize!(m)
 
-println("OBJECTIVE VALUE IS ", objective_value(m))
-println("TOTAL UNSERVED ENERGY IS ", sum(value.(m[:vNSE])))
+# println("OBJECTIVE VALUE IS ", objective_value(m))
+# println("TOTAL UNSERVED ENERGY IS ", sum(value.(m[:vNSE])))
 
 flush(stdout)
 
 # DCOPF Full solution
 println("SOLVING WITH FULL DCOPF SOLUTION")
 
-new_cap = [178,90,18,191,233,177,431,218,315,426,419,5,318,409,172,181,201,400,399,284,56,203,406,171,202]
+new_cap = [178,90,18,191,233,177,431,218,315,246,419,5,318,409,172,181,201,400,399,284,56,203,406,171,202]
 new_cap_sizes = [4,2,1,1,1,2,1,3,1,2,1,2,1,1,2,1,1,2,2,1,4,1,3,2,2]
 new_lines = [330,337,456,285,356,463]
 r_low = [177,155,5,195,25]
