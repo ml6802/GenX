@@ -119,10 +119,6 @@ optimizer = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 64800, "M
 load_candidates_base(myinputs, 8784, add_new_corridors = true)
 update_fuel_and_investment_costs(myinputs)
 
-# Run TDR
-TDR_params = Dict("MinPeriods" => 16, "MaxPeriods" => 16, "UseExtremePeriods" => 1)
-cluster_inputs(case, settings_path, mysetup; inputs = myinputs, TDR_params = TDR_params)
-
 GenX.expand_new_cap_resources_to_nodal!(myinputs, mysetup, p, "")
 
 mysetup["IntegerInvestments"] = 1
