@@ -452,3 +452,47 @@ CSV.write((@__DIR__)*"/new_cap_resources_scaled_up_della.csv", df_resources_scal
 # Display the dataframe
 println(df_resources_scaled_up)
 
+
+# Build zonal inputs (this is a downscaling step)
+z_inputs = build_zonal_inputs(myinputs, zone_map, 3)
+
+
+if haskey(mysetup, "IntegerInvestments")
+    if mysetup["IntegerInvestments"] == 1
+        for i in myinputs["NEW_CAP"]
+            resource = myinputs["RESOURCES"][i]
+            parent(resource)[:cap_size] = 200
+        end
+    end
+end
+
+n2z_map = zone_map
+num_zones = 3
+# build the nodal inputs
+n_inputs = build_nodal_inputs(myinputs, n2z_map, num_zones)
+
+n_inputs_1 = n_inputs[1]
+# Collect resource information into DataFrame
+resource_ids = []
+zone_ids = []
+resource_names = []
+regions = []
+
+for i in n_inputs_1["NEW_CAP"]
+    resource = n_inputs_1["RESOURCES"][i]
+    push!(resource_ids, i)
+    push!(zone_ids, GenX.zone_id(resource))
+    push!(resource_names, GenX.resource_name(resource))
+    push!(regions, GenX.region(resource).name)
+end
+
+# Create DataFrame
+df_resources_single_zone = DataFrame(
+    ResourceID = resource_ids,
+    ZoneID = zone_ids,
+    ResourceName = resource_names,
+    Region = regions
+)
+
+# Write to CSV
+CSV.write((@__DIR__)*"/new_cap_resources_single_zone_della.csv", df_resources_single_zone)
