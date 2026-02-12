@@ -372,6 +372,7 @@ function write_benders_mga_results!(Results_df::DataFrame, Costs_df::DataFrame, 
 	flow_df[!,:MGAIteration] .= iterations
 	power_df[!,:MGAIteration] .= iterations
 	
+	outpath = joinpath(path, "Outputs")
     CSV.write(joinpath(outpath, "SummaryMGA.csv"),Results_df)
     CSV.write(joinpath(outpath, "SummaryMGATimes.csv"),sumtime_df)
 	CSV.write(joinpath(outpath, "AnnualPowerByGen.csv"),power_df)
