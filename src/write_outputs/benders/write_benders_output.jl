@@ -391,11 +391,11 @@ function write_benders_mga_results!(Results_df::DataFrame, Costs_df::DataFrame, 
 	CSV.write(joinpath(outpath, "AnnualTransmissionFlowsMGA.csv"),flow_df)
 
 	### Write full time series outputs for each MGA iteration
-	mkdir(joinpath(outpath, "PowerTimeSeries"))
+	
 	for i in 1:num_its
 		CSV.write(joinpath(outpath, "PowerTimeSeries", "Power_MGAIteration_"*string(i)*".csv"), full_power[i])
 	end
-	mkdir(joinpath(outpath, "ChargeTimeSeries"))
+
 	for i in 1:num_its
 		CSV.write(joinpath(outpath, "ChargeTimeSeries", "Charge_MGAIteration_"*string(i)*".csv"), full_charge[i])
 	end

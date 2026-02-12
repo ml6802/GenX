@@ -22,6 +22,7 @@ export init_planning_problem
 export init_dist_subproblems
 export separate_inputs_subperiods
 export configure_benders
+export check_negative_capacities
 
 # Multi-stage methods
 export run_ddp

@@ -265,12 +265,33 @@ function run_genx_case_benders!(case::AbstractString, mysetup::Dict)
     """ MGA Functionality """
     if mysetup["ModelingToGenerateAlternatives"] == 1
         # Write least-cost solution into DF for MGA results
+        outpath = joinpath(case,"Outputs")
+        if mysetup["OverwriteResults"] == 1
+            # Overwrite existing results if dir exists
+            # This is the default behaviour when there is no flag, to avoid breaking existing code
+            if !(isdir(outpath))
+                mkdir(outpath)
+            end
+        else
+            # Find closest unused ouput directory name and create it
+            new_path = choose_output_dir(outpath)
+            mkdir(new_path)
+        end
         zone_inv_cost = make_benders_zonal_invcost(myinputs, planning_problem)
         planning_sol =  (LB = objective_value(planning_problem), inv_cost =value(planning_problem[:eObj]), net_exp_cost = value(planning_problem[:eTotalCNetworkExp]), zone_inv_cost = zone_inv_cost,values =Dict([s=>value.(variable_by_name(planning_problem,s)) for s in benders_inputs["planning_variables"]]), theta = value.(planning_problem[:vTHETA])) 
         set_attribute(planning_problem, "Crossover", 0)
         operational_sol = solve_dist_subproblems(benders_inputs["subproblems"],planning_sol,myinputs);
         dfResults, costs_df, NSE_df, flow_df = make_benders_results_df(planning_sol,operational_sol,case,mysetup,myinputs,myinputs_decomp)
         power_df, power_df_full = make_power_df(myinputs, myinputs_decomp, operational_sol, mysetup)
+        temp_charge_df = make_charge_df(myinputs,operational_sol,mysetup)
+        if !isdir(joinpath(outpath, "PowerTimeSeries"))
+            mkdir(joinpath(outpath, "PowerTimeSeries"))
+        end
+        if !isdir(joinpath(outpath, "ChargeTimeSeries"))
+		    mkdir(joinpath(outpath, "ChargeTimeSeries"))
+	    end
+        CSV.write(joinpath(outpath, "PowerTimeSeries", "Power_OptimalSolution.csv"), power_df_full)
+        CSV.write(joinpath(outpath, "ChargeTimeSeries", "Charge_OptimalSolution.csv"), temp_charge_df)
         println("Running Modelling to Generate Alternatives with Cutting-Plane Algorithm")
         # Run MGA
         benders_inputs["cap_vectors"], benders_inputs["line_vectors"] = generate_vecs(myinputs, mysetup)
