@@ -267,7 +267,7 @@ mysetup["BD_MaxCpuTime"] = 12600
 
 myinputs_decomp = GenX.separate_inputs_subperiods(n_inputs[1]);
 benders_inputs = GenX.generate_benders_inputs(mysetup,n_inputs[1],myinputs_decomp)
-planning_problem1, planning_sol1, operational_sol1, LB_hist,UB_hist1, cpu_time,feasibility_hist1, build_decisions1  = GenX.benders(benders_inputs,mysetup,n_inputs[1]);
+planning_problem1, planning_sol1, operational_sol1, LB_hist,UB_hist1, cpu_time,feasibility_hist1  = GenX.benders(benders_inputs,mysetup,n_inputs[1]);
 
 vals = [0.]
 for k in keys(planning_sol1.values)
@@ -281,7 +281,7 @@ println("OBJECTIVE OF BENDERS WAS: ", UB_hist1[end])
 
 myinputs_decomp = GenX.separate_inputs_subperiods(n_inputs[2]);
 benders_inputs = GenX.generate_benders_inputs(mysetup,n_inputs[2],myinputs_decomp)
-planning_problem2, planning_sol2, operational_sol2, LB_hist,UB_hist2, cpu_time,feasibility_hist2, build_decisions2  = GenX.benders(benders_inputs,mysetup,n_inputs[2]);
+planning_problem2, planning_sol2, operational_sol2, LB_hist,UB_hist2, cpu_time,feasibility_hist2  = GenX.benders(benders_inputs,mysetup,n_inputs[2]);
 
 
 vals = [0.]
@@ -297,7 +297,7 @@ println("OBJECTIVE OF BENDERS WAS: ", UB_hist2[end])
 
 myinputs_decomp = GenX.separate_inputs_subperiods(n_inputs[3]);
 benders_inputs = GenX.generate_benders_inputs(mysetup,n_inputs[3],myinputs_decomp)
-planning_problem3, planning_sol3, operational_sol3, LB_hist,UB_hist3, cpu_time,feasibility_hist3, build_decisions3  = GenX.benders(benders_inputs,mysetup,n_inputs[3]);
+planning_problem3, planning_sol3, operational_sol3, LB_hist,UB_hist3, cpu_time,feasibility_hist3  = GenX.benders(benders_inputs,mysetup,n_inputs[3]);
 
 vals = [0.]
 for k in keys(planning_sol3.values)
