@@ -146,6 +146,7 @@ println("Number of binary variables is ", sum(is_binary.(all_variables(m))))
 println("Number of integer variables is ", sum(is_integer.(all_variables(m))))
 println("Number of constraints is ", length(all_constraints(m, include_variable_in_set_constraints = false)))
 println("Number of constraints with variable set constraints is ", length(all_constraints(m, include_variable_in_set_constraints = true)))
+flush(stdout)
 
 
 myinputs = GenX.load_inputs(mysetup, case, p)
@@ -288,7 +289,7 @@ println("Number of integer variables is ", sum(is_integer.(all_variables(m))))
 println("Number of constraints is ", length(all_constraints(m, include_variable_in_set_constraints = false)))
 println("Number of constraints with variable set constraints is ", length(all_constraints(m, include_variable_in_set_constraints = true)))
 
-
+flush(stdout)
 
 myinputs = GenX.load_inputs(mysetup, case, p)
 
@@ -342,3 +343,4 @@ println("Number of binary variables is ", sum(is_binary.(all_variables(m))))
 println("Number of integer variables is ", sum(is_integer.(all_variables(m))))
 println("Number of constraints is ", length(all_constraints(m, include_variable_in_set_constraints = false)))
 println("Number of constraints with variable set constraints is ", length(all_constraints(m, include_variable_in_set_constraints = true)))
+flush(stdout)
