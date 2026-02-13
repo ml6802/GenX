@@ -251,6 +251,7 @@ mysetup["bilinear"] = 0
 mysetup["disaggregate"] = 0
 mysetup["unfix_slacks"] = 1
 mysetup["BD_post_warmstart_integer_routine"] = 1
+mysetup["BD_warmstart_bilinear"] = 1
 mysetup["SOS1"] = 0
 mysetup["BD_regularization_switch"] = 1
 mysetup["BD_Stab_Method"] = "int_level_set"
