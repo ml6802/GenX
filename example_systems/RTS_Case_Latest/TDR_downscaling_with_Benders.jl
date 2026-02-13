@@ -29,8 +29,8 @@ include((@__DIR__)*"/load_candidate_line_functions.jl")
 
 # Set internal portfolio data for use in GenX
 p.internal.ext["Rep_Periods"] = 1
-p.internal.ext["Timesteps_per_Rep_Period"] = 672
-p.internal.ext["hours_per_subperiod"] = 672
+p.internal.ext["Timesteps_per_Rep_Period"] = 168
+p.internal.ext["hours_per_subperiod"] = 168
 p.internal.ext["sub_weights"] = [8784 for i in 1:p.internal.ext["Rep_Periods"]] 
 add_om_costs(p)
 
@@ -52,6 +52,7 @@ for i in 1:length(buses)
         error()
     end
 end
+techs = collect(get_technologies(SupplyTechnology, p))
 
 
 cpus_per_task = parse(Int, ENV["SLURM_CPUS_PER_TASK"]);
@@ -89,7 +90,7 @@ mysetup["settings_path"] = settings_path;
 mysetup["NetworkExpansion"] = 1
 mysetup["Benders"] = 0
 
-node_names = ["Carew", "Chase", "Carrel", "Carter", "Cabot", "Bajer", "Baker", "Baffin", "Cabell", "Caine", "Camus", "Bach", "Bain", "Barlow", "Banks", "Balch", "Alger", "Alber", "Alder", "Avery", "Aiken"]
+node_names = ["Alder", "Alger", "Ali", "Archer", "Austen", "Bach", "Bailey", "Bain", "Bajer", "Baker", "Balch", "Bardeen", "Barkla", "Barlow", "Caine", "Calvin", "Camus", "Carew", "Carrel", "Carter", "Caxton", "Comte"]
 
 # Split node names by initial letter (A, B, C)
 a_node_names = filter(n -> startswith(n, "A"), node_names)
@@ -98,8 +99,8 @@ c_node_names = filter(n -> startswith(n, "C"), node_names)
 
 # Set a reproducible seed (outside the function)
 function sample_four(names::AbstractVector{<:AbstractString})
-    @assert length(names) >= 3 "Need at least 4 names (got $(length(names)))"
-    idxs = sort(randperm(length(names))[1:4])
+    @assert length(names) >= 3 "Need at least 3 names (got $(length(names)))"
+    idxs = sort(randperm(length(names))[1:3])
     return collect(names[idxs])
 end
 node_name_dict = Dict('A' => a_node_names, 'B' => b_node_names, 'C' => c_node_names)
@@ -131,11 +132,9 @@ myinputs = GenX.load_inputs(mysetup, case, p)
 
 optimizer = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 3600, "MIPGap" => 1e-3)
 
-# Add expected candidate line data
-# also scales demands up by 4x
-load_candidates_base(myinputs, 8784)
+load_candidates_base(myinputs, 8784, add_new_corridors = true)
+update_fuel_and_investment_costs(myinputs)
 
-cluster_inputs(case, settings_path, mysetup; inputs = myinputs)
 
 GenX.expand_new_cap_resources_to_nodal!(myinputs, mysetup, p, "")
 
@@ -153,6 +152,9 @@ if haskey(mysetup, "IntegerInvestments")
     end
 end
 
+# Run TDR
+TDR_params = Dict("MinPeriods" => 16, "MaxPeriods" => 16, "UseExtremePeriods" => 1)
+cluster_inputs(case, settings_path, mysetup; inputs = myinputs, TDR_params = TDR_params, random = false)
 
 # Build zonal inputs (this is a downscaling step)
 z_inputs = build_zonal_inputs(myinputs, zone_map, 3)
@@ -245,17 +247,20 @@ mysetup_benders = GenX.configure_benders(benders_settings_path)
 
 mysetup["DC_OPF"] = 1
 mysetup["ptdf"] = 0
-mysetup["bilinear"] = 1
+mysetup["bilinear"] = 0
 mysetup["disaggregate"] = 0
-mysetup["unfix_slacks"] = 0
+mysetup["unfix_slacks"] = 1
+mysetup["BD_post_warmstart_integer_routine"] = 1
 mysetup["SOS1"] = 0
+mysetup["BD_regularization_switch"] = 1
+mysetup["BD_Stab_Method"] = "int_level_set"
 mysetup = merge(mysetup,mysetup_benders);
 
 settings_path = GenX.get_settings_path(case)    
 mysetup["settings_path"] = settings_path;
 mysetup["NetworkExpansion"] = 1
 mysetup["Benders"] = 1
-mysetup["BD_integer_routine"] = 0
+mysetup["BD_integer_routine"] = 1
 mysetup["BD_MaxCpuTime"] = 12600
 
 
