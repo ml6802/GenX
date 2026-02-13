@@ -203,15 +203,18 @@ function get_trans_flows(inputs::Dict, inputs_decomp::Dict, subop_sol::Dict)
     
 	flow = Array{Float64,2}(undef,(0,L))
 	for k in eachindex(subop_sol)
-		temp_flow = subop_sol[k].flow' .* inputs_decomp[k]["omega"];
+		temp_flow = subop_sol[k].flow';
 		flow = vcat(flow,temp_flow)
 	end
 
-	annual_flow = sum(flow[i,:] for i in 1:size(flow,1))* ModelScalingFactor
+	weighted_flow = flow .* inputs["omega"]
+	annual_flow = sum(weighted_flow[i,:] for i in 1:size(weighted_flow,1))* ModelScalingFactor
 	names = "Line_" .* string.(1:L)
 	dfFlow = DataFrame(annual_flow', names)
 
-    return dfFlow
+	dfFlow_full = DataFrame(flow, names) # Raw for full time series
+
+    return dfFlow, dfFlow_full
 end
 
 function add_types(inputs::Dict, cap_mat)
@@ -337,22 +340,23 @@ function make_benders_results_df(master_sol::NamedTuple, subop_sol::Dict, path::
 
 	dfCosts = breakout_costs(master_sol, subop_sol)
 	dfNse = get_zonal_nse(inputs, inputs_decomp, subop_sol)
-	dfFlow = get_trans_flows(inputs, inputs_decomp, subop_sol)
+	dfFlow, dfFlow_full = get_trans_flows(inputs, inputs_decomp, subop_sol)
 
 	add_zone_costs!(costs, dfResults)
 	total_ems, zonal_ems = gather_emissions(inputs_decomp,subop_sol)
 	dfResults[!,:TotalEmissions] .= total_ems*ModelScalingFactor
 	add_zone_ems!(zonal_ems.*ModelScalingFactor, dfResults)
-	return dfResults, dfCosts, dfNse, dfFlow
+	return dfResults, dfCosts, dfNse, dfFlow, dfFlow_full
 end
 
 function write_benders_mga_results!(Results_df::DataFrame, Costs_df::DataFrame, NSE_df::DataFrame, flow_df::DataFrame, power_df::DataFrame, results::AbstractArray, path::AbstractString, setup::Dict, inputs::Dict, inputs_decomp::Dict, sumtime_df::DataFrame)
 	num_its = 2*setup["ModelingToGenerateAlternativeIterations"]
 	full_power = Vector{DataFrame}(undef,num_its)
 	full_charge = Vector{DataFrame}(undef,num_its)
-	
+	full_flow = Vector{DataFrame}(undef,num_its)
+
 	for i in 1:num_its
-		temp_df, temp_costs, temp_nse, temp_flow = make_benders_results_df(results[i,1],results[i,2],path,setup,inputs,inputs_decomp)
+		temp_df, temp_costs, temp_nse, temp_flow, temp_flow_full = make_benders_results_df(results[i,1],results[i,2],path,setup,inputs,inputs_decomp)
 		temp_power_df, temp_power_full_df = make_power_df(inputs,inputs_decomp,results[i,2], setup)
 		temp_charge_df = make_charge_df(inputs,results[i,2], setup)
 		append!(Results_df,temp_df)
@@ -363,6 +367,7 @@ function write_benders_mga_results!(Results_df::DataFrame, Costs_df::DataFrame, 
 		
 		full_power[i] = temp_power_full_df
 		full_charge[i] = temp_charge_df
+		full_flow[i] = temp_flow_full
 			
 	end
 	iterations = collect(0:num_its)
@@ -384,10 +389,8 @@ function write_benders_mga_results!(Results_df::DataFrame, Costs_df::DataFrame, 
 	
 	for i in 1:num_its
 		CSV.write(joinpath(outpath, "PowerTimeSeries", "Power_MGAIteration_"*string(i)*".csv"), full_power[i])
-	end
-
-	for i in 1:num_its
 		CSV.write(joinpath(outpath, "ChargeTimeSeries", "Charge_MGAIteration_"*string(i)*".csv"), full_charge[i])
+		CSV.write(joinpath(outpath, "FlowTimeSeries", "Flow_MGAIteration_"*string(i)*".csv"), full_flow[i])
 	end
 
 	return
