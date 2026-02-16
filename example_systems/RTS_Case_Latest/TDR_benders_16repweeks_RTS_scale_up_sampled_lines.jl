@@ -275,8 +275,10 @@ elseif sampling_number == 2
     Random.seed!(456)
 elseif sampling_number == 3
     Random.seed!(789)
+elseif sampling_number == 4
+    Random.seed!(101112)
 else
-    error("Invalid sampling number. Must be 1, 2, or 3.")
+    error("Invalid sampling number. Must be 1, 2, 3, or 4.")
 end
 CANDIDATE_LINES = myinputs_copy["CANDIDATE_LINES"]
 RECONDUCTOR_LINES = myinputs_copy["RECONDUCTOR_LINES"]
