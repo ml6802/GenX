@@ -40,21 +40,12 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
     #num_steps = BigM_vec ./ quant_val
     #num_cols = maximum(num_steps)
 
-    BigM = zeros((L_exist + L_cand))
-    BigM[1:L_exist] .= inputs["pTrans_Max"][1:L_exist] .* 1
-    BigM[(1+L_exist):(L_exist+L_cand)] .= inputs["Line_Reinforcement_Cap_Size"][(1+L_exist):(L_exist+L_cand)] .* 1
-
-    if haskey(inputs, "RECONDUCTOR_LINES")
-        if haskey(inputs, "existing_to_cand_map")
-            for k in keys(inputs["existing_to_cand_map"])
-
-                cline = inputs["existing_to_cand_map"][k]
-                if k in inputs["RECONDUCTOR_LINES"]
-                    BigM[k] = 1.25 * BigM[k]
-                    BigM[cline] = 1.25 * BigM[k]
-                end
-            end
-        end
+    if haskey(inputs, "BigM")
+        BigM = inputs["BigM"]
+    else    
+        BigM = zeros((L_exist + L_cand))
+        BigM[1:L_exist] .= inputs["pTrans_Max"][1:L_exist] .* 5
+        BigM[(1+L_exist):(L_exist+L_cand)] .= inputs["Line_Reinforcement_Cap_Size"][(1+L_exist):(L_exist+L_cand)] .* 5
     end
     # if !(haskey(setup, "tight_bigM"))
     #     setup["tight_bigM"] = false
@@ -673,11 +664,11 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
 
         
         @constraint(EP, 
-            cCAN_RETIRE_UPPER_LIMIT[l in CAN_RETIRE_LINES, t = 1:T], EP[:vFLOW][l, t] <= inputs["pTrans_Max"][l] * 2 * (1 - EP[:vNEW_TRANS_CAP_DECISION_INT][existing_to_cand_map[l]])
+            cCAN_RETIRE_UPPER_LIMIT[l in CAN_RETIRE_LINES, t = 1:T], EP[:vFLOW][l, t] <= BigM[l] * (1 - EP[:vNEW_TRANS_CAP_DECISION_INT][existing_to_cand_map[l]])
         )
 
         @constraint(EP, 
-            cCAN_RETIRE_LOWER_LIMIT[l in CAN_RETIRE_LINES, t = 1:T], EP[:vFLOW][l, t] >= -inputs["pTrans_Max"][l] * 2 * (1 - EP[:vNEW_TRANS_CAP_DECISION_INT][existing_to_cand_map[l]])
+            cCAN_RETIRE_LOWER_LIMIT[l in CAN_RETIRE_LINES, t = 1:T], EP[:vFLOW][l, t] >= -BigM[l] * (1 - EP[:vNEW_TRANS_CAP_DECISION_INT][existing_to_cand_map[l]])
         )
     end
 

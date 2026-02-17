@@ -228,7 +228,9 @@ function solve_subproblem(EP::Model,planning_sol::NamedTuple,planning_variables_
                     idx = EP.ext[:idx][1]
                     EP.ext[:idx][1] += 1
                     if idx < 10
-                        JuMP.write_to_file(EP, "/scratch/gpfs/JENKINS/dc0173/git/forked/subproblem__$idx.lp")
+                        if isdir("/scratch/gpfs/JENKINS/dc0173/git/forked/")
+                            JuMP.write_to_file(EP, "/scratch/gpfs/JENKINS/dc0173/git/forked/subproblem__$idx.lp")
+                        end
                     end
                     # for (i, v) in enumerate(vars)
                     #     if !(is_parameter(v))
