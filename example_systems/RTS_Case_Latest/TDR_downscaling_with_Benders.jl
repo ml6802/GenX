@@ -251,10 +251,10 @@ mysetup["bilinear"] = 0
 mysetup["disaggregate"] = 0
 mysetup["unfix_slacks"] = 1
 mysetup["BD_post_warmstart_integer_routine"] = 1
-mysetup["BD_warmstart_bilinear"] = 1
+mysetup["BD_warmstart_bigM"] = 1
 mysetup["SOS1"] = 0
-mysetup["BD_regularization_switch"] = 1
-mysetup["BD_Stab_Method"] = "int_level_set"
+mysetup["BD_regularization_switch"] = 0
+mysetup["BD_Stab_Method"] = "off"
 mysetup = merge(mysetup,mysetup_benders);
 
 settings_path = GenX.get_settings_path(case)    
@@ -422,7 +422,7 @@ new_transmission_builds_df[!, "NEW_LINES"] = new_lines
 new_transmission_builds_df[!, "RECONDUCTOR_LOW"] = reconductor_lines_low
 new_transmission_builds_df[!, "RECONDUCTOR_HIGH"] = reconductor_lines_high
 
-CSV.write((@__DIR__)*"/transmission_downscaling_results_TDR_Benders.csv", new_transmission_builds_df)
+CSV.write((@__DIR__)*"/transmission_downscaling_results_TDR_Bendersb.csv", new_transmission_builds_df)
 
 
 
@@ -460,4 +460,4 @@ for i in 1:num_zones
 end
 new_gen_cap_df[!, "NEW_CAP"] = new_cap_results
 
-CSV.write((@__DIR__)*"/new_cap_downscaling_results_TDR_Benders.csv", new_gen_cap_df)
+CSV.write((@__DIR__)*"/new_cap_downscaling_results_TDR_Bendersb.csv", new_gen_cap_df)
