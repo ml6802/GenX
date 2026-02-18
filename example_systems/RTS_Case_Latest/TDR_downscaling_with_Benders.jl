@@ -362,6 +362,60 @@ println("NODAL OBJECTIVE = ", nodal_objective)
 println("Number new builds = ", sum(value.(m1[:vNEW_TRANS_CAP_DECISION_INT])) + sum(value.(m2[:vNEW_TRANS_CAP_DECISION_INT])) + sum(value.(m3[:vNEW_TRANS_CAP_DECISION_INT])))
 
 
+
+mysetup["DC_OPF"] = 1
+mysetup["ptdf"] = 0
+mysetup["bilinear"] = 0
+mysetup["disaggregate"] = 0
+mysetup["unfix_slacks"] = 0
+mysetup["BD_post_warmstart_integer_routine"] = 0
+mysetup["BD_warmstart_bilinear"] = 0
+mysetup["SOS1"] = 0
+mysetup["BD_regularization_switch"] = 0
+mysetup["BD_Stab_Method"] = "int_level_set"
+mysetup = merge(mysetup,mysetup_benders);
+
+settings_path = GenX.get_settings_path(case)    
+mysetup["settings_path"] = settings_path;
+mysetup["NetworkExpansion"] = 1
+mysetup["Benders"] = 0
+mysetup["BD_integer_routine"] = 1
+mysetup["BD_MaxCpuTime"] = 3600
+
+m = GenX.generate_model(mysetup, myinputs, optimizer)
+
+models = [m1, m2, m3]
+planning_sol_values = [planning_sol1.values, planning_sol2.values, planning_sol3.values]
+
+for i in 1:3
+    g2g_map = n_inputs[i]["n2g_map"]
+    l2l_map_rev = n_inputs[i]["l2l_map_rev"]
+    for j in n_inputs[i]["CANDIDATE_LINES"]
+        line = l2l_map_rev[j]
+        val = planning_sol_values[i]["vNEW_TRANS_CAP_DECISION_INT[$j]"]
+        fix(m[:vNEW_TRANS_CAP_DECISION_INT][line], val, force = true)
+    end
+    for j in n_inputs[i]["RECONDUCTOR_LINES"]
+        line = l2l_map_rev[j]
+        val_low = planning_sol_values[i]["vRECONDUCTOR_SLACK_LOW[$j]"]
+        val_high = planning_sol_values[i]["vRECONDUCTOR_SLACK_HIGH[$j]"]
+        fix(m[:vRECONDUCTOR_SLACK_LOW][line], val_low, force = true)
+        fix(m[:vRECONDUCTOR_SLACK_HIGH][line], val_high, force = true)
+    end
+    for j in n_inputs[i]["NEW_CAP"]
+        gen = g2g_map[j]
+        val = planning_sol_values[i]["vCAP[$j]"]
+        fix(m[:vCAP][gen], val, force = true)
+    end
+end
+
+optimize!(m)
+
+println("ZONAL OBJECTIVE = ", zonal_objective)
+println("NODAL OBJECTIVE BENDERS = ", nodal_objective)
+println("NODAL OBJECTIVE MONOLITHIC = ", objective_value(m))
+
+
 for v in mz[:vCAP]
     println(v, "   ", value(v))
 end
@@ -422,7 +476,7 @@ new_transmission_builds_df[!, "NEW_LINES"] = new_lines
 new_transmission_builds_df[!, "RECONDUCTOR_LOW"] = reconductor_lines_low
 new_transmission_builds_df[!, "RECONDUCTOR_HIGH"] = reconductor_lines_high
 
-CSV.write((@__DIR__)*"/transmission_downscaling_results_TDR_Bendersb.csv", new_transmission_builds_df)
+CSV.write((@__DIR__)*"/transmission_downscaling_results_TDR_Bendersc.csv", new_transmission_builds_df)
 
 
 
@@ -460,4 +514,4 @@ for i in 1:num_zones
 end
 new_gen_cap_df[!, "NEW_CAP"] = new_cap_results
 
-CSV.write((@__DIR__)*"/new_cap_downscaling_results_TDR_Bendersb.csv", new_gen_cap_df)
+CSV.write((@__DIR__)*"/new_cap_downscaling_results_TDR_Bendersc.csv", new_gen_cap_df)
