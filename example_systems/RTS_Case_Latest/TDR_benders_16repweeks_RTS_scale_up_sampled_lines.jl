@@ -206,7 +206,7 @@ myinputs_copy["L"] = size(new_pNet_Map, 1)
 myinputs_copy["Z"] = size(new_pNet_Map, 2)
 myinputs_copy["L_exist"] = 245
 myinputs_copy["L_cand"] = 252
-key_set = ["Line_Reinforcement_Cap_Size", "pC_Line_Reinforcement", "pDC_OPF_coeff", "Max_Trans_Cap", "Line_Angle_Limit","pTrans_Max", "pC_Line_Reconductor_Low", "pC_Line_Reconductor_High", "pPercent_Loss"]
+key_set = ["Line_Reinforcement_Cap_Size", "pC_Line_Reinforcement", "pDC_OPF_coeff", "Max_Trans_Cap", "Line_Angle_Limit","pTrans_Max", "pC_Line_Reconductor_Low", "pC_Line_Reconductor_High", "pPercent_Loss", "BigM"]
 
 for k in key_set
     if haskey(myinputs_copy, k)
