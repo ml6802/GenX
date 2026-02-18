@@ -192,6 +192,7 @@ function load_candidates_base(myinputs, T=168; demand_scale = 2, add_new_corrido
             end
         end
         myinputs["pNet_Map"] = pNet_Map
+        myinputs["L_cand"] += 6
     end
 
     myinputs["CAN_RETIRE_LINES"] = CAN_RETIRE_LINES
@@ -205,6 +206,27 @@ function load_candidates_base(myinputs, T=168; demand_scale = 2, add_new_corrido
     myinputs["T"] = T
     myinputs["pD"] .*= demand_scale
     myinputs["L"] = myinputs["L_exist"] + myinputs["L_cand"]
+
+    L_exist = myinputs["L_exist"]
+    L_cand = myinputs["L_cand"]
+    BigM = zeros((L_exist + L_cand))
+    BigM[1:L_exist] .= myinputs["pTrans_Max"][1:L_exist]
+    BigM[(1+L_exist):(L_exist+L_cand)] .= myinputs["Line_Reinforcement_Cap_Size"][(1+L_exist):(L_exist+L_cand)]
+
+    if haskey(myinputs, "RECONDUCTOR_LINES")
+        if haskey(myinputs, "existing_to_cand_map")
+            for k in keys(myinputs["existing_to_cand_map"])
+
+                cline = myinputs["existing_to_cand_map"][k]
+                if k in myinputs["RECONDUCTOR_LINES"]
+                    BigM[k] = 1.25 * BigM[k]
+                    BigM[cline] = 1.25 * BigM[cline]
+                end
+            end
+        end
+    end
+    BigM[(L_exist * 2 + 1):(L_exist * 2 + 6)] .*= 10
+    myinputs["BigM"] = BigM
 end
 
 function load_no_candidates(myinputs, T=168; demand_scale = 2)

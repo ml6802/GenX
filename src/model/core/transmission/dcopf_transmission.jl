@@ -41,7 +41,13 @@ function DC_OPF_transmission!(EP::Model, inputs::Dict, setup::Dict)
     #num_cols = maximum(num_steps)
 
     if haskey(inputs, "BigM")
-        BigM = inputs["BigM"]
+        if length(inputs["BigM"]) == inputs["L"]
+            BigM = inputs["BigM"]
+        else
+            BigM = zeros((L_exist + L_cand))
+            BigM[1:L_exist] .= inputs["pTrans_Max"][1:L_exist] .* 5
+            BigM[(1+L_exist):(L_exist+L_cand)] .= inputs["Line_Reinforcement_Cap_Size"][(1+L_exist):(L_exist+L_cand)] .* 5
+        end
     else    
         BigM = zeros((L_exist + L_cand))
         BigM[1:L_exist] .= inputs["pTrans_Max"][1:L_exist] .* 5

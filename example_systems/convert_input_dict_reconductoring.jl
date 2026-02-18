@@ -313,7 +313,7 @@ function build_single_nodal_input(inputs::Dict, node_to_zone_map::Dict, zone::In
     nodal_inputs["l2l_map"] = l2l_map
     nodal_inputs["L"] = length(new_adj_list)
     
-    line_keys = [ "pPercent_Loss", "pTrans_Loss_Coeff", "pTrans_Max", "pDC_OPF_coeff", "Line_Angle_Limit", "pDC_OPF_coeff_cand", "Line_Angle_Limit_cand", "Line_Reinforcement_Cap_Size", "pC_Line_Reinforcement", "Max_Trans_Cap"] # "pTrans_Max_Possible",
+    line_keys = [ "pPercent_Loss", "pTrans_Loss_Coeff", "pTrans_Max", "pDC_OPF_coeff", "Line_Angle_Limit", "pDC_OPF_coeff_cand", "Line_Angle_Limit_cand", "Line_Reinforcement_Cap_Size", "pC_Line_Reinforcement", "Max_Trans_Cap", "BigM"] # "pTrans_Max_Possible",
 
     for key in line_keys
         if haskey(inputs, key)
@@ -354,6 +354,11 @@ function build_single_nodal_input(inputs::Dict, node_to_zone_map::Dict, zone::In
         end
         if old_line in inputs["CANNOT_RETIRE_LINES"]
             push!(CANNOT_RETIRE_LINES, l)
+            if haskey(inputs["existing_to_cand_map"], old_line)
+                old_cand_line = inputs["existing_to_cand_map"][old_line]
+                cand_line_replacement = l2l_map[old_cand_line]
+                existing_to_cand_map[l] = cand_line_replacement
+            end
         end
         if old_line in inputs["CAN_RETIRE_LINES"]
             push!(CAN_RETIRE_LINES, l)
