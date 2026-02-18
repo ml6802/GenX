@@ -200,7 +200,7 @@ myinputs_copy["L"] = size(new_pNet_Map, 1)
 myinputs_copy["Z"] = size(new_pNet_Map, 2)
 myinputs_copy["L_exist"] = 245
 myinputs_copy["L_cand"] = 252
-key_set = ["Line_Reinforcement_Cap_Size", "pC_Line_Reinforcement", "pDC_OPF_coeff", "Max_Trans_Cap", "Line_Angle_Limit","pTrans_Max", "pC_Line_Reconductor_Low", "pC_Line_Reconductor_High", "pPercent_Loss"]
+key_set = ["Line_Reinforcement_Cap_Size", "pC_Line_Reinforcement", "pDC_OPF_coeff", "Max_Trans_Cap", "Line_Angle_Limit","pTrans_Max", "pC_Line_Reconductor_Low", "pC_Line_Reconductor_High", "pPercent_Loss", "BigM"]
 
 for k in key_set
     if haskey(myinputs_copy, k)
@@ -286,7 +286,7 @@ mysetup["BD_post_warmstart_integer_routine"] = 1
 mysetup["BD_Stab_Method"] = "int_level_set"
 mysetup["unfix_slacks"] = 1
 mysetup["BD_MaxIter"] = 3000
-mysetup["BD_MaxCpuTime"] = 43200
+mysetup["BD_MaxCpuTime"] = 115200
 mysetup["BD_regularization_switch"] = 1
 
 myinputs_decomp = GenX.separate_inputs_subperiods(myinputs_copy);
