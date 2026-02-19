@@ -163,7 +163,7 @@ function filter_candidate_lines(inputs, lines_to_keep)
     pnet_map = inputs["pNet_Map"]
     all_lines = vcat(EXISTING_LINES, lines_to_keep)
     inputs["pNet_Map"] = pnet_map[all_lines, :]
-    line_keys = [ "pPercent_Loss", "pTrans_Max", "pDC_OPF_coeff", "Line_Angle_Limit", "Line_Reinforcement_Cap_Size", "pC_Line_Reinforcement", "Max_Trans_Cap"] # "pTrans_Max_Possible","pTrans_Loss_Coeff", 
+    line_keys = [ "pPercent_Loss", "pTrans_Max", "pDC_OPF_coeff", "Line_Angle_Limit", "Line_Reinforcement_Cap_Size", "pC_Line_Reinforcement", "Max_Trans_Cap", "BigM"] # "pTrans_Max_Possible","pTrans_Loss_Coeff", 
 
     for key in line_keys
         if haskey(inputs, key)
