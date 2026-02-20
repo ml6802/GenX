@@ -132,7 +132,7 @@ myinputs = GenX.load_inputs(mysetup, case, p)
 
 optimizer = optimizer_with_attributes(Gurobi.Optimizer, "TimeLimit" => 3600, "MIPGap" => 1e-3)
 
-load_candidates_base(myinputs, 8784, add_new_corridors = true)
+load_candidates_base(myinputs, 8784, add_new_corridors = true, use_official_lengths = true)
 update_fuel_and_investment_costs(myinputs)
 
 
