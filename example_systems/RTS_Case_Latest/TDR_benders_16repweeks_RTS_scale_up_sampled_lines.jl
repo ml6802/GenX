@@ -293,6 +293,24 @@ myinputs_copy["RECONDUCTOR_LINES"] = lines_to_keep_reconductor
 
 GenX.filter_candidate_lines(myinputs_copy, lines_to_keep)
 
+existing_to_cand_map = myinputs_copy["existing_to_cand_map"]
+candidate_to_existing_map = Dict([existing_to_cand_map[i] => i for i in keys(existing_to_cand_map)])
+
+if haskey(myinputs_copy, "BigM")
+    println("RESETTING BIG M VALUES")
+    for l in myinputs_copy["CANDIDATE_LINES"]
+        if l in keys(candidate_to_existing_map)
+            if candidate_to_existing_map[l] in myinputs_copy["RECONDUCTOR_LINES"]
+                myinputs_copy["BigM"][l] = myinputs_copy["Line_Reinforcement_Cap_Size"][l] * 1.25
+            else
+                myinputs_copy["BigM"][l] = myinputs_copy["Line_Reinforcement_Cap_Size"][l]
+            end
+        else
+            myinputs_copy["BigM"][l] = myinputs_copy["Line_Reinforcement_Cap_Size"][l]
+        end
+    end
+end
+
 println("NUMBER OF POSSIBLE LINE RETIREMENTS: ", length(myinputs_copy["CAN_RETIRE_LINES"]))
 
 # Run TDR

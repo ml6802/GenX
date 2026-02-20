@@ -180,17 +180,18 @@ function filter_candidate_lines(inputs, lines_to_keep)
     cand_new_idx = Dict(l => i + L_exist for (i, l) in enumerate(lines_to_keep))
     cand_to_existing_map = Dict(existing_to_cand_map[l] => l for l in keys(existing_to_cand_map))
 
-    for l in CANDIDATE_LINES
-        if haskey(cand_to_existing_map, l)
-            existing_line = cand_to_existing_map[l]
-            if existing_line in CAN_RETIRE_LINES 
-                if (l in lines_to_keep) # if it is in the lines_to_keep
-                    existing_to_cand_map[existing_line] = cand_new_idx[l]
-                else # if it is in the lines_to_keep
-                    idx = findfirst(==(existing_line), CAN_RETIRE_LINES)
+    for l in EXISTING_LINES
+        if haskey(existing_to_cand_map, l)
+            cand_line = existing_to_cand_map[l]
+            if (cand_line in lines_to_keep) # if it is in the lines_to_keep
+                existing_to_cand_map[l] = cand_new_idx[cand_line]
+            end
+            if l in CAN_RETIRE_LINES 
+                if !(cand_line in lines_to_keep)
+                    idx = findfirst(==(l), CAN_RETIRE_LINES)
                     deleteat!(CAN_RETIRE_LINES, idx)
-                    delete!(existing_to_cand_map, existing_line)
-                    push!(CANNOT_RETIRE_LINES, existing_line)
+                    delete!(existing_to_cand_map, l)
+                    push!(CANNOT_RETIRE_LINES, l)
                 end
             end
         end
@@ -198,8 +199,8 @@ function filter_candidate_lines(inputs, lines_to_keep)
 
 
     sort!(CANNOT_RETIRE_LINES)
-    inputs["CAN_RETIRE_LINES"] = CAN_RETIRE_LINES
-    inputs["CANNOT_RETIRE_LINES"] = CANNOT_RETIRE_LINES
+    inputs["CAN_RETIRE_LINES"] = sort(CAN_RETIRE_LINES)
+    inputs["CANNOT_RETIRE_LINES"] = sort(CANNOT_RETIRE_LINES)
     inputs["existing_to_cand_map"] = existing_to_cand_map
     inputs["CANDIDATE_LINES"] = [i for i in (L_exist + 1):(L_exist + L_cand)]
 

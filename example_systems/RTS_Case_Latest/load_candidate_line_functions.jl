@@ -63,6 +63,7 @@ function load_candidates_base(myinputs, T=168; demand_scale = 2, add_new_corrido
             if get_existing_capacity_mw(p, lines[i]) > 200
                 push!(CANNOT_RETIRE_LINES, i)
                 push!(RECONDUCTOR_LINES, i)
+                existing_to_cand_map[i] = L_exist + i
                 myinputs["pC_Line_Reconductor_Low"][i] = cost .* 0.3
                 myinputs["pC_Line_Reconductor_High"][i] = cost .* 0.7
                 myinputs["Line_Reinforcement_Cap_Size"][L_exist + i] *= 1.5
@@ -225,7 +226,9 @@ function load_candidates_base(myinputs, T=168; demand_scale = 2, add_new_corrido
             end
         end
     end
-    BigM[(L_exist * 2 + 1):(L_exist * 2 + 6)] .*= 10
+    if add_new_corridors
+        BigM[(L_exist * 2 + 1):(L_exist * 2 + 6)] .*= 10
+    end
     myinputs["BigM"] = BigM
 end
 
