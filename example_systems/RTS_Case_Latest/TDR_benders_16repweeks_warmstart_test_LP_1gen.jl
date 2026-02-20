@@ -99,9 +99,9 @@ b_node_names = filter(n -> startswith(n, "B"), node_names)
 c_node_names = filter(n -> startswith(n, "C"), node_names)
 
 # Set a reproducible seed (outside the function)
-function sample_four(names::AbstractVector{<:AbstractString})
+function sample_three(names::AbstractVector{<:AbstractString})
     @assert length(names) >= 1 "Need at least 1 name (got $(length(names)))"
-    idxs = sort(randperm(length(names))[1:1])
+    idxs = sort(randperm(length(names))[1:3])
     return collect(names[idxs])
 end
 node_name_dict = Dict('A' => a_node_names, 'B' => b_node_names, 'C' => c_node_names)
@@ -115,7 +115,7 @@ for i in 1:length(techs)
         new_region_list = PSIP.RegionTopology[]
         key = t.region[1].name[1]
         node_name_vector = node_name_dict[key]
-        new_nodes = sample_four(node_name_vector)
+        new_nodes = sample_three(node_name_vector)
         for name in new_nodes
             for n in old_region_list
                 if n.name == name
@@ -126,6 +126,16 @@ for i in 1:length(techs)
         end
         @assert length(new_region_list) >=1
         t.region = new_region_list
+    end
+end
+
+
+# Whittle each tech's region down to a single node, sampled from the three
+# assigned above. This loop runs after the seed-driven loop so the RNG state
+# during sample_three is identical to the 3-node scripts.
+for t in techs
+    if length(t.region) > 1
+        t.region = [t.region[rand(1:length(t.region))]]
     end
 end
 
@@ -140,7 +150,7 @@ update_fuel_and_investment_costs(myinputs)
 
 # Run TDR
 TDR_params = Dict("MinPeriods" => 16, "MaxPeriods" => 16, "UseExtremePeriods" => 1)
-cluster_inputs(case, settings_path, mysetup; inputs = myinputs, TDR_params = TDR_params)
+cluster_inputs(case, settings_path, mysetup; inputs = myinputs, TDR_params = TDR_params, random=false)
 
 GenX.expand_new_cap_resources_to_nodal!(myinputs, mysetup, p, "")
 

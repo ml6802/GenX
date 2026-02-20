@@ -100,9 +100,8 @@ b_node_names = filter(n -> startswith(n, "B"), node_names)
 c_node_names = filter(n -> startswith(n, "C"), node_names)
 
 # Set a reproducible seed (outside the function)
-function sample_four(names::AbstractVector{<:AbstractString})
-    @assert length(names) >= 3 "Need at least 3 names (got $(length(names)))"
-    idxs = sort(randperm(length(names))[1:5])
+function sample_three(names::AbstractVector{<:AbstractString})
+    idxs = sort(randperm(length(names))[1:3])
     return collect(names[idxs])
 end
 node_name_dict = Dict('A' => a_node_names, 'B' => b_node_names, 'C' => c_node_names)
@@ -116,7 +115,7 @@ for i in 1:length(techs)
         new_region_list = PSIP.RegionTopology[]
         key = t.region[1].name[1]
         node_name_vector = node_name_dict[key]
-        new_nodes = sample_four(node_name_vector)
+        new_nodes = sample_three(node_name_vector)
         for name in new_nodes
             for n in old_region_list
                 if n.name == name
@@ -127,6 +126,28 @@ for i in 1:length(techs)
         end
         @assert length(new_region_list) >=1
         t.region = new_region_list
+    end
+end
+
+# Expand each tech's region from 3 nodes to 5 by sampling 2 additional unique
+# nodes from the same bucket. This runs after the seed-driven loop so the RNG
+# state during sample_three is identical to the 3-node scripts.
+for t in techs
+    if length(t.region) >= 1
+        key = t.region[1].name[1]
+        all_nodes = node_name_dict[key]
+        existing_names = Set(n.name for n in t.region)
+        candidates = filter(n -> n ∉ existing_names, all_nodes)
+        n_add = min(2, length(candidates))
+        extra_names = candidates[sort(randperm(length(candidates))[1:n_add])]
+        for name in extra_names
+            for n in collect(get_components(PSIP.RegionTopology, p))
+                if n.name == name
+                    push!(t.region, n)
+                    break
+                end
+            end
+        end
     end
 end
 
