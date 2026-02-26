@@ -130,25 +130,12 @@ for i in 1:length(techs)
     end
 end
 
-# Expand each tech's region from 3 nodes to 5 by sampling 2 additional unique
-# nodes from the same bucket. This runs after the seed-driven loop so the RNG
-# state during sample_three is identical to the 3-node scripts.
+# Whittle each tech's region down to a single node, sampled from the three
+# assigned above. This loop runs after the seed-driven loop so the RNG state
+# during sample_three is identical to the 3-node scripts.
 for t in techs
-    if length(t.region) >= 1
-        key = t.region[1].name[1]
-        all_nodes = node_name_dict[key]
-        existing_names = Set(n.name for n in t.region)
-        candidates = filter(n -> n ∉ existing_names, all_nodes)
-        n_add = min(2, length(candidates))
-        extra_names = candidates[sort(randperm(length(candidates))[1:n_add])]
-        for name in extra_names
-            for n in collect(get_regions(PSIP.RegionTopology, p))
-                if n.name == name
-                    push!(t.region, n)
-                    break
-                end
-            end
-        end
+    if length(t.region) > 1
+        t.region = [t.region[rand(1:length(t.region))]]
     end
 end
 
@@ -163,7 +150,7 @@ update_fuel_and_investment_costs(myinputs)
 
 # Run TDR
 TDR_params = Dict("MinPeriods" => 16, "MaxPeriods" => 16, "UseExtremePeriods" => 1)
-cluster_inputs(case, settings_path, mysetup; inputs = myinputs, TDR_params = TDR_params, random=false)
+cluster_inputs(case, settings_path, mysetup; inputs = myinputs, TDR_params = TDR_params, random = false)
 
 GenX.expand_new_cap_resources_to_nodal!(myinputs, mysetup, p, "")
 

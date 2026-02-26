@@ -143,7 +143,7 @@ for t in techs
         n_add = min(2, length(candidates))
         extra_names = candidates[sort(randperm(length(candidates))[1:n_add])]
         for name in extra_names
-            for n in collect(get_components(PSIP.RegionTopology, p))
+            for n in collect(get_regions(PSIP.RegionTopology, p))
                 if n.name == name
                     push!(t.region, n)
                     break
