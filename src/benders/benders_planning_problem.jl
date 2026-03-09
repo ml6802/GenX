@@ -19,8 +19,8 @@ function generate_planning_problem(setup::Dict, inputs::Dict, OPTIMIZER::MOI.Opt
 	if setup["ModelingToGenerateAlternatives"] == 1
 		Z = inputs["Z"]
 		TechTypes = collect(unique(inputs["RESOURCES"].resource_type))
-		@variable(EP, vSumvCap[TechTypes = 1:length(TechTypes), z = 1:Z] >= 0)
-		@constraint(EP, cCapEquiv[tt = 1:length(TechTypes), z = 1:Z], vSumvCap[tt,z] == sum(EP[:eTotalCap][y] for y in  inputs["RESOURCES"][(inputs["RESOURCES"].resource_type .== inputs["RESOURCES"].resource_type[tt]) .& (inputs["RESOURCES"].zone .== z)].id))
+		@variable(EP, vSumvCap[tt in TechTypes, z = 1:Z] >= 0)
+		@constraint(EP, cCapEquiv[tt in TechTypes, z = 1:Z], vSumvCap[tt,z] == sum(EP[:eTotalCap][y] for y in  inputs["RESOURCES"][(inputs["RESOURCES"].resource_type .== tt) .& (inputs["RESOURCES"].zone .== z)].id))
 	end
 
     ## Define the objective function

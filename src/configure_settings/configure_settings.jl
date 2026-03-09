@@ -17,8 +17,6 @@ function default_settings()
         "TimeDomainReduction" => 0,
         "TimeDomainReductionFolder" => "TDR_results",
         "ModelingToGenerateAlternatives" => 0,
-        "ModelingtoGenerateAlternativeSlack" => 0.1,
-        "MGAAnnualGeneration" => 0,
         "MultiStage" => 0,
         "MethodofMorris" => 0,
         "IncludeLossesInESR" => 0,
@@ -186,4 +184,53 @@ function configure_writeoutput(output_settings_path::String, settings::Dict)
         merge!(writeoutput, model_writeoutput)
     end
     return writeoutput
+end
+
+function default_mga_settings()
+    Dict{String, Any}("MGA_Slack" => 0.10,
+        "MGA_RetainBendersCuts" => 2,
+        "ClusterMGAVecs" => 0,
+        "MGA_MaxCuts" => 5000,
+        "RelaxBudget" => 0.005,
+        "MGA_AnnualGeneration" => 0,
+        "MGA_Iterations" => 5,
+        "MGA_Method" => 0,
+        "MGA_VariableType" => "capacity",
+        "MGA_AggregationLevel" => 2,
+        "MGA_Technologies" => String[],
+        "MGA_IncludeTransmission" => 0,
+        "MGA_RetainBendersCuts" => 2,
+        "MGA_ComboRatio" => 0.25,
+        "MGA_RandomSeed" => Random.rand(1:1000000),
+        "MGA_VectorSortMethod" => "none"
+        )
+end
+
+function process_mga_settings(mga_settings_new::Dict{Any, Any}, mga_settings::Dict{String, Any})
+    # make sure MGA_Technologies is a vector of strings
+    if mga_settings_new["MGA_Method"] == 3
+        if mga_settings_new["MGA_VariableType"] == "capacity"
+            mga_settings_news["MGA_VariableType"] = "custom"
+        end
+    end
+    for key in keys(mga_settings)
+        if key in keys(mga_settings_new)
+            # do nothing
+        else
+            mga_settings_new[key] = mga_settings[key]
+        end
+    end
+    return mga_settings_new
+end
+
+
+function configure_mga(mga_settings_path::String, settings::Dict)
+    mga_settings = default_mga_settings()
+    # read in YAML file if provided
+    if isfile(mga_settings_path)
+        mga_settings_new = YAML.load(open(mga_settings_path))
+        mga_settings_new = process_mga_settings(mga_settings_new, mga_settings)
+        merge!(settings, mga_settings_new)
+    end
+    return settings
 end

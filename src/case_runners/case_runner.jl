@@ -264,6 +264,26 @@ function run_genx_case_benders!(case::AbstractString, mysetup::Dict)
 
     """ MGA Functionality """
     if mysetup["ModelingToGenerateAlternatives"] == 1
+        # Retrieve MGA settings
+        mga_settings_path = get_settings_path(case, "mga_settings.yml")
+        mysetup = configure_mga(mga_settings_path, mysetup)
+        if mysetup["MGA_Method"] == 3
+            # If using custom weights, retrieve them from the settings and add to mysetup
+            custom_weights_path = joinpath(case, "mga_custom_weights.csv")
+            if isfile(custom_weights_path)
+                custom_weights_df = CSV.read(custom_weights_path, DataFrame) #### Same format as output vectors and variables
+                variables = names(custom_weights_df)[2:end] # Assuming first column is an index or identifier and the rest are variable names
+                vectors = Matrix(custom_weights_df)[:, 2:end] # Convert the custom weights to a matrix, excluding the first column
+                mysetup["CustomObjs"] = (variables = variables, vectors = Matrix(vectors'))
+
+                if size(mysetup["CustomObjs"].vectors, 2) != mysetup["MGA_Iterations"]
+                    println("Number of custom vectors in mga_custom_weights.csv: $(size(mysetup["CustomObjs"].vectors, 2))")
+                    error("Number of custom vectors in mga_custom_weights.csv does not match MGA_Iterations specified in mga_settings.yml")
+                end
+            else
+                error("MGA method set to use custom weights but custom weights file not found at $(custom_weights_path)")
+            end
+        end
         # Write least-cost solution into DF for MGA results
         outpath = joinpath(case,"Outputs")
         if mysetup["OverwriteResults"] == 1
@@ -302,9 +322,9 @@ function run_genx_case_benders!(case::AbstractString, mysetup::Dict)
         CSV.write(joinpath(outpath, "FlowTimeSeries", "Flow_OptimalSolution.csv"), flow_df_full)
         println("Running Modelling to Generate Alternatives with Cutting-Plane Algorithm")
         # Run MGA
-        benders_inputs["cap_vectors"], benders_inputs["line_vectors"] = generate_vecs(myinputs, mysetup)
-        results, sumtime_df = run_benders_mga(benders_inputs,mysetup, myinputs, opt_stats)
+        results, sumtime_df, vectors, variables = run_benders_mga(benders_inputs,mysetup, myinputs, opt_stats)
         write_benders_mga_results!(dfResults, costs_df, NSE_df, flow_df, power_df, results, case, mysetup, myinputs, myinputs_decomp, sumtime_df)
+        CSV.write(joinpath(outpath, "MGA_Vectors.csv"), DataFrame(hcat(collect(1:mysetup["MGA_Iterations"]),vectors'), ["Iteration"; variables]))
     end
 end
 

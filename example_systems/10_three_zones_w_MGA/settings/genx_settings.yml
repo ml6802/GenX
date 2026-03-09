@@ -13,12 +13,6 @@ TimeDomainReduction: 1 # Time domain reduce (i.e. cluster) inputs based on Deman
 Benders: 1
 OverwriteResults: 1
 ModelingToGenerateAlternatives: 1
-ModelingToGenerateAlternativeSlack: 0.1
-ModelingToGenerateAlternativeRetainBendersCuts: 2
-MGAAnnualGeneration: 0
 ModelingToGenerateAlternativeIterations: 1
 MultiStage: 0
-MGAMethod: 2
-ClusterMGAVecs: 0
-RelaxBudget: 0.005
 WriteOutputs: full # Output options for Benders and MGA: full = full time series outputs; annual = annual sum outputs
