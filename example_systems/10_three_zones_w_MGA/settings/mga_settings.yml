@@ -8,7 +8,7 @@
 
 ## Core settings
 MGA_Slack: 0.1    # Slack for MGA alternative generation; 0.1 = 10% slack; 0.05 = 5% slack; etc.
-MGA_Iterations: 2 # Number of iterations for MGA alternative generation; 10 = generate 10 alternatives; 20 = generate 20 alternatives; etc.
+MGA_Iterations: 10 # Number of iterations for MGA alternative generation; 10 = generate 10 alternatives; 20 = generate 20 alternatives; etc.
                    # Must match number of custom vectors if MGA_Method set to 3
                    
 ## Settings for MGA vector generation

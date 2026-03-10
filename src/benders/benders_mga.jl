@@ -39,12 +39,22 @@ function run_benders_mga(benders_inputs::Dict{Any,Any},setup::Dict, inputs::Dict
         end
         @objective(EP_master,Min, sum(variable_by_name(EP_master, variables[i])*vectors[i,iteration] for i in eachindex(variables)))
 	    @time EP_master, master_sol_final, subop_sol,ApproxSystemCost_hist, TrueSystemCost_hist, cpu_time = mga_cutting_plane(EP_master,master_vars,EP_subprob, master_vars_sub,setup,inputs,iteration);
-
         results[iteration,:] = [master_sol_final,subop_sol]
     
         time_df = DataFrame(:MGA_it => iteration, :Iterations => length(TrueSystemCost_hist), :Iteration_Time => cpu_time[end])
         append!(sumtime_df, time_df)
     end
+    """
+    for i in 1:Iterations
+        vals = zeros(length(variables))
+        for j in 1:length(variables)
+            if haskey(results[i,1].values, variables[j])
+                vals[j] = results[i,1].values[variables[j]]
+            end
+        end
+        println("MGA Iteration "*string(i)*": "*string(vals))
+    end
+    """
     return results, sumtime_df, vectors, variables
 end
 
@@ -257,7 +267,6 @@ function mga_cutting_plane(EP_master::Model, master_vars::Vector{String},EP_subp
                 println("Average Master Time = "*string(master_avg))
                 println("Average Subop Time = "*string(subop_avg))
                 println("Master/Subop Ratio = "*string(ms_ratio))
-        
                 return (EP_master=EP_master,master_sol = master_sol_final,subop_sol=subop_sol,ApproxSystemCost_hist = ApproxSystemCost_hist,TrueSystemCost_hist = TrueSystemCost_hist,cpu_time = cpu_time)
 		    end
 		elseif cpu_time[end] >= MaxCpuTime
@@ -376,7 +385,9 @@ end
 function reorder_vecs(vecs::Array{Float64,2}, setup::Dict)
     if setup["MGA_VectorSortMethod"] == "angle"
         norms = [norm(vecs[:,i]) for i in 1:size(vecs,2)]
-        angles = [acos(dot(vecs[:,i], vecs[:,1])/(norms[i]*norms[1])) for i in 1:size(vecs,2)]
+        dot_product = collect(dot(vecs[:,i], vecs[:,1]) for i in 1:size(vecs,2))./norms
+        dot_product = clamp.(dot_product, -1.0, 1.0)
+        angles = [acos(dot_product[i]) for i in 1:size(vecs,2)]
         sorted_indices = sortperm(angles)
         vecs = vecs[:,sorted_indices]
     elseif setup["MGA_VectorSortMethod"] == "nearest-neighbor"

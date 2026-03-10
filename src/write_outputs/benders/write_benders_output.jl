@@ -350,7 +350,7 @@ function make_benders_results_df(master_sol::NamedTuple, subop_sol::Dict, path::
 end
 
 function write_benders_mga_results!(Results_df::DataFrame, Costs_df::DataFrame, NSE_df::DataFrame, flow_df::DataFrame, power_df::DataFrame, results::AbstractArray, path::AbstractString, setup::Dict, inputs::Dict, inputs_decomp::Dict, sumtime_df::DataFrame)
-	num_its = 2*setup["ModelingToGenerateAlternativeIterations"]
+	num_its = size(results,1)
 	full_power = Vector{DataFrame}(undef,num_its)
 	full_charge = Vector{DataFrame}(undef,num_its)
 	full_flow = Vector{DataFrame}(undef,num_its)
