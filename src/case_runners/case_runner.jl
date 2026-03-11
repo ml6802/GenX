@@ -227,6 +227,26 @@ function run_genx_case_benders!(case::AbstractString, mysetup::Dict)
     end
     mysetup["settings_path"] = settings_path;
 
+    mga_settings_path = get_settings_path(case, "mga_settings.yml")
+    mysetup = configure_mga(mga_settings_path, mysetup)
+    if mysetup["MGA_Method"] == 3
+        # If using custom weights, retrieve them from the settings and add to mysetup
+        custom_weights_path = joinpath(case, "mga_custom_weights.csv")
+        if isfile(custom_weights_path)
+            custom_weights_df = CSV.read(custom_weights_path, DataFrame) #### Same format as output vectors and variables
+            variables = names(custom_weights_df)[2:end] # Assuming first column is an index or identifier and the rest are variable names
+            vectors = Matrix(custom_weights_df)[:, 2:end] # Convert the custom weights to a matrix, excluding the first column
+            mysetup["CustomObjs"] = (variables = variables, vectors = Matrix(vectors'))
+
+            if size(mysetup["CustomObjs"].vectors, 2) != mysetup["MGA_Iterations"]
+                println("Number of custom vectors in mga_custom_weights.csv: $(size(mysetup["CustomObjs"].vectors, 2))")
+                error("Number of custom vectors in mga_custom_weights.csv does not match MGA_Iterations specified in mga_settings.yml")
+            end
+        else
+            error("MGA method set to use custom weights but custom weights file not found at $(custom_weights_path)")
+        end
+    end
+
     myinputs = load_inputs(mysetup, case);
     myinputs_decomp = separate_inputs_subperiods(myinputs);
 
@@ -264,26 +284,7 @@ function run_genx_case_benders!(case::AbstractString, mysetup::Dict)
 
     """ MGA Functionality """
     if mysetup["ModelingToGenerateAlternatives"] == 1
-        # Retrieve MGA settings
-        mga_settings_path = get_settings_path(case, "mga_settings.yml")
-        mysetup = configure_mga(mga_settings_path, mysetup)
-        if mysetup["MGA_Method"] == 3
-            # If using custom weights, retrieve them from the settings and add to mysetup
-            custom_weights_path = joinpath(case, "mga_custom_weights.csv")
-            if isfile(custom_weights_path)
-                custom_weights_df = CSV.read(custom_weights_path, DataFrame) #### Same format as output vectors and variables
-                variables = names(custom_weights_df)[2:end] # Assuming first column is an index or identifier and the rest are variable names
-                vectors = Matrix(custom_weights_df)[:, 2:end] # Convert the custom weights to a matrix, excluding the first column
-                mysetup["CustomObjs"] = (variables = variables, vectors = Matrix(vectors'))
-
-                if size(mysetup["CustomObjs"].vectors, 2) != mysetup["MGA_Iterations"]
-                    println("Number of custom vectors in mga_custom_weights.csv: $(size(mysetup["CustomObjs"].vectors, 2))")
-                    error("Number of custom vectors in mga_custom_weights.csv does not match MGA_Iterations specified in mga_settings.yml")
-                end
-            else
-                error("MGA method set to use custom weights but custom weights file not found at $(custom_weights_path)")
-            end
-        end
+        
         # Write least-cost solution into DF for MGA results
         outpath = joinpath(case,"Outputs")
         if mysetup["OverwriteResults"] == 1

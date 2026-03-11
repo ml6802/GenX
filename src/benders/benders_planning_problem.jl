@@ -19,8 +19,15 @@ function generate_planning_problem(setup::Dict, inputs::Dict, OPTIMIZER::MOI.Opt
 	if setup["ModelingToGenerateAlternatives"] == 1
 		Z = inputs["Z"]
 		TechTypes = collect(unique(inputs["RESOURCES"].resource_type))
-		@variable(EP, vSumvCap[tt in TechTypes, z = 1:Z] >= 0)
-		@constraint(EP, cCapEquiv[tt in TechTypes, z = 1:Z], vSumvCap[tt,z] == sum(EP[:eTotalCap][y] for y in  inputs["RESOURCES"][(inputs["RESOURCES"].resource_type .== tt) .& (inputs["RESOURCES"].zone .== z)].id))
+		if setup["MGA_AggregationLevel"] == 1
+			@variable(EP, vSumvCap[tt in TechTypes] >= 0)
+			@constraint(EP, cCapEquiv[tt in TechTypes], vSumvCap[tt] == sum(EP[:eTotalCap][y] for y in  inputs["RESOURCES"][(inputs["RESOURCES"].resource_type .== tt)].id))
+			@variable(EP, vTot_Trans >= 0)
+			@constraint(EP, cTotTransEquiv, vTot_Trans == sum(EP[:vNEW_TRANS_CAP]))
+		elseif setup["MGA_AggregationLevel"] == 2
+			@variable(EP, vSumvCap[tt in TechTypes, z = 1:Z] >= 0)
+			@constraint(EP, cCapEquiv[tt in TechTypes, z = 1:Z], vSumvCap[tt,z] == sum(EP[:eTotalCap][y] for y in  inputs["RESOURCES"][(inputs["RESOURCES"].resource_type .== tt) .& (inputs["RESOURCES"].zone .== z)].id))
+		end
 	end
 
     ## Define the objective function

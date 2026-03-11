@@ -92,7 +92,6 @@ function retain_fixed_spcuts_early(EP_master::Model, num_cuts::Int64, iterations
 end
 
 function retain_early_cuts_latest_iterations(EP_master::Model, num_cuts::Int64, iteration::Int64)
-    cuts_saved_per_it = 100
     cuts_by_iteration = Dict{Int64, Vector{String}}()
     struc_names = Vector{String}(undef,0)
     for i in 0:iteration
@@ -107,6 +106,9 @@ function retain_early_cuts_latest_iterations(EP_master::Model, num_cuts::Int64, 
             push!(struc_names,name(con))
         end
     end
+
+    cuts_saved_per_it = ceil(Int64, length(cuts_by_iteration[0])/4)
+
     if sum(length.(values(cuts_by_iteration))) >= num_cuts
         cut_names = cuts_by_iteration[0][1:min(cuts_saved_per_it, length(cuts_by_iteration[0]))]
     else
@@ -297,11 +299,13 @@ function generate_variable_list(EP_master::Model, setup::Dict, inputs::Dict)
 
     if var_type == "capacity"
         if ag_level == 1
-            @expression(EP_master,eTotalCapByType[type in techs], sum(EP_master[:vSumvCap][type, z] for z in 1:inputs["Z"]))
-            variables = name.(EP_master[:eTotalCapByType])
+            for v in name.(EP_master[:vSumvCap])
+                if any(s -> occursin(s, v), techs)
+                    push!(variables, v)
+                end
+            end
             if include_transmission == true
-                @expression(EP_master,eTotalTransCap, sum(EP_master[:vNEW_TRANS_CAP][l] for l in 1:inputs["lines"]))
-                variables = vcat(variables, name(EP_master[:eTotalTransCap]))
+                variables = vcat(variables, name(EP_master[:vTot_Trans]))
             end
         elseif ag_level == 2
             for v in name.(EP_master[:vSumvCap])
