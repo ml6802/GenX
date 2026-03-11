@@ -20,9 +20,9 @@ MGA_AggregationLevel: 2 # Level of aggregation for MGA vector generation; 1 = us
 MGA_IncludeTransmission: 1 # Whether to include transmission in MGA vector generation; 0 = do not include transmission; 1 = include transmission; #### Line level only for now
 MGA_ComboRatio: 0.25 # Ratio of random to capMM vectors to use in MGA vector generation; only active if MGA_Method is set to 0; 0.25 = 25% random vectors and 75% capMM vectors; 0.5 = 50% random vectors and 50% capMM vectors; etc.
 #  MGA_RandomSeed: 1234 # Uncomment to set Random seed for MGA vector generation; set to any integer for reproducibility; set to different integers to generate different sets of alternatives; only active if MGA_Method is not using custom weights
-MGA_VectorSortMethod: "angle" # Method for sorting MGA vectors to optimize cut value (mainly value if cuts are kept); options: "angle", "nearest-neighbor", "none"
+MGA_VectorSortMethod: "nearest-neighbor" # Method for sorting MGA vectors to optimize cut value (mainly value if cuts are kept); options: "angle", "nearest-neighbor", "none"
 
 ## MGA Benders settings
-MGA_RetainBendersCuts: 2 # Number of Benders cuts to retain in MGA alternative generation; 0 = do not retain any cuts; 1 = retain cuts from all iterations; 2 = retain cuts from least-cost; 3 = retain first N cuts --- n specified below
+MGA_RetainBendersCuts: 4 # Number of Benders cuts to retain in MGA alternative generation; 0 = do not retain any cuts; 1 = retain cuts from all iterations; 2 = retain cuts from least-cost; 3 = retain first N cuts --- n specified below
 RelaxBudget: 0.005 ### Convergence tolerance for MGA Benders; 0.005 = 0.5% gap; 0.01 = 1% gap; etc.
 MGA_MaxCuts: 1000 # Maximum number of Benders cuts to retain in MGA alternative generation; only active if MGA_RetainBendersCuts is set to 3; set to large number to effectively retain all cuts; set to smaller number to retain only the first N cuts

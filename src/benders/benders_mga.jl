@@ -31,8 +31,11 @@ function run_benders_mga(benders_inputs::Dict{Any,Any},setup::Dict, inputs::Dict
         elseif retain_master_cuts == 2
             forget_cuts_master!(EP_master, opt_cuts)
         elseif retain_master_cuts == 3
-            sp_cuts = retain_fixed_spcuts_early(EP_master, master_cuts, setup["MGA_MaxCuts"],nsubs)
-            forget_cuts_master!(EP_master, sp_cuts)
+            cuts = retain_fixed_spcuts_early(EP_master, setup["MGA_MaxCuts"], iteration)
+            forget_cuts_master!(EP_master, cuts)
+        elseif retain_master_cuts == 4
+            cuts = retain_early_cuts_latest_iterations(EP_master, setup["MGA_MaxCuts"],iteration)
+            forget_cuts_master!(EP_master, cuts)
         else
             println("No cut-retention method specified, defaulting to least-cost cuts")
             forget_cuts_master!(EP_master, opt_cuts)
@@ -44,24 +47,14 @@ function run_benders_mga(benders_inputs::Dict{Any,Any},setup::Dict, inputs::Dict
         time_df = DataFrame(:MGA_it => iteration, :Iterations => length(TrueSystemCost_hist), :Iteration_Time => cpu_time[end])
         append!(sumtime_df, time_df)
     end
-    """
-    for i in 1:Iterations
-        vals = zeros(length(variables))
-        for j in 1:length(variables)
-            if haskey(results[i,1].values, variables[j])
-                vals[j] = results[i,1].values[variables[j]]
-            end
-        end
-        println("MGA Iteration "*string(i)*": "*string(vals))
-    end
-    """
+
     return results, sumtime_df, vectors, variables
 end
 
 function name_cuts!(EP_master::Model, counter::Int64)
     for con in all_constraints(EP_master,include_variable_in_set_constraints=false)
         if name(con) == ""
-            set_name(con,"BendersCut"*string(counter))
+            set_name(con,"BendersCut_0_"*string(counter))
         end
         counter+=1
     end 
@@ -74,59 +67,67 @@ function update_master_problem_multi_cuts_mga!(EP::Model,subop_sol::Dict,master_
     @constraint(EP, [w in W],subop_sol[w].theta_coeff*EP[:vTHETA][w] >= subop_sol[w].op_cost + sum(subop_sol[w].lambda[i]*(variable_by_name(EP,master_vars_sub[w][i]) - master_sol.values[master_vars_sub[w][i]]) for i in 1:length(master_vars_sub[w])), base_name = name*"_"*string(w));
 end
 
-function retain_recent_cuts(EP_master::Model, master_cons::Vector{String}, num_cuts::Int64)
+function retain_fixed_spcuts_early(EP_master::Model, num_cuts::Int64, iterations::Int64)
     cut_names = Vector{String}(undef,0)
-    opt_names = Vector{String}(undef,0)
-    struc_names = Vector{String}(undef,0)
-    for con in all_constraints(EP_master, include_variable_in_set_constraints=false)
-        if name(con) == "" || occursin("BendersCut", name(con))
-            split_name = split(name(con), "_")
-            mga_it = parse(Int, split_name[2])
-            if mga_it == 0
-                push!(opt_names, name(con))
-            else
-                push!(cut_names,name(con))
-            end
-        else
-            push!(struc_names,name(con))
-        end
+    cuts_by_iteration = Dict{Int64, Vector{String}}()
+    for i in 0:iterations
+        cuts_by_iteration[i] = Vector{String}(undef,0)
     end
-    opt = length(opt_names)
-    tot = length(cut_names)
-    start=tot-num_cuts-opt
-    if start <= 0
-        start = 1
-    end
-    retained = [opt_names;cut_names[start:end]]
-    new_master_cons=struc_names
-    append!(new_master_cons, retained)
-    return new_master_cons
-end
-
-
-function retain_fixed_spcuts_early(EP_master::Model, master_cons::Vector{String}, num_cuts::Int64, nsubs::Int64)
-    cut_names = Vector{String}(undef,0)
-    sp_cuts = Vector{Vector{String}}(undef, 0)
-    for i in 1:nsubs
-        push!(sp_cuts, Vector{String}(undef,0))
-    end
+    
     struc_names = Vector{String}(undef,0)
     for con in all_constraints(EP_master, include_variable_in_set_constraints=false)
         if occursin("BendersCut", name(con))
             split_name = split(name(con), "_")
-            num = split(split_name[4], "[")
-            push!(sp_cuts[parse(Int, num[1])], name(con))
+            push!(cuts_by_iteration[parse(Int, split_name[2])], name(con))
         else
             push!(struc_names,name(con))
         end
     end
-    
-    for i in 1:nsubs
-        tot = length(sp_cuts[i])
-        if tot >= num_cuts
-            sp_cuts[i] = sp_cuts[i][1:num_cuts]
+    for i in 0:iterations
+        cut_names = vcat(cut_names, cuts_by_iteration[i])
+    end
+    cut_names = cut_names[1:min(num_cuts, length(cut_names))]
+    new_master_cons=vcat(struc_names, cut_names)
+    return new_master_cons
+end
+
+function retain_early_cuts_latest_iterations(EP_master::Model, num_cuts::Int64, iteration::Int64)
+    cuts_saved_per_it = 100
+    cuts_by_iteration = Dict{Int64, Vector{String}}()
+    struc_names = Vector{String}(undef,0)
+    for i in 0:iteration
+        cuts_by_iteration[i] = Vector{String}(undef,0)
+    end
+
+    for con in all_constraints(EP_master, include_variable_in_set_constraints=false)
+        if occursin("BendersCut", name(con))
+            split_name = split(name(con), "_")
+            push!(cuts_by_iteration[parse(Int, split_name[2])], name(con))
+        else
+            push!(struc_names,name(con))
         end
-        cut_names = [cut_names;sp_cuts[i]]
+    end
+    if sum(length.(values(cuts_by_iteration))) >= num_cuts
+        cut_names = cuts_by_iteration[0][1:min(cuts_saved_per_it, length(cuts_by_iteration[0]))]
+    else
+        cut_names = cuts_by_iteration[0]
+    end
+    
+
+    for i in length(keys(cuts_by_iteration))-1:-1:1 #loop back
+        # exit condition
+        if length(cut_names) >= num_cuts
+            cut_names = cut_names[1:num_cuts]
+            break
+        end
+
+        if sum(length.(values(cuts_by_iteration))) >= num_cuts
+            cut_names = vcat(cut_names, cuts_by_iteration[i][1:min(cuts_saved_per_it, length(cuts_by_iteration[i]))])
+        else
+            cut_names = vcat(cut_names, cuts_by_iteration[i])
+        end
+        cut_names = vcat(cut_names, cuts_by_iteration[i][1:min(cuts_saved_per_it, length(cuts_by_iteration[i]))])
+        
     end
     
     new_master_cons=struc_names
@@ -382,7 +383,7 @@ function generate_vecs(setup::Dict, variables::Vector{String})
     return vecs
 end
 
-function reorder_vecs(vecs::Array{Float64,2}, setup::Dict)
+function reorder_vecs(vecs::AbstractArray, setup::Dict)
     if setup["MGA_VectorSortMethod"] == "angle"
         norms = [norm(vecs[:,i]) for i in 1:size(vecs,2)]
         dot_product = collect(dot(vecs[:,i], vecs[:,1]) for i in 1:size(vecs,2))./norms
