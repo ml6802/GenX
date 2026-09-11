@@ -361,3 +361,42 @@ function run_genx_case_preset_mga!(case,mysetup)
     write_benders_mga_results!(dfResults, results, case, setup, inputs, inputs_decomp, sumtime_df)
 
 end
+
+function evaluate_genx_capacity_mixes(case::AbstractString)
+    # load setup
+    genx_settings = get_settings_path(case, "genx_settings.yml") # Settings YAML file path
+    writeoutput_settings = get_settings_path(case, "output_settings.yml") # Write-output settings YAML file path
+    mysetup = configure_settings(genx_settings, writeoutput_settings)
+    
+    # requires benders
+    benders_settings_path = get_settings_path(case, "benders_settings.yml")
+    mysetup_benders = configure_benders(benders_settings_path) 
+    mysetup = merge(mysetup,mysetup_benders);
+
+    settings_path = get_settings_path(case)    
+    ### Cluster time series inputs if necessary and if specified by the user
+    if mysetup["TimeDomainReduction"] == 1
+        TDRpath = joinpath(case, mysetup["TimeDomainReductionFolder"])
+        system_path = joinpath(case, mysetup["SystemFolder"])
+        prevent_doubled_timedomainreduction(system_path)
+        if !time_domain_reduced_files_exist(TDRpath)
+            println("Clustering Time Series Data (Grouped)...")
+            cluster_inputs(case, settings_path, mysetup)
+        else
+            println("Time Series Data Already Clustered.")
+        end
+    end
+    mysetup["settings_path"] = settings_path;
+
+    # load capacity mixes
+    cap_path = joinpath(case, "MGA_Interpolates.csv")
+    if isfile(cap_path)
+        cap_df = CSV.read(cap_path, DataFrame)
+        
+    else
+        error("Capacity file is not present or named MGA_Interpolates.csv. Please add or rename the file")
+    end
+
+
+
+end
